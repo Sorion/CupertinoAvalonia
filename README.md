@@ -85,26 +85,6 @@ repository. To regenerate the tokens when Apple updates it:
    in the Figma desktop app, **File → Save local copy…** to `design/source/macOS-27.fig` (ignored by git).
 2. In `tools/figma` (Node.js): `npm install`, then `npm run generate`. It works offline, without a Figma account.
 
-## Contributing
-
-```
-src/CupertinoAvalonia/
-  Styling/ControlThemes/   one file per control
-  Styling/Tokens/          generated design tokens (don't edit: regenerate them)
-  Controls/                CupertinoWindow
-samples/CupertinoAvalonia.Gallery/
-tests/CupertinoAvalonia.Tests/
-tools/figma/               the extractor
-```
-
-- Values come from the generated tokens. A color copied from the kit into a theme is a rare exception: name its
-  kit component in a comment.
-- `npm run inspect -- "Buttons" "State=Idle"` (in `tools/figma`) prints a kit component's layers and colors.
-- `dotnet test` runs the headless tests. To render the Gallery's pages to PNG:
-  `GALLERY_SCREENSHOTS=/tmp/gallery dotnet test tests/CupertinoAvalonia.Tests`.
-- The CI (GitHub Actions, on macOS) builds and tests every push and pull request.
-- To release, push a version tag (`v0.1.0`, `v0.2.0-preview.1`…): the Release workflow tests, packs and
-  publishes the package to nuget.org with the `NUGET_API_KEY` secret.
 
 ## License
 
