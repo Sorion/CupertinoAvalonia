@@ -1,0 +1,105 @@
+<!--
+  Semantic resources shared by the control themes, built on the generated tokens.
+  Values come from the kit's internal components (_Control BG, _Labels, _Input Fields…): the source
+  component is named above each group. Opacities stand in for the kit's Figma blend modes.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    Typography. ".AppleSystemUIFont" is macOS's system font (SF Pro, with all its weights) and exists
+    on every Mac, even without SF Pro installed. Other OSes don't have it and Avalonia falls back to
+    their default font. Don't add ", $Default": with a fallback list Avalonia picks Helvetica on macOS.
+  -->
+  <FontFamily x:Key="ContentControlThemeFontFamily">.AppleSystemUIFont</FontFamily>
+  <x:Double x:Key="ControlContentThemeFontSize">13</x:Double>
+  <!-- The kit sets control labels (buttons, fields, pop-ups) in SF Pro Medium. -->
+  <FontWeight x:Key="ControlFontWeight">Medium</FontWeight>
+  <!-- Letter spacing for the system font: set at startup by SystemFontTracking, 0 until then. -->
+  <x:Double x:Key="LargeTitleLetterSpacing">0</x:Double>
+  <x:Double x:Key="Title1LetterSpacing">0</x:Double>
+  <x:Double x:Key="Title2LetterSpacing">0</x:Double>
+  <x:Double x:Key="Title3LetterSpacing">0</x:Double>
+  <x:Double x:Key="HeadlineLetterSpacing">0</x:Double>
+  <x:Double x:Key="BodyLetterSpacing">0</x:Double>
+  <x:Double x:Key="CalloutLetterSpacing">0</x:Double>
+  <x:Double x:Key="SubheadlineLetterSpacing">0</x:Double>
+  <x:Double x:Key="FootnoteLetterSpacing">0</x:Double>
+  <x:Double x:Key="Caption1LetterSpacing">0</x:Double>
+  <x:Double x:Key="Caption2LetterSpacing">0</x:Double>
+  <x:Double x:Key="ControlLetterSpacingMini">0</x:Double>
+  <x:Double x:Key="ControlLetterSpacingSmall">0</x:Double>
+  <x:Double x:Key="ControlLetterSpacing">0</x:Double>
+  <x:Double x:Key="ControlLetterSpacingLarge">0</x:Double>
+  <x:Double x:Key="ControlLetterSpacingXLarge">0</x:Double>
+
+  <!-- Shapes for the Fluent fallback: macOS's regular control radius (Global/Radius). -->
+  <CornerRadius x:Key="ControlCornerRadius">6</CornerRadius>
+  <CornerRadius x:Key="OverlayCornerRadius">10</CornerRadius>
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <!-- _Control BG/Bordered, Content Area -->
+      <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#14000000" />
+      <SolidColorBrush x:Key="ButtonBackgroundPressedBrush" Color="#29000000" />
+      <SolidColorBrush x:Key="ButtonBackgroundDisabledBrush" Color="#0A000000" />
+      <!-- _Control BG/Bordered, On=True (toggle buttons) -->
+      <SolidColorBrush x:Key="ButtonCheckedBackgroundBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.06" />
+      <SolidColorBrush x:Key="ButtonCheckedBackgroundPressedBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.16" />
+      <SolidColorBrush x:Key="ButtonCheckedBackgroundDisabledBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.02" />
+      <!-- _Control BG/Bordered - Tinted -->
+      <SolidColorBrush x:Key="ButtonTintedBackgroundBrush" Color="{DynamicResource AccentColor}" Opacity="0.2" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundPressedBrush" Color="{DynamicResource AccentColor}" Opacity="0.28" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundDisabledBrush" Color="{DynamicResource AccentColor}" Opacity="0.12" />
+      <!-- _Control BG/Bordered - Destructive -->
+      <SolidColorBrush x:Key="ButtonDestructiveBackgroundBrush" Color="{StaticResource AccentRedColor}" Opacity="0.2" />
+      <SolidColorBrush x:Key="ButtonDestructiveBackgroundPressedBrush" Color="{StaticResource AccentRedColor}" Opacity="0.28" />
+      <SolidColorBrush x:Key="ButtonDestructiveBackgroundDisabledBrush" Color="{StaticResource AccentRedColor}" Opacity="0.1" />
+      <!-- _Control BG/Bordered - Prominent - Destructive (Clicked: linear burn #E6E6E6) -->
+      <Color x:Key="ButtonProminentDestructiveBackgroundPressedColor">#E61F23</Color>
+      <SolidColorBrush x:Key="ButtonProminentDestructiveBackgroundPressedBrush" Color="{DynamicResource ButtonProminentDestructiveBackgroundPressedColor}" />
+      <!-- Text selection -->
+      <SolidColorBrush x:Key="TextSelectionBrush" Color="{DynamicResource AccentColor}" Opacity="0.3" />
+      <!-- Inactive window (Active=False): fills that take the accent turn to the primary label color at
+           17%, and unfilled tracks lighten to 6% ("_Tracks - Filled", "_Tracks - Unfilled"). -->
+      <SolidColorBrush x:Key="ControlFillInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.17" />
+      <SolidColorBrush x:Key="ControlTrackInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.06" />
+
+      <!-- _Input Fields -->
+      <SolidColorBrush x:Key="TextFieldBackgroundBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="TextFieldBackgroundDisabledBrush" Color="#80FFFFFF" />
+      <!-- The kit draws the border as a 1 px outside shadow; a border renders crisper in Avalonia. -->
+      <SolidColorBrush x:Key="TextFieldBorderBrush" Color="#14000000" />
+      <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="#0A000000" />
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#12FFFFFF" />
+      <SolidColorBrush x:Key="ButtonBackgroundPressedBrush" Color="#29FFFFFF" />
+      <SolidColorBrush x:Key="ButtonBackgroundDisabledBrush" Color="#0AFFFFFF" />
+      <SolidColorBrush x:Key="ButtonCheckedBackgroundBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.09" />
+      <SolidColorBrush x:Key="ButtonCheckedBackgroundPressedBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.19" />
+      <SolidColorBrush x:Key="ButtonCheckedBackgroundDisabledBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.05" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundBrush" Color="{DynamicResource AccentColor}" Opacity="0.22" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundPressedBrush" Color="{DynamicResource AccentColor}" Opacity="0.28" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundDisabledBrush" Color="{DynamicResource AccentColor}" Opacity="0.1" />
+      <SolidColorBrush x:Key="ButtonDestructiveBackgroundBrush" Color="{StaticResource AccentRedColor}" Opacity="0.22" />
+      <SolidColorBrush x:Key="ButtonDestructiveBackgroundPressedBrush" Color="{StaticResource AccentRedColor}" Opacity="0.28" />
+      <SolidColorBrush x:Key="ButtonDestructiveBackgroundDisabledBrush" Color="{StaticResource AccentRedColor}" Opacity="0.12" />
+      <!-- Clicked: linear dodge #090909 -->
+      <Color x:Key="ButtonProminentDestructiveBackgroundPressedColor">#FF4B4E</Color>
+      <SolidColorBrush x:Key="ButtonProminentDestructiveBackgroundPressedBrush" Color="{DynamicResource ButtonProminentDestructiveBackgroundPressedColor}" />
+      <!-- Text selection -->
+      <SolidColorBrush x:Key="TextSelectionBrush" Color="{DynamicResource AccentColor}" Opacity="0.3" />
+      <SolidColorBrush x:Key="ControlFillInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.17" />
+      <SolidColorBrush x:Key="ControlTrackInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.06" />
+
+      <SolidColorBrush x:Key="TextFieldBackgroundBrush" Color="#1E1E1E" />
+      <SolidColorBrush x:Key="TextFieldBackgroundDisabledBrush" Color="#801E1E1E" />
+      <SolidColorBrush x:Key="TextFieldBorderBrush" Color="#0AFFFFFF" />
+      <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="#0AFFFFFF" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- The keyboard focus ring is FocusRingShadow, built from the accent by CupertinoAvaloniaTheme. -->
+</ResourceDictionary>

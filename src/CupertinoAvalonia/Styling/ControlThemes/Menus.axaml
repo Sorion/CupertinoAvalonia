@@ -1,0 +1,334 @@
+<!--
+  Menus, popovers and tooltips, from the kit's "Menu Background", "Menu Items" and "Separators"
+  (page Menus), "Popover" (page Popovers) and "Tooltip" (page Tooltips).
+  The kit's Liquid Glass can't be reproduced: popups have no backdrop blur in Avalonia, so the
+  materials are nearly opaque. Popup windows are sized to their content, so each popup keeps a
+  transparent margin for its shadow.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:conv="using:Avalonia.Controls.Converters">
+  <Design.PreviewWith>
+    <Border Padding="40" Width="300">
+      <Border Classes="preview" Background="{DynamicResource MenuBackgroundBrush}" CornerRadius="12" Padding="5">
+        <StackPanel>
+          <MenuItem Header="Rename" InputGesture="Cmd+R" />
+          <MenuItem Header="Duplicate" />
+          <Separator />
+          <MenuItem Header="Disabled" IsEnabled="False" />
+        </StackPanel>
+      </Border>
+    </Border>
+  </Design.PreviewWith>
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <!-- Menu Background: glass over #D9D9D9, made nearly opaque. -->
+      <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#F7F1F1F1" />
+      <SolidColorBrush x:Key="MenuBorderBrush" Color="#1F000000" />
+      <!-- Menu Items, State=Hover: linear burn #E6E6E6 -->
+      <SolidColorBrush x:Key="MenuItemHighlightBrush" Color="#1A000000" />
+      <!-- Separators: linear burn #E6E6E6 -->
+      <SolidColorBrush x:Key="MenuSeparatorBrush" Color="#1A000000" />
+      <!-- Popover: white glass -->
+      <SolidColorBrush x:Key="PopoverBackgroundBrush" Color="#F7FAFAFA" />
+      <SolidColorBrush x:Key="PopoverBorderBrush" Color="#0F000000" />
+      <!-- Tooltip: Materials, Ultra Thick -->
+      <SolidColorBrush x:Key="ToolTipBackgroundBrush" Color="#F5ECECEC" />
+      <BoxShadows x:Key="PopupShadow">0 2 8 0 #26000000, 0 0 1 0 #1A000000</BoxShadows>
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#F7363636" />
+      <SolidColorBrush x:Key="MenuBorderBrush" Color="#33FFFFFF" />
+      <!-- linear dodge #141414 -->
+      <SolidColorBrush x:Key="MenuItemHighlightBrush" Color="#14FFFFFF" />
+      <SolidColorBrush x:Key="MenuSeparatorBrush" Color="#14FFFFFF" />
+      <SolidColorBrush x:Key="PopoverBackgroundBrush" Color="#F7262626" />
+      <SolidColorBrush x:Key="PopoverBorderBrush" Color="#33FFFFFF" />
+      <SolidColorBrush x:Key="ToolTipBackgroundBrush" Color="#F5323232" />
+      <BoxShadows x:Key="PopupShadow">0 2 8 0 #73000000, 0 0 1 0 #66000000</BoxShadows>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- Room around popups for PopupShadow. -->
+  <Thickness x:Key="PopupShadowMargin">8</Thickness>
+  <CornerRadius x:Key="MenuCornerRadius">12</CornerRadius>
+  <CornerRadius x:Key="MenuItemCornerRadius">8</CornerRadius>
+  <CornerRadius x:Key="PopoverCornerRadius">20</CornerRadius>
+
+  <conv:PlatformKeyGestureConverter x:Key="CupertinoKeyGestureConverter" />
+  <StreamGeometry x:Key="MenuItemCheckGlyph">M 0.9,4.6 L 3.6,7.6 L 8.4,1.2</StreamGeometry>
+  <StreamGeometry x:Key="MenuItemSubmenuChevron">M 0.5,0.5 L 4,4 L 0.5,7.5</StreamGeometry>
+
+  <ControlTheme x:Key="{x:Type MenuFlyoutPresenter}" TargetType="MenuFlyoutPresenter">
+    <Setter Property="Background" Value="{DynamicResource MenuBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuBorderBrush}" />
+    <Setter Property="BorderThickness" Value="0.5" />
+    <Setter Property="CornerRadius" Value="{DynamicResource MenuCornerRadius}" />
+    <Setter Property="Padding" Value="5" />
+    <Setter Property="MinWidth" Value="160" />
+    <Setter Property="MaxWidth" Value="456" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="LayoutRoot"
+                Margin="{DynamicResource PopupShadowMargin}"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                BoxShadow="{DynamicResource PopupShadow}">
+          <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            Margin="{TemplateBinding Padding}"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            KeyboardNavigation.TabNavigation="Continue"
+                            Grid.IsSharedSizeScope="True" />
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
+    <Setter Property="Background" Value="{DynamicResource MenuBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuBorderBrush}" />
+    <Setter Property="BorderThickness" Value="0.5" />
+    <Setter Property="CornerRadius" Value="{DynamicResource MenuCornerRadius}" />
+    <Setter Property="Padding" Value="5" />
+    <Setter Property="MinWidth" Value="160" />
+    <Setter Property="MaxWidth" Value="456" />
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="WindowManagerAddShadowHint" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Margin="{DynamicResource PopupShadowMargin}"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                BoxShadow="{DynamicResource PopupShadow}">
+          <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            Margin="{TemplateBinding Padding}"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            KeyboardNavigation.TabNavigation="Continue"
+                            Grid.IsSharedSizeScope="True" />
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <!--
+    Menu Items: 24 px rows, a neutral rounded highlight (not the accent), a checkmark column for
+    toggle items, then an optional icon, the title, the shortcut and the submenu chevron.
+  -->
+  <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="FontSize" Value="{DynamicResource MenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="MinHeight" Value="{DynamicResource MenuHeight}" />
+    <Setter Property="Padding" Value="7,0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource MenuItemCornerRadius}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="PART_LayoutRoot"
+                  Padding="{TemplateBinding Padding}"
+                  MinHeight="{TemplateBinding MinHeight}"
+                  Background="{TemplateBinding Background}"
+                  CornerRadius="{TemplateBinding CornerRadius}">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="ToggleIcon" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIcon" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGT" />
+                <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemChevron" />
+              </Grid.ColumnDefinitions>
+              <Panel Name="PART_ToggleIconPresenter" Width="{DynamicResource MenuWidthSymbol}" Margin="0,0,8,0" IsVisible="False">
+                <Viewbox Name="PART_CheckGlyph" Width="9" Height="9" IsVisible="False">
+                  <Path Data="{StaticResource MenuItemCheckGlyph}" Width="9.3" Height="8.9"
+                        Stroke="{TemplateBinding Foreground}" StrokeThickness="1.6"
+                        StrokeLineCap="Round" StrokeJoin="Round" />
+                </Viewbox>
+                <Ellipse Name="PART_RadioGlyph" Width="6" Height="6" Fill="{TemplateBinding Foreground}" IsVisible="False" />
+              </Panel>
+              <ContentPresenter Name="PART_IconPresenter"
+                                Grid.Column="1"
+                                Width="16" Height="16"
+                                Margin="0,0,8,0"
+                                Content="{TemplateBinding Icon}"
+                                IsVisible="False" />
+              <ContentPresenter Name="PART_HeaderPresenter"
+                                Grid.Column="2"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                RecognizesAccessKey="True"
+                                VerticalAlignment="Center" />
+              <TextBlock Name="PART_InputGestureText"
+                         Grid.Column="3"
+                         Margin="24,0,0,0"
+                         Text="{TemplateBinding InputGesture, Converter={StaticResource CupertinoKeyGestureConverter}}"
+                         Foreground="{DynamicResource LabelTertiaryBrush}"
+                         VerticalAlignment="Center" />
+              <Path Name="PART_ChevronPath"
+                    Grid.Column="4"
+                    Margin="12,0,0,0"
+                    Width="4.5" Height="8"
+                    Data="{StaticResource MenuItemSubmenuChevron}"
+                    Stroke="{TemplateBinding Foreground}"
+                    StrokeThickness="1.5"
+                    StrokeLineCap="Round"
+                    StrokeJoin="Round"
+                    VerticalAlignment="Center" />
+            </Grid>
+          </Border>
+          <Popup Name="PART_Popup"
+                 WindowManagerAddShadowHint="False"
+                 Placement="RightEdgeAlignedTop"
+                 HorizontalOffset="-8"
+                 VerticalOffset="-13"
+                 IsLightDismissEnabled="False"
+                 IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
+            <Border Margin="{DynamicResource PopupShadowMargin}"
+                    Background="{DynamicResource MenuBackgroundBrush}"
+                    BorderBrush="{DynamicResource MenuBorderBrush}"
+                    BorderThickness="0.5"
+                    CornerRadius="{DynamicResource MenuCornerRadius}"
+                    BoxShadow="{DynamicResource PopupShadow}"
+                    MinWidth="160">
+              <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <ItemsPresenter Name="PART_ItemsPresenter"
+                                Margin="5"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                Grid.IsSharedSizeScope="True" />
+              </ScrollViewer>
+            </Border>
+          </Popup>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:icon /template/ ContentPresenter#PART_IconPresenter">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:selected /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource MenuItemHighlightBrush}" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+    <Style Selector="^:empty /template/ Path#PART_ChevronPath">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="^:toggle /template/ Panel#PART_ToggleIconPresenter, ^:radio /template/ Panel#PART_ToggleIconPresenter">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:checked:toggle /template/ Viewbox#PART_CheckGlyph">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:checked:radio /template/ Ellipse#PART_RadioGlyph">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:separator">
+      <Setter Property="Template">
+        <ControlTemplate>
+          <Separator />
+        </ControlTemplate>
+      </Setter>
+    </Style>
+  </ControlTheme>
+
+  <!-- Separators: a 1 px line in an 11 px row. -->
+  <ControlTheme x:Key="{x:Type Separator}" TargetType="Separator">
+    <Setter Property="Background" Value="{DynamicResource MenuSeparatorBrush}" />
+    <Setter Property="Height" Value="1" />
+    <Setter Property="Margin" Value="7,5" />
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}" />
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <!-- Popover (Flyout) -->
+  <ControlTheme x:Key="{x:Type FlyoutPresenter}" TargetType="FlyoutPresenter">
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Background" Value="{DynamicResource PopoverBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource PopoverBorderBrush}" />
+    <Setter Property="BorderThickness" Value="0.5" />
+    <Setter Property="CornerRadius" Value="{DynamicResource PopoverCornerRadius}" />
+    <Setter Property="Padding" Value="16" />
+    <Setter Property="MaxWidth" Value="456" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="LayoutRoot"
+                Margin="{DynamicResource PopupShadowMargin}"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                BoxShadow="{DynamicResource PopupShadow}">
+          <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                        VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <!-- Tooltip: Ultra Thick material, Medium 11 text. -->
+  <ControlTheme x:Key="{x:Type ToolTip}" TargetType="ToolTip">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ToolTipBackgroundBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TooltipInnerStrokeBrush}" />
+    <Setter Property="BorderThickness" Value="0.6" />
+    <Setter Property="FontSize" Value="{DynamicResource SubheadlineFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource SubheadlineLetterSpacing}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="Padding" Value="6,3,6,2" />
+    <Setter Property="MaxWidth" Value="320" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.15" />
+      </Transitions>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_LayoutRoot"
+                Margin="{DynamicResource PopupShadowMargin}"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}"
+                BoxShadow="{DynamicResource PopupShadow}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            MaxWidth="{TemplateBinding MaxWidth}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            TextWrapping="Wrap" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^:open">
+      <Setter Property="Opacity" Value="1" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

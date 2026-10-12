@@ -1,0 +1,232 @@
+<!--
+  ComboBox as a macOS pop-up button, from the kit's "Pop-Up Button" (page Pop-up and Pull-down
+  Buttons): a bordered button with a double chevron, opening a menu where the selected item has a
+  checkmark. With IsEditable, the field becomes editable inside the same shape.
+  Sizes: mini, small, (regular), large.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="10">
+      <ComboBox SelectedIndex="0">
+        <ComboBoxItem Content="Automatic" />
+        <ComboBoxItem Content="Light" />
+        <ComboBoxItem Content="Dark" />
+      </ComboBox>
+      <ComboBox PlaceholderText="Choose…" />
+      <ComboBox SelectedIndex="0" IsEnabled="False">
+        <ComboBoxItem Content="Disabled" />
+      </ComboBox>
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <StreamGeometry x:Key="ComboBoxItemCheckGlyph">M 0.9,4.6 L 3.6,7.6 L 8.4,1.2</StreamGeometry>
+  <!-- SF Symbol "chevron.up.chevron.down" -->
+  <StreamGeometry x:Key="PopUpButtonChevron">M 0.75,3.75 L 3.5,1 L 6.25,3.75 M 0.75,7.25 L 3.5,10 L 6.25,7.25</StreamGeometry>
+
+  <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
+    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
+    <Setter Property="Padding" Value="{DynamicResource PopUpButtonPadding}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="MaxDropDownHeight" Value="504" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DataValidationErrors>
+          <Grid ColumnDefinitions="*,Auto">
+            <Border Name="Background"
+                    Grid.ColumnSpan="2"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}" />
+            <TextBlock Name="PlaceholderTextBlock"
+                       Margin="{TemplateBinding Padding}"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                       Text="{TemplateBinding PlaceholderText}"
+                       Foreground="{TemplateBinding PlaceholderForeground}">
+              <TextBlock.IsVisible>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                  <Binding Path="SelectionBoxItem" RelativeSource="{RelativeSource TemplatedParent}" Converter="{x:Static ObjectConverters.IsNull}" />
+                  <Binding Path="!IsEditable" RelativeSource="{RelativeSource TemplatedParent}" />
+                </MultiBinding>
+              </TextBlock.IsVisible>
+            </TextBlock>
+            <ContentControl Name="ContentPresenter"
+                            Margin="{TemplateBinding Padding}"
+                            Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
+            <TextBox Name="PART_EditableTextBox"
+                     Classes="embedded"
+                     Padding="{TemplateBinding Padding}"
+                     MinHeight="0"
+                     VerticalAlignment="Stretch"
+                     Foreground="{TemplateBinding Foreground}"
+                     Text="{TemplateBinding Text, Mode=TwoWay}"
+                     PlaceholderText="{TemplateBinding PlaceholderText}"
+                     IsVisible="{TemplateBinding IsEditable}">
+              <!-- The combo box draws the field and the focus ring ("embedded"). -->
+              <TextBox.Resources>
+                <SolidColorBrush x:Key="TextFieldBackgroundBrush" Color="Transparent" />
+                <SolidColorBrush x:Key="TextFieldBorderBrush" Color="Transparent" />
+              </TextBox.Resources>
+            </TextBox>
+            <Path Name="DropDownGlyph"
+                  Grid.Column="1"
+                  Width="{DynamicResource ControlHeight}"
+                  Height="11"
+                  Stretch="None"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Margin="8,0,0,0"
+                  IsHitTestVisible="False"
+                  Data="{StaticResource PopUpButtonChevron}"
+                  Stroke="{TemplateBinding Foreground}"
+                  StrokeThickness="1.6"
+                  StrokeLineCap="Round"
+                  StrokeJoin="Round"
+                  RenderTransform="translate(8.5px, 0)" />
+            <Popup Name="PART_Popup"
+                   WindowManagerAddShadowHint="False"
+                   IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
+                   MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                   PlacementTarget="Background"
+                   Placement="Bottom"
+                   HorizontalOffset="0"
+                   VerticalOffset="-4"
+                   IsLightDismissEnabled="True"
+                   InheritsTransform="True">
+              <Border Name="PopupBorder"
+                      Margin="{DynamicResource PopupShadowMargin}"
+                      MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                      Background="{DynamicResource MenuBackgroundBrush}"
+                      BorderBrush="{DynamicResource MenuBorderBrush}"
+                      BorderThickness="0.5"
+                      CornerRadius="{DynamicResource MenuCornerRadius}"
+                      BoxShadow="{DynamicResource PopupShadow}">
+                <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                              VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                              IsScrollChainingEnabled="False">
+                  <ItemsPresenter Name="PART_ItemsPresenter"
+                                  Margin="5"
+                                  ItemsPanel="{TemplateBinding ItemsPanel}" />
+                </ScrollViewer>
+              </Border>
+            </Popup>
+          </Grid>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Keyboard focus ring, in the adorner layer so no container clips it (see OverflowAdorner). -->
+    <Style Selector="^:focus-visible /template/ Border#Background, ^[IsEditable=True]:focus-within /template/ Border#Background">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+    <Style Selector="^[IsEditable=True]">
+      <Setter Property="Background" Value="{DynamicResource TextFieldBackgroundBrush}" />
+      <Setter Property="Padding" Value="{DynamicResource TextFieldPadding}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource TextFieldBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="^:pressed, ^:dropdownopen">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+
+    <!-- Control sizes -->
+    <Style Selector="^.mini">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingMini}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingSmall}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusSmall}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingLarge}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+    </Style>
+  </ControlTheme>
+
+  <!-- Items look like menu items; the selected one has a checkmark. -->
+  <ControlTheme x:Key="{x:Type ComboBoxItem}" TargetType="ComboBoxItem">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="FontSize" Value="{DynamicResource MenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="MinHeight" Value="{DynamicResource MenuHeight}" />
+    <Setter Property="Padding" Value="7,0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource MenuItemCornerRadius}" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_LayoutRoot"
+                Background="{TemplateBinding Background}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}"
+                MinHeight="{TemplateBinding MinHeight}">
+          <Grid ColumnDefinitions="Auto,*">
+            <Viewbox Name="PART_CheckGlyph" Width="9" Height="9" Margin="1.5,0,9.5,0" Opacity="0">
+              <Path Data="{StaticResource ComboBoxItemCheckGlyph}" Width="9.3" Height="8.9"
+                    Stroke="{TemplateBinding Foreground}" StrokeThickness="1.6"
+                    StrokeLineCap="Round" StrokeJoin="Round" />
+            </Viewbox>
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Grid.Column="1"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Foreground="{TemplateBinding Foreground}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:pointerover, ^:focus">
+      <Setter Property="Background" Value="{DynamicResource MenuItemHighlightBrush}" />
+    </Style>
+    <Style Selector="^:selected /template/ Viewbox#PART_CheckGlyph">
+      <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

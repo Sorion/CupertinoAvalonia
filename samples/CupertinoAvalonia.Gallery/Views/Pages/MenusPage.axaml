@@ -1,0 +1,99 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.MenusPage">
+  <StackPanel Spacing="28">
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="ComboBox (pop-up button)" />
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <ComboBox SelectedIndex="0" MinWidth="140">
+          <ComboBoxItem Content="Automatic" />
+          <ComboBoxItem Content="Light" />
+          <ComboBoxItem Content="Dark" />
+        </ComboBox>
+        <ComboBox PlaceholderText="Choose a device…" MinWidth="160">
+          <ComboBoxItem Content="MacBook Pro Speakers" />
+          <ComboBoxItem Content="AirPods Pro" />
+        </ComboBox>
+        <ComboBox SelectedIndex="0" IsEnabled="False">
+          <ComboBoxItem Content="Disabled" />
+        </ComboBox>
+        <ComboBox IsEditable="True" Text="Editable" MinWidth="140">
+          <ComboBoxItem Content="Editable" />
+          <ComboBoxItem Content="Other" />
+        </ComboBox>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <ComboBox Classes="mini" SelectedIndex="0"><ComboBoxItem Content="Mini" /></ComboBox>
+        <ComboBox Classes="small" SelectedIndex="0"><ComboBoxItem Content="Small" /></ComboBox>
+        <ComboBox SelectedIndex="0"><ComboBoxItem Content="Regular" /></ComboBox>
+        <ComboBox Classes="large" SelectedIndex="0"><ComboBoxItem Content="Large" /></ComboBox>
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Menus, popover and tooltip" />
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <Button Content="MenuFlyout">
+          <Button.Flyout>
+            <MenuFlyout>
+              <MenuItem Header="Rename…" InputGesture="Cmd+R" />
+              <MenuItem Header="Duplicate" InputGesture="Cmd+D" />
+              <MenuItem Header="Show in Mixer" ToggleType="CheckBox" IsChecked="True" />
+              <MenuItem Header="Move to">
+                <MenuItem Header="Music" />
+                <MenuItem Header="Games" />
+              </MenuItem>
+              <Separator />
+              <MenuItem Header="Delete" />
+            </MenuFlyout>
+          </Button.Flyout>
+        </Button>
+        <Border Background="{DynamicResource FillTertiaryBrush}" CornerRadius="6" Padding="12,4">
+          <Border.ContextMenu>
+            <ContextMenu>
+              <MenuItem Header="Copy" InputGesture="Cmd+C" />
+              <MenuItem Header="Paste" InputGesture="Cmd+V" IsEnabled="False" />
+            </ContextMenu>
+          </Border.ContextMenu>
+          <TextBlock Text="Right-click for a ContextMenu" />
+        </Border>
+        <Button Content="Flyout (popover)">
+          <Button.Flyout>
+            <Flyout>
+              <StackPanel Spacing="8" Width="220">
+                <TextBlock Classes="headline" Text="Output device" />
+                <TextBlock Classes="secondary" TextWrapping="Wrap" Text="Choose where this channel plays." />
+                <Button Classes="accent" Content="Done" HorizontalAlignment="Right" />
+              </StackPanel>
+            </Flyout>
+          </Button.Flyout>
+        </Button>
+        <Button Content="Hover for a tooltip" ToolTip.Tip="Adjusts the channel volume" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Static previews" />
+      <TextBlock Classes="secondary" Text="The same presenters, laid out in the page." />
+      <StackPanel Orientation="Horizontal" Spacing="24" VerticalAlignment="Top">
+        <MenuFlyoutPresenter VerticalAlignment="Top">
+          <MenuItem Header="Rename…" InputGesture="Cmd+R" />
+          <MenuItem Header="Duplicate" InputGesture="Cmd+D" />
+          <MenuItem Header="Show in Mixer" ToggleType="CheckBox" IsChecked="True" />
+          <MenuItem Header="Move to">
+            <MenuItem Header="Music" />
+          </MenuItem>
+          <Separator />
+          <MenuItem Header="Disabled" IsEnabled="False" />
+        </MenuFlyoutPresenter>
+        <FlyoutPresenter VerticalAlignment="Top">
+          <StackPanel Spacing="8" Width="200">
+            <TextBlock Classes="headline" Text="Popover" />
+            <TextBlock Classes="secondary" TextWrapping="Wrap" Text="A Flyout opens in this shape." />
+          </StackPanel>
+        </FlyoutPresenter>
+        <ToolTip VerticalAlignment="Top" Content="A tooltip" />
+      </StackPanel>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

@@ -1,0 +1,148 @@
+<!--
+  macOS text styles (kit page "Text Styles") as TextBlock classes:
+  largeTitle, title1, title2, title3, headline, body, callout, subheadline, footnote, caption1, caption2.
+  Add "emphasized" for the emphasized weight, e.g. Classes="title3 emphasized".
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="4">
+      <TextBlock Classes="largeTitle" Text="Large Title" />
+      <TextBlock Classes="title1" Text="Title 1" />
+      <TextBlock Classes="title2" Text="Title 2" />
+      <TextBlock Classes="title3" Text="Title 3" />
+      <TextBlock Classes="headline" Text="Headline" />
+      <TextBlock Classes="body" Text="Body" />
+      <TextBlock Classes="body emphasized" Text="Body emphasized" />
+      <TextBlock Classes="callout" Text="Callout" />
+      <TextBlock Classes="subheadline" Text="Subheadline" />
+      <TextBlock Classes="footnote" Text="Footnote" />
+      <TextBlock Classes="caption1" Text="Caption 1" />
+      <TextBlock Classes="caption2" Text="Caption 2" />
+      <TextBlock Classes="secondary" Text="Secondary label" />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <Style Selector="TextBlock.largeTitle">
+    <Setter Property="FontSize" Value="{DynamicResource LargeTitleFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource LargeTitleLetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource LargeTitleLineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource LargeTitleFontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.largeTitle.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource LargeTitleEmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.title1">
+    <Setter Property="FontSize" Value="{DynamicResource Title1FontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource Title1LetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource Title1LineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource Title1FontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.title1.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource Title1EmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.title2">
+    <Setter Property="FontSize" Value="{DynamicResource Title2FontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource Title2LetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource Title2LineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource Title2FontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.title2.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource Title2EmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.title3">
+    <Setter Property="FontSize" Value="{DynamicResource Title3FontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource Title3LetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource Title3LineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource Title3FontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.title3.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource Title3EmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.headline">
+    <Setter Property="FontSize" Value="{DynamicResource HeadlineFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource HeadlineLetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource HeadlineLineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource HeadlineFontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.headline.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource HeadlineEmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.body">
+    <Setter Property="FontSize" Value="{DynamicResource BodyFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource BodyLetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource BodyLineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource BodyFontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.body.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource BodyEmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.callout">
+    <Setter Property="FontSize" Value="{DynamicResource CalloutFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource CalloutLetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource CalloutLineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource CalloutFontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.callout.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource CalloutEmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.subheadline">
+    <Setter Property="FontSize" Value="{DynamicResource SubheadlineFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource SubheadlineLetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource SubheadlineLineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource SubheadlineFontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.subheadline.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource SubheadlineEmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.footnote">
+    <Setter Property="FontSize" Value="{DynamicResource FootnoteFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource FootnoteLetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource FootnoteLineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource FootnoteFontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.footnote.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource FootnoteEmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.caption1">
+    <Setter Property="FontSize" Value="{DynamicResource Caption1FontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource Caption1LetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource Caption1LineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource Caption1FontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.caption1.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource Caption1EmphasizedFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBlock.caption2">
+    <Setter Property="FontSize" Value="{DynamicResource Caption2FontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource Caption2LetterSpacing}" />
+    <Setter Property="LineHeight" Value="{DynamicResource Caption2LineHeight}" />
+    <Setter Property="FontWeight" Value="{DynamicResource Caption2FontWeight}" />
+  </Style>
+  <Style Selector="TextBlock.caption2.emphasized">
+    <Setter Property="FontWeight" Value="{DynamicResource Caption2EmphasizedFontWeight}" />
+  </Style>
+
+  <!-- Default text: every window and popup starts with the regular control spacing. -->
+  <Style Selector=":is(TopLevel)">
+    <Setter Property="TextElement.LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+  </Style>
+
+  <!-- Label colors: secondary, tertiary. Primary is the default foreground. -->
+  <Style Selector="TextBlock.secondary">
+    <Setter Property="Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
+  </Style>
+  <Style Selector="TextBlock.tertiary">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+</Styles>

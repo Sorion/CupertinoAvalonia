@@ -1,0 +1,18 @@
+<Project>
+  <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
+  <PropertyGroup>
+    <Copyright>Copyright (C) 2023-2026 Sorion</Copyright>
+    <AssemblyCopyright>Copyright (C) 2023-2026 Sorion</AssemblyCopyright>
+    <AssemblyProduct>CupertinoAvalonia</AssemblyProduct>
+    <NeutralLanguage>fr-FR</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <!-- Keep aligned with MixerStudio, the first consumer of the theme. -->
+    <AvaloniaVersion>12.0.5</AvaloniaVersion>
+  </PropertyGroup>
+</Project>

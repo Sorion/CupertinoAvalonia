@@ -1,0 +1,92 @@
+<!--
+  Laid out like the kit's macOS 27 window "Unified Toolbar + Title + Sidebar" (page Windows): a full-height
+  sidebar under the window controls, on the sidebar material, and a 52-point toolbar over the content, with
+  the page's title and subtitle. On macOS, CupertinoWindow runs the content under the title bar.
+-->
+<cac:CupertinoWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cac="using:CupertinoAvalonia.Controls"
+        xmlns:vm="using:CupertinoAvalonia.Gallery.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="760"
+        x:Class="CupertinoAvalonia.Gallery.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="CupertinoAvalonia Gallery"
+        Width="1100" Height="760"
+        ExtendsContentIntoTitleBar="True"
+        ToolbarStyle="Unified"
+        Material="Sidebar">
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel />
+  </Design.DataContext>
+
+  <cac:CupertinoWindow.Resources>
+    <ResourceDictionary>
+      <!-- The toolbar's bottom edge (the kit's "Scroll Edge Effect - Hard"). -->
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+          <SolidColorBrush x:Key="GalleryToolbarEdgeBrush" Color="#0D000000" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="GalleryToolbarEdgeBrush" Color="#1AFFFFFF" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </cac:CupertinoWindow.Resources>
+
+  <cac:CupertinoWindow.Styles>
+    <!-- The sidebar's background is set by styles, not on the element, so the material can replace it:
+         where the window shows the system's sidebar material, the sidebar lets it through. -->
+    <Style Selector="Border#Sidebar">
+      <Setter Property="Background" Value="{DynamicResource MaterialSidebarBrush}" />
+    </Style>
+    <Style Selector="cac|CupertinoWindow:material Border#Sidebar">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+  </cac:CupertinoWindow.Styles>
+
+  <Grid ColumnDefinitions="240,*">
+    <Border Name="Sidebar">
+      <DockPanel>
+        <!-- Room for the window controls; dragging it moves the window. -->
+        <Border DockPanel.Dock="Top" Height="52" Background="Transparent"
+                WindowDecorationProperties.ElementRole="TitleBar" />
+        <TextBlock DockPanel.Dock="Top" Classes="caption1 emphasized secondary" Margin="18,0,0,6" Text="Controls" />
+        <ListBox Classes="sidebar"
+                 ItemsSource="{Binding Pages}"
+                 SelectedItem="{Binding SelectedPage}"
+                 Background="Transparent">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:GalleryPage">
+              <TextBlock Text="{Binding Title}" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Border>
+
+    <DockPanel Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
+      <!-- The toolbar: dragging it, title included, moves the window. -->
+      <Border DockPanel.Dock="Top" Height="52"
+              Background="Transparent"
+              BorderBrush="{DynamicResource GalleryToolbarEdgeBrush}" BorderThickness="0,0,0,1"
+              WindowDecorationProperties.ElementRole="TitleBar">
+        <Grid Margin="18,0,12,0" ColumnDefinitions="*,Auto">
+          <StackPanel VerticalAlignment="Center" Spacing="2" IsHitTestVisible="False">
+            <TextBlock Classes="headline" Text="{Binding SelectedPage.Title}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="subheadline secondary" Text="{Binding SelectedPage.Description}" TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+          <ComboBox Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" MinWidth="110"
+                    ItemsSource="{Binding Themes}"
+                    SelectedItem="{Binding SelectedTheme}" />
+        </Grid>
+      </Border>
+      <ScrollViewer>
+        <ContentControl Margin="20" Content="{Binding SelectedPage.Content}" />
+      </ScrollViewer>
+    </DockPanel>
+  </Grid>
+</cac:CupertinoWindow>

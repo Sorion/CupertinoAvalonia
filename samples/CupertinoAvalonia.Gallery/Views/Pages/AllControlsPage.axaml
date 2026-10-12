@@ -1,0 +1,154 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.AllControlsPage">
+  <WrapPanel ItemSpacing="32" LineSpacing="28">
+    <WrapPanel.Styles>
+      <Style Selector="WrapPanel > StackPanel">
+        <Setter Property="Spacing" Value="8" />
+        <Setter Property="Width" Value="260" />
+      </Style>
+      <Style Selector="WrapPanel > StackPanel > TextBlock:nth-child(1)">
+        <Setter Property="FontSize" Value="{DynamicResource Caption1FontSize}" />
+        <Setter Property="Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
+      </Style>
+    </WrapPanel.Styles>
+
+    <StackPanel>
+      <TextBlock Text="CheckBox" />
+      <CheckBox Content="Unchecked" />
+      <CheckBox Content="Checked" IsChecked="True" />
+      <CheckBox Content="Mixed" IsThreeState="True" IsChecked="{x:Null}" />
+      <CheckBox Content="Disabled" IsChecked="True" IsEnabled="False" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="RadioButton" />
+      <RadioButton Content="First" GroupName="g" IsChecked="True" />
+      <RadioButton Content="Second" GroupName="g" />
+      <RadioButton Content="Disabled" GroupName="g" IsEnabled="False" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="ToggleSwitch" />
+      <ToggleSwitch IsChecked="True" />
+      <ToggleSwitch />
+      <ToggleSwitch IsEnabled="False" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="Slider" />
+      <Slider Value="40" />
+      <Slider Value="60" TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True" />
+      <Slider Value="30" IsEnabled="False" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="TextBox" />
+      <TextBox PlaceholderText="Placeholder" />
+      <TextBox Text="Some text" />
+      <TextBox Text="Disabled" IsEnabled="False" />
+      <TextBox PasswordChar="•" Text="password" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="ComboBox" />
+      <ComboBox SelectedIndex="0" HorizontalAlignment="Left">
+        <ComboBoxItem Content="Automatic" />
+        <ComboBoxItem Content="Light" />
+        <ComboBoxItem Content="Dark" />
+      </ComboBox>
+      <ComboBox SelectedIndex="1" IsEnabled="False" HorizontalAlignment="Left">
+        <ComboBoxItem Content="Automatic" />
+        <ComboBoxItem Content="Disabled" />
+      </ComboBox>
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="ListBox" />
+      <ListBox SelectedIndex="1" Height="120">
+        <ListBoxItem Content="Music" />
+        <ListBoxItem Content="Videos" />
+        <ListBoxItem Content="Podcasts" />
+        <ListBoxItem Content="Disabled" IsEnabled="False" />
+      </ListBox>
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="Expander" />
+      <Expander Header="Details" IsExpanded="True">
+        <TextBlock Text="Expanded content." />
+      </Expander>
+      <Expander Header="Collapsed" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="ProgressBar" />
+      <ProgressBar Value="40" />
+      <ProgressBar IsIndeterminate="True" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="NumericUpDown" />
+      <NumericUpDown Value="12" Minimum="0" Maximum="100" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="Flyouts and tooltips" />
+      <Button Content="Show flyout">
+        <Button.Flyout>
+          <Flyout>
+            <TextBlock Text="A flyout" />
+          </Flyout>
+        </Button.Flyout>
+      </Button>
+      <Button Content="Show menu">
+        <Button.Flyout>
+          <MenuFlyout>
+            <MenuItem Header="Rename" InputGesture="Cmd+R" />
+            <MenuItem Header="Duplicate" />
+            <Separator />
+            <MenuItem Header="Delete" />
+          </MenuFlyout>
+        </Button.Flyout>
+      </Button>
+      <Button Content="Hover for tooltip" ToolTip.Tip="A tooltip" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="TabControl" />
+      <TabControl>
+        <TabItem Header="General"><TextBlock Text="General" /></TabItem>
+        <TabItem Header="Advanced"><TextBlock Text="Advanced" /></TabItem>
+      </TabControl>
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="TreeView" />
+      <TreeView>
+        <TreeViewItem Header="Library" IsExpanded="True">
+          <TreeViewItem Header="Songs" />
+          <TreeViewItem Header="Albums" />
+        </TreeViewItem>
+      </TreeView>
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="Date and time" />
+      <CalendarDatePicker />
+      <DatePicker />
+      <TimePicker />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="Other buttons" />
+      <DropDownButton Content="DropDownButton" />
+      <SplitButton Content="SplitButton" />
+      <HyperlinkButton Content="HyperlinkButton" />
+    </StackPanel>
+
+    <StackPanel>
+      <TextBlock Text="AutoCompleteBox" />
+      <AutoCompleteBox Name="Fruits" PlaceholderText="Search a fruit" />
+    </StackPanel>
+  </WrapPanel>
+</UserControl>

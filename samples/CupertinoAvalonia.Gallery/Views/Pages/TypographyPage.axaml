@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.TypographyPage">
+  <Grid ColumnDefinitions="160,Auto,Auto" ColumnSpacing="24" RowSpacing="8"
+        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+    <TextBlock Grid.Column="1" Classes="caption1 secondary" Text="Regular" />
+    <TextBlock Grid.Column="2" Classes="caption1 secondary" Text="Emphasized" />
+
+    <TextBlock Grid.Row="1" Classes="secondary" Text="largeTitle" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="1" Grid.Column="1" Classes="largeTitle" Text="Large Title" />
+    <TextBlock Grid.Row="1" Grid.Column="2" Classes="largeTitle emphasized" Text="Large Title" />
+
+    <TextBlock Grid.Row="2" Classes="secondary" Text="title1" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="2" Grid.Column="1" Classes="title1" Text="Title 1" />
+    <TextBlock Grid.Row="2" Grid.Column="2" Classes="title1 emphasized" Text="Title 1" />
+
+    <TextBlock Grid.Row="3" Classes="secondary" Text="title2" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="3" Grid.Column="1" Classes="title2" Text="Title 2" />
+    <TextBlock Grid.Row="3" Grid.Column="2" Classes="title2 emphasized" Text="Title 2" />
+
+    <TextBlock Grid.Row="4" Classes="secondary" Text="title3" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="4" Grid.Column="1" Classes="title3" Text="Title 3" />
+    <TextBlock Grid.Row="4" Grid.Column="2" Classes="title3 emphasized" Text="Title 3" />
+
+    <TextBlock Grid.Row="5" Classes="secondary" Text="headline" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="5" Grid.Column="1" Classes="headline" Text="Headline" />
+    <TextBlock Grid.Row="5" Grid.Column="2" Classes="headline emphasized" Text="Headline" />
+
+    <TextBlock Grid.Row="6" Classes="secondary" Text="body" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="6" Grid.Column="1" Classes="body" Text="Body" />
+    <TextBlock Grid.Row="6" Grid.Column="2" Classes="body emphasized" Text="Body" />
+
+    <TextBlock Grid.Row="7" Classes="secondary" Text="callout" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="7" Grid.Column="1" Classes="callout" Text="Callout" />
+    <TextBlock Grid.Row="7" Grid.Column="2" Classes="callout emphasized" Text="Callout" />
+
+    <TextBlock Grid.Row="8" Classes="secondary" Text="subheadline" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="8" Grid.Column="1" Classes="subheadline" Text="Subheadline" />
+    <TextBlock Grid.Row="8" Grid.Column="2" Classes="subheadline emphasized" Text="Subheadline" />
+
+    <TextBlock Grid.Row="9" Classes="secondary" Text="footnote" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="9" Grid.Column="1" Classes="footnote" Text="Footnote" />
+    <TextBlock Grid.Row="9" Grid.Column="2" Classes="footnote emphasized" Text="Footnote" />
+
+    <TextBlock Grid.Row="10" Classes="secondary" Text="caption1" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="10" Grid.Column="1" Classes="caption1" Text="Caption 1" />
+    <TextBlock Grid.Row="10" Grid.Column="2" Classes="caption1 emphasized" Text="Caption 1" />
+
+    <TextBlock Grid.Row="11" Classes="secondary" Text="caption2" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="11" Grid.Column="1" Classes="caption2" Text="Caption 2" />
+    <TextBlock Grid.Row="11" Grid.Column="2" Classes="caption2 emphasized" Text="Caption 2" />
+
+    <TextBlock Grid.Row="12" Classes="secondary" Text="labels" VerticalAlignment="Center" />
+    <StackPanel Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="16">
+      <TextBlock Text="Primary" />
+      <TextBlock Classes="secondary" Text="Secondary" />
+      <TextBlock Classes="tertiary" Text="Tertiary" />
+    </StackPanel>
+
+    <TextBlock Grid.Row="13" Classes="secondary" Text="font" VerticalAlignment="Center" />
+    <TextBlock Grid.Row="13" Grid.Column="1" Grid.ColumnSpan="2" Name="ResolvedFont" Classes="secondary" TextWrapping="Wrap" MaxWidth="700" HorizontalAlignment="Left" />
+  </Grid>
+</UserControl>

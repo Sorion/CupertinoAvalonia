@@ -1,0 +1,34 @@
+<!--
+  Class-based variants of ListBox that restyle its items (see ControlThemes/ListBox.axaml).
+  They are styles rather than control themes because they depend on the parent list's classes.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cas="using:CupertinoAvalonia.Styling">
+
+  <!-- Sidebars / Item, Size=Medium -->
+  <Style Selector="ListBox.sidebar">
+    <Setter Property="Padding" Value="8,0" />
+  </Style>
+  <Style Selector="ListBox.sidebar ListBoxItem">
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="Padding" Value="10,0" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+  </Style>
+  <Style Selector="ListBox.sidebar ListBoxItem:selected">
+    <Setter Property="Background" Value="{DynamicResource SidebarSelectionBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+  </Style>
+  <!-- Item, Active=False: a lighter selection. -->
+  <Style Selector="ListBox.sidebar ListBoxItem:selected[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="Background" Value="{DynamicResource SidebarSelectionInactiveBrush}" />
+  </Style>
+  <Style Selector="ListBox.sidebar ListBoxItem:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+
+  <!-- Table Rows, Type=Alternating Row Color -->
+  <Style Selector="ListBox.alternating ListBoxItem:nth-child(2n):not(:selected)">
+    <Setter Property="Background" Value="{DynamicResource TableRowAlternateBrush}" />
+  </Style>
+</Styles>

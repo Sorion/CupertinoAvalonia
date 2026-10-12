@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.ListsPage">
+  <WrapPanel ItemSpacing="32" LineSpacing="28">
+    <StackPanel Spacing="10" Width="260">
+      <TextBlock Classes="headline" Text="Default" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="Click a row: the selection takes the accent while the list has the focus." />
+      <ListBox SelectedIndex="1">
+        <ListBoxItem Content="Spotify" />
+        <ListBoxItem Content="Discord" />
+        <ListBoxItem Content="Safari" />
+        <ListBoxItem Content="Disabled" IsEnabled="False" />
+      </ListBox>
+    </StackPanel>
+
+    <StackPanel Spacing="10" Width="260">
+      <TextBlock Classes="headline" Text="alternating" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap" Text="Alternate row backgrounds, as in tables." />
+      <ListBox Classes="alternating" SelectedIndex="2">
+        <ListBoxItem Content="Music" />
+        <ListBoxItem Content="Games" />
+        <ListBoxItem Content="Voice chat" />
+        <ListBoxItem Content="Browser" />
+        <ListBoxItem Content="System" />
+      </ListBox>
+    </StackPanel>
+
+    <StackPanel Spacing="10" Width="260">
+      <TextBlock Classes="headline" Text="sidebar" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap" Text="Neutral selection, on the sidebar material." />
+      <Border Background="{DynamicResource MaterialSidebarBrush}" CornerRadius="12" Padding="0,8">
+        <ListBox Classes="sidebar" SelectedIndex="0">
+          <ListBoxItem Content="Mixer" />
+          <ListBoxItem Content="Profiles" />
+          <ListBoxItem Content="Settings" />
+        </ListBox>
+      </Border>
+    </StackPanel>
+  </WrapPanel>
+</UserControl>

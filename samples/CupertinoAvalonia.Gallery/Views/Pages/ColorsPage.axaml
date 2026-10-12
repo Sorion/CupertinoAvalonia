@@ -1,0 +1,6 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.ColorsPage">
+  <!-- Swatches are built in code from the resource keys. -->
+  <StackPanel Name="Groups" Spacing="24" />
+</UserControl>

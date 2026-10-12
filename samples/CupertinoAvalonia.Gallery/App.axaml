@@ -1,0 +1,10 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ca="using:CupertinoAvalonia"
+             x:Class="CupertinoAvalonia.Gallery.App"
+             RequestedThemeVariant="Default">
+  <!-- "Default" follows the system appearance. -->
+  <Application.Styles>
+    <ca:CupertinoAvaloniaTheme />
+  </Application.Styles>
+</Application>

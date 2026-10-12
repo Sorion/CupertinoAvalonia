@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.ButtonsPage">
+  <StackPanel Spacing="28">
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Styles" />
+      <Grid ColumnDefinitions="140,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+            ColumnSpacing="16" RowSpacing="10">
+        <TextBlock Grid.Column="1" Classes="caption1 secondary" Text="Enabled" />
+        <TextBlock Grid.Column="2" Classes="caption1 secondary" Text="Disabled" />
+        <TextBlock Grid.Column="3" Classes="caption1 secondary" Text="Classes" />
+
+        <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Bordered" />
+        <Button Grid.Row="1" Grid.Column="1" Content="Button" />
+        <Button Grid.Row="1" Grid.Column="2" Content="Button" IsEnabled="False" />
+        <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="(none)" />
+
+        <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Prominent" />
+        <Button Grid.Row="2" Grid.Column="1" Classes="accent" Content="Button" />
+        <Button Grid.Row="2" Grid.Column="2" Classes="accent" Content="Button" IsEnabled="False" />
+        <TextBlock Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="accent, or IsDefault=True" />
+
+        <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="Tinted" />
+        <Button Grid.Row="3" Grid.Column="1" Classes="tinted" Content="Button" />
+        <Button Grid.Row="3" Grid.Column="2" Classes="tinted" Content="Button" IsEnabled="False" />
+        <TextBlock Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="tinted" />
+
+        <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="Destructive" />
+        <Button Grid.Row="4" Grid.Column="1" Classes="destructive" Content="Button" />
+        <Button Grid.Row="4" Grid.Column="2" Classes="destructive" Content="Button" IsEnabled="False" />
+        <TextBlock Grid.Row="4" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="destructive" />
+
+        <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="Prominent destructive" />
+        <Button Grid.Row="5" Grid.Column="1" Classes="accent destructive" Content="Button" />
+        <Button Grid.Row="5" Grid.Column="2" Classes="accent destructive" Content="Button" IsEnabled="False" />
+        <TextBlock Grid.Row="5" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="accent destructive" />
+
+        <TextBlock Grid.Row="6" VerticalAlignment="Center" Text="Borderless" />
+        <Button Grid.Row="6" Grid.Column="1" Classes="borderless" Content="Button" />
+        <Button Grid.Row="6" Grid.Column="2" Classes="borderless" Content="Button" IsEnabled="False" />
+        <TextBlock Grid.Row="6" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="borderless" />
+      </Grid>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Control sizes" />
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Button Classes="mini" Content="Mini" />
+        <Button Classes="small" Content="Small" />
+        <Button Content="Regular" />
+        <Button Classes="large" Content="Large" />
+        <Button Classes="xlarge" Content="Extra Large" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Button Classes="mini accent" Content="Mini" />
+        <Button Classes="small accent" Content="Small" />
+        <Button Classes="accent" Content="Regular" />
+        <Button Classes="large accent" Content="Large" />
+        <Button Classes="xlarge accent" Content="Extra Large" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Toggle and repeat buttons" />
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <ToggleButton Content="Off" />
+        <ToggleButton Content="On" IsChecked="True" />
+        <ToggleButton Content="On, disabled" IsChecked="True" IsEnabled="False" />
+        <RepeatButton Content="Repeat" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Keyboard focus" />
+      <TextBlock Classes="secondary" Text="Press Tab to move the focus ring between buttons." />
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Button Content="Cancel" />
+        <Button Content="OK" IsDefault="True" />
+      </StackPanel>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

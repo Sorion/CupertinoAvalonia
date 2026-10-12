@@ -1,0 +1,258 @@
+<!--
+  Button, from the kit's "Buttons" component (page Buttons), Context=Content Area.
+  Styles map to classes:
+    (none)               Bordered
+    accent / IsDefault   Bordered - Prominent (the default button)
+    tinted               Bordered - Tinted
+    destructive          Bordered - Destructive
+    accent destructive   Bordered - Prominent Destructive
+    borderless           Borderless
+  Sizes: mini, small, (regular), large, xlarge.
+  In an inactive window, every style but borderless looks like a plain bordered button (Active=False).
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
+  <Design.PreviewWith>
+    <Border Padding="20">
+      <StackPanel Spacing="10">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Content="Bordered" />
+          <Button Classes="accent" Content="Prominent" />
+          <Button Classes="tinted" Content="Tinted" />
+          <Button Classes="destructive" Content="Destructive" />
+          <Button Classes="accent destructive" Content="Delete" />
+          <Button Classes="borderless" Content="Borderless" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Classes="mini" Content="Mini" />
+          <Button Classes="small" Content="Small" />
+          <Button Content="Regular" />
+          <Button Classes="large" Content="Large" />
+          <Button Classes="xlarge" Content="Extra large" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type Button}" TargetType="Button">
+    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
+    <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <!-- The background is separate from the content: disabled states fade them differently. -->
+          <Border Name="PART_Background"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Padding="{TemplateBinding Padding}"
+                            RecognizesAccessKey="True"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Keyboard focus ring, in the adorner layer so no container clips it (see OverflowAdorner). -->
+    <Style Selector="^:focus-visible /template/ Border#PART_Background">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+
+    <!-- Bordered -->
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+
+    <!-- Bordered - Tinted -->
+    <Style Selector="^.tinted">
+      <Setter Property="Background" Value="{DynamicResource ButtonTintedBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+      <Style Selector="^:pressed">
+        <Setter Property="Background" Value="{DynamicResource ButtonTintedBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Background" Value="{DynamicResource ButtonTintedBackgroundDisabledBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Opacity" Value="0.4" />
+        </Style>
+      </Style>
+    </Style>
+
+    <!-- Bordered - Destructive -->
+    <Style Selector="^.destructive">
+      <Setter Property="Background" Value="{DynamicResource ButtonDestructiveBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentRedBrush}" />
+      <Style Selector="^:pressed">
+        <Setter Property="Background" Value="{DynamicResource ButtonDestructiveBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Background" Value="{DynamicResource ButtonDestructiveBackgroundDisabledBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentRedBrush}" />
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Opacity" Value="0.4" />
+        </Style>
+      </Style>
+    </Style>
+
+    <!-- Bordered - Prominent: the default button -->
+    <Style Selector="^.accent, ^[IsDefault=True]">
+      <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+      <Style Selector="^:pressed">
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+        <Style Selector="^ /template/ Border#PART_Background">
+          <Setter Property="Opacity" Value="0.4" />
+        </Style>
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Opacity" Value="0.5" />
+        </Style>
+      </Style>
+    </Style>
+
+    <!-- Bordered - Prominent Destructive -->
+    <Style Selector="^.accent.destructive">
+      <Setter Property="Background" Value="{DynamicResource AccentRedBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+      <Style Selector="^:pressed">
+        <Setter Property="Background" Value="{DynamicResource ButtonProminentDestructiveBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Background" Value="{DynamicResource AccentRedBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Borderless -->
+    <Style Selector="^.borderless">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+      <Style Selector="^:pressed">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Opacity" Value="0.5" />
+        </Style>
+      </Style>
+    </Style>
+
+    <!-- Inactive window (Active=False): the accent, tinted and destructive styles look like Bordered. -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
+      <Style Selector="^.accent, ^[IsDefault=True], ^.tinted, ^.destructive">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+        <Style Selector="^:pressed">
+          <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+        </Style>
+        <Style Selector="^:disabled">
+          <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />
+          <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+          <Style Selector="^ /template/ Border#PART_Background, ^ /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Opacity" Value="1" />
+          </Style>
+        </Style>
+      </Style>
+    </Style>
+
+    <!-- Control sizes (Sizes collection) -->
+    <Style Selector="^.mini">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
+      <Setter Property="Padding" Value="{DynamicResource ButtonPaddingMini}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
+      <Setter Property="Padding" Value="{DynamicResource ButtonPaddingSmall}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusSmall}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
+      <Setter Property="Padding" Value="{DynamicResource ButtonPaddingLarge}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingLarge}" />
+    </Style>
+    <Style Selector="^.xlarge">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+      <Setter Property="Padding" Value="{DynamicResource ButtonPaddingXLarge}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusXLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeXLarge}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingXLarge}" />
+    </Style>
+  </ControlTheme>
+
+  <!-- Buttons - Toggle: an "on" toggle button gets a light accent tint and an accent label. -->
+  <ControlTheme x:Key="{x:Type ToggleButton}" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type Button}}">
+    <Style Selector="^:checked">
+      <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+      <Style Selector="^:pressed">
+        <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundDisabledBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Opacity" Value="0.3" />
+        </Style>
+      </Style>
+    </Style>
+    <!-- Pressing an "off" toggle button previews the "on" state. -->
+    <Style Selector="^:unchecked:pressed">
+      <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundPressedBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+    </Style>
+    <!-- Inactive window (Window Active=False): "on" looks like "off". -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]:checked">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+      <Style Selector="^:disabled">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+          <Setter Property="Opacity" Value="1" />
+        </Style>
+      </Style>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type RepeatButton}" TargetType="RepeatButton" BasedOn="{StaticResource {x:Type Button}}" />
+</ResourceDictionary>

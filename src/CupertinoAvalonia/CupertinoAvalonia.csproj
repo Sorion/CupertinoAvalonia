@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <IsAotCompatible>true</IsAotCompatible>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <PackageId>CupertinoAvalonia</PackageId>
+    <Description>A macOS 27 theme for Avalonia's built-in controls, built from Apple's official macOS UI kit, with a window that has macOS's chrome.</Description>
+    <Authors>Sorion</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>avalonia;theme;macos;cupertino</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <!-- Skia runtime shaders for the Liquid Glass lens (GlassLens); Skia is Avalonia's default renderer. -->
+    <PackageReference Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
+    <!-- Fallback for controls that don't have a macOS template yet (see README). -->
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CupertinoAvalonia.Tests" />
+  </ItemGroup>
+
+  <!-- Declares macOS 26's SDK in the apps that use the package (see buildTransitive/CupertinoAvalonia.targets). -->
+  <ItemGroup>
+    <None Include="buildTransitive/**" Pack="true" PackagePath="buildTransitive/" />
+  </ItemGroup>
+
+  <!--
+    The design tokens are generated from each developer's own copy of Apple's macOS Figma kit, which
+    this repository doesn't include (Apple's license forbids redistributing it). Fail early, with the
+    steps, rather than with missing resources.
+  -->
+  <ItemGroup>
+    <CupertinoGeneratedToken Include="Styling/Tokens/Colors.g.axaml;Styling/Tokens/Metrics.g.axaml;Styling/Tokens/Typography.g.axaml;Styling/Tokens/Shadows.g.axaml;Media/SystemAccentPalette.g.cs" />
+  </ItemGroup>
+  <Target Name="CheckCupertinoTokens" BeforeTargets="BeforeBuild" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Error Condition="!Exists('%(CupertinoGeneratedToken.Identity)')"
+           Text="CupertinoAvalonia's design tokens are missing (%(CupertinoGeneratedToken.Identity)). They are generated from your own copy of Apple's macOS 27 Figma kit, which this repository doesn't include: save it as design/source/macOS-27.fig, then run 'npm install' and 'npm run generate' in tools/figma. See README.md, 'Getting started'." />
+  </Target>
+
+</Project>

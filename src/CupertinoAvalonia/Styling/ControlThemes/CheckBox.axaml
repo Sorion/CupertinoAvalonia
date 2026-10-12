@@ -1,0 +1,326 @@
+<!--
+  CheckBox and RadioButton, from the kit's "Toggles - Checkboxes" and "Toggles - Radio Buttons"
+  (page Toggles), backgrounds from "_Control BG/Controls". In an inactive window, "on" turns gray.
+  Sizes: mini, small, (regular), large.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="8">
+      <CheckBox Content="Unchecked" />
+      <CheckBox Content="Checked" IsChecked="True" />
+      <CheckBox Content="Mixed" IsThreeState="True" IsChecked="{x:Null}" />
+      <CheckBox Content="Disabled" IsChecked="True" IsEnabled="False" />
+      <RadioButton Content="Selected" IsChecked="True" />
+      <RadioButton Content="Not selected" />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ResourceDictionary.ThemeDictionaries>
+    <!-- _Control BG/Controls, State=Clicked, On=False; Active=False, State=Idle, On=True; and the
+         Active=False glyphs (_Glyphs - Checkboxes, _Glyphs - Radio Buttons). -->
+    <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="CheckBoxBackgroundPressedBrush" Color="#30000000" />
+      <SolidColorBrush x:Key="CheckBoxBackgroundOnInactiveBrush" Color="#24000000" />
+      <SolidColorBrush x:Key="CheckBoxGlyphInactiveBrush" Color="#B2000000" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="CheckBoxBackgroundPressedBrush" Color="#30FFFFFF" />
+      <SolidColorBrush x:Key="CheckBoxBackgroundOnInactiveBrush" Color="#1AFFFFFF" />
+      <SolidColorBrush x:Key="CheckBoxGlyphInactiveBrush" Color="#FFFFFF" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!-- _Glyphs - Checkboxes: a 9.3 × 8.9 checkmark centered in the 16 px box. -->
+  <StreamGeometry x:Key="CheckBoxCheckGlyph">M 0.9,4.6 L 3.6,7.6 L 8.4,1.2</StreamGeometry>
+
+  <ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <!-- The kit leaves 3 px between the box and the label (Radio Button/Spacing). -->
+    <Setter Property="Padding" Value="3,0,0,0" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource CheckBoxRadius}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="Auto,*" Background="{TemplateBinding Background}">
+          <Panel Name="PART_Box"
+                 Width="{DynamicResource CheckBoxWidth}"
+                 Height="{DynamicResource CheckBoxWidth}"
+                 VerticalAlignment="Center">
+            <Border Name="PART_Background"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    Background="{DynamicResource FillPrimaryBrush}" />
+            <Viewbox Name="PART_CheckGlyph" Margin="3.35,3.5" IsVisible="False">
+              <Path Data="{StaticResource CheckBoxCheckGlyph}"
+                    Width="9.3" Height="8.9"
+                    Stroke="{DynamicResource WhiteBrush}"
+                    StrokeThickness="1.6"
+                    StrokeLineCap="Round"
+                    StrokeJoin="Round" />
+            </Viewbox>
+            <Border Name="PART_MixedGlyph"
+                    Width="{DynamicResource RadioButtonWidthDash}"
+                    Height="{DynamicResource RadioButtonHeightDash}"
+                    CornerRadius="1"
+                    Background="{DynamicResource WhiteBrush}"
+                    IsVisible="False" />
+          </Panel>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Grid.Column="1"
+                            Margin="{TemplateBinding Padding}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter:empty">
+      <Setter Property="Margin" Value="0" />
+    </Style>
+    <!-- Keyboard focus ring around the box, in the adorner layer so no container clips it (see OverflowAdorner). -->
+    <Style Selector="^:focus-visible /template/ Border#PART_Background">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+
+    <!-- Off -->
+    <Style Selector="^:pressed /template/ Border#PART_Background">
+      <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+      <Style Selector="^ /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource FillTertiaryBrush}" />
+      </Style>
+    </Style>
+
+    <!-- On and Mixed -->
+    <Style Selector="^:checked, ^:indeterminate">
+      <Style Selector="^ /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+      </Style>
+      <Style Selector="^:pressed /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Style Selector="^ /template/ Border#PART_Background">
+          <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+          <Setter Property="Opacity" Value="0.45" />
+        </Style>
+        <Style Selector="^ /template/ Viewbox#PART_CheckGlyph, ^ /template/ Border#PART_MixedGlyph">
+          <Setter Property="Opacity" Value="0.5" />
+        </Style>
+      </Style>
+    </Style>
+    <Style Selector="^:checked /template/ Viewbox#PART_CheckGlyph">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^:indeterminate /template/ Border#PART_MixedGlyph">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <!-- Inactive window (Active=False): "on" turns gray, with a dark glyph in light mode. -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
+      <Style Selector="^:checked /template/ Border#PART_Background, ^:indeterminate /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundOnInactiveBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Path">
+        <Setter Property="Stroke" Value="{DynamicResource CheckBoxGlyphInactiveBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Border#PART_MixedGlyph">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxGlyphInactiveBrush}" />
+      </Style>
+      <Style Selector="^:disabled:checked /template/ Border#PART_Background, ^:disabled:indeterminate /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource FillTertiaryBrush}" />
+        <Setter Property="Opacity" Value="1" />
+      </Style>
+    </Style>
+
+    <!-- Control sizes -->
+    <Style Selector="^.mini">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource CheckBoxRadiusMini}" />
+      <Style Selector="^ /template/ Panel#PART_Box">
+        <Setter Property="Width" Value="{DynamicResource CheckBoxWidthMini}" />
+        <Setter Property="Height" Value="{DynamicResource CheckBoxWidthMini}" />
+      </Style>
+      <Style Selector="^ /template/ Viewbox#PART_CheckGlyph">
+        <Setter Property="Margin" Value="2.4,2.5" />
+      </Style>
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource CheckBoxRadiusSmall}" />
+      <Style Selector="^ /template/ Panel#PART_Box">
+        <Setter Property="Width" Value="{DynamicResource CheckBoxWidthSmall}" />
+        <Setter Property="Height" Value="{DynamicResource CheckBoxWidthSmall}" />
+      </Style>
+      <Style Selector="^ /template/ Viewbox#PART_CheckGlyph">
+        <Setter Property="Margin" Value="2.9,3" />
+      </Style>
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource CheckBoxRadiusLarge}" />
+      <Style Selector="^ /template/ Panel#PART_Box">
+        <Setter Property="Width" Value="{DynamicResource CheckBoxWidthLarge}" />
+        <Setter Property="Height" Value="{DynamicResource CheckBoxWidthLarge}" />
+      </Style>
+      <Style Selector="^ /template/ Viewbox#PART_CheckGlyph">
+        <Setter Property="Margin" Value="3.1,3.35" />
+      </Style>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type RadioButton}" TargetType="RadioButton">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <!-- The kit leaves 3 px between the box and the label (Radio Button/Spacing). -->
+    <Setter Property="Padding" Value="3,0,0,0" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="Auto,*" Background="{TemplateBinding Background}">
+          <Panel Name="PART_Box"
+                 Width="{DynamicResource RadioButtonWidth}"
+                 Height="{DynamicResource RadioButtonWidth}"
+                 VerticalAlignment="Center">
+            <Border Name="PART_Background" CornerRadius="100"
+                    Background="{DynamicResource FillPrimaryBrush}" />
+            <Ellipse Name="PART_Dot"
+                     Width="{DynamicResource RadioButtonWidthDot}"
+                     Height="{DynamicResource RadioButtonWidthDot}"
+                     Fill="{DynamicResource WhiteBrush}"
+                     IsVisible="False" />
+          </Panel>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Grid.Column="1"
+                            Margin="{TemplateBinding Padding}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter:empty">
+      <Setter Property="Margin" Value="0" />
+    </Style>
+    <!-- Keyboard focus ring around the box, in the adorner layer so no container clips it (see OverflowAdorner). -->
+    <Style Selector="^:focus-visible /template/ Border#PART_Background">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+    <Style Selector="^:pressed /template/ Border#PART_Background">
+      <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+      <Style Selector="^ /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource FillTertiaryBrush}" />
+      </Style>
+    </Style>
+    <Style Selector="^:checked">
+      <Style Selector="^ /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Ellipse#PART_Dot">
+        <Setter Property="IsVisible" Value="True" />
+      </Style>
+      <Style Selector="^:pressed /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Style Selector="^ /template/ Border#PART_Background">
+          <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+          <Setter Property="Opacity" Value="0.45" />
+        </Style>
+        <Style Selector="^ /template/ Ellipse#PART_Dot">
+          <Setter Property="Opacity" Value="0.5" />
+        </Style>
+      </Style>
+    </Style>
+
+    <!-- Inactive window (Active=False): "on" turns gray, with a dark dot in light mode. -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
+      <Style Selector="^:checked /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundOnInactiveBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Ellipse#PART_Dot">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxGlyphInactiveBrush}" />
+      </Style>
+      <Style Selector="^:disabled:checked /template/ Border#PART_Background">
+        <Setter Property="Background" Value="{DynamicResource FillTertiaryBrush}" />
+        <Setter Property="Opacity" Value="1" />
+      </Style>
+    </Style>
+
+    <!-- Control sizes -->
+    <Style Selector="^.mini">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+      <Style Selector="^ /template/ Panel#PART_Box">
+        <Setter Property="Width" Value="{DynamicResource RadioButtonWidthMini}" />
+        <Setter Property="Height" Value="{DynamicResource RadioButtonWidthMini}" />
+      </Style>
+      <Style Selector="^ /template/ Ellipse#PART_Dot">
+        <Setter Property="Width" Value="{DynamicResource RadioButtonWidthDotMini}" />
+        <Setter Property="Height" Value="{DynamicResource RadioButtonWidthDotMini}" />
+      </Style>
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
+      <Style Selector="^ /template/ Panel#PART_Box">
+        <Setter Property="Width" Value="{DynamicResource RadioButtonWidthSmall}" />
+        <Setter Property="Height" Value="{DynamicResource RadioButtonWidthSmall}" />
+      </Style>
+      <Style Selector="^ /template/ Ellipse#PART_Dot">
+        <Setter Property="Width" Value="{DynamicResource RadioButtonWidthDotSmall}" />
+        <Setter Property="Height" Value="{DynamicResource RadioButtonWidthDotSmall}" />
+      </Style>
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+      <Style Selector="^ /template/ Panel#PART_Box">
+        <Setter Property="Width" Value="{DynamicResource RadioButtonWidthLarge}" />
+        <Setter Property="Height" Value="{DynamicResource RadioButtonWidthLarge}" />
+      </Style>
+      <Style Selector="^ /template/ Ellipse#PART_Dot">
+        <Setter Property="Width" Value="{DynamicResource RadioButtonWidthDotLarge}" />
+        <Setter Property="Height" Value="{DynamicResource RadioButtonWidthDotLarge}" />
+      </Style>
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

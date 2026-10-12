@@ -1,0 +1,156 @@
+<!--
+  Expander as a macOS disclosure triangle: a chevron (SF Symbol "chevron.right", as in the kit's
+  "_Disclosure" glyphs) that turns down when expanded, next to the header. No box around it.
+  The "button" class uses the kit's "Disclosure Button" instead: a bordered 24 px square.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="12" Width="260">
+      <Expander Header="Details" IsExpanded="True">
+        <TextBlock Text="Expanded content" />
+      </Expander>
+      <Expander Header="Advanced" />
+      <Expander Classes="button" Header="Show more" />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <StreamGeometry x:Key="DisclosureChevron">M 0.75,0.75 L 4.75,4.75 L 0.75,8.75</StreamGeometry>
+
+  <ControlTheme x:Key="CupertinoExpanderToggleButton" TargetType="ToggleButton">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_Root" Background="{TemplateBinding Background}" CornerRadius="5" MinHeight="{DynamicResource ControlHeight}">
+          <Grid ColumnDefinitions="Auto,*">
+            <Panel Name="PART_Glyph" Width="{DynamicResource ControlHeight}" Height="{DynamicResource ControlHeight}">
+              <Border Name="PART_GlyphBackground" CornerRadius="{DynamicResource DisclosureRadius}" />
+              <Path Name="PART_Chevron"
+                    Data="{StaticResource DisclosureChevron}"
+                    Width="5.5" Height="9.5"
+                    Stroke="{TemplateBinding Foreground}"
+                    StrokeThickness="1.75"
+                    StrokeLineCap="Round"
+                    StrokeJoin="Round"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Path.Transitions>
+                  <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
+                  </Transitions>
+                </Path.Transitions>
+              </Path>
+            </Panel>
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Grid.Column="1"
+                              Margin="2,0,0,0"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              RecognizesAccessKey="True" />
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <!-- Template parts get their state values from styles only: a local value would block them. -->
+    <Style Selector="^ /template/ Path#PART_Chevron">
+      <Setter Property="RenderTransform" Value="rotate(0deg)" />
+    </Style>
+    <Style Selector="^:checked /template/ Path#PART_Chevron">
+      <Setter Property="RenderTransform" Value="rotate(90deg)" />
+    </Style>
+    <!-- Keyboard focus ring, in the adorner layer so no container clips it (see OverflowAdorner). -->
+    <Style Selector="^:focus-visible /template/ Border#PART_GlyphBackground">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+    <Style Selector="^:pressed /template/ Path#PART_Chevron">
+      <Setter Property="Opacity" Value="0.6" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+  </ControlTheme>
+
+  <!-- Disclosure Button: the chevron in a bordered 24 px square, pointing down, or up when expanded. -->
+  <ControlTheme x:Key="CupertinoExpanderDisclosureButton" TargetType="ToggleButton"
+                BasedOn="{StaticResource CupertinoExpanderToggleButton}">
+    <Style Selector="^ /template/ Border#PART_GlyphBackground">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+    </Style>
+    <Style Selector="^ /template/ Path#PART_Chevron">
+      <Setter Property="RenderTransform" Value="rotate(90deg)" />
+    </Style>
+    <Style Selector="^:checked /template/ Path#PART_Chevron">
+      <Setter Property="RenderTransform" Value="rotate(-90deg)" />
+    </Style>
+    <Style Selector="^:pressed /template/ Border#PART_GlyphBackground">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^:pressed /template/ Path#PART_Chevron">
+      <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="^:disabled /template/ Border#PART_GlyphBackground">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />
+    </Style>
+    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Margin" Value="8,0,0,0" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type Expander}" TargetType="Expander">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="Padding" Value="26,6,0,6" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel Background="{TemplateBinding Background}">
+          <ToggleButton Name="ExpanderHeader"
+                        DockPanel.Dock="Top"
+                        Content="{TemplateBinding Header}"
+                        ContentTemplate="{TemplateBinding HeaderTemplate}"
+                        IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
+                        IsEnabled="{TemplateBinding IsEnabled}" />
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Padding="{TemplateBinding Padding}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            IsVisible="{TemplateBinding IsExpanded}" />
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Set by style, not in the template, so the "button" class can replace it. -->
+    <Style Selector="^ /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource CupertinoExpanderToggleButton}" />
+    </Style>
+    <Style Selector="^[ExpandDirection=Up] /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="DockPanel.Dock" Value="Bottom" />
+    </Style>
+    <Style Selector="^.button /template/ ToggleButton#ExpanderHeader">
+      <Setter Property="Theme" Value="{StaticResource CupertinoExpanderDisclosureButton}" />
+    </Style>
+    <Style Selector="^.button">
+      <Setter Property="Padding" Value="32,6,0,6" />
+    </Style>
+
+  </ControlTheme>
+</ResourceDictionary>

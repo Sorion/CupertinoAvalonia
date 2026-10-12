@@ -1,0 +1,123 @@
+<!--
+  ListBox and ListBoxItem, from the kit's "Table Rows" (page Lists and Tables) and, with the
+  "sidebar" class, "Sidebars / Item" (page Sidebars).
+  - Default: 20 px rows inset in the list, rounded selection. The selection takes the accent while
+    the list has the keyboard focus in the active window, and turns gray otherwise ("Selected + Inactive").
+  - sidebar: 32 px rows, a neutral selection, no background (put the list on MaterialSidebarBrush).
+  - alternating: alternate row backgrounds, as in tables.
+  The class-based variants are in ListStyles.axaml.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="20" Width="260">
+      <ListBox SelectedIndex="1">
+        <ListBoxItem Content="Music" />
+        <ListBoxItem Content="Videos" />
+        <ListBoxItem Content="Disabled" IsEnabled="False" />
+      </ListBox>
+      <ListBox Classes="sidebar" SelectedIndex="0">
+        <ListBoxItem Content="Mixer" />
+        <ListBoxItem Content="Profiles" />
+      </ListBox>
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <!-- _Selection (sidebar): linear burn #F2F2F2, or #FBFBFB when the window is inactive. -->
+      <SolidColorBrush x:Key="SidebarSelectionBrush" Color="#0D000000" />
+      <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="#04000000" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <!-- linear dodge #0D0D0D, or #070707 when the window is inactive -->
+      <SolidColorBrush x:Key="SidebarSelectionBrush" Color="#0DFFFFFF" />
+      <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="#07FFFFFF" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <ControlTheme x:Key="{x:Type ListBox}" TargetType="ListBox">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <!-- Rows are inset from the list's edges ("Table Rows": 10 px). -->
+    <Setter Property="Padding" Value="10,5" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
+    <Setter Property="ScrollViewer.IsScrollInertiaEnabled" Value="True" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="border"
+                ClipToBounds="{TemplateBinding ClipToBounds}"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <ScrollViewer Name="PART_ScrollViewer"
+                        VerticalSnapPointsType="{TemplateBinding (ScrollViewer.VerticalSnapPointsType)}"
+                        HorizontalSnapPointsType="{TemplateBinding (ScrollViewer.HorizontalSnapPointsType)}"
+                        HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                        VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                        IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+                        IsScrollInertiaEnabled="{TemplateBinding (ScrollViewer.IsScrollInertiaEnabled)}"
+                        IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
+                        AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+                        BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            Margin="{TemplateBinding Padding}" />
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Padding" Value="8,2" />
+    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter Name="PART_ContentPresenter"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          Content="{TemplateBinding Content}"
+                          Foreground="{TemplateBinding Foreground}"
+                          Padding="{TemplateBinding Padding}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" />
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+
+    <!-- Selected + Inactive: the list doesn't have the keyboard focus. -->
+    <Style Selector="^:selected">
+      <Setter Property="Background" Value="{DynamicResource TableRowSelectedInactiveBrush}" />
+    </Style>
+    <!-- Selected + Active -->
+    <Style Selector="^:selected:focus-within">
+      <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+    </Style>
+    <!-- The window keeps its focused element while inactive: the selection still turns gray. -->
+    <Style Selector="^:selected:focus-within[(cas|WindowActivity.IsInactive)=True]">
+      <Setter Property="Background" Value="{DynamicResource TableRowSelectedInactiveBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

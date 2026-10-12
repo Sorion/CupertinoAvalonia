@@ -1,0 +1,122 @@
+<!--
+  ProgressBar, from the kit's "Linear - Determinate" and "Linear - Indeterminate" (page Progress
+  Indicators): a 10 px capsule (6 px with the "small" class), the primary label color at 10% with
+  a hairline border, filled with the accent. Indeterminate bars run an accent segment across.
+  In an inactive window, the fill turns gray (Active=False).
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="12" Width="200">
+      <ProgressBar Value="40" />
+      <ProgressBar Classes="small" Value="70" />
+      <ProgressBar IsIndeterminate="True" />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="#16000000" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="#16FFFFFF" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <ControlTheme x:Key="{x:Type ProgressBar}" TargetType="ProgressBar">
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ProgressBarTrackBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ProgressTrackStrokeBrush}" />
+    <Setter Property="BorderThickness" Value="0.5" />
+    <Setter Property="CornerRadius" Value="100" />
+    <Setter Property="MinHeight" Value="10" />
+    <Setter Property="MinWidth" Value="10" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Template">
+      <ControlTemplate TargetType="ProgressBar">
+        <Panel>
+          <Border Name="ProgressBarRoot"
+                  Background="{TemplateBinding Background}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  ClipToBounds="True">
+            <Panel>
+              <Border Name="PART_Indicator"
+                      Background="{TemplateBinding Foreground}"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      IsVisible="{Binding !IsIndeterminate, RelativeSource={RelativeSource TemplatedParent}}" />
+              <Border Name="IndeterminateSegment"
+                      Background="{TemplateBinding Foreground}"
+                      CornerRadius="{TemplateBinding CornerRadius}"
+                      IsVisible="{TemplateBinding IsIndeterminate}" />
+            </Panel>
+          </Border>
+          <Border BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <LayoutTransformControl Name="PART_LayoutTransformControl"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  IsVisible="{TemplateBinding ShowProgressText}">
+            <TextBlock Foreground="{DynamicResource LabelPrimaryBrush}" Text="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, StringFormat={}{0:0}%}" />
+          </LayoutTransformControl>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:horizontal /template/ Border#PART_Indicator">
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="VerticalAlignment" Value="Stretch" />
+    </Style>
+    <Style Selector="^:vertical">
+      <Setter Property="MinWidth" Value="10" />
+      <Style Selector="^ /template/ Border#PART_Indicator">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+      </Style>
+    </Style>
+
+    <Style Selector="^.small">
+      <Setter Property="MinHeight" Value="6" />
+    </Style>
+
+    <!-- Inactive window (Active=False): a gray fill, on a lighter track when determinate. -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
+      <Setter Property="Foreground" Value="{DynamicResource ControlFillInactiveBrush}" />
+      <Style Selector="^:not(:indeterminate)">
+        <Setter Property="Background" Value="{DynamicResource ControlTrackInactiveBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^:horizontal:indeterminate /template/ Border#IndeterminateSegment">
+      <Setter Property="HorizontalAlignment" Value="Left" />
+      <Setter Property="Width" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerWidth}" />
+      <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+      <Style.Animations>
+        <Animation Duration="0:0:1.6" IterationCount="Infinite" Easing="SineEaseInOut">
+          <KeyFrame KeyTime="0:0:0">
+            <Setter Property="TranslateTransform.X" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationStartPosition}" />
+          </KeyFrame>
+          <KeyFrame KeyTime="0:0:1.6">
+            <Setter Property="TranslateTransform.X" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationEndPosition}" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+    <Style Selector="^:vertical:indeterminate /template/ Border#IndeterminateSegment">
+      <Setter Property="VerticalAlignment" Value="Top" />
+      <Setter Property="Height" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerWidth}" />
+      <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+      <Style.Animations>
+        <Animation Duration="0:0:1.6" IterationCount="Infinite" Easing="SineEaseInOut">
+          <KeyFrame KeyTime="0:0:0">
+            <Setter Property="TranslateTransform.Y" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationStartPosition}" />
+          </KeyFrame>
+          <KeyFrame KeyTime="0:0:1.6">
+            <Setter Property="TranslateTransform.Y" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationEndPosition}" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

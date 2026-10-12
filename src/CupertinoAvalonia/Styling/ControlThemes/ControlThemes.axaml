@@ -1,0 +1,18 @@
+<!-- Every control with a macOS template, and the library's own (CupertinoWindow). The others fall back to Fluent's (see CupertinoAvaloniaTheme.axaml). -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ResourceDictionary.MergedDictionaries>
+    <MergeResourceInclude Source="/Styling/ControlThemes/Button.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/CheckBox.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/ToggleSwitch.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/TextBox.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/ListBox.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/Menus.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/ComboBox.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/Slider.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/ProgressBar.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/Expander.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/ScrollBar.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/CupertinoWindow.axaml" />
+  </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.SlidersPage">
+  <StackPanel Spacing="28">
+    <StackPanel Spacing="10" Width="320" HorizontalAlignment="Left">
+      <TextBlock Classes="headline" Text="Slider" />
+      <Slider Value="40" />
+      <Slider Value="60" TickFrequency="10" TickPlacement="BottomRight" IsSnapToTickEnabled="True" />
+      <Slider Value="30" IsEnabled="False" />
+      <StackPanel Orientation="Horizontal" Spacing="16" Height="120">
+        <Slider Orientation="Vertical" Value="70" />
+        <Slider Orientation="Vertical" Value="35" />
+        <Slider Orientation="Vertical" Value="50" TickFrequency="25" TickPlacement="BottomRight" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10" Width="320" HorizontalAlignment="Left">
+      <TextBlock Classes="headline" Text="ProgressBar" />
+      <ProgressBar Value="25" />
+      <ProgressBar Value="60" />
+      <ProgressBar Classes="small" Value="80" />
+      <ProgressBar IsIndeterminate="True" />
+    </StackPanel>
+
+    <StackPanel Spacing="10" Width="320" HorizontalAlignment="Left">
+      <TextBlock Classes="headline" Text="Expander" />
+      <Expander Header="Output" IsExpanded="True">
+        <StackPanel Spacing="6">
+          <CheckBox Content="Follow the system output" IsChecked="True" />
+          <CheckBox Content="Mute when the screen locks" />
+        </StackPanel>
+      </Expander>
+      <Expander Header="Advanced" />
+      <Expander Classes="button" Header="Show more" />
+    </StackPanel>
+
+    <StackPanel Spacing="10" Width="320" HorizontalAlignment="Left">
+      <TextBlock Classes="headline" Text="ScrollViewer" />
+      <Border Height="120" CornerRadius="8" Background="{DynamicResource FillQuinaryBrush}">
+        <ScrollViewer AllowAutoHide="False">
+          <TextBlock Margin="12" TextWrapping="Wrap"
+                     Text="MixerStudio gives every application its own channel, so you can set the volume of music, games and calls independently. Each channel can be routed to a different output device, muted, or soloed. Profiles save a set of channels and rules and switch automatically when an application starts. The mixer follows the system appearance and the accent color you chose in System Settings." />
+        </ScrollViewer>
+      </Border>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

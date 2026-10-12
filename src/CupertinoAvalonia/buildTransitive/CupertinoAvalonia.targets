@@ -1,0 +1,28 @@
+<Project>
+  <!--
+    macOS 26 and later give their Liquid Glass window chrome (traffic lights, toolbar, corners) only to apps
+    built with their SDK, which they read in the executable; others keep the previous look. .NET's app host
+    is built with an older SDK: after each build and publish on macOS, declare macOS 26's in the app's
+    executable (see declare-macos-sdk.sh).
+    NuGet imports this file into the apps that use the package; with a project reference, import it in
+    the app's project file. Set CupertinoDeclareMacOSSdk to false to opt out, or CupertinoMacOSSdkVersion
+    to declare another SDK.
+  -->
+  <PropertyGroup>
+    <CupertinoDeclareMacOSSdk Condition="'$(CupertinoDeclareMacOSSdk)' == ''">true</CupertinoDeclareMacOSSdk>
+    <CupertinoMacOSSdkVersion Condition="'$(CupertinoMacOSSdkVersion)' == ''">26.0</CupertinoMacOSSdkVersion>
+    <_CupertinoDeclaresMacOSSdk Condition="'$(CupertinoDeclareMacOSSdk)' == 'true' And $([MSBuild]::IsOSPlatform('OSX')) And ('$(OutputType)' == 'Exe' Or '$(OutputType)' == 'WinExe') And '$(UseAppHost)' != 'false'">true</_CupertinoDeclaresMacOSSdk>
+  </PropertyGroup>
+
+  <Target Name="CupertinoDeclareMacOSSdk" AfterTargets="Build"
+          Condition="'$(_CupertinoDeclaresMacOSSdk)' == 'true' And Exists('$(OutDir)$(AssemblyName)')">
+    <Exec Command="sh &quot;$(MSBuildThisFileDirectory)declare-macos-sdk.sh&quot; &quot;$(OutDir)$(AssemblyName)&quot; $(CupertinoMacOSSdkVersion)"
+          ContinueOnError="WarnAndContinue" />
+  </Target>
+
+  <Target Name="CupertinoDeclareMacOSSdkOnPublish" AfterTargets="Publish"
+          Condition="'$(_CupertinoDeclaresMacOSSdk)' == 'true' And Exists('$(PublishDir)$(AssemblyName)')">
+    <Exec Command="sh &quot;$(MSBuildThisFileDirectory)declare-macos-sdk.sh&quot; &quot;$(PublishDir)$(AssemblyName)&quot; $(CupertinoMacOSSdkVersion)"
+          ContinueOnError="WarnAndContinue" />
+  </Target>
+</Project>

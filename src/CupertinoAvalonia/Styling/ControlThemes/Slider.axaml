@@ -1,0 +1,392 @@
+<!--
+  Slider, from the kit's "Slider" (page Sliders and Dials): a 4 px track, accent-filled up to the
+  value, with a white capsule knob. While pressed or dragged, the knob turns into a Liquid Glass lens
+  ("_Knob - Clicked"), larger than the knob, through which the track shows (see GlassLens).
+  Ticks (TickPlacement) are drawn as short marks under the track. In an inactive window, the fill
+  turns gray.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="12" Width="240">
+      <Slider Value="40" />
+      <Slider Value="60" TickFrequency="10" TickPlacement="BottomRight" />
+      <Slider Value="30" IsEnabled="False" />
+      <Slider Value="50" Orientation="Vertical" Height="120" HorizontalAlignment="Left" />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ResourceDictionary.ThemeDictionaries>
+    <!-- _Tracks - Unfilled: the primary label color at 10%, 19% pressed, 6% disabled. Ticks (_Ticks): at 25%.
+         The pressed lens's tint, light, rim and shadow are measured on native macOS 27 (System Settings) in
+         dark mode; in light mode they follow the switch's lens. -->
+    <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="SliderTrackBrush" Color="#16000000" />
+      <SolidColorBrush x:Key="SliderTrackPressedBrush" Color="#29000000" />
+      <SolidColorBrush x:Key="SliderTrackDisabledBrush" Color="#0D000000" />
+      <SolidColorBrush x:Key="SliderTickBrush" Color="#36000000" />
+      <Color x:Key="SliderLensTint">#0B000000</Color>
+      <Color x:Key="SliderLensHighlightColor">#6BFFFFFF</Color>
+      <Color x:Key="SliderLensGlowColor">#33FFFFFF</Color>
+      <Color x:Key="SliderLensRimColor">#4D000000</Color>
+      <BoxShadows x:Key="SliderLensShadow">0 6 10 2 #1F000000, 0 0.8 0.3 0 #26000000</BoxShadows>
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="SliderTrackBrush" Color="#16FFFFFF" />
+      <SolidColorBrush x:Key="SliderTrackPressedBrush" Color="#29FFFFFF" />
+      <SolidColorBrush x:Key="SliderTrackDisabledBrush" Color="#0DFFFFFF" />
+      <SolidColorBrush x:Key="SliderTickBrush" Color="#36FFFFFF" />
+      <Color x:Key="SliderLensTint">#3D2A2B2F</Color>
+      <Color x:Key="SliderLensHighlightColor">#1AFFFFFF</Color>
+      <Color x:Key="SliderLensGlowColor">#27FFFFFF</Color>
+      <Color x:Key="SliderLensRimColor">#38000000</Color>
+      <BoxShadows x:Key="SliderLensShadow">0 6 10 2 #29000000</BoxShadows>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <x:Double x:Key="SliderTrackThickness">4</x:Double>
+
+  <ControlTheme x:Key="CupertinoSliderHorizontalRepeatButton" TargetType="RepeatButton">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <!-- A taller transparent hit area, so the track is easy to click. -->
+          <Border Background="Transparent" Margin="0,-10" />
+          <Border Background="{TemplateBinding Background}"
+                  CornerRadius="100"
+                  Height="{DynamicResource SliderTrackThickness}"
+                  VerticalAlignment="Center" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="CupertinoSliderVerticalRepeatButton" TargetType="RepeatButton">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Background="Transparent" Margin="-10,0" />
+          <Border Background="{TemplateBinding Background}"
+                  CornerRadius="100"
+                  Width="{DynamicResource SliderTrackThickness}"
+                  HorizontalAlignment="Center" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <!-- _Knob, Style=Non-Ticked -->
+  <ControlTheme x:Key="CupertinoSliderThumb" TargetType="Thumb">
+    <!-- TemplatedControl clips by default, which would cut the knob's shadow to its rectangle. -->
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}"
+                CornerRadius="100"
+                BoxShadow="0 0.5 6 0 #1F000000, 0 0 1 0 #33000000" />
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="Opacity" Duration="0:0:0.12" />
+      </Transitions>
+    </Setter>
+  </ControlTheme>
+
+  <!--
+    The pressed lens ("_Knob - Clicked"): its "Glass Effect" layer is 27 × 22 on the 20 × 16 knob, the size
+    native macOS shows. It is created on the knob while the slider is pressed (see the styles below), in
+    the window's adorner layer so no container clips it.
+  -->
+  <ControlTheme x:Key="CupertinoSliderLens" TargetType="TemplatedControl">
+    <Setter Property="Width" Value="27" />
+    <Setter Property="Height" Value="22" />
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <!-- Clear glass, as on native macOS 27: unlike the switch's lens, it doesn't zoom out the track,
+               but magnifies it just inside the rim, and its tint deepens away from the rim. Light grows
+               toward the top and bottom edges. Without Skia it falls back to an opaque knob in the window's
+               color. -->
+          <cas:GlassLens Magnification="1"
+                         Refraction="-3.6"
+                         RefractionBand="2.0"
+                         Frost="0"
+                         Dispersion="0"
+                         Tint="{DynamicResource SliderLensTint}"
+                         TintDepth="4.5"
+                         HighlightColor="{DynamicResource SliderLensHighlightColor}"
+                         HighlightWidth="0.65"
+                         HighlightFalloff="0.6"
+                         GlowColor="{DynamicResource SliderLensGlowColor}"
+                         GlowFalloff="7"
+                         RimColor="{DynamicResource SliderLensRimColor}"
+                         RimWidth="1"
+                         RimFringe="0"
+                         FallbackBackground="{DynamicResource WindowBackgroundBrush}"
+                         FallbackForeground="{DynamicResource SliderTrackPressedBrush}" />
+          <!-- Drawn after the glass so the glass doesn't see it: a box shadow only paints outside its border. -->
+          <Border CornerRadius="100"
+                  Background="Transparent"
+                  BoxShadow="{DynamicResource SliderLensShadow}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^.vertical">
+      <Setter Property="Width" Value="22" />
+      <Setter Property="Height" Value="27" />
+    </Style>
+    <!-- Grows out of the knob (keyframe animations can't animate RenderTransform itself: they animate a
+         ScaleTransform they create). -->
+    <Style Selector="^">
+      <Style.Animations>
+        <Animation Duration="0:0:0.2" Easing="BackEaseOut" FillMode="Forward">
+          <KeyFrame Cue="0%">
+            <Setter Property="ScaleTransform.ScaleX" Value="0.74" />
+            <Setter Property="ScaleTransform.ScaleY" Value="0.74" />
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="ScaleTransform.ScaleX" Value="1" />
+            <Setter Property="ScaleTransform.ScaleY" Value="1" />
+          </KeyFrame>
+        </Animation>
+        <Animation Duration="0:0:0.12" FillMode="Forward">
+          <KeyFrame Cue="0%">
+            <Setter Property="Opacity" Value="0" />
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="Opacity" Value="1" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type Slider}" TargetType="Slider">
+    <!-- TemplatedControl clips by default: let the knob's shadow draw past the ends of the track. -->
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="Background" Value="{DynamicResource SliderTrackBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+
+    <Style Selector="^:horizontal">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <!-- Like the control, its validation wrapper mustn't clip the knob's shadow. -->
+          <DataValidationErrors ClipToBounds="False">
+            <Grid Name="SliderContainer" Margin="{TemplateBinding Padding}" Background="Transparent" RowDefinitions="*,Auto,*">
+              <Grid.Styles>
+                <Style Selector="TickBar">
+                  <Setter Property="ReservedSpace" Value="{Binding #PART_Track.Thumb.Bounds}" />
+                </Style>
+              </Grid.Styles>
+              <TickBar Name="TopTickBar"
+                       Ticks="{TemplateBinding Ticks}"
+                       TickFrequency="{TemplateBinding Slider.TickFrequency}"
+                       Orientation="{TemplateBinding Slider.Orientation}"
+                       Minimum="{TemplateBinding Slider.Minimum}"
+                       Maximum="{TemplateBinding Slider.Maximum}"
+                       IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                       Height="4" Margin="0,0,0,3" VerticalAlignment="Bottom" Placement="Top"
+                       Fill="{DynamicResource SliderTickBrush}" IsVisible="False" />
+              <Track Name="PART_Track"
+                     Grid.Row="1"
+                     Minimum="{TemplateBinding Minimum}"
+                     Maximum="{TemplateBinding Maximum}"
+                     Value="{TemplateBinding Value, Mode=TwoWay}"
+                     IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                     Orientation="Horizontal">
+                <Track.DecreaseButton>
+                  <RepeatButton Name="PART_DecreaseButton"
+                                ZIndex="1"
+                                Theme="{StaticResource CupertinoSliderHorizontalRepeatButton}"
+                                Background="{TemplateBinding Foreground}"
+                                Focusable="False" />
+                </Track.DecreaseButton>
+                <Track.IncreaseButton>
+                  <RepeatButton Name="PART_IncreaseButton"
+                                Theme="{StaticResource CupertinoSliderHorizontalRepeatButton}"
+                                Background="{TemplateBinding Background}"
+                                Focusable="False" />
+                </Track.IncreaseButton>
+                <Thumb Name="thumb"
+                       ZIndex="2"
+                       Width="{DynamicResource SliderKnobNonTickedSliderWidth}"
+                       Height="{DynamicResource SliderKnobNonTickedSliderHeight}"
+                       Theme="{StaticResource CupertinoSliderThumb}"
+                       DataContext="{TemplateBinding Value}" />
+              </Track>
+              <TickBar Name="BottomTickBar"
+                       Grid.Row="2"
+                       Ticks="{TemplateBinding Ticks}"
+                       TickFrequency="{TemplateBinding Slider.TickFrequency}"
+                       Orientation="{TemplateBinding Slider.Orientation}"
+                       Minimum="{TemplateBinding Slider.Minimum}"
+                       Maximum="{TemplateBinding Slider.Maximum}"
+                       IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                       Height="4" Margin="0,3,0,0" VerticalAlignment="Top" Placement="Bottom"
+                       Fill="{DynamicResource SliderTickBrush}" IsVisible="False" />
+            </Grid>
+          </DataValidationErrors>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+
+    <Style Selector="^:vertical">
+      <Setter Property="MinWidth" Value="{DynamicResource ControlHeight}" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <!-- Like the control, its validation wrapper mustn't clip the knob's shadow. -->
+          <DataValidationErrors ClipToBounds="False">
+            <Grid Name="SliderContainer" Margin="{TemplateBinding Padding}" Background="Transparent" ColumnDefinitions="*,Auto,*">
+              <Grid.Styles>
+                <Style Selector="TickBar">
+                  <Setter Property="ReservedSpace" Value="{Binding #PART_Track.Thumb.Bounds}" />
+                </Style>
+              </Grid.Styles>
+              <TickBar Name="LeftTickBar"
+                       Ticks="{TemplateBinding Ticks}"
+                       TickFrequency="{TemplateBinding Slider.TickFrequency}"
+                       Orientation="{TemplateBinding Slider.Orientation}"
+                       Minimum="{TemplateBinding Slider.Minimum}"
+                       Maximum="{TemplateBinding Slider.Maximum}"
+                       IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                       Width="4" Margin="0,0,3,0" HorizontalAlignment="Right" Placement="Left"
+                       Fill="{DynamicResource SliderTickBrush}" IsVisible="False" />
+              <Track Name="PART_Track"
+                     Grid.Column="1"
+                     Minimum="{TemplateBinding Minimum}"
+                     Maximum="{TemplateBinding Maximum}"
+                     Value="{TemplateBinding Value, Mode=TwoWay}"
+                     IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                     Orientation="Vertical">
+                <Track.DecreaseButton>
+                  <RepeatButton Name="PART_DecreaseButton"
+                                ZIndex="1"
+                                Theme="{StaticResource CupertinoSliderVerticalRepeatButton}"
+                                Background="{TemplateBinding Foreground}"
+                                Focusable="False" />
+                </Track.DecreaseButton>
+                <Track.IncreaseButton>
+                  <RepeatButton Name="PART_IncreaseButton"
+                                Theme="{StaticResource CupertinoSliderVerticalRepeatButton}"
+                                Background="{TemplateBinding Background}"
+                                Focusable="False" />
+                </Track.IncreaseButton>
+                <Thumb Name="thumb"
+                       ZIndex="2"
+                       Width="{DynamicResource SliderKnobNonTickedSliderHeight}"
+                       Height="{DynamicResource SliderKnobNonTickedSliderWidth}"
+                       Theme="{StaticResource CupertinoSliderThumb}"
+                       DataContext="{TemplateBinding Value}" />
+              </Track>
+              <TickBar Name="RightTickBar"
+                       Grid.Column="2"
+                       Ticks="{TemplateBinding Ticks}"
+                       TickFrequency="{TemplateBinding Slider.TickFrequency}"
+                       Orientation="{TemplateBinding Slider.Orientation}"
+                       Minimum="{TemplateBinding Slider.Minimum}"
+                       Maximum="{TemplateBinding Slider.Maximum}"
+                       IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                       Width="4" Margin="3,0,0,0" HorizontalAlignment="Left" Placement="Right"
+                       Fill="{DynamicResource SliderTickBrush}" IsVisible="False" />
+            </Grid>
+          </DataValidationErrors>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+
+    <Style Selector="^[TickPlacement=TopLeft] /template/ TickBar#TopTickBar, ^[TickPlacement=Outside] /template/ TickBar#TopTickBar">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^[TickPlacement=BottomRight] /template/ TickBar#BottomTickBar, ^[TickPlacement=Outside] /template/ TickBar#BottomTickBar">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^[TickPlacement=TopLeft] /template/ TickBar#LeftTickBar, ^[TickPlacement=Outside] /template/ TickBar#LeftTickBar">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="^[TickPlacement=BottomRight] /template/ TickBar#RightTickBar, ^[TickPlacement=Outside] /template/ TickBar#RightTickBar">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <!-- The fill runs on under the knob up to its center, and the rest of the track starts under the fill's
+         rounded end (the knob is 20 long: 10 is half of it), so the pressed glass lens shows a continuous track. -->
+    <Style Selector="^:horizontal">
+      <Style Selector="^ /template/ RepeatButton#PART_DecreaseButton">
+        <Setter Property="Margin" Value="0,0,-10,0" />
+      </Style>
+      <Style Selector="^ /template/ RepeatButton#PART_IncreaseButton">
+        <Setter Property="Margin" Value="-14,0,0,0" />
+      </Style>
+      <Style Selector="^[IsDirectionReversed=True] /template/ RepeatButton#PART_DecreaseButton">
+        <Setter Property="Margin" Value="-10,0,0,0" />
+      </Style>
+      <Style Selector="^[IsDirectionReversed=True] /template/ RepeatButton#PART_IncreaseButton">
+        <Setter Property="Margin" Value="0,0,-14,0" />
+      </Style>
+    </Style>
+    <Style Selector="^:vertical">
+      <Style Selector="^ /template/ RepeatButton#PART_DecreaseButton">
+        <Setter Property="Margin" Value="0,-10,0,0" />
+      </Style>
+      <Style Selector="^ /template/ RepeatButton#PART_IncreaseButton">
+        <Setter Property="Margin" Value="0,0,0,-14" />
+      </Style>
+      <Style Selector="^[IsDirectionReversed=True] /template/ RepeatButton#PART_DecreaseButton">
+        <Setter Property="Margin" Value="0,0,0,-10" />
+      </Style>
+      <Style Selector="^[IsDirectionReversed=True] /template/ RepeatButton#PART_IncreaseButton">
+        <Setter Property="Margin" Value="0,-14,0,0" />
+      </Style>
+    </Style>
+
+    <!-- Inactive window (Active=False): a gray fill on a lighter track (_Tracks - Filled, _Tracks - Unfilled). -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
+      <Setter Property="Background" Value="{DynamicResource ControlTrackInactiveBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource ControlFillInactiveBrush}" />
+    </Style>
+
+    <!-- Pressed: the knob becomes the glass lens. -->
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource SliderTrackPressedBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+      <Style Selector="^ /template/ Thumb">
+        <Setter Property="Opacity" Value="0" />
+      </Style>
+    </Style>
+    <Style Selector="^:pressed:horizontal /template/ Thumb">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <TemplatedControl Theme="{DynamicResource CupertinoSliderLens}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+    <Style Selector="^:pressed:vertical /template/ Thumb">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <TemplatedControl Classes="vertical" Theme="{DynamicResource CupertinoSliderLens}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+
+    <Style Selector="^:disabled">
+      <!-- The kit grays the whole track when disabled. -->
+      <Setter Property="Background" Value="{DynamicResource SliderTrackDisabledBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource SliderTrackDisabledBrush}" />
+    </Style>
+
+    <Style Selector="^:error /template/ Thumb">
+      <Setter Property="Background" Value="{DynamicResource AccentRedBrush}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

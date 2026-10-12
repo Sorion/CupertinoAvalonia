@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CupertinoAvalonia/CupertinoAvalonia.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/CupertinoAvalonia.Gallery/CupertinoAvalonia.Gallery.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CupertinoAvalonia.Tests/CupertinoAvalonia.Tests.csproj" />
+  </Folder>
+</Solution>

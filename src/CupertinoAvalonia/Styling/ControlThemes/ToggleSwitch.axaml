@@ -1,0 +1,308 @@
+<!--
+  ToggleSwitch, from the kit's "Toggles - Switches" (page Toggles).
+  macOS puts the label before the switch and shows no On/Off text: Content is the leading label,
+  OnContent and OffContent are not displayed.
+  While pressed or dragged, the white knob turns into a Liquid Glass lens ("_Knob Clicked" in the kit):
+  larger than the track and overflowing it, it shows the track through clear glass (see GlassLens).
+  In an inactive window, the "on" track turns gray (_Tracks - Filled, Active=False).
+  Sizes: mini, small, (regular), large.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="10">
+      <ToggleSwitch IsChecked="True" />
+      <ToggleSwitch />
+      <ToggleSwitch Content="Launch at login" IsChecked="True" />
+      <ToggleSwitch IsChecked="True" IsEnabled="False" />
+      <ToggleSwitch Classes="small" IsChecked="True" />
+      <ToggleSwitch Classes="mini" IsChecked="True" />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ResourceDictionary.ThemeDictionaries>
+    <!-- The pressed lens's rim, light along its top and bottom edges, colored fringe and shadow, measured
+         on native macOS 27 (System Settings): the kit's "_Knob Clicked" predates them. -->
+    <ResourceDictionary x:Key="Default">
+      <Color x:Key="SwitchLensRimColor">#4D000000</Color>
+      <Color x:Key="SwitchLensHighlightColor">#6BFFFFFF</Color>
+      <x:Double x:Key="SwitchLensIridescence">0.16</x:Double>
+      <BoxShadows x:Key="SwitchLensShadow">0 6 6 -2.5 #17000000, 0 0.8 0.3 0 #26000000</BoxShadows>
+      <!-- _Tracks - Unfilled, State=Clicked: the primary label color at 19%. -->
+      <SolidColorBrush x:Key="SwitchTrackPressedBrush" Color="#29000000" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <Color x:Key="SwitchLensRimColor">#38000000</Color>
+      <Color x:Key="SwitchLensHighlightColor">#3DFFFFFF</Color>
+      <x:Double x:Key="SwitchLensIridescence">0.07</x:Double>
+      <BoxShadows x:Key="SwitchLensShadow">0 6 6 -2.5 #12000000</BoxShadows>
+      <SolidColorBrush x:Key="SwitchTrackPressedBrush" Color="#29FFFFFF" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <!--
+    The pressed lens ("_Knob Clicked"). It is created on the knob while the switch is pressed or
+    dragged (see the styles below), in the window's adorner layer so no container clips it (not even
+    a scroll viewport: it only shows while the pointer holds the switch), and
+    scaled up 1.62 times: in "_Knob Clicked", the glass layer (60 × 40) overflows its 58 × 38 component,
+    which is placed at 50 × 31 on the 32 × 20 knob, so the visible glass is about 1.62 times the knob in
+    every control size. Its sizes and widths are local DIPs, before that scale; native macOS shows a lens of
+    the same size.
+  -->
+  <ControlTheme x:Key="CupertinoSwitchLens" TargetType="TemplatedControl">
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="IsHitTestVisible" Value="False" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <!-- Clear glass, as on native macOS 27: the track seen through it is zoomed out (about 3/4 of
+               its height) and sharp, under a slightly darker body, light along the top and bottom edges,
+               a colored fringe in the rounded ends and a thin dark rim. Values are local DIPs, before
+               the 1.62 scale. Without Skia it falls back to the track's pressed color. -->
+          <cas:GlassLens Name="PART_Glass"
+                         Magnification="0.74"
+                         Refraction="0"
+                         Frost="0"
+                         Dispersion="0.04"
+                         Tint="#0B000000"
+                         HighlightColor="{DynamicResource SwitchLensHighlightColor}"
+                         HighlightFalloff="3.7"
+                         RimColor="{DynamicResource SwitchLensRimColor}"
+                         RimWidth="0.85"
+                         Iridescence="{DynamicResource SwitchLensIridescence}"
+                         FallbackBackground="{DynamicResource WindowBackgroundBrush}"
+                         FallbackForeground="{DynamicResource SwitchTrackPressedBrush}" />
+          <!-- The "Shadow" layer, drawn after the glass so the glass doesn't see it: a box shadow only
+               paints outside its border. Avalonia applies box shadow offsets in the window's space,
+               ignoring render transforms: offsets are screen DIPs, blur and spread scale with the lens. -->
+          <Border CornerRadius="100"
+                  Background="Transparent"
+                  BoxShadow="{DynamicResource SwitchLensShadow}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^.on /template/ cas|GlassLens#PART_Glass">
+      <Setter Property="FallbackForeground" Value="{DynamicResource AccentBrush}" />
+    </Style>
+    <!-- Grows out of the knob, then stays 1.62 times its size (keyframe animations can't animate
+         RenderTransform itself: they animate a ScaleTransform they create). -->
+    <Style Selector="^">
+      <Style.Animations>
+        <Animation Duration="0:0:0.2" Easing="BackEaseOut" FillMode="Forward">
+          <KeyFrame Cue="0%">
+            <Setter Property="ScaleTransform.ScaleX" Value="1" />
+            <Setter Property="ScaleTransform.ScaleY" Value="1" />
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="ScaleTransform.ScaleX" Value="1.62" />
+            <Setter Property="ScaleTransform.ScaleY" Value="1.62" />
+          </KeyFrame>
+        </Animation>
+        <Animation Duration="0:0:0.12" FillMode="Forward">
+          <KeyFrame Cue="0%">
+            <Setter Property="Opacity" Value="0" />
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="Opacity" Value="1" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type ToggleSwitch}" TargetType="ToggleSwitch">
+    <!-- TemplatedControl clips by default, which would cut the knob's soft shadow. -->
+    <Setter Property="ClipToBounds" Value="False" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="KnobTransitions">
+      <Transitions>
+        <DoubleTransition Property="Canvas.Left" Duration="0:0:0.2" Easing="CubicEaseOut" />
+      </Transitions>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="Auto,Auto" Background="{TemplateBinding Background}">
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Center"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            RecognizesAccessKey="True" />
+          <!-- Parts ToggleSwitch expects; macOS shows no On/Off text. -->
+          <ContentPresenter Name="PART_OffContentPresenter" IsVisible="False"
+                            Content="{TemplateBinding OffContent}"
+                            ContentTemplate="{TemplateBinding OffContentTemplate}" />
+          <ContentPresenter Name="PART_OnContentPresenter" IsVisible="False"
+                            Content="{TemplateBinding OnContent}"
+                            ContentTemplate="{TemplateBinding OnContentTemplate}" />
+
+          <Panel Name="PART_Track"
+                 Grid.Column="1"
+                 Width="{DynamicResource SwitchTrackWidth}"
+                 Height="{DynamicResource SwitchTrackHeight}"
+                 VerticalAlignment="Center">
+            <!-- _Tracks - Unfilled: the primary label color at 10%. -->
+            <Border Name="PART_TrackOff" CornerRadius="100"
+                    Background="{DynamicResource LabelPrimaryBrush}" Opacity="0.1" />
+            <!-- _Tracks - Filled -->
+            <Border Name="PART_TrackOn" CornerRadius="100"
+                    Background="{DynamicResource AccentBrush}" Opacity="0" />
+            <Border Name="PART_TrackPressed" CornerRadius="100"
+                    Background="{DynamicResource FillSecondaryBrush}" IsVisible="False" />
+            <Canvas Name="PART_SwitchKnob"
+                    Width="{DynamicResource SwitchKnobTravel}"
+                    Height="{DynamicResource SwitchKnobHeight}"
+                    Margin="{DynamicResource SwitchKnobMargin}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+              <Panel Name="PART_MovingKnobs"
+                     Width="{DynamicResource SwitchKnobWidth}"
+                     Height="{DynamicResource SwitchKnobHeight}">
+                <!-- _Knob: white, with its soft drop shadow. -->
+                <Border Name="PART_Knob"
+                        CornerRadius="100"
+                        Background="{DynamicResource WhiteBrush}"
+                        BoxShadow="0 3 36 0 #0D000000, 0 0 1 0 #26000000">
+                  <Border.Transitions>
+                    <Transitions>
+                      <DoubleTransition Property="Opacity" Duration="0:0:0.12" />
+                    </Transitions>
+                  </Border.Transitions>
+                </Border>
+              </Panel>
+            </Canvas>
+          </Panel>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter:empty">
+      <Setter Property="Margin" Value="0" />
+    </Style>
+    <!-- Keyboard focus ring around the track, in the adorner layer (see OverflowAdorner). -->
+    <Style Selector="^:focus-visible /template/ Panel#PART_Track">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" CornerRadius="100" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+
+    <Style Selector="^:checked">
+      <Style Selector="^ /template/ Border#PART_TrackOn">
+        <Setter Property="Opacity" Value="1" />
+      </Style>
+      <Style Selector="^ /template/ Border#PART_TrackOff">
+        <Setter Property="Opacity" Value="0" />
+      </Style>
+      <Style Selector="^:pressed /template/ Border#PART_TrackPressed">
+        <Setter Property="IsVisible" Value="True" />
+      </Style>
+    </Style>
+
+    <!-- Inactive window: the primary label color at 17% instead of the accent. -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]:checked /template/ Border#PART_TrackOn">
+      <Setter Property="Background" Value="{DynamicResource ControlFillInactiveBrush}" />
+    </Style>
+
+    <Style Selector="^:pressed:unchecked /template/ Border#PART_TrackOff">
+      <Setter Property="Opacity" Value="0.19" />
+    </Style>
+    <!-- Pressed or dragged: the knob becomes the glass lens. -->
+    <Style Selector="^:pressed /template/ Border#PART_Knob, ^:dragging /template/ Border#PART_Knob">
+      <Setter Property="Opacity" Value="0" />
+    </Style>
+    <Style Selector="^:pressed:unchecked /template/ Panel#PART_MovingKnobs, ^:dragging:unchecked /template/ Panel#PART_MovingKnobs">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <TemplatedControl Theme="{DynamicResource CupertinoSwitchLens}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+    <Style Selector="^:pressed:checked /template/ Panel#PART_MovingKnobs, ^:dragging:checked /template/ Panel#PART_MovingKnobs">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <TemplatedControl Classes="on" Theme="{DynamicResource CupertinoSwitchLens}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+      <Style Selector="^:unchecked /template/ Border#PART_TrackOff">
+        <Setter Property="Opacity" Value="0.06" />
+      </Style>
+      <!-- The kit keeps the disabled "on" track unchanged; dim it so it reads as disabled, as AppKit does. -->
+      <Style Selector="^:checked /template/ Border#PART_TrackOn">
+        <Setter Property="Opacity" Value="0.5" />
+      </Style>
+    </Style>
+
+    <!-- Control sizes -->
+    <Style Selector="^.mini">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+      <Style Selector="^ /template/ Panel#PART_Track">
+        <Setter Property="Width" Value="{DynamicResource SwitchTrackWidthMini}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchTrackHeightMini}" />
+      </Style>
+      <Style Selector="^ /template/ Canvas#PART_SwitchKnob">
+        <Setter Property="Width" Value="{DynamicResource SwitchKnobTravelMini}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchKnobHeightMini}" />
+        <Setter Property="Margin" Value="{DynamicResource SwitchKnobMarginMini}" />
+      </Style>
+      <Style Selector="^ /template/ Panel#PART_MovingKnobs">
+        <Setter Property="Width" Value="{DynamicResource SwitchKnobWidthMini}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchKnobHeightMini}" />
+      </Style>
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
+      <Style Selector="^ /template/ Panel#PART_Track">
+        <Setter Property="Width" Value="{DynamicResource SwitchTrackWidthSmall}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchTrackHeightSmall}" />
+      </Style>
+      <Style Selector="^ /template/ Canvas#PART_SwitchKnob">
+        <Setter Property="Width" Value="{DynamicResource SwitchKnobTravelSmall}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchKnobHeightSmall}" />
+        <Setter Property="Margin" Value="{DynamicResource SwitchKnobMarginSmall}" />
+      </Style>
+      <Style Selector="^ /template/ Panel#PART_MovingKnobs">
+        <Setter Property="Width" Value="{DynamicResource SwitchKnobWidthSmall}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchKnobHeightSmall}" />
+      </Style>
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+      <Style Selector="^ /template/ Panel#PART_Track">
+        <Setter Property="Width" Value="{DynamicResource SwitchTrackWidthLarge}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchTrackHeightLarge}" />
+      </Style>
+      <Style Selector="^ /template/ Canvas#PART_SwitchKnob">
+        <Setter Property="Width" Value="{DynamicResource SwitchKnobTravelLarge}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchKnobHeightLarge}" />
+        <Setter Property="Margin" Value="{DynamicResource SwitchKnobMarginLarge}" />
+      </Style>
+      <Style Selector="^ /template/ Panel#PART_MovingKnobs">
+        <Setter Property="Width" Value="{DynamicResource SwitchKnobWidthLarge}" />
+        <Setter Property="Height" Value="{DynamicResource SwitchKnobHeightLarge}" />
+      </Style>
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

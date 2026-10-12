@@ -1,0 +1,33 @@
+<Styles x:Class="CupertinoAvalonia.CupertinoAvaloniaTheme"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cas="using:CupertinoAvalonia.Styling">
+
+  <!--
+    Fallback for the controls that don't have a macOS template yet: they keep Fluent's templates,
+    recolored with Apple's palette (see CupertinoAvaloniaTheme.ApplyFluentPalettes).
+    The resources below are looked up first, so every macOS control theme wins over Fluent's.
+  -->
+  <FluentTheme />
+
+  <Styles.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <MergeResourceInclude Source="/Styling/Tokens/Colors.g.axaml" />
+        <MergeResourceInclude Source="/Styling/Tokens/Metrics.g.axaml" />
+        <MergeResourceInclude Source="/Styling/Tokens/Typography.g.axaml" />
+        <MergeResourceInclude Source="/Styling/Tokens/Shadows.g.axaml" />
+        <MergeResourceInclude Source="/Styling/ThemeResources.axaml" />
+        <MergeResourceInclude Source="/Styling/ControlThemes/ControlThemes.axaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <StyleInclude Source="/Styling/TextStyles.axaml" />
+  <StyleInclude Source="/Styling/ListStyles.axaml" />
+
+  <!-- An inactive window shows no keyboard focus ring (see Styling/WindowActivity.cs). -->
+  <Style Selector="Border.focus-ring[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="IsVisible" Value="False" />
+  </Style>
+</Styles>

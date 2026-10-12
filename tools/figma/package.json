@@ -1,0 +1,14 @@
+{
+  "name": "cupertino-figma-tools",
+  "private": true,
+  "description": "Generate CupertinoAvalonia's design tokens from your own local copy of Apple's macOS Figma kit",
+  "scripts": {
+    "generate": "npm run extract && npm run tokens",
+    "extract": "unzip -o -q ../../design/source/macOS-27.fig canvas.fig -d ../../design/source/unpacked && node decode.js ../../design/source/unpacked/canvas.fig ../../design/source/unpacked/canvas.json && node extract-tokens.js ../../design/source/unpacked/canvas.json ../../design/extracted",
+    "tokens": "node generate-tokens.js ../../design/extracted ../../src/CupertinoAvalonia/Styling/Tokens",
+    "inspect": "node inspect.js ../../design/source/unpacked/canvas.json"
+  },
+  "dependencies": {
+    "kiwi-schema": "0.5.0"
+  }
+}
