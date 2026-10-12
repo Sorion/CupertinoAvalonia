@@ -3,21 +3,10 @@
 A macOS 27 theme for [Avalonia](https://avaloniaui.net)'s built-in controls, plus `CupertinoWindow`, a window
 with macOS's chrome. Inspired by [FluentAvalonia](https://github.com/amwx/FluentAvalonia). Status: early.
 
-> **Apple's UI kit isn't included.** The theme's colors, metrics and text styles are generated from **your own
-> copy** of Apple's macOS 27 UI kit, by the extractor in `tools/figma`, which you run yourself. The kit's license
-> (on its *License* page) forbids redistributing its content: never commit or share the generated files.
-
 ## Getting started
 
-**1. Generate the design tokens** (once, and again when Apple updates the kit):
-
-1. Duplicate Apple's [macOS 27 kit](https://developer.apple.com/design/resources/) from the Figma Community, then
-   in the Figma desktop app, **File → Save local copy…** to `design/source/macOS-27.fig`.
-2. In `tools/figma` (Node.js): `npm install`, then `npm run generate`. It works offline, without a Figma account.
-
-The build stops with a message until the tokens exist. Git ignores them, and `design/`.
-
-**2. Use the theme** instead of `FluentTheme` in `App.axaml`:
+Add the package (`dotnet add package CupertinoAvalonia`), then use the theme instead of `FluentTheme` in
+`App.axaml`:
 
 ```xml
 <Application xmlns="https://github.com/avaloniaui"
@@ -69,7 +58,7 @@ On macOS (elsewhere it's a plain `Window`):
 - `Material`: a system material behind the window (`Sidebar`, `WindowBackground`, `UnderWindowBackground`,
   `HudWindow`), shown wherever the content is transparent.
 
-The Gallery's window ([MainWindow.axaml](samples/CupertinoAvalonia.Gallery/Views/MainWindow.axaml)) is a
+The Gallery's window ([MainWindow.axaml](https://github.com/Sorion/CupertinoAvalonia/blob/main/samples/CupertinoAvalonia.Gallery/Views/MainWindow.axaml)) is a
 complete example: a sidebar on the sidebar material, a toolbar over the content.
 
 **Liquid Glass chrome:** macOS 26+ draws it only for apps whose executable declares its SDK, which .NET's app
@@ -83,15 +72,25 @@ turns it off.
   inspired by [LiquidGlassAvaloniaUI](https://github.com/KaranocaVe/LiquidGlassAvaloniaUI) and
   [LiquidAvalonia](https://github.com/A1isandr/LiquidAvalonia)). Menus, popovers and sidebars aren't glass yet.
 - Focus rings and lenses are drawn in the adorner layer so containers don't clip them:
-  [docs/avalonia-clipping.md](docs/avalonia-clipping.md) explains how, for any control.
+  [docs/avalonia-clipping.md](https://github.com/Sorion/CupertinoAvalonia/blob/main/docs/avalonia-clipping.md) explains how, for any control.
 - The theme adds letter spacing to the system font, which Skia renders tighter than macOS does.
+
+## Design tokens
+
+The theme's colors, metrics and text styles (`Styling/Tokens/*.g.axaml`, `Media/SystemAccentPalette.g.cs`) are
+generated from Apple's macOS 27 UI kit for Figma, and included in the library. Apple's kit itself isn't in the
+repository. To regenerate the tokens when Apple updates it:
+
+1. Duplicate Apple's [macOS 27 kit](https://developer.apple.com/design/resources/) from the Figma Community, then
+   in the Figma desktop app, **File → Save local copy…** to `design/source/macOS-27.fig` (ignored by git).
+2. In `tools/figma` (Node.js): `npm install`, then `npm run generate`. It works offline, without a Figma account.
 
 ## Contributing
 
 ```
 src/CupertinoAvalonia/
   Styling/ControlThemes/   one file per control
-  Styling/Tokens/          generated tokens (local only, don't edit)
+  Styling/Tokens/          generated design tokens (don't edit: regenerate them)
   Controls/                CupertinoWindow
 samples/CupertinoAvalonia.Gallery/
 tests/CupertinoAvalonia.Tests/
@@ -103,7 +102,10 @@ tools/figma/               the extractor
 - `npm run inspect -- "Buttons" "State=Idle"` (in `tools/figma`) prints a kit component's layers and colors.
 - `dotnet test` runs the headless tests. To render the Gallery's pages to PNG:
   `GALLERY_SCREENSHOTS=/tmp/gallery dotnet test tests/CupertinoAvalonia.Tests`.
+- The CI (GitHub Actions, on macOS) builds and tests every push and pull request.
+- To release, push a version tag (`v0.1.0`, `v0.2.0-preview.1`…): the Release workflow tests, packs and
+  publishes the package to nuget.org with the `NUGET_API_KEY` secret.
 
 ## License
 
-MIT, see [LICENSE](LICENSE) and [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+MIT, see [LICENSE](https://github.com/Sorion/CupertinoAvalonia/blob/main/LICENSE) and [THIRD-PARTY-NOTICES.md](https://github.com/Sorion/CupertinoAvalonia/blob/main/THIRD-PARTY-NOTICES.md).

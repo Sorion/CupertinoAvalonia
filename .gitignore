@@ -339,11 +339,9 @@ ASALocalRun/
 # Local History for Visual Studio
 .localhistory/
 
-# Apple's macOS Figma kit and everything derived from it stay on each developer's machine: Apple's
-# license forbids redistributing the kit's content, decoded or not (see README, "Design tokens").
+# Apple's macOS Figma kit, and what the extractor decodes from it, stay on the maintainer's machine. The design
+# tokens generated from it (Styling/Tokens/*.g.axaml, Media/*.g.cs) are part of the library.
 design/
-src/CupertinoAvalonia/Styling/Tokens/*.g.axaml
-src/CupertinoAvalonia/Media/*.g.cs
 
 # Figma tooling
 tools/figma/node_modules/

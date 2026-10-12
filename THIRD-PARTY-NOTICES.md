@@ -32,11 +32,11 @@ SOFTWARE.
 
 ## Apple
 
-The theme's design tokens (colors, metrics, text styles) are generated on each developer's machine from that
-developer's own copy of Apple's macOS 27 UI kit for Figma, which is subject to Apple's "License Agreement for
-Apple Design Resources". The kit, and the files extracted or generated from it, are not distributed with this
-project. As an exception, a limited number of control colors taken from the kit are written directly in the
-control themes; each names the kit component it comes from.
+The theme's design tokens (colors, metrics, text styles: `Styling/Tokens/*.g.axaml` and
+`Media/SystemAccentPalette.g.cs`) are generated from Apple's macOS 27 UI kit for Figma, which is subject to Apple's
+"License Agreement for Apple Design Resources", and a limited number of control colors taken from the kit are
+written directly in the control themes, each naming the kit component it comes from. The kit itself is not
+distributed with this project.
 
 Apple's fonts (SF Pro) and symbols (SF Symbols) are not distributed either: the theme uses the system font
 installed with macOS, and draws its glyphs (checkmarks, chevrons) as vector paths.
