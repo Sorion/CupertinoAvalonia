@@ -1,0 +1,333 @@
+<!--
+  Toolbar items, from the kit's "Window/…" components (page Windows). Styles rather than control themes: grouped
+  buttons depend on their parent's class. The kit's vibrant labels blend into the glass; the translucent labels stand in.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cas="using:CupertinoAvalonia.Styling"
+        xmlns:cac="using:CupertinoAvalonia.Controls"
+        xmlns:sys="using:System">
+
+  <Styles.Resources>
+    <ResourceDictionary>
+      <StreamGeometry x:Key="ToolbarSearchGlyph">M 11.5,6.5 A 5,5 0 1 1 1.5,6.5 A 5,5 0 1 1 11.5,6.5 Z M 10.1,10.1 L 14,14</StreamGeometry>
+
+      <!--
+        Liquid Glass - Small: the kit's blend-mode layers as translucent colors, checked against macOS 26 (Notes).
+        The edge lines are inner shadows offset by 1 pt: they follow the curve and fade out on the sides.
+      -->
+      <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+          <LinearGradientBrush x:Key="ToolbarGlassBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Offset="0" Color="#8CFFFFFF" />
+            <GradientStop Offset="0.08" Color="#8CFFFFFF" />
+            <GradientStop Offset="0.16" Color="#8CF9F9F9" />
+            <GradientStop Offset="0.3" Color="#8CF2F2F2" />
+            <GradientStop Offset="0.45" Color="#8CF6F6F6" />
+            <GradientStop Offset="0.6" Color="#8CF9F9F9" />
+            <GradientStop Offset="0.75" Color="#8CFBFBFB" />
+            <GradientStop Offset="0.85" Color="#8CFDFDFD" />
+            <GradientStop Offset="0.92" Color="#8CFFFFFF" />
+            <GradientStop Offset="1" Color="#8CFFFFFF" />
+          </LinearGradientBrush>
+          <!-- State=Clicked, measured on Notes. -->
+          <LinearGradientBrush x:Key="ToolbarGlassPressedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Offset="0" Color="#8CFAFAFA" />
+            <GradientStop Offset="0.04" Color="#8CEBEBEB" />
+            <GradientStop Offset="0.15" Color="#8CE0E0E0" />
+            <GradientStop Offset="0.3" Color="#8CD5D5D5" />
+            <GradientStop Offset="0.75" Color="#8CD5D5D5" />
+            <GradientStop Offset="1" Color="#8CD0D0D0" />
+          </LinearGradientBrush>
+          <!-- Rim: linear burn #E8E8E8, #D0D0D0 on the sides. -->
+          <LinearGradientBrush x:Key="ToolbarGlassRimBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Offset="0" Color="#14000000" />
+            <GradientStop Offset="0.5" Color="#22000000" />
+            <GradientStop Offset="1" Color="#17000000" />
+          </LinearGradientBrush>
+          <BoxShadows x:Key="ToolbarGlassShadow">0 8 15 0 #05000000, inset 0 1 0 0 #CCFFFFFF, inset 0 -1 0 0 #CCFFFFFF</BoxShadows>
+          <BoxShadows x:Key="ToolbarGlassPrimaryShadow">0 8 15 0 #05000000, inset 0 1 0 0 #40FFFFFF, inset 0 -1 0 0 #40FFFFFF, inset 0 4 6 -3 #26FFFFFF, inset 0 -4 6 -3 #26FFFFFF</BoxShadows>
+          <!-- Active=False, measured on macOS 26 (the kit's linear burn #FBFBFB is lighter). -->
+          <SolidColorBrush x:Key="ToolbarGlassInactiveBrush" Color="#1A000000" />
+          <SolidColorBrush x:Key="ToolbarGlassInactiveRimBrush" Color="#14000000" />
+          <!-- _Buttons, State=Selected: linear burn #E6E6E6 -->
+          <SolidColorBrush x:Key="ToolbarItemSelectedBrush" Color="#1A000000" />
+          <!-- Separator: linear burn #D9D9D9 -->
+          <SolidColorBrush x:Key="ToolbarSeparatorBrush" Color="#26000000" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+          <!-- Measured on macOS 26 (the kit: #2B999999). -->
+          <SolidColorBrush x:Key="ToolbarGlassBrush" Color="#21FFFFFF" />
+          <!-- linear dodge #141414 -->
+          <SolidColorBrush x:Key="ToolbarGlassPressedBrush" Color="#3AFFFFFF" />
+          <!-- Rim: linear burn #A6A6A6, on the sides only. -->
+          <LinearGradientBrush x:Key="ToolbarGlassRimBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Offset="0" Color="#00000000" />
+            <GradientStop Offset="0.2" Color="#99000000" />
+            <GradientStop Offset="0.5" Color="#CC000000" />
+            <GradientStop Offset="0.8" Color="#99000000" />
+            <GradientStop Offset="1" Color="#00000000" />
+          </LinearGradientBrush>
+          <BoxShadows x:Key="ToolbarGlassShadow">0 8 15 0 #0A000000, inset 0 1 0 0 #40FFFFFF, inset 0 -1 0 0 #40FFFFFF, inset 0 4 6 -3 #26FFFFFF, inset 0 -4 6 -3 #26FFFFFF</BoxShadows>
+          <BoxShadows x:Key="ToolbarGlassPrimaryShadow">0 8 15 0 #0A000000, inset 0 1 0 0 #40FFFFFF, inset 0 -1 0 0 #40FFFFFF, inset 0 4 6 -3 #26FFFFFF, inset 0 -4 6 -3 #26FFFFFF</BoxShadows>
+          <!-- linear dodge #0D0D0D; rim linear burn #E6E6E6 -->
+          <SolidColorBrush x:Key="ToolbarGlassInactiveBrush" Color="#12FFFFFF" />
+          <SolidColorBrush x:Key="ToolbarGlassInactiveRimBrush" Color="#1A000000" />
+          <!-- linear dodge #141414 -->
+          <SolidColorBrush x:Key="ToolbarItemSelectedBrush" Color="#14FFFFFF" />
+          <!-- linear dodge #262626 -->
+          <SolidColorBrush x:Key="ToolbarSeparatorBrush" Color="#26FFFFFF" />
+        </ResourceDictionary>
+      </ResourceDictionary.ThemeDictionaries>
+
+      <BoxShadows x:Key="ToolbarNoShadow">0 0 0 0 Transparent</BoxShadows>
+      <!-- Keep GlassLift.MinimumDuration in sync. -->
+      <sys:TimeSpan x:Key="ToolbarLiftDuration">0:0:0.25</sys:TimeSpan>
+      <BackEaseOut x:Key="ToolbarLiftEasing" />
+    </ResourceDictionary>
+  </Styles.Resources>
+
+  <Style Selector=":is(Button).toolbar, ComboBox.toolbar, TextBox.toolbar, ListBox.segmented.toolbar">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ToolbarGlassRimBrush}" />
+    <Setter Property="BorderThickness" Value="0.5" />
+    <Setter Property="CornerRadius" Value="1000" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelVibrantPrimaryBrush}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+    <!-- Would clip the shadow. -->
+    <Setter Property="ClipToBounds" Value="False" />
+  </Style>
+  <Style Selector=":is(Button).toolbar /template/ Border#PART_Background, ComboBox.toolbar /template/ Border#Background, TextBox.toolbar /template/ Border#PART_BorderElement, ListBox.segmented.toolbar /template/ Border#border, Border.toolbar-group">
+    <Setter Property="BoxShadow" Value="{DynamicResource ToolbarGlassShadow}" />
+    <!-- Would round the 0.5 pt rim away on a 1x screen. -->
+    <Setter Property="UseLayoutRounding" Value="False" />
+  </Style>
+  <Style Selector="ComboBox.toolbar /template/ DataValidationErrors, TextBox.toolbar /template/ DataValidationErrors">
+    <Setter Property="ClipToBounds" Value="False" />
+  </Style>
+
+  <!-- The swell, measured on Notes. Transitions set with the lifted value would come too late. -->
+  <Style Selector=":is(Button).toolbar, ComboBox.toolbar, Border.toolbar-group, ListBox.segmented.toolbar">
+    <Setter Property="cas:GlassLift.IsEnabled" Value="True" />
+    <Setter Property="RenderTransform" Value="scale(1)" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <TransformOperationsTransition Property="RenderTransform" Duration="{StaticResource ToolbarLiftDuration}" Easing="{StaticResource ToolbarLiftEasing}" />
+      </Transitions>
+    </Setter>
+  </Style>
+  <Style Selector=":is(Button).toolbar[(cas|GlassLift.IsLifted)=True], :is(Button).toolbar:flyout-open, ComboBox.toolbar[(cas|GlassLift.IsLifted)=True], ComboBox.toolbar:dropdownopen, Border.toolbar-group[(cas|GlassLift.IsLifted)=True], ListBox.segmented.toolbar[(cas|GlassLift.IsLifted)=True]">
+    <Setter Property="RenderTransform" Value="scale(1.08)" />
+  </Style>
+
+  <Style Selector=":is(Button).toolbar">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+    <Setter Property="MinWidth" Value="{DynamicResource ControlHeightXLarge}" />
+    <Setter Property="Padding" Value="8,0" />
+  </Style>
+  <!-- Button, not :is(Button): a lifted toggle button shows its own state. -->
+  <Style Selector=":is(Button).toolbar:pressed, Button.toolbar[(cas|GlassLift.IsLifted)=True], :is(Button).toolbar:flyout-open">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassPressedBrush}" />
+  </Style>
+  <Style Selector=":is(Button).toolbar.accent">
+    <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+  </Style>
+  <Style Selector=":is(Button).toolbar.accent /template/ Border#PART_Background">
+    <Setter Property="BoxShadow" Value="{DynamicResource ToolbarGlassPrimaryShadow}" />
+  </Style>
+  <Style Selector=":is(Button).toolbar.accent:pressed, Button.toolbar.accent[(cas|GlassLift.IsLifted)=True], :is(Button).toolbar.accent:flyout-open">
+    <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+  </Style>
+  <!-- Pressing a toggle button previews its other state. -->
+  <Style Selector="ToggleButton.toolbar:checked, ToggleButton.toolbar:unchecked:pressed">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassPressedBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelVibrantPrimaryBrush}" />
+  </Style>
+  <Style Selector="ToggleButton.toolbar:checked:pressed">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassBrush}" />
+  </Style>
+
+  <Style Selector="Border.toolbar-group">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ToolbarGlassRimBrush}" />
+    <Setter Property="BorderThickness" Value="0.5" />
+    <Setter Property="CornerRadius" Value="1000" />
+    <!-- 4 pt, rim included. -->
+    <Setter Property="Padding" Value="3.5" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Border.toolbar-group > StackPanel">
+    <Setter Property="Orientation" Value="Horizontal" />
+    <Setter Property="Spacing" Value="1" />
+  </Style>
+  <Style Selector="Border.toolbar-group :is(Button)">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelVibrantPrimaryBrush}" />
+    <Setter Property="CornerRadius" Value="1000" />
+    <Setter Property="MinHeight" Value="28" />
+    <Setter Property="MinWidth" Value="36" />
+    <Setter Property="Padding" Value="8,0" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+  </Style>
+  <Style Selector="Border.toolbar-group :is(Button):pressed, Border.toolbar-group :is(Button):flyout-open, Border.toolbar-group ToggleButton:checked">
+    <Setter Property="Background" Value="{DynamicResource ToolbarItemSelectedBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelVibrantPrimaryBrush}" />
+  </Style>
+  <Style Selector="Border.toolbar-group ToggleButton:checked:pressed">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+
+  <Style Selector="ListBox.segmented.toolbar">
+    <Setter Property="Padding" Value="3.5" />
+  </Style>
+  <Style Selector="ListBox.segmented.toolbar /template/ Border#Underlay">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="ListBox.segmented.toolbar cas|SegmentedPanel">
+    <Setter Property="Spacing" Value="3" />
+    <Setter Property="SeparatorBrush" Value="{DynamicResource ToolbarSeparatorBrush}" />
+    <Setter Property="SeparatorHeight" Value="20" />
+  </Style>
+  <Style Selector="ListBox.segmented.toolbar ListBoxItem">
+    <Setter Property="Foreground" Value="{DynamicResource LabelVibrantPrimaryBrush}" />
+    <Setter Property="MinHeight" Value="28" />
+    <Setter Property="MinWidth" Value="32" />
+    <Setter Property="Padding" Value="8,0" />
+    <Setter Property="CornerRadius" Value="1000" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+  </Style>
+  <Style Selector="ListBox.segmented.toolbar ListBoxItem:pressed, ListBox.segmented.toolbar ListBoxItem:selected">
+    <Setter Property="Background" Value="{DynamicResource ToolbarItemSelectedBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelVibrantPrimaryBrush}" />
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+
+  <Style Selector=":is(Button).toolbar cac|SymbolIcon, Border.toolbar-group cac|SymbolIcon, ListBox.segmented.toolbar cac|SymbolIcon">
+    <Setter Property="SymbolScale" Value="Large" />
+    <!-- Wide symbols (up to 24 pt) draw past it, so icon buttons stay round. -->
+    <Setter Property="MaxWidth" Value="20" />
+  </Style>
+  <Style Selector="ListBox.segmented.toolbar cac|SymbolIcon">
+    <Setter Property="MaxWidth" Value="16" />
+  </Style>
+  <Style Selector=":is(Button).toolbar.compact cac|SymbolIcon, Border.toolbar-group.compact cac|SymbolIcon, ListBox.segmented.toolbar.compact cac|SymbolIcon">
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+
+  <Style Selector="ComboBox.toolbar">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+    <Setter Property="Padding" Value="8,0,0,0" />
+  </Style>
+  <Style Selector="ComboBox.toolbar /template/ cac|SymbolIcon#DropDownGlyph">
+    <Setter Property="Width" Value="10" />
+    <Setter Property="Margin" Value="2,0,8,0" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="ComboBox.toolbar:pressed, ComboBox.toolbar:dropdownopen, ComboBox.toolbar[(cas|GlassLift.IsLifted)=True]">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassPressedBrush}" />
+  </Style>
+
+  <Style Selector="TextBox.toolbar">
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelSecondaryBrush}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+    <Setter Property="MinWidth" Value="130" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Padding" Value="0,0,10,0" />
+    <Setter Property="InnerLeftContent">
+      <Template>
+        <cac:SymbolIcon Name="SearchGlyph"
+                        Width="16" Height="16" Margin="10,0,6,0"
+                        VerticalAlignment="Center"
+                        IsHitTestVisible="False"
+                        Symbol="magnifyingglass"
+                        FontSize="13"
+                        FontWeight="Medium"
+                        FallbackData="{StaticResource ToolbarSearchGlyph}"
+                        Foreground="{Binding $parent[TextBox].PlaceholderForeground}" />
+      </Template>
+    </Setter>
+  </Style>
+
+  <Style Selector=":is(Button).toolbar:not(.accent):disabled, Border.toolbar-group :is(Button):disabled, ListBox.segmented.toolbar ListBoxItem:disabled, ComboBox.toolbar:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+  <Style Selector="TextBox.toolbar:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+
+  <!-- Active=False, measured on macOS 26. -->
+  <Style Selector=":is(Button).toolbar[(cas|WindowActivity.IsInactive)=True], ComboBox.toolbar[(cas|WindowActivity.IsInactive)=True], TextBox.toolbar[(cas|WindowActivity.IsInactive)=True], ListBox.segmented.toolbar[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="TemplatedControl.Background" Value="{DynamicResource ToolbarGlassInactiveBrush}" />
+    <Setter Property="TemplatedControl.BorderBrush" Value="{DynamicResource ToolbarGlassInactiveRimBrush}" />
+  </Style>
+  <Style Selector="Border.toolbar-group[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassInactiveBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ToolbarGlassInactiveRimBrush}" />
+  </Style>
+  <Style Selector=":is(Button).toolbar[(cas|WindowActivity.IsInactive)=True] /template/ Border#PART_Background, Border.toolbar-group[(cas|WindowActivity.IsInactive)=True], ComboBox.toolbar[(cas|WindowActivity.IsInactive)=True] /template/ Border#Background, TextBox.toolbar[(cas|WindowActivity.IsInactive)=True] /template/ Border#PART_BorderElement, ListBox.segmented.toolbar[(cas|WindowActivity.IsInactive)=True] /template/ Border#border">
+    <Setter Property="BoxShadow" Value="{StaticResource ToolbarNoShadow}" />
+  </Style>
+  <Style Selector="ToggleButton.toolbar:checked[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="Background" Value="{DynamicResource ToolbarItemSelectedBrush}" />
+  </Style>
+  <Style Selector=":is(Button).toolbar[(cas|WindowActivity.IsInactive)=True], Border.toolbar-group :is(Button)[(cas|WindowActivity.IsInactive)=True], ComboBox.toolbar[(cas|WindowActivity.IsInactive)=True], ListBox.segmented.toolbar ListBoxItem[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="TemplatedControl.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+  <Style Selector="TextBox.toolbar[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+  <Style Selector="cac|CupertinoToolbar[(cas|WindowActivity.IsInactive)=True] TextBlock, cac|CupertinoToolbar[(cas|WindowActivity.IsInactive)=True] cac|SymbolIcon">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+
+  <Style Selector=":is(Button).toolbar.compact">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="MinWidth" Value="36" />
+    <Setter Property="Padding" Value="8,0" />
+  </Style>
+  <Style Selector="Border.toolbar-group.compact">
+    <Setter Property="Padding" Value="1.5" />
+  </Style>
+  <Style Selector="Border.toolbar-group.compact :is(Button)">
+    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="MinWidth" Value="24" />
+    <Setter Property="Padding" Value="6,0" />
+  </Style>
+  <Style Selector="ListBox.segmented.toolbar.compact">
+    <Setter Property="Padding" Value="1.5" />
+  </Style>
+  <Style Selector="ListBox.segmented.toolbar.compact cas|SegmentedPanel">
+    <Setter Property="SeparatorHeight" Value="16" />
+  </Style>
+  <Style Selector="ListBox.segmented.toolbar.compact ListBoxItem">
+    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="MinWidth" Value="24" />
+    <Setter Property="Padding" Value="6,0" />
+  </Style>
+  <Style Selector="ComboBox.toolbar.compact">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="Padding" Value="6,0,0,0" />
+  </Style>
+  <Style Selector="ComboBox.toolbar.compact /template/ cac|SymbolIcon#DropDownGlyph">
+    <Setter Property="Width" Value="8" />
+    <Setter Property="Margin" Value="2,0,6,0" />
+    <Setter Property="FontSize" Value="10" />
+  </Style>
+  <Style Selector="TextBox.toolbar.compact">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="Padding" Value="0,0,6,0" />
+  </Style>
+  <Style Selector="TextBox.toolbar.compact cac|SymbolIcon#SearchGlyph">
+    <Setter Property="Margin" Value="6,0,4,0" />
+  </Style>
+</Styles>

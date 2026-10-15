@@ -78,4 +78,139 @@
   <Style Selector="ListBox.alternating ListBoxItem:nth-child(2n):not(:selected)">
     <Setter Property="Background" Value="{DynamicResource TableRowAlternateBrush}" />
   </Style>
+
+  <!-- Segmented Control, Context=Content Area -->
+  <Style Selector="ListBox.segmented">
+    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <!-- Without a scroll viewer of its own, it would scroll the page. -->
+    <Setter Property="AutoScrollToSelectedItem" Value="False" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <cas:SegmentedPanel />
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <!-- Fills - Opaque/Quinary under the bordered control background. -->
+        <Border Name="Underlay" Background="{DynamicResource FillQuinaryBrush}" CornerRadius="{TemplateBinding CornerRadius}">
+          <Border Name="border"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  Padding="{TemplateBinding Padding}">
+            <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+          </Border>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="ListBox.segmented cas|SegmentedPanel">
+    <Setter Property="Spacing" Value="1" />
+    <Setter Property="SeparatorBrush" Value="{DynamicResource LabelTertiaryBrush}" />
+    <Setter Property="SeparatorHeight" Value="{DynamicResource SegmentedControlHeightSeparator}" />
+  </Style>
+  <Style Selector="ListBox.segmented ListBoxItem">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPadding}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ListBox.segmented ListBoxItem:focus-visible">
+    <Setter Property="AdornerLayer.Adorner">
+      <Template>
+        <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+          <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+        </Panel>
+      </Template>
+    </Setter>
+  </Style>
+  <Style Selector="ListBox.segmented ListBoxItem:pressed">
+    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+  </Style>
+  <Style Selector="ListBox.segmented ListBoxItem:selected">
+    <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+  </Style>
+  <Style Selector="ListBox.segmented ListBoxItem:selected:pressed">
+    <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+  </Style>
+  <!-- Active=False (_Control BG/Controls) -->
+  <Style Selector="ListBox.segmented ListBoxItem:selected[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="Background" Value="{DynamicResource FillPrimaryBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+  </Style>
+  <Style Selector="ListBox.segmented ListBoxItem:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+  <!-- State=Disabled, Selected=True -->
+  <Style Selector="ListBox.segmented ListBoxItem:selected:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+    <Setter Property="Opacity" Value="0.45" />
+  </Style>
+  <Style Selector="ListBox.segmented ListBoxItem:selected:disabled[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    <Setter Property="Opacity" Value="1" />
+  </Style>
+
+  <Style Selector="ListBox.segmented.mini">
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
+  </Style>
+  <Style Selector="ListBox.segmented.mini cas|SegmentedPanel">
+    <Setter Property="SeparatorHeight" Value="{DynamicResource SegmentedControlHeightSeparatorMini}" />
+  </Style>
+  <Style Selector="ListBox.segmented.mini ListBoxItem">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
+    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPaddingMini}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+  </Style>
+  <Style Selector="ListBox.segmented.small">
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusSmall}" />
+  </Style>
+  <Style Selector="ListBox.segmented.small cas|SegmentedPanel">
+    <Setter Property="SeparatorHeight" Value="{DynamicResource SegmentedControlHeightSeparatorSmall}" />
+  </Style>
+  <Style Selector="ListBox.segmented.small ListBoxItem">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
+    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPaddingSmall}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusSmall}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
+  </Style>
+  <Style Selector="ListBox.segmented.large">
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
+  </Style>
+  <Style Selector="ListBox.segmented.large cas|SegmentedPanel">
+    <Setter Property="SeparatorHeight" Value="{DynamicResource SegmentedControlHeightSeparatorLarge}" />
+  </Style>
+  <Style Selector="ListBox.segmented.large ListBoxItem">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
+    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPaddingLarge}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingLarge}" />
+  </Style>
+  <Style Selector="ListBox.segmented.xlarge">
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusXLarge}" />
+  </Style>
+  <Style Selector="ListBox.segmented.xlarge cas|SegmentedPanel">
+    <Setter Property="SeparatorHeight" Value="{DynamicResource SegmentedControlHeightSeparatorXLarge}" />
+  </Style>
+  <Style Selector="ListBox.segmented.xlarge ListBoxItem">
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPaddingXLarge}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusXLarge}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeXLarge}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingXLarge}" />
+  </Style>
 </Styles>

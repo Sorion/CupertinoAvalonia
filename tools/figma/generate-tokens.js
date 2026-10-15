@@ -156,6 +156,7 @@ const sizeGroups = { 'Global': 'Control', 'Toggle (Switch)': 'Switch', 'Radio Bu
     ['ButtonPadding', (m) => `${byName['Button/Padding - Horizontal'][m]},0`],
     ['TextFieldPadding', (m) => `${byName['Fields/Inset - Left'][m]},0,${byName['Fields/Inset - Right'][m]},0`],
     ['PopUpButtonPadding', (m) => `${byName['Popup/Inset - Left'][m]},0,0,0`],
+    ['SegmentedControlPadding', (m) => `${byName['Segmented Control/Margins'][m]},0`],
   ];
   for (const [key, f] of composites) for (const mode of sizes.modes) lines.push(`  <Thickness x:Key="${key}${sizeSuffix[mode]}">${f(mode)}</Thickness>`);
   // Values derived from several variables.

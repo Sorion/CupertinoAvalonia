@@ -1,0 +1,68 @@
+<!--
+  CupertinoToolbar, from the kit's "Scroll Edge Effect - Hard" (page Windows) and macOS 26 (Notes). Nearly opaque
+  until the band gets a blur (the kit: #D9FFFFFF); dark mode measured on macOS 26.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling"
+                    xmlns:cac="using:CupertinoAvalonia.Controls">
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="ToolbarBandBrush" Color="#F7FFFFFF" />
+      <SolidColorBrush x:Key="ToolbarBandEdgeBrush" Color="#1A000000" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="ToolbarBandBrush" Color="#F7262626" />
+      <SolidColorBrush x:Key="ToolbarBandEdgeBrush" Color="#14FFFFFF" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+
+  <ControlTheme x:Key="{x:Type cac:CupertinoToolbar}" TargetType="cac:CupertinoToolbar">
+    <Setter Property="Height" Value="52" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="PART_Background"
+                  Background="{DynamicResource ToolbarBandBrush}"
+                  BorderBrush="{DynamicResource ToolbarBandEdgeBrush}"
+                  BorderThickness="0,0,0,1"
+                  WindowDecorationProperties.ElementRole="TitleBar">
+            <Border.Transitions>
+              <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+              </Transitions>
+            </Border.Transitions>
+          </Border>
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Set by styles: a value in the template would block them. -->
+    <Style Selector="^ /template/ Border#PART_Background">
+      <Setter Property="Opacity" Value="0" />
+    </Style>
+    <Style Selector="^[BackgroundVisibility=Visible] /template/ Border#PART_Background, ^[BackgroundVisibility=Automatic]:scrolled /template/ Border#PART_Background, ^[BackgroundVisibility=Automatic]:pointerover /template/ Border#PART_Background">
+      <Setter Property="Opacity" Value="1" />
+    </Style>
+    <!-- Active=False: shown at rest too. -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
+      <Style Selector="^[BackgroundVisibility=Automatic] /template/ Border#PART_Background, ^[BackgroundVisibility=Visible] /template/ Border#PART_Background">
+        <Setter Property="Opacity" Value="1" />
+      </Style>
+    </Style>
+
+    <Style Selector="^.compact">
+      <Setter Property="Height" Value="40" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

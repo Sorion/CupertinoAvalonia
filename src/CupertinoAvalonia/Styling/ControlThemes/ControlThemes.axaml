@@ -17,5 +17,6 @@
     <MergeResourceInclude Source="/Styling/ControlThemes/ScrollBar.axaml" />
     <MergeResourceInclude Source="/Styling/ControlThemes/SplitView.axaml" />
     <MergeResourceInclude Source="/Styling/ControlThemes/CupertinoWindow.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/CupertinoToolbar.axaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
