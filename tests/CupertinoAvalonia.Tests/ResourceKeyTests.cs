@@ -13,8 +13,7 @@ namespace CupertinoAvalonia.Tests;
 /// </summary>
 public partial class ResourceKeyTests
 {
-    // Keys provided at runtime by the theme's code (CupertinoAvaloniaTheme, SystemFontTracking) are
-    // checked too: they must resolve once the theme is loaded.
+    // Includes the keys the theme's code sets at runtime.
     [GeneratedRegex(@"\{(?:DynamicResource|StaticResource)\s+(?:ResourceKey=)?([A-Za-z0-9_]+)\s*\}")]
     private static partial Regex ResourceReference();
 
@@ -42,7 +41,6 @@ public partial class ResourceKeyTests
         Assert.True(missing.Count == 0, "Missing resources:\n" + string.Join("\n", missing.Distinct()));
     }
 
-    /// <summary>The theme's XAML sources, found by walking up from the test binaries to the repository.</summary>
     private static string ThemeSourceDirectory()
     {
         for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent)

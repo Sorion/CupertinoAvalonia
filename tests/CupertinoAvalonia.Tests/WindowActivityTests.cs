@@ -60,7 +60,6 @@ public class WindowActivityTests
         Assert.Equal(gray, Describe(slider.Foreground));
         Assert.Equal(gray, Describe(progressBar.Foreground));
 
-        // Back to active, back to the accent.
         WindowActivity.SetIsInactive(window, false);
         Assert.Equal(activeAccent, Describe(accent.Background));
         window.Close();

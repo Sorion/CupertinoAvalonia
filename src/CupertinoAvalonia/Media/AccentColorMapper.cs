@@ -3,20 +3,17 @@ using Avalonia.Media;
 namespace CupertinoAvalonia.Media;
 
 /// <summary>
-/// Maps the accent color reported by the OS to the macOS 27 palette, and derives the shades the
-/// kit builds with Figma blend modes, which Avalonia brushes can't express.
+/// Maps the OS's accent color to the macOS 27 palette, and computes the kit's Figma blend modes, which brushes can't
+/// express.
 /// </summary>
 internal static partial class AccentColorMapper
 {
     private readonly record struct SystemAccent(string ResourceKey, Color Light, Color Dark);
 
-    // Reported colors may differ slightly from the kit's values (color space conversion).
+    // Reported colors differ slightly from the kit's (color space conversion).
     private const double MaxDistance = 24;
 
-    /// <summary>
-    /// Returns the resource key of the macOS 27 accent matching <paramref name="reported"/>, or
-    /// <c>null</c> when it isn't one of the macOS accent colors (another OS, or a custom color).
-    /// </summary>
+    // Null when it isn't a macOS accent (another OS, or a custom color).
     public static string? FindAccentResourceKey(Color reported)
     {
         string? best = null;
@@ -34,16 +31,12 @@ internal static partial class AccentColorMapper
         return best;
     }
 
-    /// <summary>Figma's "linear burn" of a gray layer over <paramref name="color"/>.</summary>
+    // A gray layer over the color.
     public static Color LinearBurn(Color color, byte gray) => Shift(color, gray - 255);
 
-    /// <summary>Figma's "linear dodge" of a gray layer over <paramref name="color"/>.</summary>
     public static Color LinearDodge(Color color, byte gray) => Shift(color, gray);
 
-    /// <summary>
-    /// Lowers the HSL lightness of <paramref name="color"/> by <paramref name="lightness"/> (0 to 1)
-    /// and rotates its hue by <paramref name="hue"/> degrees.
-    /// </summary>
+    // HSL lightness (0 to 1) and hue (degrees).
     public static Color Darken(Color color, double lightness, double hue = 0)
     {
         var hsl = color.ToHsl();

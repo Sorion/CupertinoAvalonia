@@ -8,22 +8,14 @@ using Avalonia.VisualTree;
 namespace CupertinoAvalonia.Styling;
 
 /// <summary>
-/// Support for visuals that draw outside their control: the keyboard focus ring and the switch's
-/// pressed lens.
+/// For visuals drawn past their control (focus rings, glass lenses), hosted in the <see cref="AdornerLayer"/>: every
+/// <see cref="TemplatedControl"/> ancestor would clip them otherwise.
 /// </summary>
-/// <remarks>
-/// Every <see cref="TemplatedControl"/> clips to its bounds by default, so anything drawn past a
-/// control's edge is cut by the first such ancestor (a UserControl, a ListBoxItem…). These visuals
-/// are therefore hosted in the window's <see cref="AdornerLayer"/> with clipping disabled, and
-/// <see cref="FollowAdornedProperty"/> clips them to the scroll viewports around the adorned element
-/// only, so they never float over the content outside a scrolled area.
-/// </remarks>
 public static class OverflowAdorner
 {
     /// <summary>
-    /// Set on an element inside an adorner (not the adorner root: the layer resets the root's clip):
-    /// clips it to the adorned element's scroll viewports and, for a Border, copies the adorned
-    /// element's corner radius.
+    /// Clips an element inside an adorner to the adorned element's scroll viewports and, for a Border, copies its corner
+    /// radius. Not on the adorner root: the layer resets its clip.
     /// </summary>
     public static readonly AttachedProperty<bool> FollowAdornedProperty =
         AvaloniaProperty.RegisterAttached<Control, bool>("FollowAdorned", typeof(OverflowAdorner));

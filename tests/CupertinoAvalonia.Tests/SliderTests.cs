@@ -48,14 +48,13 @@ public class SliderTests
         var thumb = Part<Thumb>(slider, "thumb");
         Assert.Null(AdornerLayer.GetAdorner(thumb));
 
-        // Hold the mouse button down on the knob.
         var thumbCenter = thumb.TranslatePoint(new Point(thumb.Bounds.Width / 2, thumb.Bounds.Height / 2), window)!.Value;
         window.MouseDown(thumbCenter, MouseButton.Left);
         Assert.Contains(":pressed", slider.Classes);
         // The lens is an adorner of the knob, outside the slider's tree.
         var lens = Assert.IsType<Panel>(AdornerLayer.GetAdorner(thumb)).Children.OfType<TemplatedControl>().Single();
         Assert.False(AdornerLayer.GetIsClipEnabled(lens.GetVisualParent()!));
-        // Animations and transitions run on the real clock: let them finish.
+        // Transitions run on the real clock.
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         while ((lens.Opacity < 1 || thumb.Opacity > 0) && stopwatch.ElapsedMilliseconds < 2000)
         {

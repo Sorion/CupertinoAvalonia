@@ -5,10 +5,8 @@ using Avalonia.Platform;
 namespace CupertinoAvalonia.Controls;
 
 /// <summary>
-/// A window with the chrome of macOS 27 apps: content that runs under the title bar, the window controls
-/// in a toolbar-high title bar, and a system material behind the window, such as the sidebar's. On other
-/// platforms it is a plain <see cref="Window"/>. Modeled on FluentAvalonia's FAAppWindow, which does the
-/// same for Windows.
+/// A window with macOS 27's chrome: content under a toolbar-high title bar, and a system material behind the window.
+/// A plain <see cref="Window"/> on other platforms.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -17,12 +15,9 @@ namespace CupertinoAvalonia.Controls;
 /// <c>WindowDecorationProperties.ElementRole="TitleBar"</c>.
 /// </para>
 /// <para>
-/// With a <see cref="Material"/>, the window's background turns transparent (pseudo-class
-/// <c>:material</c>) and shows the material wherever the content is transparent; paint opaque what
-/// shouldn't show it, such as the content next to a sidebar.
+/// With a <see cref="Material"/>, the background turns transparent (<c>:material</c>): paint opaque what shouldn't
+/// show the material, such as the content next to a sidebar.
 /// </para>
-/// <para>Pseudo-classes: <c>:macos</c>, <c>:extended</c> (the content is under the title bar),
-/// <c>:material</c> (the material is shown).</para>
 /// </remarks>
 public class CupertinoWindow : Window
 {
@@ -55,22 +50,17 @@ public class CupertinoWindow : Window
         PseudoClasses.Set(":macos", _isMacOS);
     }
 
-    // Window's subclasses take Window's theme; this one has its own (Styling/ControlThemes/CupertinoWindow.axaml).
+    // Window subclasses would otherwise take Window's theme.
     protected override Type StyleKeyOverride => typeof(CupertinoWindow);
 
-    /// <summary>
-    /// Whether the content runs under the title bar, the window controls drawn over it (macOS only).
-    /// </summary>
+    /// <summary>Runs the content under the title bar (macOS only).</summary>
     public bool ExtendsContentIntoTitleBar
     {
         get => GetValue(ExtendsContentIntoTitleBarProperty);
         set => SetValue(ExtendsContentIntoTitleBarProperty, value);
     }
 
-    /// <summary>
-    /// The toolbar the title bar makes room for when <see cref="ExtendsContentIntoTitleBar"/> is set: its
-    /// height and where the window controls sit (macOS only).
-    /// </summary>
+    /// <summary>The title bar's height when <see cref="ExtendsContentIntoTitleBar"/> is set (macOS only).</summary>
     public CupertinoToolbarStyle ToolbarStyle
     {
         get => GetValue(ToolbarStyleProperty);
@@ -135,8 +125,7 @@ public class CupertinoWindow : Window
         PseudoClasses.Set(":extended", extended);
         UpdateWindowControlsInset();
 
-        // The material is Avalonia's blur behind the window, given a system material once the window exists.
-        // Only set the hint when it changes: on macOS, setting the same level again turns transparency off.
+        // Only on change: setting the same level again turns transparency off on macOS.
         if (Material != CupertinoWindowMaterial.None)
         {
             if (!_materialSetTransparency)

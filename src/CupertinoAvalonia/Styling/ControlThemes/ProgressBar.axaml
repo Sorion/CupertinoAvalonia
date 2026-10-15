@@ -1,9 +1,4 @@
-<!--
-  ProgressBar, from the kit's "Linear - Determinate" and "Linear - Indeterminate" (page Progress
-  Indicators): a 10 px capsule (6 px with the "small" class), the primary label color at 10% with
-  a hairline border, filled with the accent. Indeterminate bars run an accent segment across.
-  In an inactive window, the fill turns gray (Active=False).
--->
+<!-- ProgressBar, from the kit's "Linear - Determinate" and "Linear - Indeterminate" (page Progress Indicators). -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cas="using:CupertinoAvalonia.Styling">
@@ -80,7 +75,6 @@
       <Setter Property="MinHeight" Value="6" />
     </Style>
 
-    <!-- Inactive window (Active=False): a gray fill, on a lighter track when determinate. -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
       <Setter Property="Foreground" Value="{DynamicResource ControlFillInactiveBrush}" />
       <Style Selector="^:not(:indeterminate)">

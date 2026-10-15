@@ -1,8 +1,4 @@
-<!--
-  macOS text styles (kit page "Text Styles") as TextBlock classes:
-  largeTitle, title1, title2, title3, headline, body, callout, subheadline, footnote, caption1, caption2.
-  Add "emphasized" for the emphasized weight, e.g. Classes="title3 emphasized".
--->
+<!-- The kit's text styles as TextBlock classes; add "emphasized" for the emphasized weight. -->
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
@@ -133,12 +129,11 @@
     <Setter Property="FontWeight" Value="{DynamicResource Caption2EmphasizedFontWeight}" />
   </Style>
 
-  <!-- Default text: every window and popup starts with the regular control spacing. -->
+  <!-- Windows and popups. -->
   <Style Selector=":is(TopLevel)">
     <Setter Property="TextElement.LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
   </Style>
 
-  <!-- Label colors: secondary, tertiary. Primary is the default foreground. -->
   <Style Selector="TextBlock.secondary">
     <Setter Property="Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
   </Style>

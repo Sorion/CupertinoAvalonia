@@ -11,15 +11,11 @@ using SkiaSharp;
 namespace CupertinoAvalonia.Styling;
 
 /// <summary>
-/// A Liquid Glass lens: shows what is drawn behind it through a capsule of glass that zooms it and bends
-/// it at the rim, outlined by a thin edge that catches light. Rendering primitive used by the theme's
-/// templates (the pressed knobs of the switch and the slider), not a control meant for apps.
+/// A Liquid Glass lens that refracts what is drawn behind it. Used by the pressed knobs of the switch and the slider.
 /// </summary>
 /// <remarks>
-/// The backdrop is a snapshot of the render surface under the lens, taken while drawing (everything
-/// behind it is already drawn at that point), and refracted by a Skia runtime shader. Without Skia,
-/// or when the snapshot isn't available, the lens draws <see cref="FallbackBackground"/> and
-/// <see cref="FallbackForeground"/> instead, outlined with <see cref="RimColor"/>.
+/// The backdrop is a snapshot of the render surface, taken while drawing, refracted by a Skia runtime shader. Without
+/// Skia, the lens draws <see cref="FallbackBackground"/> and <see cref="FallbackForeground"/> instead.
 /// </remarks>
 public class GlassLens : Control
 {
@@ -77,7 +73,6 @@ public class GlassLens : Control
     public static readonly StyledProperty<IBrush?> FallbackForegroundProperty =
         AvaloniaProperty.Register<GlassLens, IBrush?>(nameof(FallbackForeground));
 
-    // Device rectangle a full redraw was last requested for (see LensDrawOperation).
     private readonly Lock _redrawSync = new();
     private SKRectI _redrawRequestedFor;
 
@@ -90,27 +85,21 @@ public class GlassLens : Control
             FallbackForegroundProperty);
     }
 
-    /// <summary>
-    /// Scale of what is seen through the lens, away from its spine (the segment its rounded ends are
-    /// centered on). 1 shows it at its size, more magnifies it, less zooms out, as native macOS does.
-    /// </summary>
+    /// <summary>Scale of the backdrop away from the capsule's spine: above 1 magnifies, below zooms out.</summary>
     public double Magnification
     {
         get => GetValue(MagnificationProperty);
         set => SetValue(MagnificationProperty, value);
     }
 
-    /// <summary>
-    /// How far, in DIPs, the rim bends the backdrop in, on top of <see cref="Magnification"/>. Negative
-    /// values bend it out instead, magnifying it along the rim, as native macOS does on the slider's knob.
-    /// </summary>
+    /// <summary>How far, in DIPs, the rim bends the backdrop inward; negative values bend it outward.</summary>
     public double Refraction
     {
         get => GetValue(RefractionProperty);
         set => SetValue(RefractionProperty, value);
     }
 
-    /// <summary>Width, in DIPs, of the bent band, inside the rim line.</summary>
+    /// <summary>Width, in DIPs, of the bent band inside the rim.</summary>
     public double RefractionBand
     {
         get => GetValue(RefractionBandProperty);
@@ -124,123 +113,96 @@ public class GlassLens : Control
         set => SetValue(FrostProperty, value);
     }
 
-    /// <summary>
-    /// Chromatic spread of the refraction: blue is bent 1 + Dispersion times as far as green, red
-    /// 1 − Dispersion times. 0 disables it.
-    /// </summary>
+    /// <summary>Chromatic spread: blue bends 1 + Dispersion times as far as green, red 1 − Dispersion times.</summary>
     public double Dispersion
     {
         get => GetValue(DispersionProperty);
         set => SetValue(DispersionProperty, value);
     }
 
-    /// <summary>Color laid over the glass body, its alpha giving how much.</summary>
+    /// <summary>Color laid over the glass body; its alpha sets the amount.</summary>
     public Color Tint
     {
         get => GetValue(TintProperty);
         set => SetValue(TintProperty, value);
     }
 
-    /// <summary>
-    /// Distance, in DIPs, over which <see cref="Tint"/> builds up from the rim (to about two thirds at that
-    /// distance), as in thicker glass. 0 tints the whole body evenly.
-    /// </summary>
+    /// <summary>Distance, in DIPs, over which <see cref="Tint"/> builds up from the rim; 0 tints evenly.</summary>
     public double TintDepth
     {
         get => GetValue(TintDepthProperty);
         set => SetValue(TintDepthProperty, value);
     }
 
-    /// <summary>
-    /// Light added along the top and bottom edges, inside the rim, its alpha giving how much: a bright
-    /// line, then a glow a quarter as strong that fades inward over <see cref="HighlightFalloff"/>.
-    /// </summary>
+    /// <summary>Light along the top and bottom edges: a bright line, then a quarter-strength glow fading inward.</summary>
     public Color HighlightColor
     {
         get => GetValue(HighlightColorProperty);
         set => SetValue(HighlightColorProperty, value);
     }
 
-    /// <summary>
-    /// Distance, in DIPs, from the middle of the bright line of <see cref="HighlightColor"/> to where it
-    /// has faded to about a third.
-    /// </summary>
+    /// <summary>Half-width, in DIPs, of the highlight's bright line.</summary>
     public double HighlightWidth
     {
         get => GetValue(HighlightWidthProperty);
         set => SetValue(HighlightWidthProperty, value);
     }
 
-    /// <summary>Distance, in DIPs, over which <see cref="HighlightColor"/> fades to about a third.</summary>
+    /// <summary>Distance, in DIPs, over which the highlight's glow fades.</summary>
     public double HighlightFalloff
     {
         get => GetValue(HighlightFalloffProperty);
         set => SetValue(HighlightFalloffProperty, value);
     }
 
-    /// <summary>
-    /// Broad light added inside the top and bottom edges, its alpha giving how much next to the rim; it
-    /// fades inward over <see cref="GlowFalloff"/> and toward the middle of the rounded ends.
-    /// </summary>
+    /// <summary>Broad light inside the top and bottom edges, fading inward and toward the rounded ends.</summary>
     public Color GlowColor
     {
         get => GetValue(GlowColorProperty);
         set => SetValue(GlowColorProperty, value);
     }
 
-    /// <summary>Distance, in DIPs, over which <see cref="GlowColor"/> fades to about a third.</summary>
+    /// <summary>Distance, in DIPs, over which <see cref="GlowColor"/> fades.</summary>
     public double GlowFalloff
     {
         get => GetValue(GlowFalloffProperty);
         set => SetValue(GlowFalloffProperty, value);
     }
 
-    /// <summary>
-    /// Color of the thin line along the rim. It darkens what is under it like a linear burn, its alpha
-    /// giving how much on the rounded ends (black at 30% takes 0.3 off every channel); it is fainter
-    /// along the straight edges.
-    /// </summary>
+    /// <summary>The rim line, applied as a linear burn, fainter along the straight edges.</summary>
     public Color RimColor
     {
         get => GetValue(RimColorProperty);
         set => SetValue(RimColorProperty, value);
     }
 
-    /// <summary>Width, in DIPs, of the rim line.</summary>
     public double RimWidth
     {
         get => GetValue(RimWidthProperty);
         set => SetValue(RimWidthProperty, value);
     }
 
-    /// <summary>
-    /// How much further in, as a fraction of <see cref="RimWidth"/>, the rim line's red reaches on the
-    /// rounded ends, leaving a cyan inner edge there as on native macOS's switch. 0 disables it.
-    /// </summary>
+    /// <summary>How much further in (× <see cref="RimWidth"/>) the rim's red reaches on the rounded ends, leaving a cyan edge.</summary>
     public double RimFringe
     {
         get => GetValue(RimFringeProperty);
         set => SetValue(RimFringeProperty, value);
     }
 
-    /// <summary>
-    /// Strength, from 0 to 1, of the colored fringe just inside the rim of the rounded ends: yellow
-    /// toward the top left and bottom right, cyan toward the top right and bottom left.
-    /// </summary>
+    /// <summary>Strength (0 to 1) of the yellow and cyan fringe inside the rounded ends.</summary>
     public double Iridescence
     {
         get => GetValue(IridescenceProperty);
         set => SetValue(IridescenceProperty, value);
     }
 
-    /// <summary>Painted under <see cref="FallbackForeground"/> when the backdrop can't be captured.</summary>
+    /// <summary>Drawn, under <see cref="FallbackForeground"/>, when the backdrop can't be captured.</summary>
     public IBrush? FallbackBackground
     {
         get => GetValue(FallbackBackgroundProperty);
         set => SetValue(FallbackBackgroundProperty, value);
     }
 
-    /// <summary>Painted over <see cref="FallbackBackground"/> when the backdrop can't be captured.</summary>
     public IBrush? FallbackForeground
     {
         get => GetValue(FallbackForegroundProperty);
@@ -301,12 +263,11 @@ public class GlassLens : Control
             var magnification = Math.Clamp(parameters.Magnification, 0.25f, 4f);
             var dispersion = Math.Clamp(parameters.Dispersion, 0f, 0.5f);
 
-            // The backdrop the shader may sample: the lens, plus what zooming out and bending the rim in pull
-            // in from around it (the rim is a radius away from the spine).
+            // Zooming out and bending the rim inward sample pixels from around the lens.
             var reach = radius * Math.Max(0f, 1 / magnification - 1) + Math.Max(0f, parameters.Refraction);
             var margin = reach * (1 + dispersion) + parameters.Frost + 1;
             var local = new SKRect(-margin, -margin, width + margin, height + margin);
-            // Skia trims the snapshot to the surface: start it at the surface's edge at most.
+            // Skia trims snapshots to the surface.
             var deviceRect = SKRectI.Round(localToDevice.MapRect(local));
             deviceRect.Left = Math.Max(0, deviceRect.Left);
             deviceRect.Top = Math.Max(0, deviceRect.Top);
@@ -319,13 +280,12 @@ public class GlassLens : Control
             if (backdrop is null)
                 return false;
 
-            // Snapshot pixel (0, 0) sits at deviceRect's corner: map it back to the lens's local space,
-            // so the shader samples the backdrop with local coordinates.
+            // The snapshot starts at deviceRect's corner; the shader samples it in local coordinates.
             var imageToLocal = SKMatrix.Concat(deviceToLocal, SKMatrix.CreateTranslation(deviceRect.Left, deviceRect.Top));
             using var backdropShader = SKShader.CreateImage(backdrop, SKShaderTileMode.Clamp, SKShaderTileMode.Clamp,
                 new SKSamplingOptions(SKFilterMode.Linear), imageToLocal);
 
-            // Local units per device pixel, to anti-alias the edge over one pixel at any scale.
+            // Local units per device pixel: the edge is anti-aliased over one pixel.
             var deviceScale = MathF.Sqrt(MathF.Abs(localToDevice.ScaleX * localToDevice.ScaleY - localToDevice.SkewX * localToDevice.SkewY));
             var uniforms = new SKRuntimeEffectUniforms(effect)
             {
@@ -358,12 +318,8 @@ public class GlassLens : Control
 
         private static float[] ToVector(Color color) => [color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f];
 
-        /// <summary>
-        /// A partial redraw (only part of the window changed) would sample pixels left from the
-        /// previous frame, the old lens included. When the clip doesn't cover what the lens samples, ask
-        /// once for a full redraw of it; asking again for the same position would loop if the lens is
-        /// partly outside the window.
-        /// </summary>
+        // A partial redraw would sample stale pixels, the old lens included. Ask once per position: a lens partly
+        // outside the window is never fully redrawn, and asking again would loop.
         private void RequestFullRedrawIfPartial(SKCanvas canvas, SKRectI sampled)
         {
             if (canvas.DeviceClipBounds.Contains(sampled))
@@ -407,12 +363,7 @@ public class GlassLens : Control
 
         public static SKRuntimeEffect? Effect => LazyEffect.Value;
 
-        // Coordinates are the lens's local DIPs; colors are premultiplied. The lens is a rounded
-        // rectangle (a capsule here). Inside it, the backdrop is scaled away from the spine (the segment
-        // the rounded ends are centered on) and bent along the rim, most at the rim and fading out across
-        // the band, blue more than red. Over it come the glass tint, light along the top and bottom edges,
-        // a colored fringe inside the rounded ends, and the rim line, whose red reaches further in on the
-        // rounded ends, leaving a cyan edge there as on native macOS.
+        // Local DIPs, premultiplied colors. The spine is the segment the rounded ends are centered on.
         private const string Source = """
             uniform shader backdrop;
             uniform float2 size;
@@ -471,8 +422,7 @@ public class GlassLens : Control
                 float nl = length(n);
                 n = nl > 0.0001 ? n / nl : float2(0.0);
 
-                // Where this pixel looks: scaled away from the spine, then bent along the inner side of the
-                // rim line: the bend grows across the line and fades out smoothly over the band.
+                // Scaled away from the spine, then bent inside the rim line, fading out over the band.
                 float w = rimWidth;
                 float2 spine = max(halfSize - float2(radius), float2(0.0));
                 float2 onSpine = clamp(p, -spine, spine);
@@ -489,16 +439,12 @@ public class GlassLens : Control
                 float thickness = tintDepth > 0.0 ? 1.0 - exp(-depth / tintDepth) : 1.0;
                 float3 rgb = mix(color.rgb, tint.rgb * alpha, tint.a * thickness);
 
-                // Light caught along the top and bottom edges, from the inner side of the rim line: a
-                // bright line, then a faint glow fading inward.
                 float lit = (depth - w * 1.35) / highlightWidth;
                 float shine = exp(-lit * lit) + 0.25 * exp(-max(0.0, depth - w * 1.15) / highlightFalloff);
                 float lift = smoothstep(w * 0.7, w * 1.15, depth);
                 rgb += highlight.rgb * alpha * (highlight.a * n.y * n.y * lift * shine);
-                // A broader glow, fading inward and toward the middle of the rounded ends.
                 rgb += glow.rgb * alpha * (glow.a * abs(n.y) * lift * exp(-max(0.0, depth - w * 1.15) / glowFalloff));
 
-                // A colored fringe inside the rim of the rounded ends.
                 if (iridescence > 0.0) {
                     float x = (depth - w * 1.8) / (w * 0.8);
                     float s = 2.0 * n.x * n.y * iridescence * exp(-x * x);
@@ -507,8 +453,7 @@ public class GlassLens : Control
                 }
                 rgb = clamp(rgb, 0.0, alpha);
 
-                // The rim line darkens like a linear burn, more on the rounded ends, where its red
-                // and a little of its green reach further in.
+                // Linear burn; on the rounded ends, red (and a little green) reach further in.
                 if (rim.a > 0.0) {
                     float spread = w * rimFringe * abs(n.x);
                     float3 ring = float3(

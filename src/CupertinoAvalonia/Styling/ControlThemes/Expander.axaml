@@ -1,8 +1,4 @@
-<!--
-  Expander as a macOS disclosure triangle: a chevron (SF Symbol "chevron.right", as in the kit's
-  "_Disclosure" glyphs) that turns down when expanded, next to the header. No box around it.
-  The "button" class uses the kit's "Disclosure Button" instead: a bordered 24 px square.
--->
+<!-- Expander as the kit's disclosure triangle ("_Disclosure"), or its "Disclosure Button" with the "button" class. -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cac="using:CupertinoAvalonia.Controls"
@@ -63,7 +59,6 @@
     <Style Selector="^:checked /template/ cac|SymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(90deg)" />
     </Style>
-    <!-- Keyboard focus ring, in the adorner layer so no container clips it (see OverflowAdorner). -->
     <Style Selector="^:focus-visible /template/ Border#PART_GlyphBackground">
       <Setter Property="AdornerLayer.Adorner">
         <Template>
@@ -81,7 +76,7 @@
     </Style>
   </ControlTheme>
 
-  <!-- Disclosure Button: the chevron in a bordered 24 px square, pointing down, or up when expanded. -->
+  <!-- Disclosure Button -->
   <ControlTheme x:Key="CupertinoExpanderDisclosureButton" TargetType="ToggleButton"
                 BasedOn="{StaticResource CupertinoExpanderToggleButton}">
     <Style Selector="^ /template/ Border#PART_GlyphBackground">

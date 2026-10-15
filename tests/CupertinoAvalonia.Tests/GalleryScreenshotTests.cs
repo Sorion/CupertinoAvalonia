@@ -33,8 +33,7 @@ public class GalleryScreenshotTests
         var vm = new MainWindowViewModel();
         var window = new MainWindow { DataContext = vm, Width = 1100, Height = 760 };
         window.Show();
-        // The window activates once its jobs run (the first page has no endless animation): only then
-        // can it be made to look inactive, until something activates it again.
+        // The window activates once its jobs run; only then can it be made to look inactive.
         Dispatcher.UIThread.RunJobs();
         WindowActivity.SetIsInactive(window, inactive);
         // Let transitions end (the toolbar band fades in).

@@ -1,15 +1,4 @@
-<!--
-  Button, from the kit's "Buttons" component (page Buttons), Context=Content Area.
-  Styles map to classes:
-    (none)               Bordered
-    accent / IsDefault   Bordered - Prominent (the default button)
-    tinted               Bordered - Tinted
-    destructive          Bordered - Destructive
-    accent destructive   Bordered - Prominent Destructive
-    borderless           Borderless
-  Sizes: mini, small, (regular), large, xlarge.
-  In an inactive window, every style but borderless looks like a plain bordered button (Active=False).
--->
+<!-- Button, from the kit's "Buttons" (page Buttons), Context=Content Area. -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cas="using:CupertinoAvalonia.Styling">
@@ -53,7 +42,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
-          <!-- The background is separate from the content: disabled states fade them differently. -->
+          <!-- Apart from the content: disabled states fade them differently. -->
           <Border Name="PART_Background"
                   Background="{TemplateBinding Background}"
                   BorderBrush="{TemplateBinding BorderBrush}"
@@ -70,7 +59,6 @@
       </ControlTemplate>
     </Setter>
 
-    <!-- Keyboard focus ring, in the adorner layer so no container clips it (see OverflowAdorner). -->
     <Style Selector="^:focus-visible /template/ Border#PART_Background">
       <Setter Property="AdornerLayer.Adorner">
         <Template>
@@ -122,7 +110,7 @@
       </Style>
     </Style>
 
-    <!-- Bordered - Prominent: the default button -->
+    <!-- Bordered - Prominent -->
     <Style Selector="^.accent, ^[IsDefault=True]">
       <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
@@ -170,7 +158,7 @@
       </Style>
     </Style>
 
-    <!-- Inactive window (Active=False): the accent, tinted and destructive styles look like Bordered. -->
+    <!-- Active=False: like Bordered. -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
       <Style Selector="^.accent, ^[IsDefault=True], ^.tinted, ^.destructive">
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
@@ -188,7 +176,6 @@
       </Style>
     </Style>
 
-    <!-- Control sizes (Sizes collection) -->
     <Style Selector="^.mini">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
       <Setter Property="Padding" Value="{DynamicResource ButtonPaddingMini}" />
@@ -219,7 +206,7 @@
     </Style>
   </ControlTheme>
 
-  <!-- Buttons - Toggle: an "on" toggle button gets a light accent tint and an accent label. -->
+  <!-- Buttons - Toggle -->
   <ControlTheme x:Key="{x:Type ToggleButton}" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type Button}}">
     <Style Selector="^:checked">
       <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundBrush}" />
@@ -235,12 +222,12 @@
         </Style>
       </Style>
     </Style>
-    <!-- Pressing an "off" toggle button previews the "on" state. -->
+    <!-- Pressing "off" previews "on". -->
     <Style Selector="^:unchecked:pressed">
       <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundPressedBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
     </Style>
-    <!-- Inactive window (Window Active=False): "on" looks like "off". -->
+    <!-- Active=False: "on" looks like "off". -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]:checked">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />

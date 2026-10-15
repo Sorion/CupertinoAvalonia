@@ -1,8 +1,4 @@
-<!--
-  CupertinoWindow (see Controls/CupertinoWindow.cs): the window background of the kit's windows (page
-  Windows, "Window BG"), which turns transparent while a system material shows behind the window.
-  The template is Avalonia's window template.
--->
+<!-- CupertinoWindow: the kit's "Window BG" (page Windows), transparent while a system material shows. -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cac="using:CupertinoAvalonia.Controls">

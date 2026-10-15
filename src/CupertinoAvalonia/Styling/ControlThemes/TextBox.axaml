@@ -1,9 +1,4 @@
-<!--
-  TextBox, from the kit's "Text Field" and "_Input Fields" (page Text Fields).
-  A white field (dark gray in dark mode) with a hairline border; the focus ring shows while it has
-  the keyboard focus, as in AppKit. Multi-line text boxes (AcceptsReturn) align text to the top.
-  Sizes: mini, small, (regular), large.
--->
+<!-- TextBox, from the kit's "Text Field" and "_Input Fields" (page Text Fields). -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cas="using:CupertinoAvalonia.Styling">
@@ -120,7 +115,7 @@
       </ControlTemplate>
     </Setter>
 
-    <!-- Focus ring while the field has the focus, as in AppKit; "embedded" text boxes leave it to their host, in the adorner layer so no container clips it (see OverflowAdorner). -->
+    <!-- As in AppKit, on any focus, not only from the keyboard. "embedded" text boxes leave it to their host. -->
     <Style Selector="^:focus:not(.embedded) /template/ Border#PART_BorderElement">
       <Setter Property="AdornerLayer.Adorner">
         <Template>
@@ -131,7 +126,6 @@
       </Setter>
     </Style>
 
-    <!-- Inactive window: selected text turns gray, the gray of an inactive table row selection. -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
       <Setter Property="SelectionBrush" Value="{DynamicResource TableRowSelectedInactiveBrush}" />
     </Style>
@@ -151,7 +145,6 @@
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
-    <!-- Control sizes -->
     <Style Selector="^.mini">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
       <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingMini}" />

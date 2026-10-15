@@ -1,9 +1,6 @@
 <!--
-  Menus, popovers and tooltips, from the kit's "Menu Background", "Menu Items" and "Separators"
-  (page Menus), "Popover" (page Popovers) and "Tooltip" (page Tooltips).
-  The kit's Liquid Glass can't be reproduced: popups have no backdrop blur in Avalonia, so the
-  materials are nearly opaque. Popup windows are sized to their content, so each popup keeps a
-  transparent margin for its shadow.
+  Menus, popovers and tooltips (kit pages Menus, Popovers and Tooltips). Nearly opaque: Avalonia popups have no backdrop
+  blur.
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -51,7 +48,7 @@
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
-  <!-- Room around popups for PopupShadow. -->
+  <!-- Popup windows fit their content: room for PopupShadow. -->
   <Thickness x:Key="PopupShadowMargin">8</Thickness>
   <CornerRadius x:Key="MenuCornerRadius">12</CornerRadius>
   <CornerRadius x:Key="MenuItemCornerRadius">8</CornerRadius>
@@ -122,10 +119,7 @@
     </Setter>
   </ControlTheme>
 
-  <!--
-    Menu Items: 24 px rows, a neutral rounded highlight (not the accent), a checkmark column for
-    toggle items, then an optional icon, the title, the shortcut and the submenu chevron.
-  -->
+  <!-- Menu Items -->
   <ControlTheme x:Key="{x:Type MenuItem}" TargetType="MenuItem">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
@@ -240,7 +234,6 @@
     </Style>
   </ControlTheme>
 
-  <!-- Separators: a 1 px line in an 11 px row. -->
   <ControlTheme x:Key="{x:Type Separator}" TargetType="Separator">
     <Setter Property="Background" Value="{DynamicResource MenuSeparatorBrush}" />
     <Setter Property="Height" Value="1" />
@@ -289,7 +282,7 @@
     </Setter>
   </ControlTheme>
 
-  <!-- Tooltip: Ultra Thick material, Medium 11 text. -->
+  <!-- Tooltip -->
   <ControlTheme x:Key="{x:Type ToolTip}" TargetType="ToolTip">
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
     <Setter Property="Background" Value="{DynamicResource ToolTipBackgroundBrush}" />

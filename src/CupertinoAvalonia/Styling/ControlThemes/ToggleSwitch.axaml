@@ -1,11 +1,6 @@
 <!--
-  ToggleSwitch, from the kit's "Toggles - Switches" (page Toggles).
-  macOS puts the label before the switch and shows no On/Off text: Content is the leading label,
-  OnContent and OffContent are not displayed.
-  While pressed or dragged, the white knob turns into a Liquid Glass lens ("_Knob Clicked" in the kit):
-  larger than the track and overflowing it, it shows the track through clear glass (see GlassLens).
-  In an inactive window, the "on" track turns gray (_Tracks - Filled, Active=False).
-  Sizes: mini, small, (regular), large.
+  ToggleSwitch, from the kit's "Toggles - Switches" (page Toggles). macOS shows no On/Off text: Content is the label
+  before the switch.
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -22,14 +17,13 @@
   </Design.PreviewWith>
 
   <ResourceDictionary.ThemeDictionaries>
-    <!-- The pressed lens's rim, light along its top and bottom edges, colored fringe and shadow, measured
-         on native macOS 27 (System Settings): the kit's "_Knob Clicked" predates them. -->
+    <!-- The pressed lens, measured on macOS 27 (System Settings): the kit's "_Knob Clicked" predates it. -->
     <ResourceDictionary x:Key="Default">
       <Color x:Key="SwitchLensRimColor">#4D000000</Color>
       <Color x:Key="SwitchLensHighlightColor">#6BFFFFFF</Color>
       <x:Double x:Key="SwitchLensIridescence">0.16</x:Double>
       <BoxShadows x:Key="SwitchLensShadow">0 6 6 -2.5 #17000000, 0 0.8 0.3 0 #26000000</BoxShadows>
-      <!-- _Tracks - Unfilled, State=Clicked: the primary label color at 19%. -->
+      <!-- _Tracks - Unfilled, State=Clicked -->
       <SolidColorBrush x:Key="SwitchTrackPressedBrush" Color="#29000000" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
@@ -42,13 +36,8 @@
   </ResourceDictionary.ThemeDictionaries>
 
   <!--
-    The pressed lens ("_Knob Clicked"). It is created on the knob while the switch is pressed or
-    dragged (see the styles below), in the window's adorner layer so no container clips it (not even
-    a scroll viewport: it only shows while the pointer holds the switch), and
-    scaled up 1.62 times: in "_Knob Clicked", the glass layer (60 × 40) overflows its 58 × 38 component,
-    which is placed at 50 × 31 on the 32 × 20 knob, so the visible glass is about 1.62 times the knob in
-    every control size. Its sizes and widths are local DIPs, before that scale; native macOS shows a lens of
-    the same size.
+    The pressed lens ("_Knob Clicked"), 1.62 times the knob: the kit's glass overflows a 50 × 31 component on the
+    32 × 20 knob. Its sizes are before that scale.
   -->
   <ControlTheme x:Key="CupertinoSwitchLens" TargetType="TemplatedControl">
     <Setter Property="ClipToBounds" Value="False" />
@@ -56,10 +45,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
-          <!-- Clear glass, as on native macOS 27: the track seen through it is zoomed out (about 3/4 of
-               its height) and sharp, under a slightly darker body, light along the top and bottom edges,
-               a colored fringe in the rounded ends and a thin dark rim. Values are local DIPs, before
-               the 1.62 scale. Without Skia it falls back to the track's pressed color. -->
+          <!-- As on macOS 27: clear glass that zooms the track out. -->
           <cas:GlassLens Name="PART_Glass"
                          Magnification="0.74"
                          Refraction="0"
@@ -73,9 +59,8 @@
                          Iridescence="{DynamicResource SwitchLensIridescence}"
                          FallbackBackground="{DynamicResource WindowBackgroundBrush}"
                          FallbackForeground="{DynamicResource SwitchTrackPressedBrush}" />
-          <!-- The "Shadow" layer, drawn after the glass so the glass doesn't see it: a box shadow only
-               paints outside its border. Avalonia applies box shadow offsets in the window's space,
-               ignoring render transforms: offsets are screen DIPs, blur and spread scale with the lens. -->
+          <!-- After the glass, so the glass doesn't refract it. Shadow offsets ignore render transforms: they are
+               screen DIPs, while blur and spread scale with the lens. -->
           <Border CornerRadius="100"
                   Background="Transparent"
                   BoxShadow="{DynamicResource SwitchLensShadow}" />
@@ -85,8 +70,7 @@
     <Style Selector="^.on /template/ cas|GlassLens#PART_Glass">
       <Setter Property="FallbackForeground" Value="{DynamicResource AccentBrush}" />
     </Style>
-    <!-- Grows out of the knob, then stays 1.62 times its size (keyframe animations can't animate
-         RenderTransform itself: they animate a ScaleTransform they create). -->
+    <!-- Keyframes can't animate RenderTransform itself, only a ScaleTransform they create. -->
     <Style Selector="^">
       <Style.Animations>
         <Animation Duration="0:0:0.2" Easing="BackEaseOut" FillMode="Forward">
@@ -112,7 +96,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type ToggleSwitch}" TargetType="ToggleSwitch">
-    <!-- TemplatedControl clips by default, which would cut the knob's soft shadow. -->
+    <!-- Would clip the knob's shadow. -->
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
     <Setter Property="Background" Value="Transparent" />
@@ -137,7 +121,7 @@
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             RecognizesAccessKey="True" />
-          <!-- Parts ToggleSwitch expects; macOS shows no On/Off text. -->
+          <!-- Parts ToggleSwitch expects. -->
           <ContentPresenter Name="PART_OffContentPresenter" IsVisible="False"
                             Content="{TemplateBinding OffContent}"
                             ContentTemplate="{TemplateBinding OffContentTemplate}" />
@@ -150,10 +134,9 @@
                  Width="{DynamicResource SwitchTrackWidth}"
                  Height="{DynamicResource SwitchTrackHeight}"
                  VerticalAlignment="Center">
-            <!-- _Tracks - Unfilled: the primary label color at 10%. -->
+            <!-- _Tracks - Unfilled -->
             <Border Name="PART_TrackOff" CornerRadius="100"
                     Background="{DynamicResource LabelPrimaryBrush}" Opacity="0.1" />
-            <!-- _Tracks - Filled -->
             <Border Name="PART_TrackOn" CornerRadius="100"
                     Background="{DynamicResource AccentBrush}" Opacity="0" />
             <Border Name="PART_TrackPressed" CornerRadius="100"
@@ -167,7 +150,7 @@
               <Panel Name="PART_MovingKnobs"
                      Width="{DynamicResource SwitchKnobWidth}"
                      Height="{DynamicResource SwitchKnobHeight}">
-                <!-- _Knob: white, with its soft drop shadow. -->
+                <!-- _Knob -->
                 <Border Name="PART_Knob"
                         CornerRadius="100"
                         Background="{DynamicResource WhiteBrush}"
@@ -188,7 +171,6 @@
     <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter:empty">
       <Setter Property="Margin" Value="0" />
     </Style>
-    <!-- Keyboard focus ring around the track, in the adorner layer (see OverflowAdorner). -->
     <Style Selector="^:focus-visible /template/ Panel#PART_Track">
       <Setter Property="AdornerLayer.Adorner">
         <Template>
@@ -211,7 +193,6 @@
       </Style>
     </Style>
 
-    <!-- Inactive window: the primary label color at 17% instead of the accent. -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]:checked /template/ Border#PART_TrackOn">
       <Setter Property="Background" Value="{DynamicResource ControlFillInactiveBrush}" />
     </Style>
@@ -219,7 +200,6 @@
     <Style Selector="^:pressed:unchecked /template/ Border#PART_TrackOff">
       <Setter Property="Opacity" Value="0.19" />
     </Style>
-    <!-- Pressed or dragged: the knob becomes the glass lens. -->
     <Style Selector="^:pressed /template/ Border#PART_Knob, ^:dragging /template/ Border#PART_Knob">
       <Setter Property="Opacity" Value="0" />
     </Style>
@@ -247,13 +227,12 @@
       <Style Selector="^:unchecked /template/ Border#PART_TrackOff">
         <Setter Property="Opacity" Value="0.06" />
       </Style>
-      <!-- The kit keeps the disabled "on" track unchanged; dim it so it reads as disabled, as AppKit does. -->
+      <!-- The kit doesn't dim it; AppKit does. -->
       <Style Selector="^:checked /template/ Border#PART_TrackOn">
         <Setter Property="Opacity" Value="0.5" />
       </Style>
     </Style>
 
-    <!-- Control sizes -->
     <Style Selector="^.mini">
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />

@@ -1,8 +1,4 @@
-<!--
-  CheckBox and RadioButton, from the kit's "Toggles - Checkboxes" and "Toggles - Radio Buttons"
-  (page Toggles), backgrounds from "_Control BG/Controls". In an inactive window, "on" turns gray.
-  Sizes: mini, small, (regular), large.
--->
+<!-- CheckBox and RadioButton, from the kit's "Toggles - Checkboxes" and "Toggles - Radio Buttons" (page Toggles). -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cas="using:CupertinoAvalonia.Styling">
@@ -18,8 +14,7 @@
   </Design.PreviewWith>
 
   <ResourceDictionary.ThemeDictionaries>
-    <!-- _Control BG/Controls, State=Clicked, On=False; Active=False, State=Idle, On=True; and the
-         Active=False glyphs (_Glyphs - Checkboxes, _Glyphs - Radio Buttons). -->
+    <!-- _Control BG/Controls (Clicked; Active=False, On=True) and the Active=False glyphs. -->
     <ResourceDictionary x:Key="Default">
       <SolidColorBrush x:Key="CheckBoxBackgroundPressedBrush" Color="#30000000" />
       <SolidColorBrush x:Key="CheckBoxBackgroundOnInactiveBrush" Color="#24000000" />
@@ -32,7 +27,7 @@
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
-  <!-- _Glyphs - Checkboxes: a 9.3 × 8.9 checkmark centered in the 16 px box. -->
+  <!-- _Glyphs - Checkboxes -->
   <StreamGeometry x:Key="CheckBoxCheckGlyph">M 0.9,4.6 L 3.6,7.6 L 8.4,1.2</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox">
@@ -40,7 +35,7 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
-    <!-- The kit leaves 3 px between the box and the label (Radio Button/Spacing). -->
+    <!-- Radio Button/Spacing -->
     <Setter Property="Padding" Value="3,0,0,0" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
@@ -88,7 +83,6 @@
     <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter:empty">
       <Setter Property="Margin" Value="0" />
     </Style>
-    <!-- Keyboard focus ring around the box, in the adorner layer so no container clips it (see OverflowAdorner). -->
     <Style Selector="^:focus-visible /template/ Border#PART_Background">
       <Setter Property="AdornerLayer.Adorner">
         <Template>
@@ -99,7 +93,6 @@
       </Setter>
     </Style>
 
-    <!-- Off -->
     <Style Selector="^:pressed /template/ Border#PART_Background">
       <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundPressedBrush}" />
     </Style>
@@ -110,7 +103,6 @@
       </Style>
     </Style>
 
-    <!-- On and Mixed -->
     <Style Selector="^:checked, ^:indeterminate">
       <Style Selector="^ /template/ Border#PART_Background">
         <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
@@ -135,7 +127,6 @@
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
-    <!-- Inactive window (Active=False): "on" turns gray, with a dark glyph in light mode. -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
       <Style Selector="^:checked /template/ Border#PART_Background, ^:indeterminate /template/ Border#PART_Background">
         <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundOnInactiveBrush}" />
@@ -152,7 +143,6 @@
       </Style>
     </Style>
 
-    <!-- Control sizes -->
     <Style Selector="^.mini">
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
@@ -195,7 +185,7 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
-    <!-- The kit leaves 3 px between the box and the label (Radio Button/Spacing). -->
+    <!-- Radio Button/Spacing -->
     <Setter Property="Padding" Value="3,0,0,0" />
     <Setter Property="HorizontalAlignment" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
@@ -232,7 +222,6 @@
     <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter:empty">
       <Setter Property="Margin" Value="0" />
     </Style>
-    <!-- Keyboard focus ring around the box, in the adorner layer so no container clips it (see OverflowAdorner). -->
     <Style Selector="^:focus-visible /template/ Border#PART_Background">
       <Setter Property="AdornerLayer.Adorner">
         <Template>
@@ -272,7 +261,6 @@
       </Style>
     </Style>
 
-    <!-- Inactive window (Active=False): "on" turns gray, with a dark dot in light mode. -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
       <Style Selector="^:checked /template/ Border#PART_Background">
         <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundOnInactiveBrush}" />
@@ -286,7 +274,6 @@
       </Style>
     </Style>
 
-    <!-- Control sizes -->
     <Style Selector="^.mini">
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />

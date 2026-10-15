@@ -1,12 +1,7 @@
 <Project>
   <!--
-    macOS 26 and later give their Liquid Glass window chrome (traffic lights, toolbar, corners) only to apps
-    built with their SDK, which they read in the executable; others keep the previous look. .NET's app host
-    is built with an older SDK: after each build and publish on macOS, declare macOS 26's in the app's
-    executable (see declare-macos-sdk.sh).
-    NuGet imports this file into the apps that use the package; with a project reference, import it in
-    the app's project file. Set CupertinoDeclareMacOSSdk to false to opt out, or CupertinoMacOSSdkVersion
-    to declare another SDK.
+    macOS 26 gives its Liquid Glass window chrome only to executables built with its SDK, which .NET's app host isn't:
+    declare it after each build and publish. With a project reference, import this file in the app.
   -->
   <PropertyGroup>
     <CupertinoDeclareMacOSSdk Condition="'$(CupertinoDeclareMacOSSdk)' == ''">true</CupertinoDeclareMacOSSdk>

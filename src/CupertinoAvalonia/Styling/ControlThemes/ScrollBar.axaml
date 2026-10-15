@@ -1,8 +1,4 @@
-<!--
-  ScrollBar, from the kit's "Scrollbar - Vertical/Horizontal" (page Scrollbar): an overlay scroller
-  showing only a 6 px rounded thumb, inset 3 px. When expanded (pointer over it) the track appears
-  behind. No line buttons, as on macOS.
--->
+<!-- ScrollBar, from the kit's "Scrollbar - Vertical/Horizontal" (page Scrollbar). -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>

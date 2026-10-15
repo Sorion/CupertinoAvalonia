@@ -1,10 +1,4 @@
-<!--
-  Slider, from the kit's "Slider" (page Sliders and Dials): a 4 px track, accent-filled up to the
-  value, with a white capsule knob. While pressed or dragged, the knob turns into a Liquid Glass lens
-  ("_Knob - Clicked"), larger than the knob, through which the track shows (see GlassLens).
-  Ticks (TickPlacement) are drawn as short marks under the track. In an inactive window, the fill
-  turns gray.
--->
+<!-- Slider, from the kit's "Slider" (page Sliders and Dials). -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cas="using:CupertinoAvalonia.Styling">
@@ -18,9 +12,7 @@
   </Design.PreviewWith>
 
   <ResourceDictionary.ThemeDictionaries>
-    <!-- _Tracks - Unfilled: the primary label color at 10%, 19% pressed, 6% disabled. Ticks (_Ticks): at 25%.
-         The pressed lens's tint, light, rim and shadow are measured on native macOS 27 (System Settings) in
-         dark mode; in light mode they follow the switch's lens. -->
+    <!-- _Tracks - Unfilled, _Ticks. The lens is measured on macOS 27 in dark mode; light mode follows the switch's. -->
     <ResourceDictionary x:Key="Default">
       <SolidColorBrush x:Key="SliderTrackBrush" Color="#16000000" />
       <SolidColorBrush x:Key="SliderTrackPressedBrush" Color="#29000000" />
@@ -51,7 +43,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Grid>
-          <!-- A taller transparent hit area, so the track is easy to click. -->
+          <!-- A taller hit area. -->
           <Border Background="Transparent" Margin="0,-10" />
           <Border Background="{TemplateBinding Background}"
                   CornerRadius="100"
@@ -78,7 +70,7 @@
 
   <!-- _Knob, Style=Non-Ticked -->
   <ControlTheme x:Key="CupertinoSliderThumb" TargetType="Thumb">
-    <!-- TemplatedControl clips by default, which would cut the knob's shadow to its rectangle. -->
+    <!-- Would clip the knob's shadow. -->
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
     <Setter Property="Template">
@@ -95,11 +87,7 @@
     </Setter>
   </ControlTheme>
 
-  <!--
-    The pressed lens ("_Knob - Clicked"): its "Glass Effect" layer is 27 × 22 on the 20 × 16 knob, the size
-    native macOS shows. It is created on the knob while the slider is pressed (see the styles below), in
-    the window's adorner layer so no container clips it.
-  -->
+  <!-- The pressed lens ("_Knob - Clicked"). -->
   <ControlTheme x:Key="CupertinoSliderLens" TargetType="TemplatedControl">
     <Setter Property="Width" Value="27" />
     <Setter Property="Height" Value="22" />
@@ -108,10 +96,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
-          <!-- Clear glass, as on native macOS 27: unlike the switch's lens, it doesn't zoom out the track,
-               but magnifies it just inside the rim, and its tint deepens away from the rim. Light grows
-               toward the top and bottom edges. Without Skia it falls back to an opaque knob in the window's
-               color. -->
+          <!-- As on macOS 27: unlike the switch's lens, it magnifies the track inside the rim. -->
           <cas:GlassLens Magnification="1"
                          Refraction="-3.6"
                          RefractionBand="2.0"
@@ -129,7 +114,7 @@
                          RimFringe="0"
                          FallbackBackground="{DynamicResource WindowBackgroundBrush}"
                          FallbackForeground="{DynamicResource SliderTrackPressedBrush}" />
-          <!-- Drawn after the glass so the glass doesn't see it: a box shadow only paints outside its border. -->
+          <!-- After the glass, so the glass doesn't refract it. -->
           <Border CornerRadius="100"
                   Background="Transparent"
                   BoxShadow="{DynamicResource SliderLensShadow}" />
@@ -140,8 +125,7 @@
       <Setter Property="Width" Value="22" />
       <Setter Property="Height" Value="27" />
     </Style>
-    <!-- Grows out of the knob (keyframe animations can't animate RenderTransform itself: they animate a
-         ScaleTransform they create). -->
+    <!-- Keyframes can't animate RenderTransform itself, only a ScaleTransform they create. -->
     <Style Selector="^">
       <Style.Animations>
         <Animation Duration="0:0:0.2" Easing="BackEaseOut" FillMode="Forward">
@@ -167,7 +151,7 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type Slider}" TargetType="Slider">
-    <!-- TemplatedControl clips by default: let the knob's shadow draw past the ends of the track. -->
+    <!-- Would clip the knob's shadow at the track's ends. -->
     <Setter Property="ClipToBounds" Value="False" />
     <Setter Property="Background" Value="{DynamicResource SliderTrackBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
@@ -178,7 +162,7 @@
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
       <Setter Property="Template">
         <ControlTemplate>
-          <!-- Like the control, its validation wrapper mustn't clip the knob's shadow. -->
+          <!-- Clips too by default. -->
           <DataValidationErrors ClipToBounds="False">
             <Grid Name="SliderContainer" Margin="{TemplateBinding Padding}" Background="Transparent" RowDefinitions="*,Auto,*">
               <Grid.Styles>
@@ -242,7 +226,6 @@
       <Setter Property="MinWidth" Value="{DynamicResource ControlHeight}" />
       <Setter Property="Template">
         <ControlTemplate>
-          <!-- Like the control, its validation wrapper mustn't clip the knob's shadow. -->
           <DataValidationErrors ClipToBounds="False">
             <Grid Name="SliderContainer" Margin="{TemplateBinding Padding}" Background="Transparent" ColumnDefinitions="*,Auto,*">
               <Grid.Styles>
@@ -315,8 +298,8 @@
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
-    <!-- The fill runs on under the knob up to its center, and the rest of the track starts under the fill's
-         rounded end (the knob is 20 long: 10 is half of it), so the pressed glass lens shows a continuous track. -->
+    <!-- The fill runs to the knob's center (half of 20) and the track starts under its rounded end: the lens shows
+         a continuous track. -->
     <Style Selector="^:horizontal">
       <Style Selector="^ /template/ RepeatButton#PART_DecreaseButton">
         <Setter Property="Margin" Value="0,0,-10,0" />
@@ -346,13 +329,11 @@
       </Style>
     </Style>
 
-    <!-- Inactive window (Active=False): a gray fill on a lighter track (_Tracks - Filled, _Tracks - Unfilled). -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
       <Setter Property="Background" Value="{DynamicResource ControlTrackInactiveBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource ControlFillInactiveBrush}" />
     </Style>
 
-    <!-- Pressed: the knob becomes the glass lens. -->
     <Style Selector="^:pressed">
       <Setter Property="Background" Value="{DynamicResource SliderTrackPressedBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
@@ -380,7 +361,7 @@
     </Style>
 
     <Style Selector="^:disabled">
-      <!-- The kit grays the whole track when disabled. -->
+      <!-- The kit grays the fill too. -->
       <Setter Property="Background" Value="{DynamicResource SliderTrackDisabledBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource SliderTrackDisabledBrush}" />
     </Style>

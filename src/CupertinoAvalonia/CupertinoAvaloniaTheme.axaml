@@ -4,11 +4,7 @@
         xmlns:cas="using:CupertinoAvalonia.Styling"
         xmlns:cac="using:CupertinoAvalonia.Controls">
 
-  <!--
-    Fallback for the controls that don't have a macOS template yet: they keep Fluent's templates,
-    recolored with Apple's palette (see CupertinoAvaloniaTheme.ApplyFluentPalettes).
-    The resources below are looked up first, so every macOS control theme wins over Fluent's.
-  -->
+  <!-- For the controls without a macOS template. The resources below are looked up first, so the macOS themes win. -->
   <FluentTheme />
 
   <Styles.Resources>
@@ -37,7 +33,6 @@
     <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
   </Style>
 
-  <!-- An inactive window shows no keyboard focus ring (see Styling/WindowActivity.cs). -->
   <Style Selector="Border.focus-ring[(cas|WindowActivity.IsInactive)=True]">
     <Setter Property="IsVisible" Value="False" />
   </Style>

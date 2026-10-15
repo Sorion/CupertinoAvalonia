@@ -2,10 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace CupertinoAvalonia.Controls;
 
-/// <summary>
-/// The parts of a macOS window's chrome Avalonia doesn't expose, set on the NSWindow through the
-/// Objective-C runtime.
-/// </summary>
+/// <summary>Window chrome Avalonia doesn't expose, set on the NSWindow through the Objective-C runtime.</summary>
 internal static class MacOSWindowChrome
 {
     private const string ObjC = "/usr/lib/libobjc.A.dylib";
@@ -19,11 +16,7 @@ internal static class MacOSWindowChrome
     // NSVisualEffectBlendingMode
     private const nint BlendingBehindWindow = 0;
 
-    /// <summary>
-    /// Gives the window an empty toolbar of the given style, which makes its title bar as high as the
-    /// toolbar with the window controls centered in it, or removes it. The app draws its own toolbar
-    /// content under it, and its own separator.
-    /// </summary>
+    // An empty NSToolbar sets the title bar's height and centers the window controls in it; the app draws the rest.
     public static void SetToolbar(IntPtr nsWindow, CupertinoToolbarStyle style, bool extended)
     {
         if (style == CupertinoToolbarStyle.None)
@@ -48,11 +41,7 @@ internal static class MacOSWindowChrome
         SendInt(nsWindow, Sel("setTitlebarSeparatorStyle:"), extended ? TitlebarSeparatorNone : TitlebarSeparatorAutomatic);
     }
 
-    /// <summary>
-    /// Gives Avalonia's blur behind the window (TransparencyLevelHint AcrylicBlur) a system material:
-    /// Avalonia uses NSVisualEffectMaterialLight, which stays light in dark mode. Returns whether the blur
-    /// view was found.
-    /// </summary>
+    // Avalonia's AcrylicBlur uses NSVisualEffectMaterialLight, which stays light in dark mode.
     public static bool SetBehindWindowMaterial(IntPtr nsWindow, CupertinoWindowMaterial material)
     {
         var subviews = Send(Send(nsWindow, Sel("contentView")), Sel("subviews"));

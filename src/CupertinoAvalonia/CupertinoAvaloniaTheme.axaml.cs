@@ -10,10 +10,7 @@ using CupertinoAvalonia.Styling;
 
 namespace CupertinoAvalonia;
 
-/// <summary>
-/// The macOS 27 theme for Avalonia's built-in controls. Add it to <c>Application.Styles</c>
-/// instead of <c>FluentTheme</c>.
-/// </summary>
+/// <summary>The macOS 27 theme for Avalonia's built-in controls, in place of <c>FluentTheme</c>.</summary>
 public class CupertinoAvaloniaTheme : Styles
 {
     public static readonly StyledProperty<bool> PreferSystemAccentColorProperty =
@@ -49,17 +46,14 @@ public class CupertinoAvaloniaTheme : Styles
         UpdateAccent();
     }
 
-    /// <summary>
-    /// Follows the accent color chosen in System Settings (default). When <c>false</c>, or when the
-    /// platform doesn't report one, the accent is macOS's default blue.
-    /// </summary>
+    /// <summary>Follows the system's accent color (default); otherwise the accent is macOS's blue.</summary>
     public bool PreferSystemAccentColor
     {
         get => GetValue(PreferSystemAccentColorProperty);
         set => SetValue(PreferSystemAccentColorProperty, value);
     }
 
-    /// <summary>An accent color that replaces the system one, in both light and dark modes.</summary>
+    /// <summary>Replaces the system accent color in both light and dark modes.</summary>
     public Color? CustomAccentColor
     {
         get => GetValue(CustomAccentColorProperty);
@@ -90,7 +84,7 @@ public class CupertinoAvaloniaTheme : Styles
             }
             else if (accentKey is null)
             {
-                // Not a macOS accent (e.g. Windows): use the reported color as is.
+                // Not a macOS accent (e.g. Windows).
                 accent = vibrant = reported!.Value;
             }
             else
@@ -109,7 +103,7 @@ public class CupertinoAvaloniaTheme : Styles
         var isDark = variant == ThemeVariant.Dark;
         var d = (ResourceDictionary)_accentResources.ThemeDictionaries[isDark ? ThemeVariant.Dark : ThemeVariant.Default];
 
-        // The kit draws the prominent button with blend-mode layers over the accent: approximate them.
+        // The kit's blend-mode layers over the prominent button's accent.
         var buttonIdle = isDark ? accent : AccentColorMapper.LinearBurn(accent, 0xF7);
         var buttonPressed = isDark ? AccentColorMapper.LinearDodge(accent, 0x09) : AccentColorMapper.LinearBurn(accent, 0xE6);
 
@@ -117,17 +111,13 @@ public class CupertinoAvaloniaTheme : Styles
         Set(d, "AccentVibrantColor", vibrant);
         Set(d, "AccentButtonBackgroundColor", buttonIdle);
         Set(d, "AccentButtonBackgroundPressedColor", buttonPressed);
-        // Selected rows in lists and tables: "Tables/BG - Selected + Active" is the blue accent made
-        // darker and slightly shifted (#0088FF → #0165E2 light, #0091FF → #0158D2 dark); apply the
-        // same change to any accent.
+        // "Tables/BG - Selected + Active": #0088FF → #0165E2 light, #0091FF → #0158D2 dark, applied to any accent.
         Set(d, "AccentSelectionColor", isDark
             ? AccentColorMapper.Darken(accent, 0.086, hue: 9)
             : AccentColorMapper.Darken(accent, 0.055, hue: 5));
-        // Also feed the accent to code and Fluent templates that read Avalonia's standard key.
         d["SystemAccentColor"] = accent;
 
-        // Keyboard focus ring (_Input Fields, State=Focused): the accent at 50%, 3.5 px outside
-        // plus a 1 px inner line. A spread shadow follows the control's corner radius.
+        // _Input Fields, State=Focused. A spread shadow follows the control's corner radius.
         var ring = Color.FromArgb(0x80, accent.R, accent.G, accent.B);
         d["FocusRingShadow"] = new BoxShadows(
             new BoxShadow { Spread = 3.5, Color = ring },
@@ -144,10 +134,7 @@ public class CupertinoAvaloniaTheme : Styles
             d[brushKey] = new SolidColorBrush(color);
     }
 
-    /// <summary>
-    /// Recolors the Fluent fallback with Apple's palette, so controls that aren't restyled yet
-    /// still match the rest of the app.
-    /// </summary>
+    // Controls without a macOS template keep Fluent's, in Apple's colors.
     private void ApplyFluentPalettes()
     {
         foreach (var variant in Variants)

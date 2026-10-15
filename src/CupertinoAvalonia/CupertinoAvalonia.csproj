@@ -17,7 +17,6 @@
     <RepositoryUrl>https://github.com/Sorion/CupertinoAvalonia</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <!-- Symbols on nuget.org's symbol server, sources through Source Link. -->
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -26,9 +25,9 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
-    <!-- Skia runtime shaders for the Liquid Glass lens (GlassLens); Skia is Avalonia's default renderer. -->
+    <!-- GlassLens's runtime shader. -->
     <PackageReference Include="Avalonia.Skia" Version="$(AvaloniaVersion)" />
-    <!-- Fallback for controls that don't have a macOS template yet (see README). -->
+    <!-- Templates for the controls without a macOS one. -->
     <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
   </ItemGroup>
 

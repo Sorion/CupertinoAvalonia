@@ -49,14 +49,13 @@ public class ToggleSwitchTests
         var movingKnobs = Part<Panel>(toggle, "PART_MovingKnobs");
         Assert.Null(AdornerLayer.GetAdorner(movingKnobs));
 
-        // Hold the mouse button down on the knob.
         var knobCenter = knob.TranslatePoint(new Point(knob.Bounds.Width / 2, knob.Bounds.Height / 2), window)!.Value;
         window.MouseDown(knobCenter, MouseButton.Left);
         Assert.True(toggle.IsPressed);
         // The lens is an adorner of the knob, outside the switch's tree.
         var lens = Assert.IsType<Panel>(AdornerLayer.GetAdorner(movingKnobs)).Children.OfType<TemplatedControl>().Single();
         Assert.False(AdornerLayer.GetIsClipEnabled(lens.GetVisualParent()!));
-        // Animations and transitions run on the real clock: let them finish.
+        // Transitions run on the real clock.
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         while ((lens.Opacity < 1 || knob.Opacity > 0) && stopwatch.ElapsedMilliseconds < 2000)
         {

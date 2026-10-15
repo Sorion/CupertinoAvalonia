@@ -1,12 +1,4 @@
-<!--
-  ListBox and ListBoxItem, from the kit's "Table Rows" (page Lists and Tables) and, with the
-  "sidebar" class, "Sidebars / Item" (page Sidebars).
-  - Default: 20 px rows inset in the list, rounded selection. The selection takes the accent while
-    the list has the keyboard focus in the active window, and turns gray otherwise ("Selected + Inactive").
-  - sidebar: 32 px rows, a neutral selection, no background (put the list on MaterialSidebarBrush).
-  - alternating: alternate row backgrounds, as in tables.
-  The class-based variants are in ListStyles.axaml.
--->
+<!-- ListBox, from the kit's "Table Rows" (page Lists and Tables). The class variants are in ListStyles.axaml. -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cas="using:CupertinoAvalonia.Styling">
@@ -41,7 +33,6 @@
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
-    <!-- Rows are inset from the list's edges ("Table Rows": 10 px). -->
     <Setter Property="Padding" Value="10,5" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
@@ -105,7 +96,7 @@
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
 
-    <!-- Selected + Inactive: the list doesn't have the keyboard focus. -->
+    <!-- Selected + Inactive: the list doesn't have the focus. -->
     <Style Selector="^:selected">
       <Setter Property="Background" Value="{DynamicResource TableRowSelectedInactiveBrush}" />
     </Style>
@@ -114,7 +105,7 @@
       <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
     </Style>
-    <!-- The window keeps its focused element while inactive: the selection still turns gray. -->
+    <!-- An inactive window keeps its focused element. -->
     <Style Selector="^:selected:focus-within[(cas|WindowActivity.IsInactive)=True]">
       <Setter Property="Background" Value="{DynamicResource TableRowSelectedInactiveBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />

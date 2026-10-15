@@ -1,7 +1,4 @@
-<!--
-  Class-based variants of ListBox that restyle its items (see ControlThemes/ListBox.axaml).
-  They are styles rather than control themes because they depend on the parent list's classes.
--->
+<!-- Styles rather than control themes: the items depend on the parent list's classes. -->
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cas="using:CupertinoAvalonia.Styling"

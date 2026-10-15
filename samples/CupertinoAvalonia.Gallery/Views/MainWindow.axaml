@@ -1,8 +1,4 @@
-<!--
-  Laid out like the kit's macOS 27 window "Unified Toolbar + Title + Sidebar" (page Windows): a full-height
-  sidebar under the window controls, on the sidebar material, and a 52-point toolbar over the content, with
-  the page's title and subtitle. On macOS, CupertinoWindow runs the content under the title bar.
--->
+<!-- The kit's "Unified Toolbar + Title + Sidebar" window (page Windows). -->
 <cac:CupertinoWindow xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cac="using:CupertinoAvalonia.Controls"
@@ -40,7 +36,7 @@
   <SplitView Name="Split" DisplayMode="Inline" IsPaneOpen="{Binding IsSidebarOpen}">
     <SplitView.Pane>
       <DockPanel>
-        <!-- Room for the window controls; dragging it moves the window. -->
+        <!-- Room for the window controls. -->
         <Border DockPanel.Dock="Top" Height="52" Background="Transparent"
                 WindowDecorationProperties.ElementRole="TitleBar" />
         <TextBlock DockPanel.Dock="Top" Classes="caption1 emphasized secondary" Margin="18,0,0,6" Text="Controls" />

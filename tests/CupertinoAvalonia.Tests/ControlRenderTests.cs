@@ -80,9 +80,7 @@ public class ControlRenderTests
     }
 
     /// <summary>
-    /// The focus ring draws outside the control. TemplatedControl clips to its bounds by default, so
-    /// the ring must live in the adorner layer, unclipped, or a container like this UserControl
-    /// would cut it.
+    /// The focus ring lives in the adorner layer: a container like this UserControl would clip it.
     /// </summary>
     [AvaloniaTheory]
     [InlineData(typeof(Button), NavigationMethod.Tab)]
@@ -118,7 +116,6 @@ public class ControlRenderTests
         Assert.False(AdornerLayer.GetIsClipEnabled(ring.GetVisualParent()!));
         Assert.Null(ring.Clip); // no scroll viewport around it
 
-        // The ring follows the shape it surrounds.
         var adornedBorder = AdornerLayer.GetAdornedElement(ring.GetVisualParent()!) as Border;
         if (adornedBorder is not null)
             Assert.Equal(adornedBorder.CornerRadius, ring.CornerRadius);
