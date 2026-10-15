@@ -66,6 +66,38 @@ public class WindowActivityTests
         window.Close();
     }
 
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Inactive_window_grays_sidebar_symbols_and_labels(string theme)
+    {
+        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Application.Current!.RequestedThemeVariant = variant;
+        var icon = new CupertinoAvalonia.Controls.SymbolIcon { Symbol = "folder" };
+        var label = new TextBlock { Text = "Notes" };
+        var item = new ListBoxItem { Content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Children = { icon, label } } };
+        var list = new ListBox { Classes = { "sidebar" }, Items = { item }, SelectedIndex = 0 };
+        var treeIcon = new CupertinoAvalonia.Controls.SymbolIcon { Symbol = "folder" };
+        var treeItem = new TreeViewItem { Header = treeIcon };
+        var tree = new TreeView { Classes = { "sidebar" }, Items = { treeItem } };
+        var window = new Window { Content = new StackPanel { Children = { list, tree } } };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        // _Leading: the accent's vibrant color, the label in the primary color.
+        Assert.Equal(Describe(Resource("AccentVibrantBrush", variant)), Describe(icon.Foreground));
+        Assert.Equal(Describe(Resource("AccentVibrantBrush", variant)), Describe(treeIcon.Foreground));
+        Assert.Equal(Describe(Resource("LabelPrimaryBrush", variant)), Describe(label.Foreground));
+
+        // Active=False: both turn gray, selected or not.
+        WindowActivity.SetIsInactive(window, true);
+        var gray = Describe(Resource("LabelSecondaryBrush", variant));
+        Assert.Equal(gray, Describe(icon.Foreground));
+        Assert.Equal(gray, Describe(label.Foreground));
+        Assert.Equal(gray, Describe(treeIcon.Foreground));
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void Inactive_window_hides_the_focus_ring()
     {

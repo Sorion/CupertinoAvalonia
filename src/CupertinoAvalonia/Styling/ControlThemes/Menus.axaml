@@ -7,6 +7,7 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cac="using:CupertinoAvalonia.Controls"
                     xmlns:conv="using:Avalonia.Controls.Converters">
   <Design.PreviewWith>
     <Border Padding="40" Width="300">
@@ -150,11 +151,10 @@
                 <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemChevron" />
               </Grid.ColumnDefinitions>
               <Panel Name="PART_ToggleIconPresenter" Width="{DynamicResource MenuWidthSymbol}" Margin="0,0,8,0" IsVisible="False">
-                <Viewbox Name="PART_CheckGlyph" Width="9" Height="9" IsVisible="False">
-                  <Path Data="{StaticResource MenuItemCheckGlyph}" Width="9.3" Height="8.9"
-                        Stroke="{TemplateBinding Foreground}" StrokeThickness="1.6"
-                        StrokeLineCap="Round" StrokeJoin="Round" />
-                </Viewbox>
+                <cac:SymbolIcon Name="PART_CheckGlyph" IsVisible="False"
+                                Symbol="checkmark" FontSize="10" FontWeight="Bold"
+                                FallbackData="{StaticResource MenuItemCheckGlyph}" FallbackStrokeThickness="1.6"
+                                Foreground="{TemplateBinding Foreground}" />
                 <Ellipse Name="PART_RadioGlyph" Width="6" Height="6" Fill="{TemplateBinding Foreground}" IsVisible="False" />
               </Panel>
               <ContentPresenter Name="PART_IconPresenter"
@@ -175,16 +175,13 @@
                          Text="{TemplateBinding InputGesture, Converter={StaticResource CupertinoKeyGestureConverter}}"
                          Foreground="{DynamicResource LabelTertiaryBrush}"
                          VerticalAlignment="Center" />
-              <Path Name="PART_ChevronPath"
-                    Grid.Column="4"
-                    Margin="12,0,0,0"
-                    Width="4.5" Height="8"
-                    Data="{StaticResource MenuItemSubmenuChevron}"
-                    Stroke="{TemplateBinding Foreground}"
-                    StrokeThickness="1.5"
-                    StrokeLineCap="Round"
-                    StrokeJoin="Round"
-                    VerticalAlignment="Center" />
+              <cac:SymbolIcon Name="PART_ChevronPath"
+                              Grid.Column="4"
+                              Margin="12,0,0,0"
+                              VerticalAlignment="Center"
+                              Symbol="chevron.right" FontSize="13" FontWeight="Bold"
+                              FallbackData="{StaticResource MenuItemSubmenuChevron}" FallbackStrokeThickness="1.5"
+                              Foreground="{TemplateBinding Foreground}" />
             </Grid>
           </Border>
           <Popup Name="PART_Popup"
@@ -222,13 +219,13 @@
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
-    <Style Selector="^:empty /template/ Path#PART_ChevronPath">
+    <Style Selector="^:empty /template/ cac|SymbolIcon#PART_ChevronPath">
       <Setter Property="IsVisible" Value="False" />
     </Style>
     <Style Selector="^:toggle /template/ Panel#PART_ToggleIconPresenter, ^:radio /template/ Panel#PART_ToggleIconPresenter">
       <Setter Property="IsVisible" Value="True" />
     </Style>
-    <Style Selector="^:checked:toggle /template/ Viewbox#PART_CheckGlyph">
+    <Style Selector="^:checked:toggle /template/ cac|SymbolIcon#PART_CheckGlyph">
       <Setter Property="IsVisible" Value="True" />
     </Style>
     <Style Selector="^:checked:radio /template/ Ellipse#PART_RadioGlyph">

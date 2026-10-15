@@ -1,0 +1,336 @@
+<!-- NumericUpDown and ButtonSpinner, from the kit's "Stepper" (page Steppers). -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cac="using:CupertinoAvalonia.Controls"
+                    xmlns:cas="using:CupertinoAvalonia.Styling"
+                    xmlns:converters="using:Avalonia.Controls.Converters">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="12" Width="200">
+      <NumericUpDown Value="12" Minimum="0" Maximum="100" />
+      <NumericUpDown Value="100" Minimum="0" Maximum="100" />
+      <NumericUpDown Value="12" IsEnabled="False" />
+      <ButtonSpinner />
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <!-- Stepper: the same separator in both modes. -->
+  <SolidColorBrush x:Key="StepperSeparatorBrush" Color="#1F000000" />
+  <SolidColorBrush x:Key="StepperSeparatorDisabledBrush" Color="#0F000000" />
+  <StreamGeometry x:Key="StepperUpGlyph">M 0.75,4 L 4,0.75 L 7.25,4</StreamGeometry>
+  <StreamGeometry x:Key="StepperDownGlyph">M 0.75,0.75 L 4,4 L 7.25,0.75</StreamGeometry>
+  <converters:CornerRadiusFilterConverter x:Key="StepperTopCorners" Filter="TopLeft, TopRight" />
+  <converters:CornerRadiusFilterConverter x:Key="StepperBottomCorners" Filter="BottomLeft, BottomRight" />
+
+  <ControlTheme x:Key="CupertinoStepperButton" TargetType="RepeatButton">
+    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
+          <cac:SymbolIcon Name="Chevron"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          FontSize="{DynamicResource StepperFontSize}"
+                          FontWeight="Medium"
+                          FallbackStrokeThickness="1.5"
+                          Foreground="{TemplateBinding Foreground}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^#PART_IncreaseButton /template/ cac|SymbolIcon#Chevron">
+      <Setter Property="Symbol" Value="chevron.up" />
+      <Setter Property="FallbackData" Value="{StaticResource StepperUpGlyph}" />
+    </Style>
+    <Style Selector="^#PART_DecreaseButton /template/ cac|SymbolIcon#Chevron">
+      <Setter Property="Symbol" Value="chevron.down" />
+      <Setter Property="FallbackData" Value="{StaticResource StepperDownGlyph}" />
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+    </Style>
+    <!-- At the minimum or maximum -->
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+    <Style Selector="^[(cas|Stepper.Size)=Mini] /template/ cac|SymbolIcon#Chevron">
+      <Setter Property="FontSize" Value="{DynamicResource StepperFontSizeMini}" />
+    </Style>
+    <Style Selector="^[(cas|Stepper.Size)=Small] /template/ cac|SymbolIcon#Chevron">
+      <Setter Property="FontSize" Value="{DynamicResource StepperFontSizeSmall}" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type ButtonSpinner}" TargetType="ButtonSpinner">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DataValidationErrors>
+          <Panel>
+            <Border Name="PART_Field"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}" />
+            <DockPanel>
+              <Panel Name="PART_SpinnerPanel"
+                     DockPanel.Dock="Right"
+                     Width="{DynamicResource StepperWidth}"
+                     IsVisible="{TemplateBinding ShowButtonSpinner}">
+                <!-- Holds the corner radius the halves bind to. -->
+                <Border Name="Stepper" CornerRadius="{DynamicResource StepperRadius}" />
+                <Grid RowDefinitions="*,*">
+                  <RepeatButton Name="PART_IncreaseButton"
+                                Theme="{StaticResource CupertinoStepperButton}"
+                                CornerRadius="{Binding #Stepper.CornerRadius, Converter={StaticResource StepperTopCorners}}" />
+                  <RepeatButton Name="PART_DecreaseButton"
+                                Grid.Row="1"
+                                Theme="{StaticResource CupertinoStepperButton}"
+                                CornerRadius="{Binding #Stepper.CornerRadius, Converter={StaticResource StepperBottomCorners}}" />
+                </Grid>
+                <Rectangle Name="StepperSeparator"
+                           Width="{DynamicResource StepperWidthSeparator}"
+                           Height="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           IsHitTestVisible="False"
+                           Fill="{DynamicResource StepperSeparatorBrush}" />
+              </Panel>
+              <ContentPresenter Name="PART_ContentPresenter"
+                                Margin="0,0,4,0"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Padding="{TemplateBinding Padding}"
+                                IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            </DockPanel>
+          </Panel>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:focus-visible /template/ Panel#PART_SpinnerPanel">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True"
+                    CornerRadius="{DynamicResource StepperRadius}" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+
+    <Style Selector="^:left">
+      <Style Selector="^ /template/ Panel#PART_SpinnerPanel">
+        <Setter Property="DockPanel.Dock" Value="Left" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Margin" Value="4,0,0,0" />
+      </Style>
+    </Style>
+
+    <!-- In a NumericUpDown -->
+    <Style Selector="^.field /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <Style Selector="^:disabled">
+      <Style Selector="^ /template/ RepeatButton">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />
+      </Style>
+      <Style Selector="^ /template/ Rectangle#StepperSeparator">
+        <Setter Property="Fill" Value="{DynamicResource StepperSeparatorDisabledBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Through cas:Stepper.Size: a NumericUpDown's classes don't reach its ButtonSpinner. -->
+    <Style Selector="^.mini">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
+      <Setter Property="cas:Stepper.Size" Value="Mini" />
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
+      <Setter Property="cas:Stepper.Size" Value="Small" />
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
+      <Setter Property="cas:Stepper.Size" Value="Large" />
+    </Style>
+    <Style Selector="^.xlarge">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+      <Setter Property="cas:Stepper.Size" Value="XLarge" />
+    </Style>
+    <Style Selector="^[(cas|Stepper.Size)=Mini]">
+      <Style Selector="^ /template/ Panel#PART_SpinnerPanel">
+        <Setter Property="Width" Value="{DynamicResource StepperWidthMini}" />
+      </Style>
+      <Style Selector="^ /template/ Border#Stepper">
+        <Setter Property="CornerRadius" Value="{DynamicResource StepperRadiusMini}" />
+      </Style>
+      <Style Selector="^ /template/ Rectangle#StepperSeparator">
+        <Setter Property="Width" Value="{DynamicResource StepperWidthSeparatorMini}" />
+      </Style>
+    </Style>
+    <Style Selector="^[(cas|Stepper.Size)=Small]">
+      <Style Selector="^ /template/ Panel#PART_SpinnerPanel">
+        <Setter Property="Width" Value="{DynamicResource StepperWidthSmall}" />
+      </Style>
+      <Style Selector="^ /template/ Border#Stepper">
+        <Setter Property="CornerRadius" Value="{DynamicResource StepperRadiusSmall}" />
+      </Style>
+      <Style Selector="^ /template/ Rectangle#StepperSeparator">
+        <Setter Property="Width" Value="{DynamicResource StepperWidthSeparatorSmall}" />
+      </Style>
+    </Style>
+    <Style Selector="^[(cas|Stepper.Size)=Large]">
+      <Style Selector="^ /template/ Panel#PART_SpinnerPanel">
+        <Setter Property="Width" Value="{DynamicResource StepperWidthLarge}" />
+      </Style>
+      <Style Selector="^ /template/ Border#Stepper">
+        <Setter Property="CornerRadius" Value="{DynamicResource StepperRadiusLarge}" />
+      </Style>
+      <Style Selector="^ /template/ Rectangle#StepperSeparator">
+        <Setter Property="Width" Value="{DynamicResource StepperWidthSeparatorLarge}" />
+      </Style>
+    </Style>
+    <Style Selector="^[(cas|Stepper.Size)=XLarge]">
+      <Style Selector="^ /template/ Panel#PART_SpinnerPanel">
+        <Setter Property="Width" Value="{DynamicResource StepperWidthXLarge}" />
+      </Style>
+      <Style Selector="^ /template/ Border#Stepper">
+        <Setter Property="CornerRadius" Value="{DynamicResource StepperRadiusXLarge}" />
+      </Style>
+      <Style Selector="^ /template/ Rectangle#StepperSeparator">
+        <Setter Property="Width" Value="{DynamicResource StepperWidthSeparatorXLarge}" />
+      </Style>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type NumericUpDown}" TargetType="NumericUpDown">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Background" Value="{DynamicResource TextFieldBackgroundBrush}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource TextFieldBorderBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlRadius}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="MinWidth" Value="64" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Padding" Value="{DynamicResource TextFieldPadding}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DataValidationErrors>
+          <ButtonSpinner Name="PART_Spinner"
+                         Classes="field"
+                         Background="{TemplateBinding Background}"
+                         BorderThickness="{TemplateBinding BorderThickness}"
+                         BorderBrush="{TemplateBinding BorderBrush}"
+                         CornerRadius="{TemplateBinding CornerRadius}"
+                         MinHeight="{TemplateBinding MinHeight}"
+                         IsTabStop="False"
+                         Focusable="False"
+                         Padding="0"
+                         MinWidth="0"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
+                         HorizontalContentAlignment="Stretch"
+                         VerticalContentAlignment="Stretch"
+                         AllowSpin="{TemplateBinding AllowSpin}"
+                         ShowButtonSpinner="{TemplateBinding ShowButtonSpinner}"
+                         ButtonSpinnerLocation="{TemplateBinding ButtonSpinnerLocation}">
+            <TextBox Name="PART_TextBox"
+                     Classes="embedded"
+                     Padding="{TemplateBinding Padding}"
+                     MinWidth="0"
+                     MinHeight="0"
+                     VerticalAlignment="Stretch"
+                     Foreground="{TemplateBinding Foreground}"
+                     PlaceholderText="{TemplateBinding PlaceholderText}"
+                     PlaceholderForeground="{TemplateBinding PlaceholderForeground}"
+                     IsReadOnly="{TemplateBinding IsReadOnly}"
+                     VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                     HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                     Text="{TemplateBinding Text}"
+                     TextAlignment="{TemplateBinding TextAlignment}"
+                     AcceptsReturn="False"
+                     TextWrapping="NoWrap"
+                     InnerLeftContent="{Binding InnerLeftContent, RelativeSource={RelativeSource TemplatedParent}}"
+                     InnerRightContent="{Binding InnerRightContent, RelativeSource={RelativeSource TemplatedParent}}">
+              <!-- The NumericUpDown draws the field. -->
+              <TextBox.Resources>
+                <SolidColorBrush x:Key="TextFieldBackgroundBrush" Color="Transparent" />
+                <SolidColorBrush x:Key="TextFieldBackgroundDisabledBrush" Color="Transparent" />
+                <SolidColorBrush x:Key="TextFieldBorderBrush" Color="Transparent" />
+                <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="Transparent" />
+              </TextBox.Resources>
+            </TextBox>
+          </ButtonSpinner>
+        </DataValidationErrors>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:focus-within /template/ ButtonSpinner#PART_Spinner">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+      <Setter Property="Background" Value="{DynamicResource TextFieldBackgroundDisabledBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource TextFieldBorderDisabledBrush}" />
+    </Style>
+
+    <Style Selector="^.mini">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
+      <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingMini}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusMini}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="cas:Stepper.Size" Value="Mini" />
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
+      <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingSmall}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusSmall}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="cas:Stepper.Size" Value="Small" />
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
+      <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingLarge}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+      <Setter Property="cas:Stepper.Size" Value="Large" />
+    </Style>
+    <Style Selector="^.xlarge">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+      <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingXLarge}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusXLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeXLarge}" />
+      <Setter Property="cas:Stepper.Size" Value="XLarge" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

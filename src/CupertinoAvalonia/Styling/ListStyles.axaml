@@ -4,7 +4,8 @@
 -->
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:cas="using:CupertinoAvalonia.Styling">
+        xmlns:cas="using:CupertinoAvalonia.Styling"
+        xmlns:cac="using:CupertinoAvalonia.Controls">
 
   <!-- Sidebars / Item, Size=Medium -->
   <Style Selector="ListBox.sidebar">
@@ -19,12 +20,58 @@
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
   </Style>
-  <!-- Item, Active=False: a lighter selection. -->
+  <Style Selector="ListBox.sidebar ListBoxItem cac|SymbolIcon">
+    <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
+  </Style>
+  <!-- Active=False: "Sidebar/Label - Inactive" (linear burn #878787, dodge #666666) is the secondary label. -->
   <Style Selector="ListBox.sidebar ListBoxItem:selected[(cas|WindowActivity.IsInactive)=True]">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionInactiveBrush}" />
   </Style>
-  <Style Selector="ListBox.sidebar ListBoxItem:disabled">
+  <Style Selector="ListBox.sidebar ListBoxItem[(cas|WindowActivity.IsInactive)=True], ListBox.sidebar ListBoxItem[(cas|WindowActivity.IsInactive)=True] cac|SymbolIcon">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
+  </Style>
+  <Style Selector="ListBox.sidebar ListBoxItem:disabled, ListBox.sidebar ListBoxItem:disabled cac|SymbolIcon">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+
+  <!-- Sidebars / Item, Size=Medium, Level=0…3 -->
+  <Style Selector="TreeView.sidebar">
+    <Setter Property="Padding" Value="8,0" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem">
+    <Setter Property="MinHeight" Value="32" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem /template/ Grid#PART_Header">
+    <Setter Property="Margin"
+            Value="{ReflectionBinding Level, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static cas:OutlineIndentConverter.Instance}, ConverterParameter=12}" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem /template/ Panel#PART_ExpandCollapseChevronContainer">
+    <Setter Property="Width" Value="12" />
+    <Setter Property="Margin" Value="4,0,4,0" />
+  </Style>
+  <Style Selector="TreeView.sidebar ToggleButton#PART_ExpandCollapseChevron">
     <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+  <Style Selector="TreeView.sidebar ToggleButton#PART_ExpandCollapseChevron /template/ cac|SymbolIcon#Chevron">
+    <Setter Property="FontSize" Value="11" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource SidebarSelectionBrush}" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ ToggleButton#PART_ExpandCollapseChevron">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem cac|SymbolIcon:not(#Chevron)">
+    <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem:selected[(cas|WindowActivity.IsInactive)=True] /template/ Border#PART_LayoutRoot">
+    <Setter Property="Background" Value="{DynamicResource SidebarSelectionInactiveBrush}" />
+  </Style>
+  <Style Selector="TreeView.sidebar TreeViewItem[(cas|WindowActivity.IsInactive)=True] /template/ ContentPresenter#PART_HeaderPresenter, TreeView.sidebar TreeViewItem[(cas|WindowActivity.IsInactive)=True] cac|SymbolIcon:not(#Chevron)">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
   </Style>
 
   <!-- Table Rows, Type=Alternating Row Color -->

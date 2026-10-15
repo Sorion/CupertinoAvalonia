@@ -6,7 +6,8 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:cas="using:CupertinoAvalonia.Styling">
+                    xmlns:cas="using:CupertinoAvalonia.Styling"
+                    xmlns:cac="using:CupertinoAvalonia.Controls">
   <Design.PreviewWith>
     <StackPanel Margin="20" Spacing="10">
       <ComboBox SelectedIndex="0">
@@ -88,21 +89,17 @@
                 <SolidColorBrush x:Key="TextFieldBorderBrush" Color="Transparent" />
               </TextBox.Resources>
             </TextBox>
-            <Path Name="DropDownGlyph"
-                  Grid.Column="1"
-                  Width="{DynamicResource ControlHeight}"
-                  Height="11"
-                  Stretch="None"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center"
-                  Margin="8,0,0,0"
-                  IsHitTestVisible="False"
-                  Data="{StaticResource PopUpButtonChevron}"
-                  Stroke="{TemplateBinding Foreground}"
-                  StrokeThickness="1.6"
-                  StrokeLineCap="Round"
-                  StrokeJoin="Round"
-                  RenderTransform="translate(8.5px, 0)" />
+            <cac:SymbolIcon Name="DropDownGlyph"
+                            Grid.Column="1"
+                            Width="{DynamicResource ControlHeight}"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            IsHitTestVisible="False"
+                            Symbol="chevron.up.chevron.down"
+                            FontWeight="Bold"
+                            FallbackData="{StaticResource PopUpButtonChevron}"
+                            FallbackStrokeThickness="1.6"
+                            Foreground="{TemplateBinding Foreground}" />
             <Popup Name="PART_Popup"
                    WindowManagerAddShadowHint="False"
                    IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
@@ -159,13 +156,23 @@
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
 
-    <!-- Control sizes -->
+    <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+      <Setter Property="FontSize" Value="11" />
+    </Style>
+
+    <!-- The kit has no chevron sizes: scaled with the text. -->
+    <Style Selector="^.mini /template/ cac|SymbolIcon#DropDownGlyph">
+      <Setter Property="FontSize" Value="8" />
+    </Style>
     <Style Selector="^.mini">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
       <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingMini}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+    </Style>
+    <Style Selector="^.small /template/ cac|SymbolIcon#DropDownGlyph">
+      <Setter Property="FontSize" Value="9" />
     </Style>
     <Style Selector="^.small">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
@@ -202,11 +209,11 @@
                 Padding="{TemplateBinding Padding}"
                 MinHeight="{TemplateBinding MinHeight}">
           <Grid ColumnDefinitions="Auto,*">
-            <Viewbox Name="PART_CheckGlyph" Width="9" Height="9" Margin="1.5,0,9.5,0" Opacity="0">
-              <Path Data="{StaticResource ComboBoxItemCheckGlyph}" Width="9.3" Height="8.9"
-                    Stroke="{TemplateBinding Foreground}" StrokeThickness="1.6"
-                    StrokeLineCap="Round" StrokeJoin="Round" />
-            </Viewbox>
+            <cac:SymbolIcon Name="PART_CheckGlyph" Width="9" Margin="1.5,0,9.5,0" Opacity="0"
+                            VerticalAlignment="Center"
+                            Symbol="checkmark" FontSize="10" FontWeight="Bold"
+                            FallbackData="{StaticResource ComboBoxItemCheckGlyph}" FallbackStrokeThickness="1.6"
+                            Foreground="{TemplateBinding Foreground}" />
             <ContentPresenter Name="PART_ContentPresenter"
                               Grid.Column="1"
                               Content="{TemplateBinding Content}"
@@ -222,7 +229,7 @@
     <Style Selector="^:pointerover, ^:focus">
       <Setter Property="Background" Value="{DynamicResource MenuItemHighlightBrush}" />
     </Style>
-    <Style Selector="^:selected /template/ Viewbox#PART_CheckGlyph">
+    <Style Selector="^:selected /template/ cac|SymbolIcon#PART_CheckGlyph">
       <Setter Property="Opacity" Value="1" />
     </Style>
     <Style Selector="^:disabled">

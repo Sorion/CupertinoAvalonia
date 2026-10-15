@@ -36,10 +36,14 @@
     <InternalsVisibleTo Include="CupertinoAvalonia.Tests" />
   </ItemGroup>
 
-  <!-- Declares macOS 26's SDK in the apps that use the package (see buildTransitive/CupertinoAvalonia.targets). -->
+  <ItemGroup>
+    <AvaloniaResource Include="Assets/**" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="buildTransitive/**" Pack="true" PackagePath="buildTransitive/" />
     <None Include="../../README.md" Pack="true" PackagePath="/" Visible="false" />
+    <None Include="../../THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" Visible="false" />
   </ItemGroup>
 
 </Project>

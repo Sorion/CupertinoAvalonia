@@ -1,0 +1,165 @@
+<!-- TreeView, from the kit's "Outline View" and "Table Rows" Level=0…4 (page Lists and Tables). -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling"
+                    xmlns:cac="using:CupertinoAvalonia.Controls">
+  <Design.PreviewWith>
+    <TreeView Margin="20" Width="260">
+      <TreeViewItem Header="Applications" IsExpanded="True">
+        <TreeViewItem Header="Games" IsSelected="True" IsExpanded="True">
+          <TreeViewItem Header="Steam" />
+        </TreeViewItem>
+        <TreeViewItem Header="Music" />
+      </TreeViewItem>
+      <TreeViewItem Header="Devices" />
+    </TreeView>
+  </Design.PreviewWith>
+
+  <StreamGeometry x:Key="OutlineDisclosureGlyph">M 0.75,0.75 L 3.75,3.75 L 0.75,6.75</StreamGeometry>
+
+  <!-- _Disclosure -->
+  <ControlTheme x:Key="CupertinoOutlineDisclosure" TargetType="ToggleButton">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Focusable" Value="False" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="VerticalAlignment" Value="Stretch" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}">
+          <cac:SymbolIcon Name="Chevron"
+                          Symbol="chevron.right"
+                          FontSize="9"
+                          FontWeight="Bold"
+                          FallbackData="{StaticResource OutlineDisclosureGlyph}"
+                          Foreground="{TemplateBinding Foreground}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center">
+            <cac:SymbolIcon.Transitions>
+              <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
+              </Transitions>
+            </cac:SymbolIcon.Transitions>
+          </cac:SymbolIcon>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Style Selector="^ /template/ cac|SymbolIcon#Chevron">
+      <Setter Property="RenderTransform" Value="rotate(0deg)" />
+    </Style>
+    <Style Selector="^:checked /template/ cac|SymbolIcon#Chevron">
+      <Setter Property="RenderTransform" Value="rotate(90deg)" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type TreeView}" TargetType="TreeView">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="10,5" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.IsScrollChainingEnabled" Value="True" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <ScrollViewer Background="{TemplateBinding Background}"
+                        HorizontalScrollBarVisibility="{TemplateBinding (ScrollViewer.HorizontalScrollBarVisibility)}"
+                        VerticalScrollBarVisibility="{TemplateBinding (ScrollViewer.VerticalScrollBarVisibility)}"
+                        IsScrollChainingEnabled="{TemplateBinding (ScrollViewer.IsScrollChainingEnabled)}"
+                        IsDeferredScrollingEnabled="{TemplateBinding (ScrollViewer.IsDeferredScrollingEnabled)}"
+                        AllowAutoHide="{TemplateBinding (ScrollViewer.AllowAutoHide)}"
+                        BringIntoViewOnFocusChange="{TemplateBinding (ScrollViewer.BringIntoViewOnFocusChange)}">
+            <ItemsPresenter Name="PART_ItemsPresenter"
+                            ItemsPanel="{TemplateBinding ItemsPanel}"
+                            Margin="{TemplateBinding Padding}" />
+          </ScrollViewer>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type TreeViewItem}" TargetType="TreeViewItem">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <StackPanel>
+          <!-- Indented inside, so the selection spans the tree's width. -->
+          <Border Name="PART_LayoutRoot"
+                  Focusable="True"
+                  Background="{TemplateBinding Background}"
+                  CornerRadius="{TemplateBinding CornerRadius}"
+                  MinHeight="{TemplateBinding MinHeight}"
+                  TemplatedControl.IsTemplateFocusTarget="True">
+            <Grid Name="PART_Header" ColumnDefinitions="Auto,*">
+              <Panel Name="PART_ExpandCollapseChevronContainer" Width="9" Margin="6,0,4,0">
+                <ToggleButton Name="PART_ExpandCollapseChevron"
+                              Theme="{StaticResource CupertinoOutlineDisclosure}"
+                              Foreground="{TemplateBinding Foreground}"
+                              IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+              </Panel>
+              <ContentPresenter Name="PART_HeaderPresenter"
+                                Grid.Column="1"
+                                Focusable="False"
+                                Background="Transparent"
+                                Foreground="{TemplateBinding Foreground}"
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                VerticalAlignment="Center"
+                                Margin="{TemplateBinding Padding}" />
+            </Grid>
+          </Border>
+          <ItemsPresenter Name="PART_ItemsPresenter"
+                          IsVisible="{TemplateBinding IsExpanded}"
+                          ItemsPanel="{TemplateBinding ItemsPanel}" />
+        </StackPanel>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Not in the template: a binding there is a local value, which the sidebar's indent couldn't override. -->
+    <Style Selector="^ /template/ Grid#PART_Header">
+      <Setter Property="Margin"
+              Value="{Binding Level, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static cas:OutlineIndentConverter.Instance}, ConverterParameter=15}" />
+    </Style>
+
+    <!-- A row without children keeps the chevron's room. -->
+    <Style Selector="^:empty /template/ ToggleButton#PART_ExpandCollapseChevron">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <Style Selector="^:disabled /template/ ContentPresenter#PART_HeaderPresenter">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+
+    <!-- Selected + Inactive -->
+    <Style Selector="^:selected /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource TableRowSelectedInactiveBrush}" />
+    </Style>
+    <!-- Selected + Active. On template parts only, so the nested rows keep their color. -->
+    <Style Selector="^:selected:focus-within">
+      <Style Selector="^ /template/ Border#PART_LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource AccentSelectionBrush}" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter, ^ /template/ ToggleButton#PART_ExpandCollapseChevron">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource WhiteBrush}" />
+      </Style>
+    </Style>
+    <!-- An inactive window keeps its focused element. -->
+    <Style Selector="^:selected:focus-within[(cas|WindowActivity.IsInactive)=True]">
+      <Style Selector="^ /template/ Border#PART_LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource TableRowSelectedInactiveBrush}" />
+      </Style>
+      <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter, ^ /template/ ToggleButton#PART_ExpandCollapseChevron">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+      </Style>
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

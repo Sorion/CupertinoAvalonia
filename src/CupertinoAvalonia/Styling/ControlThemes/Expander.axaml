@@ -5,6 +5,7 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cac="using:CupertinoAvalonia.Controls"
                     xmlns:cas="using:CupertinoAvalonia.Styling">
   <Design.PreviewWith>
     <StackPanel Margin="20" Spacing="12" Width="260">
@@ -30,21 +31,18 @@
           <Grid ColumnDefinitions="Auto,*">
             <Panel Name="PART_Glyph" Width="{DynamicResource ControlHeight}" Height="{DynamicResource ControlHeight}">
               <Border Name="PART_GlyphBackground" CornerRadius="{DynamicResource DisclosureRadius}" />
-              <Path Name="PART_Chevron"
-                    Data="{StaticResource DisclosureChevron}"
-                    Width="5.5" Height="9.5"
-                    Stroke="{TemplateBinding Foreground}"
-                    StrokeThickness="1.75"
-                    StrokeLineCap="Round"
-                    StrokeJoin="Round"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                <Path.Transitions>
+              <cac:SymbolIcon Name="PART_Chevron"
+                              Symbol="chevron.right" FontSize="13" FontWeight="Bold"
+                              FallbackData="{StaticResource DisclosureChevron}" FallbackStrokeThickness="1.75"
+                              Foreground="{TemplateBinding Foreground}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
+                <cac:SymbolIcon.Transitions>
                   <Transitions>
                     <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
                   </Transitions>
-                </Path.Transitions>
-              </Path>
+                </cac:SymbolIcon.Transitions>
+              </cac:SymbolIcon>
             </Panel>
             <ContentPresenter Name="PART_ContentPresenter"
                               Grid.Column="1"
@@ -58,11 +56,11 @@
         </Border>
       </ControlTemplate>
     </Setter>
-    <!-- Template parts get their state values from styles only: a local value would block them. -->
-    <Style Selector="^ /template/ Path#PART_Chevron">
+    <!-- In styles: a value in the template would block them. -->
+    <Style Selector="^ /template/ cac|SymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(0deg)" />
     </Style>
-    <Style Selector="^:checked /template/ Path#PART_Chevron">
+    <Style Selector="^:checked /template/ cac|SymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(90deg)" />
     </Style>
     <!-- Keyboard focus ring, in the adorner layer so no container clips it (see OverflowAdorner). -->
@@ -75,7 +73,7 @@
         </Template>
       </Setter>
     </Style>
-    <Style Selector="^:pressed /template/ Path#PART_Chevron">
+    <Style Selector="^:pressed /template/ cac|SymbolIcon#PART_Chevron">
       <Setter Property="Opacity" Value="0.6" />
     </Style>
     <Style Selector="^:disabled">
@@ -89,16 +87,16 @@
     <Style Selector="^ /template/ Border#PART_GlyphBackground">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     </Style>
-    <Style Selector="^ /template/ Path#PART_Chevron">
+    <Style Selector="^ /template/ cac|SymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(90deg)" />
     </Style>
-    <Style Selector="^:checked /template/ Path#PART_Chevron">
+    <Style Selector="^:checked /template/ cac|SymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(-90deg)" />
     </Style>
     <Style Selector="^:pressed /template/ Border#PART_GlyphBackground">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
     </Style>
-    <Style Selector="^:pressed /template/ Path#PART_Chevron">
+    <Style Selector="^:pressed /template/ cac|SymbolIcon#PART_Chevron">
       <Setter Property="Opacity" Value="1" />
     </Style>
     <Style Selector="^:disabled /template/ Border#PART_GlyphBackground">

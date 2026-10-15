@@ -40,6 +40,7 @@ public class CupertinoAvaloniaTheme : Styles
         ApplyFluentPalettes();
         SystemFontTracking.Apply(Resources);
         WindowActivity.Initialize();
+        Stepper.Initialize();
 
         _platformSettings = Application.Current?.PlatformSettings;
         if (_platformSettings is not null)
