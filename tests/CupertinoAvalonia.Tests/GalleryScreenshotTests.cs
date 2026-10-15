@@ -37,6 +37,14 @@ public class GalleryScreenshotTests
         // can it be made to look inactive, until something activates it again.
         Dispatcher.UIThread.RunJobs();
         WindowActivity.SetIsInactive(window, inactive);
+        // Let transitions end (the toolbar band fades in).
+        var settle = System.Diagnostics.Stopwatch.StartNew();
+        while (settle.ElapsedMilliseconds < 300)
+        {
+            Thread.Sleep(5);
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Dispatcher.UIThread.RunJobs();
+        }
 
         foreach (var page in vm.Pages.Where(p => string.IsNullOrEmpty(pageFilter) || p.Title.Contains(pageFilter, StringComparison.OrdinalIgnoreCase)))
         {

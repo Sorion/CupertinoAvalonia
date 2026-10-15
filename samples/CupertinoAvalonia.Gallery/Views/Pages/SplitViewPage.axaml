@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.SplitViewPage">
+  <StackPanel Spacing="28">
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Inspector" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="PanePlacement=&quot;Right&quot; and DisplayMode=&quot;Inline&quot;: an inspector on the window background, which pushes the content aside." />
+      <ToggleButton HorizontalAlignment="Left" Content="Inspector" IsChecked="{Binding #Inspector.IsPaneOpen, Mode=TwoWay}" />
+      <Border Height="360" CornerRadius="10" ClipToBounds="True"
+              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
+        <SplitView Name="Inspector" PanePlacement="Right" DisplayMode="Inline" IsPaneOpen="True">
+          <SplitView.Pane>
+            <DockPanel>
+              <Border DockPanel.Dock="Top" Padding="16,12" BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="0,0,0,1">
+                <StackPanel Spacing="2">
+                  <TextBlock Classes="headline" Text="Channel options" />
+                  <TextBlock Classes="subheadline secondary" Text="Games" />
+                </StackPanel>
+              </Border>
+              <Border DockPanel.Dock="Bottom" Padding="16,10" BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="0,1,0,0">
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                  <Button Classes="borderless destructive" Content="Delete" />
+                  <Button Grid.Column="1" Margin="0,0,8,0" Content="Cancel" />
+                  <Button Grid.Column="2" Classes="accent" Content="Save" />
+                </Grid>
+              </Border>
+              <StackPanel Margin="16" Spacing="10">
+                <TextBlock Classes="subheadline secondary" Text="Name" />
+                <TextBox Text="Games" />
+                <ToggleSwitch Content="Mute at startup" />
+                <TextBlock Classes="subheadline secondary" Text="Volume" />
+                <Slider Value="55" />
+              </StackPanel>
+            </DockPanel>
+          </SplitView.Pane>
+          <TextBlock Margin="20" Classes="secondary" Text="Content" />
+        </SplitView>
+      </Border>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Sidebar over the content" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="DisplayMode=&quot;Overlay&quot;: the sidebar covers the content, opaque, without dimming it; a click outside closes it." />
+      <ToggleButton HorizontalAlignment="Left" Content="Sidebar" IsChecked="{Binding #Overlay.IsPaneOpen, Mode=TwoWay}" />
+      <Border Height="240" CornerRadius="10" ClipToBounds="True"
+              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
+        <SplitView Name="Overlay" DisplayMode="Overlay" OpenPaneLength="200">
+          <SplitView.Pane>
+            <ListBox Classes="sidebar" Margin="0,10" SelectedIndex="0" Background="Transparent">
+              <ListBoxItem Content="Mixer" />
+              <ListBoxItem Content="Profiles" />
+              <ListBoxItem Content="Settings" />
+            </ListBox>
+          </SplitView.Pane>
+          <TextBlock Margin="20" Classes="secondary" Text="Content" />
+        </SplitView>
+      </Border>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

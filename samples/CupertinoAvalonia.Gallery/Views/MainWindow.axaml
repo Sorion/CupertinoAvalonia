@@ -23,33 +23,22 @@
     <vm:MainWindowViewModel />
   </Design.DataContext>
 
-  <cac:CupertinoWindow.Resources>
-    <ResourceDictionary>
-      <!-- The toolbar's bottom edge (the kit's "Scroll Edge Effect - Hard"). -->
-      <ResourceDictionary.ThemeDictionaries>
-        <ResourceDictionary x:Key="Default">
-          <SolidColorBrush x:Key="GalleryToolbarEdgeBrush" Color="#0D000000" />
-        </ResourceDictionary>
-        <ResourceDictionary x:Key="Dark">
-          <SolidColorBrush x:Key="GalleryToolbarEdgeBrush" Color="#1AFFFFFF" />
-        </ResourceDictionary>
-      </ResourceDictionary.ThemeDictionaries>
-    </ResourceDictionary>
-  </cac:CupertinoWindow.Resources>
-
   <cac:CupertinoWindow.Styles>
-    <!-- The sidebar's background is set by styles, not on the element, so the material can replace it:
-         where the window shows the system's sidebar material, the sidebar lets it through. -->
-    <Style Selector="Border#Sidebar">
-      <Setter Property="Background" Value="{DynamicResource MaterialSidebarBrush}" />
+    <!-- Without the sidebar, the toolbar makes room for the window controls, in step with the sidebar. -->
+    <Style Selector="Border#ToolbarInset">
+      <Setter Property="Transitions">
+        <Transitions>
+          <ThicknessTransition Property="Padding" Duration="{StaticResource SplitViewPaneDuration}" Easing="{StaticResource SplitViewPaneEasing}" />
+        </Transitions>
+      </Setter>
     </Style>
-    <Style Selector="cac|CupertinoWindow:material Border#Sidebar">
-      <Setter Property="Background" Value="Transparent" />
+    <Style Selector="SplitView#Split:closed Border#ToolbarInset">
+      <Setter Property="Padding" Value="{Binding $parent[cac:CupertinoWindow].WindowControlsInset}" />
     </Style>
   </cac:CupertinoWindow.Styles>
 
-  <Grid ColumnDefinitions="240,*">
-    <Border Name="Sidebar">
+  <SplitView Name="Split" DisplayMode="Inline" IsPaneOpen="{Binding IsSidebarOpen}">
+    <SplitView.Pane>
       <DockPanel>
         <!-- Room for the window controls; dragging it moves the window. -->
         <Border DockPanel.Dock="Top" Height="52" Background="Transparent"
@@ -61,32 +50,38 @@
                  Background="Transparent">
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="vm:GalleryPage">
-              <TextBlock Text="{Binding Title}" />
+              <StackPanel Orientation="Horizontal" Spacing="4">
+                <cac:SymbolIcon Width="24" Symbol="{Binding Icon}" />
+                <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
+              </StackPanel>
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
       </DockPanel>
-    </Border>
+    </SplitView.Pane>
 
-    <DockPanel Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
-      <!-- The toolbar: dragging it, title included, moves the window. -->
-      <Border DockPanel.Dock="Top" Height="52"
-              Background="Transparent"
-              BorderBrush="{DynamicResource GalleryToolbarEdgeBrush}" BorderThickness="0,0,0,1"
-              WindowDecorationProperties.ElementRole="TitleBar">
-        <Grid Margin="18,0,12,0" ColumnDefinitions="*,Auto">
-          <StackPanel VerticalAlignment="Center" Spacing="2" IsHitTestVisible="False">
-            <TextBlock Classes="headline" Text="{Binding SelectedPage.Title}" TextTrimming="CharacterEllipsis" />
-            <TextBlock Classes="subheadline secondary" Text="{Binding SelectedPage.Description}" TextTrimming="CharacterEllipsis" />
-          </StackPanel>
-          <ComboBox Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" MinWidth="110"
-                    ItemsSource="{Binding Themes}"
-                    SelectedItem="{Binding SelectedTheme}" />
-        </Grid>
-      </Border>
-      <ScrollViewer>
-        <ContentControl Margin="20" Content="{Binding SelectedPage.Content}" />
+    <Panel>
+      <ScrollViewer Name="PageScroll">
+        <ContentControl Margin="20,72,20,20" Content="{Binding SelectedPage.Content}" />
       </ScrollViewer>
-    </DockPanel>
-  </Grid>
+      <cac:CupertinoToolbar ScrollViewer="{Binding #PageScroll}">
+        <Border Name="ToolbarInset">
+          <Grid Margin="10,0,12,0" ColumnDefinitions="Auto,*,Auto">
+            <Button Classes="toolbar" VerticalAlignment="Center"
+                    Command="{Binding ToggleSidebarCommand}"
+                    ToolTip.Tip="Show or hide the sidebar">
+              <cac:SymbolIcon Symbol="sidebar.left" />
+            </Button>
+            <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" Spacing="2" IsHitTestVisible="False">
+              <TextBlock Classes="headline" Text="{Binding SelectedPage.Title}" TextTrimming="CharacterEllipsis" />
+              <TextBlock Classes="subheadline secondary" Text="{Binding SelectedPage.Description}" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <ComboBox Grid.Column="2" Classes="toolbar" Margin="12,0,0,0" MinWidth="90"
+                      ItemsSource="{Binding Themes}"
+                      SelectedItem="{Binding SelectedTheme}" />
+          </Grid>
+        </Border>
+      </cac:CupertinoToolbar>
+    </Panel>
+  </SplitView>
 </cac:CupertinoWindow>

@@ -1,0 +1,166 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cac="using:CupertinoAvalonia.Controls"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.ToolbarPage">
+  <StackPanel Spacing="28">
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Toolbar" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="Liquid Glass items for a unified toolbar: add the toolbar class to Button, ToggleButton, ComboBox, TextBox (a search field) and a segmented ListBox; Border.toolbar-group groups buttons in one capsule. Pressed, an item swells: briefly after a click, up to 3 seconds while held, and as long as its menu is open." />
+      <Border Height="52" Padding="12,0" CornerRadius="10"
+              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
+        <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
+          <Button Classes="toolbar" ToolTip.Tip="More">
+            <cac:SymbolIcon Symbol="ellipsis" />
+            <Button.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                <MenuItem Header="View as Gallery" />
+                <Separator />
+                <MenuItem Header="Sort By" />
+                <MenuItem Header="Group By Date" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+          <Border Grid.Column="1" Classes="toolbar-group">
+            <StackPanel>
+              <Button ToolTip.Tip="Back">
+                <cac:SymbolIcon Symbol="chevron.left" />
+              </Button>
+              <Button ToolTip.Tip="Forward" IsEnabled="False">
+                <cac:SymbolIcon Symbol="chevron.right" />
+              </Button>
+            </StackPanel>
+          </Border>
+          <ListBox Grid.Column="2" Classes="segmented toolbar" SelectedIndex="0">
+            <ListBoxItem ToolTip.Tip="As a list">
+              <cac:SymbolIcon Symbol="list.bullet" />
+            </ListBoxItem>
+            <ListBoxItem ToolTip.Tip="As icons">
+              <cac:SymbolIcon Symbol="square.grid.2x2" />
+            </ListBoxItem>
+          </ListBox>
+          <ToggleButton Grid.Column="4" Classes="toolbar" IsChecked="True" ToolTip.Tip="Favorites">
+            <cac:SymbolIcon Symbol="star" />
+          </ToggleButton>
+          <ComboBox Grid.Column="5" Classes="toolbar" SelectedIndex="0">
+            <ComboBoxItem Content="Default" />
+            <ComboBoxItem Content="Games" />
+            <ComboBoxItem Content="Music" />
+          </ComboBox>
+          <Button Grid.Column="6" Classes="toolbar accent">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <cac:SymbolIcon Symbol="plus" />
+              <TextBlock Text="Add Channel" />
+            </StackPanel>
+          </Button>
+          <TextBox Grid.Column="7" Classes="toolbar" Width="160" PlaceholderText="Search" />
+        </Grid>
+      </Border>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Compact toolbar" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="With ToolbarStyle=&quot;UnifiedCompact&quot;, add the compact class: the items are 24 points tall." />
+      <Border Height="40" Padding="12,0" CornerRadius="10"
+              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
+        <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
+          <Border Classes="toolbar-group compact">
+            <StackPanel>
+              <Button>
+                <cac:SymbolIcon Symbol="chevron.left" />
+              </Button>
+              <Button>
+                <cac:SymbolIcon Symbol="chevron.right" />
+              </Button>
+            </StackPanel>
+          </Border>
+          <ListBox Grid.Column="1" Classes="segmented toolbar compact" SelectedIndex="1">
+            <ListBoxItem>
+              <cac:SymbolIcon Symbol="list.bullet" />
+            </ListBoxItem>
+            <ListBoxItem>
+              <cac:SymbolIcon Symbol="square.grid.2x2" />
+            </ListBoxItem>
+          </ListBox>
+          <Button Grid.Column="3" Classes="toolbar compact">
+            <cac:SymbolIcon Symbol="square.and.arrow.up" />
+          </Button>
+          <ComboBox Grid.Column="4" Classes="toolbar compact" SelectedIndex="0">
+            <ComboBoxItem Content="Default" />
+            <ComboBoxItem Content="Games" />
+          </ComboBox>
+          <TextBox Grid.Column="5" Classes="toolbar compact" Width="160" PlaceholderText="Search" />
+        </Grid>
+      </Border>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Disabled toolbar items" />
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Classes="toolbar" IsEnabled="False">
+          <cac:SymbolIcon Symbol="square.and.arrow.up" />
+        </Button>
+        <Button Classes="toolbar accent" Content="Add Channel" IsEnabled="False" />
+        <ComboBox Classes="toolbar" SelectedIndex="0" IsEnabled="False">
+          <ComboBoxItem Content="Default" />
+        </ComboBox>
+        <TextBox Classes="toolbar" Width="160" PlaceholderText="Search" IsEnabled="False" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Segmented control" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="A ListBox with the segmented class: segments as wide as the widest, the selected one in the accent color. Arrow keys move the selection." />
+      <ListBox Classes="segmented" SelectedIndex="1">
+        <ListBoxItem Content="Day" />
+        <ListBoxItem Content="Week" />
+        <ListBoxItem Content="Month" />
+        <ListBoxItem Content="Year" />
+      </ListBox>
+      <ListBox Classes="segmented" SelectionMode="Multiple">
+        <ListBoxItem Content="Bold" IsSelected="True" />
+        <ListBoxItem Content="Italic" IsSelected="True" />
+        <ListBoxItem Content="Underline" />
+        <ListBoxItem Content="Strikethrough" />
+      </ListBox>
+      <TextBlock Classes="caption1 secondary" Text="SelectionMode=&quot;Multiple&quot;: each segment turns on and off." />
+      <ListBox Classes="segmented" SelectedIndex="0" IsEnabled="False">
+        <ListBoxItem Content="Disabled" />
+        <ListBoxItem Content="Segmented" />
+        <ListBoxItem Content="Control" />
+      </ListBox>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Control sizes" />
+      <ListBox Classes="segmented mini" SelectedIndex="0">
+        <ListBoxItem Content="Mini" />
+        <ListBoxItem Content="Two" />
+        <ListBoxItem Content="Three" />
+      </ListBox>
+      <ListBox Classes="segmented small" SelectedIndex="0">
+        <ListBoxItem Content="Small" />
+        <ListBoxItem Content="Two" />
+        <ListBoxItem Content="Three" />
+      </ListBox>
+      <ListBox Classes="segmented" SelectedIndex="0">
+        <ListBoxItem Content="Regular" />
+        <ListBoxItem Content="Two" />
+        <ListBoxItem Content="Three" />
+      </ListBox>
+      <ListBox Classes="segmented large" SelectedIndex="0">
+        <ListBoxItem Content="Large" />
+        <ListBoxItem Content="Two" />
+        <ListBoxItem Content="Three" />
+      </ListBox>
+      <ListBox Classes="segmented xlarge" SelectedIndex="0">
+        <ListBoxItem Content="Extra Large" />
+        <ListBoxItem Content="Two" />
+        <ListBoxItem Content="Three" />
+      </ListBox>
+    </StackPanel>
+  </StackPanel>
+</UserControl>

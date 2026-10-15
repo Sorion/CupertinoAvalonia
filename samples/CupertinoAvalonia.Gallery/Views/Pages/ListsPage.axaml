@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cac="using:CupertinoAvalonia.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.ListsPage">
   <WrapPanel ItemSpacing="32" LineSpacing="28">
     <StackPanel Spacing="10" Width="260">
@@ -35,6 +36,52 @@
           <ListBoxItem Content="Profiles" />
           <ListBoxItem Content="Settings" />
         </ListBox>
+      </Border>
+    </StackPanel>
+
+    <StackPanel Spacing="10" Width="260">
+      <TextBlock Classes="headline" Text="TreeView" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="An outline: 15 points further in at each level; the chevron turns down when a row expands. Left and Right arrow keys collapse and expand." />
+      <TreeView>
+        <TreeViewItem IsExpanded="True">
+          <TreeViewItem.Header>
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <cac:SymbolIcon Symbol="folder" Foreground="{DynamicResource AccentBrush}" />
+              <TextBlock Text="Applications" />
+            </StackPanel>
+          </TreeViewItem.Header>
+          <TreeViewItem Header="Games" IsExpanded="True" IsSelected="True">
+            <TreeViewItem Header="Steam" />
+            <TreeViewItem Header="Epic Games" />
+          </TreeViewItem>
+          <TreeViewItem Header="Music">
+            <TreeViewItem Header="Spotify" />
+          </TreeViewItem>
+          <TreeViewItem Header="Browser" />
+        </TreeViewItem>
+        <TreeViewItem Header="Devices">
+          <TreeViewItem Header="Speakers" />
+          <TreeViewItem Header="Headphones" />
+        </TreeViewItem>
+        <TreeViewItem Header="Disabled" IsEnabled="False" />
+      </TreeView>
+    </StackPanel>
+
+    <StackPanel Spacing="10" Width="260">
+      <TextBlock Classes="headline" Text="TreeView sidebar" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap" Text="Nested sidebar items: 12 points further in at each level." />
+      <Border Background="{DynamicResource MaterialSidebarBrush}" CornerRadius="12" Padding="0,8">
+        <TreeView Classes="sidebar">
+          <TreeViewItem Header="Mixer" IsExpanded="True">
+            <TreeViewItem Header="Channels" IsSelected="True" />
+            <TreeViewItem Header="Applications" />
+          </TreeViewItem>
+          <TreeViewItem Header="Profiles">
+            <TreeViewItem Header="Default" />
+          </TreeViewItem>
+          <TreeViewItem Header="Settings" />
+        </TreeView>
       </Border>
     </StackPanel>
   </WrapPanel>

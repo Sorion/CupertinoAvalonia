@@ -19,6 +19,28 @@
     </StackPanel>
 
     <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Steppers" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="NumericUpDown: a field with the stepper inside. Arrow keys, the scroll wheel and the stepper change the value; at the limits, a half dims." />
+      <NumericUpDown Value="12" Minimum="0" Maximum="100" />
+      <NumericUpDown Value="100" Minimum="0" Maximum="100" FormatString="0' %'" />
+      <NumericUpDown Value="12" IsEnabled="False" />
+      <TextBlock Classes="caption1 secondary" Text="ButtonSpinner: the stepper alone, or after its content." />
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <ButtonSpinner />
+        <ButtonSpinner Content="4 copies" />
+        <ButtonSpinner IsEnabled="False" />
+      </StackPanel>
+      <TextBlock Classes="caption1 secondary" Text="Control sizes" />
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <NumericUpDown Classes="mini" Value="1" Width="64" />
+        <NumericUpDown Classes="small" Value="2" Width="70" />
+        <NumericUpDown Value="3" Width="76" />
+        <NumericUpDown Classes="large" Value="4" Width="82" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
       <TextBlock Classes="headline" Text="Multi-line" />
       <TextBox AcceptsReturn="True" TextWrapping="Wrap" Height="90"
                Text="MixerStudio routes each application to its own channel. Type here to try the caret and the selection color." />
