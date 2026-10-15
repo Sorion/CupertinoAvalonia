@@ -12,10 +12,9 @@ namespace CupertinoAvalonia.Controls;
 /// </summary>
 /// <remarks>
 /// <para>
-/// With <see cref="ExtendsContentIntoTitleBar"/>, the content starts at the top of the window: leave room
-/// for the window controls (top left), mark the areas that move the window with
-/// <c>WindowDecorationProperties.ElementRole="TitleBar"</c>, and read the title bar's height from
-/// <see cref="Window.WindowDecorationMargin"/>.
+/// With <see cref="ExtendsContentIntoTitleBar"/>, keep the title bar's content clear of
+/// <see cref="WindowControlsInset"/> and mark the areas that move the window with
+/// <c>WindowDecorationProperties.ElementRole="TitleBar"</c>.
 /// </para>
 /// <para>
 /// With a <see cref="Material"/>, the window's background turns transparent (pseudo-class
@@ -36,13 +35,20 @@ public class CupertinoWindow : Window
     public static readonly StyledProperty<CupertinoWindowMaterial> MaterialProperty =
         AvaloniaProperty.Register<CupertinoWindow, CupertinoWindowMaterial>(nameof(Material));
 
-    // The kit's toolbar heights (page Windows, "Unified Toolbar" and "Unified Compact Toolbar").
+    public static readonly DirectProperty<CupertinoWindow, Thickness> WindowControlsInsetProperty =
+        AvaloniaProperty.RegisterDirect<CupertinoWindow, Thickness>(nameof(WindowControlsInset), o => o.WindowControlsInset);
+
     private const double UnifiedToolbarHeight = 52;
     private const double UnifiedCompactToolbarHeight = 40;
+
+    // The kit's window controls: 68 pt wide, 8 pt from the edge in a standard title bar, 18 pt in a toolbar.
+    private const double WindowControlsEnd = 68;
+    private const double WindowControlsGap = 8;
 
     private readonly bool _isMacOS = OperatingSystem.IsMacOS() && !Design.IsDesignMode;
     private bool _materialSetTransparency;
     private bool _materialApplied;
+    private Thickness _windowControlsInset;
 
     public CupertinoWindow()
     {
@@ -78,6 +84,16 @@ public class CupertinoWindow : Window
         set => SetValue(MaterialProperty, value);
     }
 
+    /// <summary>
+    /// The room the window controls take over the content: padding for title bar content that starts at the window's
+    /// left edge. Empty when they don't cover the content.
+    /// </summary>
+    public Thickness WindowControlsInset
+    {
+        get => _windowControlsInset;
+        private set => SetAndRaise(WindowControlsInsetProperty, ref _windowControlsInset, value);
+    }
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
@@ -90,6 +106,10 @@ public class CupertinoWindow : Window
         else if (change.Property == ActualTransparencyLevelProperty)
         {
             UpdateMaterialPseudoClass();
+        }
+        else if (change.Property == WindowStateProperty)
+        {
+            UpdateWindowControlsInset();
         }
     }
 
@@ -113,6 +133,7 @@ public class CupertinoWindow : Window
             _ => -1,
         };
         PseudoClasses.Set(":extended", extended);
+        UpdateWindowControlsInset();
 
         // The material is Avalonia's blur behind the window, given a system material once the window exists.
         // Only set the hint when it changes: on macOS, setting the same level again turns transparency off.
@@ -146,6 +167,13 @@ public class CupertinoWindow : Window
         }
 
         UpdateMaterialPseudoClass();
+    }
+
+    private void UpdateWindowControlsInset()
+    {
+        var covered = _isMacOS && ExtendsContentIntoTitleBar && WindowState != WindowState.FullScreen;
+        var start = ToolbarStyle == CupertinoToolbarStyle.None ? 8 : 18;
+        WindowControlsInset = covered ? new Thickness(start + WindowControlsEnd + WindowControlsGap, 0, 0, 0) : default;
     }
 
     private void UpdateMaterialPseudoClass() =>

@@ -13,6 +13,7 @@
     <MergeResourceInclude Source="/Styling/ControlThemes/ProgressBar.axaml" />
     <MergeResourceInclude Source="/Styling/ControlThemes/Expander.axaml" />
     <MergeResourceInclude Source="/Styling/ControlThemes/ScrollBar.axaml" />
+    <MergeResourceInclude Source="/Styling/ControlThemes/SplitView.axaml" />
     <MergeResourceInclude Source="/Styling/ControlThemes/CupertinoWindow.axaml" />
   </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

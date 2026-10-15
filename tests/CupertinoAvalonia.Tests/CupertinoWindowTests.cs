@@ -72,4 +72,26 @@ public class CupertinoWindowTests
 
         window.Close();
     }
+
+    [AvaloniaFact]
+    public void Window_controls_inset_follows_the_title_bar()
+    {
+        var window = new CupertinoWindow { ExtendsContentIntoTitleBar = true, ToolbarStyle = CupertinoToolbarStyle.Unified };
+        window.Show();
+
+        if (OperatingSystem.IsMacOS())
+        {
+            // The kit's window controls end at 86 points in a toolbar, 76 in a standard title bar, then a gap.
+            Assert.Equal(new Thickness(94, 0, 0, 0), window.WindowControlsInset);
+            window.ToolbarStyle = CupertinoToolbarStyle.None;
+            Assert.Equal(new Thickness(84, 0, 0, 0), window.WindowControlsInset);
+            window.WindowState = WindowState.FullScreen;
+            Assert.Equal(default, window.WindowControlsInset);
+            window.WindowState = WindowState.Normal;
+            window.ExtendsContentIntoTitleBar = false;
+        }
+
+        Assert.Equal(default, window.WindowControlsInset);
+        window.Close();
+    }
 }

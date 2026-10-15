@@ -1,7 +1,8 @@
 <Styles x:Class="CupertinoAvalonia.CupertinoAvaloniaTheme"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:cas="using:CupertinoAvalonia.Styling">
+        xmlns:cas="using:CupertinoAvalonia.Styling"
+        xmlns:cac="using:CupertinoAvalonia.Controls">
 
   <!--
     Fallback for the controls that don't have a macOS template yet: they keep Fluent's templates,
@@ -25,6 +26,14 @@
 
   <StyleInclude Source="/Styling/TextStyles.axaml" />
   <StyleInclude Source="/Styling/ListStyles.axaml" />
+
+  <!-- A sidebar shows the window's material; the content stays opaque. -->
+  <Style Selector="cac|CupertinoWindow:material SplitView:left:inline, cac|CupertinoWindow:material SplitView:left:compactinline">
+    <Setter Property="PaneBackground" Value="Transparent" />
+  </Style>
+  <Style Selector="cac|CupertinoWindow:material SplitView:left /template/ Panel#ContentRoot">
+    <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
+  </Style>
 
   <!-- An inactive window shows no keyboard focus ring (see Styling/WindowActivity.cs). -->
   <Style Selector="Border.focus-ring[(cas|WindowActivity.IsInactive)=True]">
