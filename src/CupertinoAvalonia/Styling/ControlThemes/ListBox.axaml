@@ -31,9 +31,9 @@
       <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="#04000000" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <!-- linear dodge #0D0D0D, or #070707 when the window is inactive -->
+      <!-- linear dodge #0D0D0D, also when inactive: the kit lightens it, Notes doesn't. -->
       <SolidColorBrush x:Key="SidebarSelectionBrush" Color="#0DFFFFFF" />
-      <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="#07FFFFFF" />
+      <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="#0DFFFFFF" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
