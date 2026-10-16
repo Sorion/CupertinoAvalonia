@@ -91,4 +91,33 @@
       <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="#0AFFFFFF" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
+
+  <!-- System Settings' multicolor accent swatch, measured on macOS 27 every 15° (the same in both modes). -->
+  <ConicGradientBrush x:Key="AccentMulticolorBrush">
+    <GradientStop Offset="0" Color="#9737DC" />
+    <GradientStop Offset="0.0417" Color="#AB33D1" />
+    <GradientStop Offset="0.0833" Color="#C433BF" />
+    <GradientStop Offset="0.125" Color="#E735A3" />
+    <GradientStop Offset="0.1667" Color="#FD348F" />
+    <GradientStop Offset="0.2083" Color="#FE2B70" />
+    <GradientStop Offset="0.25" Color="#FD193D" />
+    <GradientStop Offset="0.2917" Color="#FC2A26" />
+    <GradientStop Offset="0.3333" Color="#FD660C" />
+    <GradientStop Offset="0.375" Color="#FC8F03" />
+    <GradientStop Offset="0.4167" Color="#FAB306" />
+    <GradientStop Offset="0.4583" Color="#D4B60A" />
+    <GradientStop Offset="0.5" Color="#9BB819" />
+    <GradientStop Offset="0.5417" Color="#7CB93F" />
+    <GradientStop Offset="0.5833" Color="#4FB975" />
+    <GradientStop Offset="0.625" Color="#1CBAB5" />
+    <GradientStop Offset="0.6667" Color="#00B6D8" />
+    <GradientStop Offset="0.7083" Color="#0FA4DA" />
+    <GradientStop Offset="0.75" Color="#1D8FDE" />
+    <GradientStop Offset="0.7917" Color="#3271E4" />
+    <GradientStop Offset="0.8333" Color="#405EE7" />
+    <GradientStop Offset="0.875" Color="#5054E6" />
+    <GradientStop Offset="0.9167" Color="#6B4AE1" />
+    <GradientStop Offset="0.9583" Color="#833FDE" />
+    <GradientStop Offset="1" Color="#9737DC" />
+  </ConicGradientBrush>
 </ResourceDictionary>

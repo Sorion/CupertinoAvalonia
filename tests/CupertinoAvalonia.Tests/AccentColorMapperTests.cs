@@ -1,4 +1,11 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
+using Avalonia.Headless;
+using Avalonia.Headless.XUnit;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using CupertinoAvalonia.Media;
 using Xunit;
 
@@ -6,6 +13,39 @@ namespace CupertinoAvalonia.Tests;
 
 public class AccentColorMapperTests
 {
+    [AvaloniaFact]
+    public void Multicolor_swatch_turns_as_in_System_Settings()
+    {
+        Assert.True(Application.Current!.TryGetResource("AccentMulticolorBrush", null, out var brush));
+        var swatch = new Ellipse { Width = 100, Height = 100, Fill = (IBrush)brush! };
+        var window = new Window { Width = 200, Height = 200, Content = swatch };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        // Measured on macOS 27: purple at the top, then clockwise red, yellow-green, blue.
+        using var frame = window.CaptureRenderedFrame()!;
+        var center = swatch.TranslatePoint(new Point(50, 50), window)!.Value;
+        foreach (var (degrees, expected) in new[] { (0, "#9737DC"), (90, "#FD193D"), (180, "#9BB819"), (270, "#1D8FDE") })
+        {
+            var angle = degrees * Math.PI / 180;
+            var actual = Pixel(frame, (int)(center.X + Math.Sin(angle) * 35), (int)(center.Y - Math.Cos(angle) * 35));
+            var target = Color.Parse(expected);
+            Assert.True(Math.Abs(actual.R - target.R) + Math.Abs(actual.G - target.G) + Math.Abs(actual.B - target.B) < 40,
+                $"{degrees}°: {actual} instead of {target}");
+        }
+        window.Close();
+    }
+
+    private static Color Pixel(WriteableBitmap frame, int x, int y)
+    {
+        using var buffer = frame.Lock();
+        var bytes = new byte[4];
+        System.Runtime.InteropServices.Marshal.Copy(buffer.Address + y * buffer.RowBytes + x * 4, bytes, 0, 4);
+        return frame.Format == Avalonia.Platform.PixelFormats.Rgba8888
+            ? Color.FromRgb(bytes[0], bytes[1], bytes[2])
+            : Color.FromRgb(bytes[2], bytes[1], bytes[0]);
+    }
+
     [Theory]
     // The colors macOS reports for each accent (pre-26 palette), light and dark.
     [InlineData("#007AFF", "AccentBlueColor")]
