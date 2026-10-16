@@ -36,7 +36,7 @@ Light and dark follow `RequestedThemeVariant`; the accent follows System Setting
 | `Button`, `RepeatButton`, `ToggleButton` | `accent` (or `IsDefault`), `tinted`, `destructive`, `borderless` |
 | `DropDownButton`, `SplitButton`, `ToggleSplitButton` | A pull-down button, with a button's classes (`toolbar` included); an action and, apart, its menu, as AppKit's split combo button |
 | `CheckBox`, `RadioButton`, `ToggleSwitch` | |
-| `TextBox`, `ComboBox` | |
+| `TextBox`, `ComboBox`, `AutoCompleteBox` | The autocomplete box's suggestions open in a menu |
 | `NumericUpDown`, `ButtonSpinner` | A field with the stepper inside; the stepper alone |
 | `ListBox` | `sidebar`, `alternating`, `segmented` (a segmented control; `SelectionMode="Multiple"` for several) |
 | `TreeView` | An outline view; `sidebar` for nested sidebar items |
@@ -58,7 +58,7 @@ Light and dark follow `RequestedThemeVariant`; the accent follows System Setting
   `ControlHeight`… `AccentMulticolorBrush` is System Settings' multicolor swatch, for an accent picker.
 - **Inactive windows** gray out their controls, as on macOS. Your styles can do the same with
   `[(cas|WindowActivity.IsInactive)=True]` (`xmlns:cas="using:CupertinoAvalonia.Styling"`).
-- **Other controls** (pickers, `AutoCompleteBox`…) keep Fluent's templates,
+- **Other controls** (date and time pickers, `Calendar`…) keep Fluent's templates,
   recolored with Apple's palette.
 
 ## CupertinoWindow
