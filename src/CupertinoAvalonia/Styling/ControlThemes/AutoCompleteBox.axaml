@@ -1,0 +1,124 @@
+<!-- AutoCompleteBox: a text field (TextBox's theme) whose suggestions open in a menu, as the pop-up button's. -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <AutoCompleteBox Margin="20" Width="200" PlaceholderText="Channel" />
+  </Design.PreviewWith>
+
+  <!-- A suggestion: a menu item's row, without the checkmark column. -->
+  <ControlTheme x:Key="CupertinoAutoCompleteItem" TargetType="ListBoxItem">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="FontSize" Value="{DynamicResource MenuFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="MinHeight" Value="{DynamicResource MenuHeight}" />
+    <Setter Property="Padding" Value="7,0" />
+    <Setter Property="CornerRadius" Value="{DynamicResource MenuItemCornerRadius}" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <ContentPresenter Name="PART_ContentPresenter"
+                          Background="{TemplateBinding Background}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          Padding="{TemplateBinding Padding}"
+                          MinHeight="{TemplateBinding MinHeight}"
+                          Content="{TemplateBinding Content}"
+                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+      </ControlTemplate>
+    </Setter>
+
+    <!-- The arrow keys select the suggestion they reach. -->
+    <Style Selector="^:pointerover, ^:selected">
+      <Setter Property="Background" Value="{DynamicResource MenuItemHighlightBrush}" />
+    </Style>
+    <Style Selector="^:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type AutoCompleteBox}" TargetType="AutoCompleteBox">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource TextFieldPadding}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ControlRadius}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="MaxDropDownHeight" Value="504" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid Name="PART_LayoutRoot">
+          <!-- The field: a TextBox, which the box's size reaches through these bindings. -->
+          <TextBox Name="PART_TextBox"
+                   PlaceholderText="{TemplateBinding PlaceholderText}"
+                   PlaceholderForeground="{TemplateBinding PlaceholderForeground}"
+                   Foreground="{TemplateBinding Foreground}"
+                   MinHeight="{TemplateBinding MinHeight}"
+                   Padding="{TemplateBinding Padding}"
+                   CornerRadius="{TemplateBinding CornerRadius}"
+                   FontSize="{TemplateBinding FontSize}"
+                   LetterSpacing="{TemplateBinding LetterSpacing}"
+                   CaretIndex="{TemplateBinding CaretIndex, Mode=TwoWay}"
+                   ClearSelectionOnLostFocus="{TemplateBinding ClearSelectionOnLostFocus}"
+                   MaxLength="{TemplateBinding MaxLength}"
+                   InnerLeftContent="{TemplateBinding InnerLeftContent}"
+                   InnerRightContent="{TemplateBinding InnerRightContent}"
+                   DataValidationErrors.Errors="{TemplateBinding (DataValidationErrors.Errors)}" />
+          <Popup Name="PART_Popup"
+                 WindowManagerAddShadowHint="False"
+                 MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                 PlacementTarget="PART_TextBox"
+                 Placement="Bottom"
+                 VerticalOffset="-4"
+                 IsLightDismissEnabled="True"
+                 InheritsTransform="True">
+            <Border Name="PART_SuggestionsContainer"
+                    Margin="{DynamicResource PopupShadowMargin}"
+                    MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                    Background="{DynamicResource MenuBackgroundBrush}"
+                    BorderBrush="{DynamicResource MenuBorderBrush}"
+                    BorderThickness="0.5"
+                    CornerRadius="{DynamicResource MenuCornerRadius}"
+                    BoxShadow="{DynamicResource PopupShadow}">
+              <ListBox Name="PART_SelectingItemsControl"
+                       Margin="5"
+                       Padding="0"
+                       Background="Transparent"
+                       BorderThickness="0"
+                       ItemTemplate="{TemplateBinding ItemTemplate}"
+                       ItemContainerTheme="{StaticResource CupertinoAutoCompleteItem}"
+                       ScrollViewer.IsScrollChainingEnabled="False" />
+            </Border>
+          </Popup>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^.mini">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
+      <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingMini}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusMini}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
+      <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingSmall}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusSmall}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
+      <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingLarge}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingLarge}" />
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

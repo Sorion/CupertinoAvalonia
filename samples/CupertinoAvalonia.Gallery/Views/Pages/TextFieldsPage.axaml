@@ -41,6 +41,16 @@
     </StackPanel>
 
     <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Autocomplete" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="AutoCompleteBox: a text field whose suggestions open in a menu as you type. Type &quot;g&quot; or &quot;m&quot;." />
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <AutoCompleteBox Name="Channels" Width="200" PlaceholderText="Channel" />
+        <AutoCompleteBox Name="SmallChannels" Classes="small" Width="160" PlaceholderText="Small" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
       <TextBlock Classes="headline" Text="Multi-line" />
       <TextBox AcceptsReturn="True" TextWrapping="Wrap" Height="90"
                Text="MixerStudio routes each application to its own channel. Type here to try the caret and the selection color." />
