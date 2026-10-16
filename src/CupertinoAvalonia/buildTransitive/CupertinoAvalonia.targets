@@ -1,11 +1,11 @@
 <Project>
   <!--
-    macOS 26 gives its Liquid Glass window chrome only to executables built with its SDK, which .NET's app host isn't:
-    declare it after each build and publish. With a project reference, import this file in the app.
+    macOS gives its Liquid Glass window chrome only to executables built with the 26 SDK or later; .NET's app host isn't.
+    Declares macOS 27's SDK after each build and publish. With a project reference, import this file in the app.
   -->
   <PropertyGroup>
     <CupertinoDeclareMacOSSdk Condition="'$(CupertinoDeclareMacOSSdk)' == ''">true</CupertinoDeclareMacOSSdk>
-    <CupertinoMacOSSdkVersion Condition="'$(CupertinoMacOSSdkVersion)' == ''">26.0</CupertinoMacOSSdkVersion>
+    <CupertinoMacOSSdkVersion Condition="'$(CupertinoMacOSSdkVersion)' == ''">27.0</CupertinoMacOSSdkVersion>
     <_CupertinoDeclaresMacOSSdk Condition="'$(CupertinoDeclareMacOSSdk)' == 'true' And $([MSBuild]::IsOSPlatform('OSX')) And ('$(OutputType)' == 'Exe' Or '$(OutputType)' == 'WinExe') And '$(UseAppHost)' != 'false'">true</_CupertinoDeclaresMacOSSdk>
   </PropertyGroup>
 

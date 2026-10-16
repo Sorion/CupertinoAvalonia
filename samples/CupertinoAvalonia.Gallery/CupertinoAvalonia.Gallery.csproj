@@ -25,6 +25,6 @@
     <ProjectReference Include="../../src/CupertinoAvalonia/CupertinoAvalonia.csproj" />
   </ItemGroup>
 
-  <!-- What NuGet would import from the package: declares macOS 26's SDK in the app (Liquid Glass window chrome). -->
+  <!-- What NuGet would import from the package: declares macOS 27's SDK in the app (Liquid Glass window chrome). -->
   <Import Project="../../src/CupertinoAvalonia/buildTransitive/CupertinoAvalonia.targets" />
 </Project>
