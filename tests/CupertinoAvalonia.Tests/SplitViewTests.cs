@@ -28,16 +28,58 @@ public class SplitViewTests
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
+        // Measured on macOS 27 (TestNav, Shortcuts): both panes in the sidebar's color, without a divider.
+        var paneColor = theme == "Dark" ? Avalonia.Media.Color.Parse("#252525") : Avalonia.Media.Color.Parse("#EDEDED");
         Assert.Equal(240, sidebar.OpenPaneLength);
-        Assert.Equal(Color("MaterialSidebarBrush", variant), Color(sidebar.PaneBackground));
+        Assert.Equal(paneColor, Color(sidebar.PaneBackground));
         Assert.Equal(280, inspector.OpenPaneLength);
+        Assert.Equal(paneColor, Color(inspector.PaneBackground));
+        Assert.False(Part<Rectangle>(sidebar, "PaneDivider").IsVisible);
+        Assert.False(Part<Rectangle>(inspector, "PaneDivider").IsVisible);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Plain_pane_takes_the_content_background_and_a_divider(string theme)
+    {
+        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        Application.Current!.RequestedThemeVariant = variant;
+        var sidebar = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true };
+        var inspector = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
+        var window = new CupertinoWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        // Even where the window shows its material.
+        ((IPseudoClasses)window.Classes).Set(":material", true);
+
+        Assert.Equal(Color("WindowBackgroundBrush", variant), Color(sidebar.PaneBackground));
         Assert.Equal(Color("WindowBackgroundBrush", variant), Color(inspector.PaneBackground));
-        // A divider on the edge that faces the content, hidden once the pane is closed.
+        // On the edge that faces the content (#E6E6E6 over white in Shortcuts), hidden once the pane is closed.
+        Assert.Equal(Color("TableColumnSeparatorBrush", variant), Color(Part<Rectangle>(inspector, "PaneDivider").Fill));
         Assert.Equal(HorizontalAlignment.Right, Part<Rectangle>(sidebar, "PaneDivider").HorizontalAlignment);
         Assert.Equal(HorizontalAlignment.Left, Part<Rectangle>(inspector, "PaneDivider").HorizontalAlignment);
         Assert.True(Part<Rectangle>(sidebar, "PaneDivider").IsVisible);
         sidebar.IsPaneOpen = false;
         Assert.False(Part<Rectangle>(sidebar, "PaneDivider").IsVisible);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Pane_background_can_be_set_like_any_SplitView()
+    {
+        var inspector = new SplitView
+        {
+            DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right,
+            PaneBackground = Brushes.Red,
+        };
+        var window = new CupertinoWindow { Width = 600, Height = 300, Content = Sized(inspector) };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        ((IPseudoClasses)window.Classes).Set(":material", true);
+
+        Assert.Equal(Colors.Red, Color(Part<Border>(inspector, "PaneBackground").Background));
         window.Close();
     }
 
@@ -55,7 +97,23 @@ public class SplitViewTests
         ((IPseudoClasses)window.Classes).Set(":material", true);
         Assert.Equal(Colors.Transparent, Color(sidebar.PaneBackground));
         Assert.Equal(Color("WindowBackgroundBrush", ThemeVariant.Light), Color(Part<Panel>(sidebar, "ContentRoot").Background));
-        Assert.Equal(Color("WindowBackgroundBrush", ThemeVariant.Light), Color(inspector.PaneBackground));
+        Assert.Equal(Color("SplitViewInspectorBackgroundBrush", ThemeVariant.Light), Color(inspector.PaneBackground));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Inspector_background_and_divider_come_from_resources()
+    {
+        var inspector = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
+        var plain = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
+        var window = new Window { Width = 600, Height = 400, Content = new StackPanel { Children = { Sized(inspector), Sized(plain) } } };
+        window.Resources["SplitViewInspectorBackgroundBrush"] = new SolidColorBrush(Colors.Red);
+        window.Resources["SplitViewDividerThickness"] = 2.0;
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(Colors.Red, Color(inspector.PaneBackground));
+        Assert.Equal(2, Part<Rectangle>(plain, "PaneDivider").Bounds.Width);
         window.Close();
     }
 

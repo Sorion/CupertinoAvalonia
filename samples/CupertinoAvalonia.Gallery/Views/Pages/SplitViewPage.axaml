@@ -5,11 +5,15 @@
     <StackPanel Spacing="10">
       <TextBlock Classes="headline" Text="Inspector" />
       <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="PanePlacement=&quot;Right&quot; and DisplayMode=&quot;Inline&quot;: an inspector on the window background, which pushes the content aside." />
-      <ToggleButton HorizontalAlignment="Left" Content="Inspector" IsChecked="{Binding #Inspector.IsPaneOpen, Mode=TwoWay}" />
+                 Text="PanePlacement=&quot;Right&quot; and DisplayMode=&quot;Inline&quot;: an inspector in the sidebar's color, which pushes the content aside. With the &quot;plain&quot; class, it takes the content's background and a divider, as in Shortcuts." />
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <ToggleButton Content="Inspector" IsChecked="{Binding #Inspector.IsPaneOpen, Mode=TwoWay}" />
+        <ToggleButton Name="Plain" Content="plain" />
+      </StackPanel>
       <Border Height="360" CornerRadius="10" ClipToBounds="True"
               BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
-        <SplitView Name="Inspector" PanePlacement="Right" DisplayMode="Inline" IsPaneOpen="True">
+        <SplitView Name="Inspector" PanePlacement="Right" DisplayMode="Inline" IsPaneOpen="True"
+                   Classes.plain="{Binding #Plain.IsChecked}">
           <SplitView.Pane>
             <DockPanel>
               <Border DockPanel.Dock="Top" Padding="16,12" BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="0,0,0,1">

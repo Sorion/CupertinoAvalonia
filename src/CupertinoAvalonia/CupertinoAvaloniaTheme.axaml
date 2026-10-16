@@ -26,7 +26,7 @@
   <StyleInclude Source="/Styling/ToolbarStyles.axaml" />
 
   <!-- A sidebar shows the window's material; the content stays opaque. -->
-  <Style Selector="cac|CupertinoWindow:material SplitView:left:inline, cac|CupertinoWindow:material SplitView:left:compactinline">
+  <Style Selector="cac|CupertinoWindow:material SplitView:not(.plain):left:inline, cac|CupertinoWindow:material SplitView:not(.plain):left:compactinline">
     <Setter Property="PaneBackground" Value="Transparent" />
   </Style>
   <Style Selector="cac|CupertinoWindow:material SplitView:left /template/ Panel#ContentRoot">
