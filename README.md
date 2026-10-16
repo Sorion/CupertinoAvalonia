@@ -41,19 +41,19 @@ Light and dark follow `RequestedThemeVariant`; the accent follows System Setting
 | `TreeView` | An outline view; `sidebar` for nested sidebar items |
 | `MenuFlyout`, `ContextMenu`, `Flyout`, `ToolTip` | |
 | `Slider`, `ProgressBar`, `Expander`, `ScrollBar` | `small` (progress bar), `button` (expander) |
-| `SplitView` | Pane on the left: a sidebar (on the window's material in a `CupertinoWindow`). On the right: an inspector |
+| `SplitView` | Pane on the left: a sidebar (on the window's material in a `CupertinoWindow`). On the right: an inspector, in the sidebar's color. `plain`: the pane takes the content's background and a divider, as in Shortcuts. `PaneBackground` and the resources `SplitView…BackgroundBrush`, `SplitViewInspectorLength`, `SplitViewDividerThickness` change the rest |
 
 - **Sizes:** `mini`, `small`, `large` (and `xlarge` on buttons, segmented controls and steppers).
 - **Toolbar items:** add `toolbar` to a `Button`, `ToggleButton`, `ComboBox`, `TextBox` (a search field) or
   segmented `ListBox` for a Liquid Glass capsule; `accent` marks the primary item. A `Border` with
   `toolbar-group` puts several buttons (in a `StackPanel`, without the class) in one capsule. Items are 36 pt
-  tall for a `Unified` toolbar; add `compact` for an `UnifiedCompact` one. Pressed, they swell as in macOS 26:
+  tall for a `Unified` toolbar; add `compact` for an `UnifiedCompact` one. Pressed, they swell as in macOS 27:
   briefly after a click, up to 3 s while held, and as long as their flyout or drop-down is open (a group or
   segmented control as a whole; the search field doesn't).
 - **Text styles:** `TextBlock` classes `largeTitle`, `title1`…`title3`, `headline`, `body`, `callout`,
   `subheadline`, `footnote`, `caption1`, `caption2`, plus `emphasized`, `secondary`, `tertiary`.
 - **Resources** are named after the kit: `AccentBrush`, `LabelSecondaryBrush`, `WindowBackgroundBrush`,
-  `ControlHeight`…
+  `ControlHeight`… `AccentMulticolorBrush` is System Settings' multicolor swatch, for an accent picker.
 - **Inactive windows** gray out their controls, as on macOS. Your styles can do the same with
   `[(cas|WindowActivity.IsInactive)=True]` (`xmlns:cas="using:CupertinoAvalonia.Styling"`).
 - **Other controls** (pickers, `TabControl`…) keep Fluent's templates,
@@ -81,10 +81,10 @@ On macOS (elsewhere it's a plain `Window`):
 The Gallery's window ([MainWindow.axaml](https://github.com/Sorion/CupertinoAvalonia/blob/main/samples/CupertinoAvalonia.Gallery/Views/MainWindow.axaml)) is a
 complete example: a sidebar on the sidebar material, a toolbar over the content.
 
-**Liquid Glass chrome:** macOS 26+ draws it only for apps whose executable declares its SDK, which .NET's app
-host doesn't. The package's `buildTransitive/CupertinoAvalonia.targets` declares it after each build on macOS;
-with a project reference, import that file in your app (as the Gallery does). `CupertinoDeclareMacOSSdk=false`
-turns it off.
+**Liquid Glass chrome:** macOS draws it only for apps whose executable declares a recent SDK (26 or later), which
+.NET's app host doesn't. The package's `buildTransitive/CupertinoAvalonia.targets` declares macOS 27's SDK after each build on
+macOS; with a project reference, import that file in your app (as the Gallery does). `CupertinoDeclareMacOSSdk=false`
+turns it off, `CupertinoMacOSSdkVersion` declares another SDK.
 
 ## CupertinoToolbar
 
@@ -99,11 +99,14 @@ turns it off.
 </Panel>
 ```
 
-The window's toolbar band, laid over the top of the content as in macOS 26: transparent at rest, its background
+The window's toolbar band, laid over the top of the content as in macOS 27: transparent at rest, its background
 (and its 1 pt edge line) fades in when the content scrolls under it or the pointer is over it. In dark mode it is a
 third color, lighter than the content; in an inactive window it shows, at rest too. `BackgroundVisibility`:
 `Automatic` (default), `Visible` (always), `Hidden` (never). Dragging the band moves the window. Leave room for it at
 the top of the scrolled content. The content passing under it isn't blurred yet: the background is nearly opaque.
+
+Its buttons, pop-ups and segmented controls are toolbar items without the `toolbar` class (and `compact` ones in a
+`compact` toolbar), except in a `toolbar-group`. Controls in a flyout or in another control's template stay as they are.
 
 ## SymbolIcon
 
