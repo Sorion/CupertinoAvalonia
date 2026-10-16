@@ -34,6 +34,7 @@ Light and dark follow `RequestedThemeVariant`; the accent follows System Setting
 | Control | Classes |
 |---|---|
 | `Button`, `RepeatButton`, `ToggleButton` | `accent` (or `IsDefault`), `tinted`, `destructive`, `borderless` |
+| `DropDownButton`, `SplitButton`, `ToggleSplitButton` | A pull-down button, with a button's classes (`toolbar` included); an action and, apart, its menu, as AppKit's split combo button |
 | `CheckBox`, `RadioButton`, `ToggleSwitch` | |
 | `TextBox`, `ComboBox` | |
 | `NumericUpDown`, `ButtonSpinner` | A field with the stepper inside; the stepper alone |
@@ -45,7 +46,7 @@ Light and dark follow `RequestedThemeVariant`; the accent follows System Setting
 | `TabControl` | A segmented control on top of the content (`TabStripPlacement`: `Bottom` below it, `Left` and `Right` beside it). `toolbar`: a settings window's tabs, on glass. `Icon="gearshape"` gives a tab an SF Symbol |
 
 - **Sizes:** `mini`, `small`, `large` (and `xlarge` on buttons, segmented controls and steppers).
-- **Toolbar items:** add `toolbar` to a `Button`, `ToggleButton`, `ComboBox`, `TextBox` (a search field) or
+- **Toolbar items:** add `toolbar` to a `Button`, `ToggleButton`, `DropDownButton`, `ComboBox`, `TextBox` (a search field) or
   segmented `ListBox` for a Liquid Glass capsule; `accent` marks the primary item. A `Border` with
   `toolbar-group` puts several buttons (in a `StackPanel`, without the class) in one capsule. Items are 36 pt
   tall for a `Unified` toolbar; add `compact` for an `UnifiedCompact` one. Pressed, they swell as in macOS 27:
