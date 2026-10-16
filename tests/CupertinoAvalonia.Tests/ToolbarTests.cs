@@ -218,7 +218,7 @@ public class ToolbarTests
         Assert.Equal(Describe(Resource("ToolbarGlassInactiveRimBrush", variant)), Describe(button.BorderBrush));
         Assert.Equal(Application.Current.TryGetResource("ToolbarNoShadow", variant, out var s) ? (BoxShadows)s! : default,
             Part<Border>(button, "PART_Background").BoxShadow);
-        // Labels dim to the tertiary label (macOS 26: 25 to 33 %).
+        // Labels dim to the tertiary label (macOS 27: 25 to 33 %).
         Assert.Equal(flat, Describe(primary.Background));
         var tertiary = Describe(Resource("LabelTertiaryBrush", variant));
         Assert.Equal(tertiary, Describe(button.Foreground));

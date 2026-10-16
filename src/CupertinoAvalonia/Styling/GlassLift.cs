@@ -9,7 +9,7 @@ using Avalonia.VisualTree;
 namespace CupertinoAvalonia.Styling;
 
 /// <summary>
-/// The swell of pressed Liquid Glass toolbar items (macOS 26). Styles scale the item up while
+/// The swell of pressed Liquid Glass toolbar items (macOS 27). Styles scale the item up while
 /// <c>[(cas|GlassLift.IsLifted)=True]</c>. On a container, pressing any of its items lifts the whole container.
 /// </summary>
 /// <remarks>

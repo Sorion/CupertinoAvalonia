@@ -13,7 +13,7 @@
       <StreamGeometry x:Key="ToolbarSearchGlyph">M 11.5,6.5 A 5,5 0 1 1 1.5,6.5 A 5,5 0 1 1 11.5,6.5 Z M 10.1,10.1 L 14,14</StreamGeometry>
 
       <!--
-        Liquid Glass - Small: the kit's blend-mode layers as translucent colors, checked against macOS 26 (Notes).
+        Liquid Glass - Small: the kit's blend-mode layers as translucent colors, checked against macOS 27 (Notes).
         The edge lines are inner shadows offset by 1 pt: they follow the curve and fade out on the sides.
       -->
       <ResourceDictionary.ThemeDictionaries>
@@ -47,7 +47,7 @@
           </LinearGradientBrush>
           <BoxShadows x:Key="ToolbarGlassShadow">0 8 15 0 #05000000, inset 0 1 0 0 #CCFFFFFF, inset 0 -1 0 0 #CCFFFFFF</BoxShadows>
           <BoxShadows x:Key="ToolbarGlassPrimaryShadow">0 8 15 0 #05000000, inset 0 1 0 0 #40FFFFFF, inset 0 -1 0 0 #40FFFFFF, inset 0 4 6 -3 #26FFFFFF, inset 0 -4 6 -3 #26FFFFFF</BoxShadows>
-          <!-- Active=False, measured on macOS 26 (the kit's linear burn #FBFBFB is lighter). -->
+          <!-- Active=False, measured on macOS 27 (the kit's linear burn #FBFBFB is lighter). -->
           <SolidColorBrush x:Key="ToolbarGlassInactiveBrush" Color="#1A000000" />
           <SolidColorBrush x:Key="ToolbarGlassInactiveRimBrush" Color="#14000000" />
           <!-- _Buttons, State=Selected: linear burn #E6E6E6 -->
@@ -56,7 +56,7 @@
           <SolidColorBrush x:Key="ToolbarSeparatorBrush" Color="#26000000" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
-          <!-- Measured on macOS 26 (the kit: #2B999999). -->
+          <!-- Measured on macOS 27 (the kit: #2B999999). -->
           <SolidColorBrush x:Key="ToolbarGlassBrush" Color="#21FFFFFF" />
           <!-- linear dodge #141414 -->
           <SolidColorBrush x:Key="ToolbarGlassPressedBrush" Color="#3AFFFFFF" />
@@ -264,7 +264,7 @@
     <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
 
-  <!-- Active=False, measured on macOS 26. -->
+  <!-- Active=False, measured on macOS 27. -->
   <Style Selector=":is(Button).toolbar[(cas|WindowActivity.IsInactive)=True], ComboBox.toolbar[(cas|WindowActivity.IsInactive)=True], TextBox.toolbar[(cas|WindowActivity.IsInactive)=True], ListBox.segmented.toolbar[(cas|WindowActivity.IsInactive)=True]">
     <Setter Property="TemplatedControl.Background" Value="{DynamicResource ToolbarGlassInactiveBrush}" />
     <Setter Property="TemplatedControl.BorderBrush" Value="{DynamicResource ToolbarGlassInactiveRimBrush}" />

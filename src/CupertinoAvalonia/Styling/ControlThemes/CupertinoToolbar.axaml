@@ -1,6 +1,6 @@
 <!--
-  CupertinoToolbar, from the kit's "Scroll Edge Effect - Hard" (page Windows) and macOS 26 (Notes). Nearly opaque
-  until the band gets a blur (the kit: #D9FFFFFF); dark mode measured on macOS 26.
+  CupertinoToolbar, from the kit's "Scroll Edge Effect - Hard" (page Windows) and macOS 27 (Notes). Nearly opaque
+  until the band gets a blur (the kit: #D9FFFFFF); dark mode measured on macOS 27.
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
