@@ -63,7 +63,7 @@
       <cac:CupertinoToolbar ScrollViewer="{Binding #PageScroll}">
         <Border Name="ToolbarInset">
           <Grid Margin="10,0,12,0" ColumnDefinitions="Auto,*,Auto">
-            <Button Classes="toolbar" VerticalAlignment="Center"
+            <Button VerticalAlignment="Center"
                     Command="{Binding ToggleSidebarCommand}"
                     ToolTip.Tip="Show or hide the sidebar">
               <cac:SymbolIcon Symbol="sidebar.left" />
@@ -72,7 +72,7 @@
               <TextBlock Classes="headline" Text="{Binding SelectedPage.Title}" TextTrimming="CharacterEllipsis" />
               <TextBlock Classes="subheadline secondary" Text="{Binding SelectedPage.Description}" TextTrimming="CharacterEllipsis" />
             </StackPanel>
-            <ComboBox Grid.Column="2" Classes="toolbar" Margin="12,0,0,0" MinWidth="90"
+            <ComboBox Grid.Column="2" Margin="12,0,0,0" MinWidth="90"
                       ItemsSource="{Binding Themes}"
                       SelectedItem="{Binding SelectedTheme}" />
           </Grid>

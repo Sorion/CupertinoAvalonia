@@ -1,9 +1,11 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Chrome;
+using Avalonia.Controls.Primitives;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -125,10 +127,76 @@ public class CupertinoToolbarTests
         window.Close();
     }
 
-    private static (Window, CupertinoToolbar, ScrollViewer) Show()
+    [AvaloniaFact]
+    public void Its_controls_are_toolbar_items_without_the_class()
+    {
+        var button = new Button { Content = "Share" };
+        var toggle = new ToggleButton { Content = "Bold" };
+        var popUp = new ComboBox { ItemsSource = new[] { "One" }, SelectedIndex = 0 };
+        var segmented = new ListBox { Classes = { "segmented" }, ItemsSource = new[] { "A", "B" } };
+        var list = new ListBox();
+        var search = new TextBox();
+        var grouped = new Button { Content = "Back" };
+        var group = new Border { Classes = { "toolbar-group" }, Child = new StackPanel { Children = { grouped } } };
+        var numberBox = new NumericUpDown();
+        var (window, _, _) = Show(new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Children = { button, toggle, popUp, segmented, list, search, group, numberBox },
+        });
+
+        Assert.All(new Control[] { button, toggle, popUp, segmented }, c => Assert.Contains("toolbar", c.Classes));
+        Assert.All(new Control[] { list, search, grouped }, c => Assert.DoesNotContain("toolbar", c.Classes));
+        // Not the parts of another control's template.
+        Assert.All(numberBox.GetVisualDescendants().OfType<Button>(), b => Assert.DoesNotContain("toolbar", b.Classes));
+        Assert.Equal(36, button.Bounds.Height);
+        Assert.Equal(new Thickness(0.5), button.BorderThickness);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Buttons_of_a_flyout_opened_from_the_toolbar_stay_plain()
+    {
+        var inFlyout = new Button { Content = "Rename" };
+        var more = new Button { Content = "More", Flyout = new Flyout { Content = inFlyout } };
+        var (window, _, _) = Show(more);
+
+        more.Flyout!.ShowAt(more);
+        Pump(window, 100);
+        Assert.True(inFlyout.IsLoaded);
+        Assert.Contains("toolbar", more.Classes);
+        Assert.DoesNotContain("toolbar", inFlyout.Classes);
+        more.Flyout.Hide();
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Items_follow_a_compact_toolbar_and_lose_the_class_when_they_leave()
+    {
+        var added = new Button { Content = "Share" };
+        var declared = new Button { Classes = { "toolbar" }, Content = "Edit" };
+        var panel = new StackPanel { Orientation = Orientation.Horizontal, Children = { added, declared } };
+        var (window, toolbar, _) = Show(panel);
+
+        toolbar.Classes.Add("compact");
+        Assert.Contains("compact", added.Classes);
+        window.UpdateLayout();
+        Assert.Equal(24, added.Bounds.Height);
+        toolbar.Classes.Remove("compact");
+        Assert.DoesNotContain("compact", added.Classes);
+
+        panel.Children.Clear();
+        Dispatcher.UIThread.RunJobs();
+        Assert.DoesNotContain("toolbar", added.Classes);
+        // A class its XAML gave it stays.
+        Assert.Contains("toolbar", declared.Classes);
+        window.Close();
+    }
+
+    private static (Window, CupertinoToolbar, ScrollViewer) Show(Control? content = null)
     {
         var scrollViewer = new ScrollViewer { Content = new Border { Height = 2000 } };
-        var toolbar = new CupertinoToolbar { ScrollViewer = scrollViewer, Content = new TextBlock { Text = "Title" } };
+        var toolbar = new CupertinoToolbar { ScrollViewer = scrollViewer, Content = content ?? new TextBlock { Text = "Title" } };
         var window = new Window { Width = 400, Height = 300, Content = new Panel { Children = { scrollViewer, toolbar } } };
         window.Show();
         Dispatcher.UIThread.RunJobs();
