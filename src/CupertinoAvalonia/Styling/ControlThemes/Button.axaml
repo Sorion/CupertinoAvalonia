@@ -1,7 +1,12 @@
-<!-- Button, from the kit's "Buttons" (page Buttons), Context=Content Area. -->
+<!--
+  Button, from the kit's "Buttons" (page Buttons), Context=Content Area. DropDownButton is the kit's "Pulldown Button";
+  SplitButton, which the kit lacks, follows AppKit's NSComboButton (split style).
+-->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:cas="using:CupertinoAvalonia.Styling">
+                    xmlns:cas="using:CupertinoAvalonia.Styling"
+                    xmlns:cac="using:CupertinoAvalonia.Controls"
+                    xmlns:converters="using:Avalonia.Controls.Converters">
   <Design.PreviewWith>
     <Border Padding="20">
       <StackPanel Spacing="10">
@@ -242,4 +247,209 @@
   </ControlTheme>
 
   <ControlTheme x:Key="{x:Type RepeatButton}" TargetType="RepeatButton" BasedOn="{StaticResource {x:Type Button}}" />
+
+  <StreamGeometry x:Key="PullDownChevron">M 0.75,0.75 L 4,4 L 7.25,0.75</StreamGeometry>
+  <converters:CornerRadiusFilterConverter x:Key="SplitButtonLeftCorners" Filter="TopLeft, BottomLeft" />
+  <converters:CornerRadiusFilterConverter x:Key="SplitButtonRightCorners" Filter="TopRight, BottomRight" />
+
+  <!-- Pulldown Button: a button's styles and sizes, then a chevron.down (Disclosure/Font Size) in a 24 pt box. -->
+  <ControlTheme x:Key="{x:Type DropDownButton}" TargetType="DropDownButton" BasedOn="{StaticResource {x:Type Button}}">
+    <Setter Property="Padding" Value="{DynamicResource PopUpButtonPadding}" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <Border Name="PART_Background"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Grid ColumnDefinitions="*,Auto">
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Padding="{TemplateBinding Padding}"
+                              RecognizesAccessKey="True"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            <cac:SymbolIcon Name="DropDownGlyph"
+                            Grid.Column="1"
+                            Width="{DynamicResource ControlHeight}"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            IsHitTestVisible="False"
+                            Symbol="chevron.down"
+                            FontSize="13"
+                            FontWeight="Bold"
+                            FallbackData="{StaticResource PullDownChevron}"
+                            FallbackStrokeThickness="1.6" />
+          </Grid>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+
+    <!-- Pressed while its menu is open. -->
+    <Style Selector="^:flyout-open">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^.accent:flyout-open, ^[IsDefault=True]:flyout-open">
+      <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^.borderless:flyout-open">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+    </Style>
+
+    <Style Selector="^.mini">
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingMini}" />
+      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+        <Setter Property="FontSize" Value="10" />
+      </Style>
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingSmall}" />
+      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+        <Setter Property="FontSize" Value="10" />
+      </Style>
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingLarge}" />
+    </Style>
+    <Style Selector="^.xlarge">
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingXLarge}" />
+    </Style>
+  </ControlTheme>
+
+  <!--
+    NSComboButton, split style, measured on macOS 27: two bordered parts side by side, without a separator, the menu's
+    being square with a 9 pt chevron. ToggleSplitButton uses this theme too.
+  -->
+  <ControlTheme x:Key="{x:Type SplitButton}" TargetType="SplitButton">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
+    <!-- Popup/Inset - Left, on both sides: measured around the action's symbol. -->
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Focusable" Value="True" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <!-- Holds the corner radius the focus ring copies. -->
+        <Border Name="PART_Root" CornerRadius="{TemplateBinding CornerRadius}">
+          <Grid ColumnDefinitions="*,Auto">
+            <!-- The parts are bordered Buttons; the split button's size reaches them through these bindings. -->
+            <Button Name="PART_PrimaryButton"
+                    Focusable="False"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    MinHeight="{TemplateBinding MinHeight}"
+                    Padding="{TemplateBinding Padding}"
+                    CornerRadius="{TemplateBinding CornerRadius, Converter={StaticResource SplitButtonLeftCorners}}"
+                    FontSize="{TemplateBinding FontSize}"
+                    LetterSpacing="{TemplateBinding LetterSpacing}"
+                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                    Content="{TemplateBinding Content}"
+                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                    Command="{TemplateBinding Command}"
+                    CommandParameter="{TemplateBinding CommandParameter}" />
+            <Button Name="PART_SecondaryButton"
+                    Grid.Column="1"
+                    Focusable="False"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Padding="0"
+                    MinHeight="{TemplateBinding MinHeight}"
+                    MinWidth="{TemplateBinding MinHeight}"
+                    CornerRadius="{TemplateBinding CornerRadius, Converter={StaticResource SplitButtonRightCorners}}">
+              <cac:SymbolIcon Name="DropDownGlyph"
+                              Symbol="chevron.down"
+                              FontSize="9"
+                              FontWeight="SemiBold"
+                              FallbackData="{StaticResource PullDownChevron}"
+                              FallbackStrokeThickness="1.4" />
+            </Button>
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:focus-visible /template/ Border#PART_Root">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+    <Style Selector="^:flyout-open /template/ Button#PART_SecondaryButton">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+    </Style>
+
+    <!-- ToggleSplitButton, "on": as an "on" toggle button. -->
+    <Style Selector="^:checked">
+      <Style Selector="^ /template/ Button">
+        <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+      </Style>
+      <Style Selector="^:flyout-open /template/ Button#PART_SecondaryButton">
+        <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundPressedBrush}" />
+      </Style>
+    </Style>
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]:checked">
+      <Style Selector="^ /template/ Button">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+      </Style>
+    </Style>
+
+    <Style Selector="^.mini">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
+      <Setter Property="Padding" Value="7,0" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
+      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+        <Setter Property="FontSize" Value="7" />
+      </Style>
+    </Style>
+    <Style Selector="^.small">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
+      <Setter Property="Padding" Value="10,0" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusSmall}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
+      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+        <Setter Property="FontSize" Value="8" />
+      </Style>
+    </Style>
+    <Style Selector="^.large">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
+      <Setter Property="Padding" Value="14,0" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingLarge}" />
+      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+        <Setter Property="FontSize" Value="10" />
+      </Style>
+    </Style>
+    <Style Selector="^.xlarge">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+      <Setter Property="Padding" Value="18,0" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusXLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeXLarge}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingXLarge}" />
+      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+        <Setter Property="FontSize" Value="11" />
+      </Style>
+    </Style>
+  </ControlTheme>
 </ResourceDictionary>

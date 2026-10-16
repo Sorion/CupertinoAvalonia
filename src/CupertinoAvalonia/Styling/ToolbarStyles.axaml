@@ -323,6 +323,25 @@
     <Setter Property="Margin" Value="2,0,6,0" />
     <Setter Property="FontSize" Value="10" />
   </Style>
+  <!-- Window/Pull Down Button: the symbol, then a chevron.down 2 pt after it. -->
+  <Style Selector="DropDownButton.toolbar">
+    <Setter Property="Padding" Value="8,0,0,0" />
+  </Style>
+  <Style Selector="DropDownButton.toolbar /template/ cac|SymbolIcon#DropDownGlyph">
+    <Setter Property="Width" Value="12" />
+    <Setter Property="Margin" Value="2,0,8,0" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+  </Style>
+  <Style Selector="DropDownButton.toolbar.compact">
+    <Setter Property="Padding" Value="6,0,0,0" />
+  </Style>
+  <Style Selector="DropDownButton.toolbar.compact /template/ cac|SymbolIcon#DropDownGlyph">
+    <Setter Property="Width" Value="10" />
+    <Setter Property="Margin" Value="2,0,6,0" />
+    <Setter Property="FontSize" Value="10" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
   <Style Selector="TextBox.toolbar.compact">
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
     <Setter Property="Padding" Value="0,0,6,0" />

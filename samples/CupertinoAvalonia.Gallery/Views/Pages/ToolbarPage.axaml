@@ -7,10 +7,10 @@
     <StackPanel Spacing="10">
       <TextBlock Classes="headline" Text="Toolbar" />
       <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="Liquid Glass items for a unified toolbar: add the toolbar class to Button, ToggleButton, ComboBox, TextBox (a search field) and a segmented ListBox; Border.toolbar-group groups buttons in one capsule. Pressed, an item swells: briefly after a click, up to 3 seconds while held, and as long as its menu is open." />
+                 Text="Liquid Glass items for a unified toolbar: add the toolbar class to Button, ToggleButton, DropDownButton, ComboBox, TextBox (a search field) and a segmented ListBox; Border.toolbar-group groups buttons in one capsule. Pressed, an item swells: briefly after a click, up to 3 seconds while held, and as long as its menu is open." />
       <Border Height="52" Padding="12,0" CornerRadius="10"
               BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
-        <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
+        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
           <Button Classes="toolbar" ToolTip.Tip="More">
             <cac:SymbolIcon Symbol="ellipsis" />
             <Button.Flyout>
@@ -40,21 +40,30 @@
               <cac:SymbolIcon Symbol="square.grid.2x2" />
             </ListBoxItem>
           </ListBox>
-          <ToggleButton Grid.Column="4" Classes="toolbar" IsChecked="True" ToolTip.Tip="Favorites">
+          <DropDownButton Grid.Column="3" Classes="toolbar" ToolTip.Tip="Share">
+            <cac:SymbolIcon Symbol="square.and.arrow.up" />
+            <DropDownButton.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                <MenuItem Header="Copy Link" />
+                <MenuItem Header="Export…" />
+              </MenuFlyout>
+            </DropDownButton.Flyout>
+          </DropDownButton>
+          <ToggleButton Grid.Column="5" Classes="toolbar" IsChecked="True" ToolTip.Tip="Favorites">
             <cac:SymbolIcon Symbol="star" />
           </ToggleButton>
-          <ComboBox Grid.Column="5" Classes="toolbar" SelectedIndex="0">
+          <ComboBox Grid.Column="6" Classes="toolbar" SelectedIndex="0">
             <ComboBoxItem Content="Default" />
             <ComboBoxItem Content="Games" />
             <ComboBoxItem Content="Music" />
           </ComboBox>
-          <Button Grid.Column="6" Classes="toolbar accent">
+          <Button Grid.Column="7" Classes="toolbar accent">
             <StackPanel Orientation="Horizontal" Spacing="6">
               <cac:SymbolIcon Symbol="plus" />
               <TextBlock Text="Add Channel" />
             </StackPanel>
           </Button>
-          <TextBox Grid.Column="7" Classes="toolbar" Width="160" PlaceholderText="Search" />
+          <TextBox Grid.Column="8" Classes="toolbar" Width="160" PlaceholderText="Search" />
         </Grid>
       </Border>
     </StackPanel>

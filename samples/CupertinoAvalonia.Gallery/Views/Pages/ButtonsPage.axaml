@@ -72,6 +72,63 @@
     </StackPanel>
 
     <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Pull-down and split buttons" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="DropDownButton: a pull-down button, which opens its menu. SplitButton and ToggleSplitButton: an action and, apart, its menu." />
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <DropDownButton Content="Export">
+          <DropDownButton.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft">
+              <MenuItem Header="PDF" />
+              <MenuItem Header="PNG" />
+              <MenuItem Header="SVG" />
+            </MenuFlyout>
+          </DropDownButton.Flyout>
+        </DropDownButton>
+        <DropDownButton Classes="accent" Content="New">
+          <DropDownButton.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft">
+              <MenuItem Header="Profile" />
+              <MenuItem Header="Channel" />
+            </MenuFlyout>
+          </DropDownButton.Flyout>
+        </DropDownButton>
+        <SplitButton Content="Reply">
+          <SplitButton.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft">
+              <MenuItem Header="Reply All" />
+              <MenuItem Header="Forward" />
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
+        <ToggleSplitButton Content="Monitor" IsChecked="True">
+          <ToggleSplitButton.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft">
+              <MenuItem Header="Headphones" />
+              <MenuItem Header="Speakers" />
+            </MenuFlyout>
+          </ToggleSplitButton.Flyout>
+        </ToggleSplitButton>
+        <DropDownButton Content="Disabled" IsEnabled="False" />
+        <SplitButton Content="Disabled" IsEnabled="False" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <SplitButton Classes="mini" Content="Mini" />
+        <SplitButton Classes="small" Content="Small" />
+        <SplitButton Content="Regular" />
+        <SplitButton Classes="large" Content="Large" />
+        <SplitButton Classes="xlarge" Content="Extra Large" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <DropDownButton Classes="mini" Content="Mini" />
+        <DropDownButton Classes="small" Content="Small" />
+        <DropDownButton Content="Regular" />
+        <DropDownButton Classes="large" Content="Large" />
+        <DropDownButton Classes="xlarge" Content="Extra Large" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
       <TextBlock Classes="headline" Text="Keyboard focus" />
       <TextBlock Classes="secondary" Text="Press Tab to move the focus ring between buttons." />
       <StackPanel Orientation="Horizontal" Spacing="10">
