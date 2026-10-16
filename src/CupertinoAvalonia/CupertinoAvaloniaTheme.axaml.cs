@@ -38,6 +38,7 @@ public class CupertinoAvaloniaTheme : Styles
         SystemFontTracking.Apply(Resources);
         WindowActivity.Initialize();
         Stepper.Initialize();
+        MacOSColorSpace.Initialize();
 
         _platformSettings = Application.Current?.PlatformSettings;
         if (_platformSettings is not null)
