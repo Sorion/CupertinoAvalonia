@@ -42,6 +42,7 @@ Light and dark follow `RequestedThemeVariant`; the accent follows System Setting
 | `MenuFlyout`, `ContextMenu`, `Flyout`, `ToolTip` | |
 | `Slider`, `ProgressBar`, `Expander`, `ScrollBar` | `small` (progress bar), `button` (expander) |
 | `SplitView` | Pane on the left: a sidebar (on the window's material in a `CupertinoWindow`). On the right: an inspector, in the sidebar's color. `plain`: the pane takes the content's background and a divider, as in Shortcuts. `PaneBackground` and the resources `SplitView…BackgroundBrush`, `SplitViewInspectorLength`, `SplitViewDividerThickness` change the rest |
+| `TabControl` | A segmented control on top of the content (`TabStripPlacement`: `Bottom` below it, `Left` and `Right` beside it). `toolbar`: a settings window's tabs, on glass. `Icon="gearshape"` gives a tab an SF Symbol |
 
 - **Sizes:** `mini`, `small`, `large` (and `xlarge` on buttons, segmented controls and steppers).
 - **Toolbar items:** add `toolbar` to a `Button`, `ToggleButton`, `ComboBox`, `TextBox` (a search field) or
@@ -56,7 +57,7 @@ Light and dark follow `RequestedThemeVariant`; the accent follows System Setting
   `ControlHeight`… `AccentMulticolorBrush` is System Settings' multicolor swatch, for an accent picker.
 - **Inactive windows** gray out their controls, as on macOS. Your styles can do the same with
   `[(cas|WindowActivity.IsInactive)=True]` (`xmlns:cas="using:CupertinoAvalonia.Styling"`).
-- **Other controls** (pickers, `TabControl`…) keep Fluent's templates,
+- **Other controls** (pickers, `AutoCompleteBox`…) keep Fluent's templates,
   recolored with Apple's palette.
 
 ## CupertinoWindow
