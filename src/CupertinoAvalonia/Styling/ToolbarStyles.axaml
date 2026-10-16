@@ -330,4 +330,78 @@
   <Style Selector="TextBox.toolbar.compact cac|SymbolIcon#SearchGlyph">
     <Setter Property="Margin" Value="6,0,4,0" />
   </Style>
+
+  <!--
+    A settings window's tabs (TabControl.toolbar), measured on macOS 27 (printer settings): a 13 pt symbol at the large
+    scale over an 11 pt label, gray; the selected tab on glass, in the accent. Pressed, only the symbol takes the label
+    color; the tab is selected once released, over it.
+  -->
+  <Style Selector="TabControl.toolbar > TabItem">
+    <!-- ItemSelectionEventTriggers selects on release when the mouse can hold. -->
+    <Setter Property="InputElement.IsHoldWithMouseEnabled" Value="True" />
+    <Setter Property="IconTemplate">
+      <DataTemplate x:DataType="x:String">
+        <cac:SymbolIcon Symbol="{Binding}" SymbolScale="Large" />
+      </DataTemplate>
+    </Setter>
+    <Setter Property="BorderBrush" Value="Transparent" />
+    <Setter Property="BorderThickness" Value="0.5" />
+    <Setter Property="CornerRadius" Value="6.5" />
+    <Setter Property="Padding" Value="7.5,6,7.5,5" />
+    <Setter Property="MinHeight" Value="48" />
+    <!-- Would clip the glass's shadow. -->
+    <Setter Property="ClipToBounds" Value="False" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem /template/ StackPanel#PART_HeaderStack">
+    <Setter Property="Orientation" Value="Vertical" />
+    <Setter Property="Spacing" Value="3" />
+    <Setter Property="TextElement.FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+    <Setter Property="TextElement.FontWeight" Value="Normal" />
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem /template/ ContentPresenter#PART_IconPresenter">
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem /template/ ContentPresenter#PART_ContentPresenter">
+    <Setter Property="HorizontalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem:pressed">
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem:selected">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ToolbarGlassRimBrush}" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="BoxShadow" Value="{DynamicResource ToolbarGlassShadow}" />
+    <!-- Would round the 0.5 pt rim away on a 1x screen. -->
+    <Setter Property="UseLayoutRounding" Value="False" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem:selected /template/ StackPanel#PART_HeaderStack">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource AccentBrush}" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem:selected:pressed">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassBrush}" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem:pressed:not(:selected) /template/ ContentPresenter#PART_IconPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem:disabled /template/ StackPanel#PART_HeaderStack">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+  <!-- Active=False, as the toolbar's items. -->
+  <Style Selector="TabControl.toolbar > TabItem[(cas|WindowActivity.IsInactive)=True] /template/ StackPanel#PART_HeaderStack">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem[(cas|WindowActivity.IsInactive)=True]:selected">
+    <Setter Property="Background" Value="{DynamicResource ToolbarGlassInactiveBrush}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource ToolbarGlassInactiveRimBrush}" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem[(cas|WindowActivity.IsInactive)=True]:selected /template/ Border#PART_LayoutRoot">
+    <Setter Property="BoxShadow" Value="{StaticResource ToolbarNoShadow}" />
+  </Style>
+  <Style Selector="TabControl.toolbar > TabItem[(cas|WindowActivity.IsInactive)=True]:selected /template/ StackPanel#PART_HeaderStack">
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
+  </Style>
 </Styles>

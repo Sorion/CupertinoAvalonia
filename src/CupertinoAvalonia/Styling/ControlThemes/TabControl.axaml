@@ -1,0 +1,192 @@
+<!--
+  TabControl, after NSTabViewController's tab styles, measured on macOS 27:
+  - by default, a segmented control on top of the content, or below it (Audio MIDI Setup);
+  - "toolbar": a settings window's tabs, symbols over labels in a toolbar band (ToolbarStyles.axaml).
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling"
+                    xmlns:cac="using:CupertinoAvalonia.Controls">
+  <Design.PreviewWith>
+    <TabControl Margin="20" Width="360" Height="200">
+      <TabItem Header="General">
+        <TextBlock Text="General settings" />
+      </TabItem>
+      <TabItem Header="Advanced" />
+      <TabItem Header="Disabled" IsEnabled="False" />
+    </TabControl>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type TabControl}" TargetType="TabControl">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Padding" Value="0,16,0,0" />
+    <Setter Property="ItemsPanel">
+      <ItemsPanelTemplate>
+        <cas:SegmentedPanel Spacing="1"
+                            SeparatorBrush="{DynamicResource LabelTertiaryBrush}"
+                            SeparatorHeight="{DynamicResource SegmentedControlHeightSeparator}" />
+      </ItemsPanelTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel Background="{TemplateBinding Background}">
+          <Border Name="PART_StripBand" DockPanel.Dock="{TemplateBinding TabStripPlacement}">
+            <!-- One layer, as measured: #ECECEC over white. -->
+            <Border Name="PART_Strip"
+                    HorizontalAlignment="Center"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    CornerRadius="{DynamicResource ButtonRadius}">
+              <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+            </Border>
+          </Border>
+          <Panel ClipToBounds="True">
+            <ContentPresenter Name="PART_SelectedContentHost2"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                              IsVisible="False" />
+            <ContentPresenter Name="PART_SelectedContentHost"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </Panel>
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^[TabStripPlacement=Bottom]">
+      <Setter Property="Padding" Value="0,0,0,16" />
+    </Style>
+    <Style Selector="^[TabStripPlacement=Left], ^[TabStripPlacement=Right]">
+      <Setter Property="ItemsPanel">
+        <ItemsPanelTemplate>
+          <StackPanel Spacing="1" />
+        </ItemsPanelTemplate>
+      </Setter>
+      <Style Selector="^ /template/ Border#PART_Strip">
+        <Setter Property="VerticalAlignment" Value="Top" />
+      </Style>
+    </Style>
+    <Style Selector="^[TabStripPlacement=Left]">
+      <Setter Property="Padding" Value="16,0,0,0" />
+    </Style>
+    <Style Selector="^[TabStripPlacement=Right]">
+      <Setter Property="Padding" Value="0,0,16,0" />
+    </Style>
+
+    <!-- Measured on macOS 27 (printer settings): the toolbar band, a 0.5 pt edge, 8 pt around the tabs. -->
+    <Style Selector="^.toolbar">
+      <Setter Property="Padding" Value="20" />
+      <Setter Property="ItemsPanel">
+        <ItemsPanelTemplate>
+          <StackPanel Orientation="Horizontal" Spacing="8" />
+        </ItemsPanelTemplate>
+      </Setter>
+      <Style Selector="^ /template/ Border#PART_StripBand">
+        <Setter Property="Background" Value="{DynamicResource ToolbarBandBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ToolbarBandEdgeBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,0.5" />
+        <Setter Property="Padding" Value="0,8" />
+        <!-- Would round the 0.5 pt edge away on a 1x screen. -->
+        <Setter Property="UseLayoutRounding" Value="False" />
+      </Style>
+      <Style Selector="^ /template/ Border#PART_Strip">
+        <Setter Property="Background" Value="Transparent" />
+      </Style>
+    </Style>
+  </ControlTheme>
+
+  <ControlTheme x:Key="{x:Type TabItem}" TargetType="TabItem">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPadding}" />
+    <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
+    <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
+    <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="FocusAdorner" Value="{x:Null}" />
+    <!-- Icon="gearshape": an SF Symbol by its name; any other icon is shown as is. -->
+    <Setter Property="IconTemplate">
+      <DataTemplate x:DataType="x:String">
+        <cac:SymbolIcon Symbol="{Binding}" />
+      </DataTemplate>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_LayoutRoot"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}">
+          <!-- The header's colors go here: the tab's content inherits the TabItem's. -->
+          <StackPanel Name="PART_HeaderStack"
+                      Orientation="Horizontal"
+                      Spacing="4"
+                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+            <ContentPresenter Name="PART_IconPresenter"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Icon}"
+                              ContentTemplate="{TemplateBinding IconTemplate}"
+                              IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            <ContentPresenter Name="PART_ContentPresenter"
+                              VerticalAlignment="Center"
+                              Content="{TemplateBinding Header}"
+                              ContentTemplate="{TemplateBinding HeaderTemplate}"
+                              RecognizesAccessKey="True" />
+          </StackPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+
+    <Style Selector="^:focus-visible">
+      <Setter Property="AdornerLayer.Adorner">
+        <Template>
+          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+          </Panel>
+        </Template>
+      </Setter>
+    </Style>
+    <Style Selector="^:pressed">
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^:selected">
+      <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
+      <Style Selector="^ /template/ StackPanel#PART_HeaderStack">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource WhiteBrush}" />
+      </Style>
+    </Style>
+    <Style Selector="^:selected:pressed">
+      <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+    </Style>
+    <Style Selector="^:disabled /template/ StackPanel#PART_HeaderStack">
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+    </Style>
+    <!-- State=Disabled, Selected=True -->
+    <Style Selector="^:selected:disabled">
+      <Setter Property="Opacity" Value="0.45" />
+      <Style Selector="^ /template/ StackPanel#PART_HeaderStack">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource WhiteBrush}" />
+      </Style>
+    </Style>
+
+    <!-- Active=False (_Control BG/Controls) -->
+    <Style Selector="^[(cas|WindowActivity.IsInactive)=True]:selected">
+      <Setter Property="Background" Value="{DynamicResource FillPrimaryBrush}" />
+      <Style Selector="^ /template/ StackPanel#PART_HeaderStack">
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Opacity" Value="1" />
+        <Style Selector="^ /template/ StackPanel#PART_HeaderStack">
+          <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+        </Style>
+      </Style>
+    </Style>
+  </ControlTheme>
+</ResourceDictionary>

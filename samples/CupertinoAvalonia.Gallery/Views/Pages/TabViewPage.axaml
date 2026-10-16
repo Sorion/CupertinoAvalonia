@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.TabViewPage">
+  <StackPanel Spacing="28">
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Settings tabs" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="TabControl with the &quot;toolbar&quot; class: a settings window's tabs, a symbol (Icon=&quot;gearshape&quot;) over each label. The selected tab is on glass, in the accent." />
+      <Border Height="260" CornerRadius="10" ClipToBounds="True"
+              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
+        <TabControl Classes="toolbar">
+          <TabItem Header="General" Icon="gearshape">
+            <StackPanel Spacing="10">
+              <CheckBox Content="Open at login" IsChecked="True" />
+              <CheckBox Content="Show in the menu bar" />
+              <ToggleSwitch Content="Automatic updates" IsChecked="True" />
+            </StackPanel>
+          </TabItem>
+          <TabItem Header="Appearance" Icon="paintpalette">
+            <StackPanel Spacing="10">
+              <TextBlock Classes="subheadline secondary" Text="Text size" />
+              <Slider Value="40" Width="240" HorizontalAlignment="Left" />
+            </StackPanel>
+          </TabItem>
+          <TabItem Header="Notifications" Icon="bell">
+            <TextBlock Classes="secondary" Text="Notification settings" />
+          </TabItem>
+          <TabItem Header="Advanced" Icon="gearshape.2">
+            <TextBlock Classes="secondary" Text="Advanced settings" />
+          </TabItem>
+        </TabControl>
+      </Border>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Segmented tabs" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="TabControl: a segmented control on top of the content, as in Audio MIDI Setup. TabStripPlacement=&quot;Bottom&quot; puts it below." />
+      <TabControl Height="140">
+        <TabItem Header="Input">
+          <TextBlock Classes="secondary" Text="Input: 48 000 Hz, 2 channels" />
+        </TabItem>
+        <TabItem Header="Output">
+          <TextBlock Classes="secondary" Text="Output: 48 000 Hz, 2 channels" />
+        </TabItem>
+        <TabItem Header="Disabled" IsEnabled="False" />
+      </TabControl>
+      <TabControl Height="140">
+        <TabItem Header="Microphone" Icon="mic">
+          <TextBlock Classes="secondary" Text="A segment can show a symbol before its label." />
+        </TabItem>
+        <TabItem Header="Speakers" Icon="speaker.wave.2" />
+      </TabControl>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Tabs on the left" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="TabStripPlacement=&quot;Left&quot; or &quot;Right&quot;: a column of tabs beside the content." />
+      <TabControl Height="140" TabStripPlacement="Left">
+        <TabItem Header="Mixer">
+          <TextBlock Classes="secondary" Text="Mixer" />
+        </TabItem>
+        <TabItem Header="Profiles">
+          <TextBlock Classes="secondary" Text="Profiles" />
+        </TabItem>
+        <TabItem Header="Devices">
+          <TextBlock Classes="secondary" Text="Devices" />
+        </TabItem>
+      </TabControl>
+    </StackPanel>
+  </StackPanel>
+</UserControl>
