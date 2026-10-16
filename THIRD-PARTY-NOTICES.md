@@ -32,8 +32,8 @@ SOFTWARE.
 
 ## Apple
 
-The theme's design tokens (colors, metrics, text styles: `Styling/Tokens/*.g.axaml` and
-`Media/SystemAccentPalette.g.cs`) are generated from Apple's macOS 27 UI kit for Figma, which is subject to Apple's
+The theme's design tokens (colors, metrics, text styles: `Styling/Tokens/*.g.axaml`) are generated from Apple's
+macOS 27 UI kit for Figma, which is subject to Apple's
 "License Agreement for Apple Design Resources", and a limited number of control colors taken from the kit are
 written directly in the control themes, each naming the kit component it comes from. The kit itself is not
 distributed with this project.

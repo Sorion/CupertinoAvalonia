@@ -28,6 +28,8 @@ Add the package (`dotnet add package CupertinoAvalonia`), then use the theme ins
 ```
 
 Light and dark follow `RequestedThemeVariant`; the accent follows System Settings (`CustomAccentColor` forces one).
+On macOS, the accent, the selection and the focus ring are AppKit's own colors in both modes; elsewhere, and for a
+custom accent, their shades are derived from the accent.
 
 ## Controls
 
@@ -135,11 +137,15 @@ An SF Symbol by its name in Apple's catalog, at the size, weight and color of th
 - Focus rings and lenses are drawn in the adorner layer so containers don't clip them:
   [docs/avalonia-clipping.md](https://github.com/Sorion/CupertinoAvalonia/blob/main/docs/avalonia-clipping.md) explains how, for any control.
 - The theme adds letter spacing to the system font, which Skia renders tighter than macOS does.
+- On macOS, the theme tags every window as sRGB. Avalonia leaves the color space unset, so on a wide-gamut display
+  (every recent Mac) colors looked more saturated than in native apps. Your own colors and images are affected too.
+  Avalonia's [#21847](https://github.com/AvaloniaUI/Avalonia/pull/21847) proposes an option for it, which the theme
+  will use once released.
 
 ## Design tokens
 
-The theme's colors, metrics and text styles (`Styling/Tokens/*.g.axaml`, `Media/SystemAccentPalette.g.cs`) are
-generated from Apple's macOS 27 UI kit for Figma, and included in the library. Apple's kit itself isn't in the
+The theme's colors, metrics and text styles (`Styling/Tokens/*.g.axaml`) are generated from Apple's macOS 27 UI
+kit for Figma, and included in the library. Apple's kit itself isn't in the
 repository. To regenerate the tokens when Apple updates it:
 
 1. Duplicate Apple's [macOS 27 kit](https://developer.apple.com/design/resources/) from the Figma Community, then
