@@ -47,7 +47,10 @@ public class CupertinoAvaloniaTheme : Styles
         UpdateAccent();
     }
 
-    /// <summary>Follows the system's accent color (default); otherwise the accent is macOS's blue.</summary>
+    /// <summary>
+    /// Follows the system's accent color (default): on macOS, AppKit's own accent, selection and focus ring colors in
+    /// both modes. Otherwise the accent is macOS's blue.
+    /// </summary>
     public bool PreferSystemAccentColor
     {
         get => GetValue(PreferSystemAccentColorProperty);
@@ -73,56 +76,59 @@ public class CupertinoAvaloniaTheme : Styles
 
     private void UpdateAccent()
     {
+        // On macOS, AppKit's own colors in both appearances; elsewhere, shades derived from the reported accent.
+        var system = PreferSystemAccentColor && CustomAccentColor is null ? MacOSAccentColors.Read() : null;
         var reported = PreferSystemAccentColor ? _platformSettings?.GetColorValues().AccentColor1 : null;
-        var accentKey = reported is { } r ? AccentColorMapper.FindAccentResourceKey(r) : "AccentBlueColor";
 
         foreach (var variant in Variants)
         {
-            Color accent, vibrant;
-            if (CustomAccentColor is { } custom)
+            var isDark = variant == ThemeVariant.Dark;
+            MacOSAccentColors.Shades shades;
+            if ((CustomAccentColor ?? (system is null ? reported : null)) is { } accent)
             {
-                accent = vibrant = custom;
-            }
-            else if (accentKey is null)
-            {
-                // Not a macOS accent (e.g. Windows).
-                accent = vibrant = reported!.Value;
+                shades = Derive(accent, isDark);
             }
             else
             {
-                accent = Token(accentKey, variant);
-                vibrant = TryToken(accentKey.Replace("Accent", "AccentVibrant"), variant) ?? accent;
+                var native = system ?? MacOSAccentColors.Blue;
+                shades = isDark ? native.Dark : native.Light;
             }
 
-            SetAccentResources(variant, accent, vibrant);
-            _fluentFallback.Palettes[variant].Accent = accent;
+            SetAccentResources(variant, shades);
+            _fluentFallback.Palettes[variant].Accent = shades.Accent;
         }
     }
 
-    private void SetAccentResources(ThemeVariant variant, Color accent, Color vibrant)
+    // Fitted on AppKit's shades of the eight macOS 27 accents (within ΔE 4): the selection darker and a little less
+    // saturated; the focus ring at 50 %, darker in light mode, lighter in dark mode.
+    private static MacOSAccentColors.Shades Derive(Color accent, bool isDark)
+    {
+        var selection = isDark ? AccentColorMapper.Shade(accent, -0.118, 0.92) : AccentColorMapper.Shade(accent, -0.078, 0.96);
+        var ring = isDark ? AccentColorMapper.Shade(accent, 0.162, 1.16) : AccentColorMapper.Shade(accent, -0.05, 1.06);
+        return new(accent, selection, Color.FromArgb(0x7F, ring.R, ring.G, ring.B));
+    }
+
+    private void SetAccentResources(ThemeVariant variant, MacOSAccentColors.Shades shades)
     {
         var isDark = variant == ThemeVariant.Dark;
         var d = (ResourceDictionary)_accentResources.ThemeDictionaries[isDark ? ThemeVariant.Dark : ThemeVariant.Default];
+        var accent = shades.Accent;
 
-        // The kit's blend-mode layers over the prominent button's accent.
-        var buttonIdle = isDark ? accent : AccentColorMapper.LinearBurn(accent, 0xF7);
-        var buttonPressed = isDark ? AccentColorMapper.LinearDodge(accent, 0x09) : AccentColorMapper.LinearBurn(accent, 0xE6);
+        // Measured on macOS 27: a prominent button is the accent itself, without the kit's blend layers; pressed, the
+        // accent under black (light) or white (dark) at 10 %.
+        var buttonPressed = AccentColorMapper.Overlay(accent, isDark ? 1 : 0, 0.1);
 
         Set(d, "AccentColor", accent);
-        Set(d, "AccentVibrantColor", vibrant);
-        Set(d, "AccentButtonBackgroundColor", buttonIdle);
+        Set(d, "AccentVibrantColor", accent);
+        Set(d, "AccentButtonBackgroundColor", accent);
         Set(d, "AccentButtonBackgroundPressedColor", buttonPressed);
-        // "Tables/BG - Selected + Active": #0088FF → #0165E2 light, #0091FF → #0158D2 dark, applied to any accent.
-        Set(d, "AccentSelectionColor", isDark
-            ? AccentColorMapper.Darken(accent, 0.086, hue: 9)
-            : AccentColorMapper.Darken(accent, 0.055, hue: 5));
+        Set(d, "AccentSelectionColor", shades.Selection);
         d["SystemAccentColor"] = accent;
 
-        // _Input Fields, State=Focused. A spread shadow follows the control's corner radius.
-        var ring = Color.FromArgb(0x80, accent.R, accent.G, accent.B);
+        // A spread shadow follows the control's corner radius.
         d["FocusRingShadow"] = new BoxShadows(
-            new BoxShadow { Spread = 3.5, Color = ring },
-            [new BoxShadow { Spread = 1, Color = ring, IsInset = true }]);
+            new BoxShadow { Spread = 3.5, Color = shades.FocusRing },
+            [new BoxShadow { Spread = 1, Color = shades.FocusRing, IsInset = true }]);
     }
 
     private static void Set(ResourceDictionary d, string colorKey, Color color)
