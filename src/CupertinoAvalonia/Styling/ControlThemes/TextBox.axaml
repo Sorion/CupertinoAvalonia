@@ -31,6 +31,8 @@
     <Setter Property="BorderThickness" Value="1" />
     <Setter Property="CornerRadius" Value="{DynamicResource ControlRadius}" />
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
+    <!-- A text field keeps its height, as the other controls do; a multi-line one fills its space. -->
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="MinWidth" Value="64" />
     <Setter Property="Padding" Value="{DynamicResource TextFieldPadding}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
@@ -137,6 +139,7 @@
     </Style>
 
     <Style Selector="^[AcceptsReturn=True]">
+      <Setter Property="VerticalAlignment" Value="Stretch" />
       <Setter Property="VerticalContentAlignment" Value="Top" />
       <Setter Property="Padding" Value="8,4" />
     </Style>

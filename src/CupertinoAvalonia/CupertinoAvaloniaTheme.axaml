@@ -22,7 +22,9 @@
 
   <StyleInclude Source="/Styling/TextStyles.axaml" />
   <StyleInclude Source="/Styling/ListStyles.axaml" />
-  <!-- After ListStyles: the toolbar's segmented control restyles the content area's. -->
+  <StyleInclude Source="/Styling/SearchFieldStyles.axaml" />
+  <!-- After ListStyles and SearchFieldStyles: the toolbar restyles the content area's segmented control and search
+       field. -->
   <StyleInclude Source="/Styling/ToolbarStyles.axaml" />
 
   <!-- A sidebar shows the window's material; the content stays opaque. -->

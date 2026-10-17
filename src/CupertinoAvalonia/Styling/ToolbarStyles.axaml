@@ -10,7 +10,6 @@
 
   <Styles.Resources>
     <ResourceDictionary>
-      <StreamGeometry x:Key="ToolbarSearchGlyph">M 11.5,6.5 A 5,5 0 1 1 1.5,6.5 A 5,5 0 1 1 11.5,6.5 Z M 10.1,10.1 L 14,14</StreamGeometry>
 
       <!--
         Liquid Glass - Small: the kit's blend-mode layers as translucent colors, checked against macOS 27 (Notes).
@@ -241,19 +240,15 @@
     <Setter Property="MinWidth" Value="130" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Padding" Value="0,0,10,0" />
-    <Setter Property="InnerLeftContent">
-      <Template>
-        <cac:SymbolIcon Name="SearchGlyph"
-                        Width="16" Height="16" Margin="10,0,6,0"
-                        VerticalAlignment="Center"
-                        IsHitTestVisible="False"
-                        Symbol="magnifyingglass"
-                        FontSize="13"
-                        FontWeight="Medium"
-                        FallbackData="{StaticResource ToolbarSearchGlyph}"
-                        Foreground="{Binding $parent[TextBox].PlaceholderForeground}" />
-      </Template>
-    </Setter>
+  </Style>
+  <Style Selector="TextBox.toolbar cac|SymbolIcon#SearchGlyph">
+    <Setter Property="Width" Value="16" />
+    <Setter Property="Height" Value="16" />
+    <Setter Property="Margin" Value="10,0,6,0" />
+  </Style>
+  <!-- The clear button mirrors the magnifier. -->
+  <Style Selector="TextBox.toolbar Button#SearchClearButton">
+    <Setter Property="Margin" Value="0,0,9,0" />
   </Style>
 
   <Style Selector=":is(Button).toolbar:not(.accent):disabled, Border.toolbar-group :is(Button):disabled, ListBox.segmented.toolbar ListBoxItem:disabled, ComboBox.toolbar:disabled">
@@ -348,6 +343,9 @@
   </Style>
   <Style Selector="TextBox.toolbar.compact cac|SymbolIcon#SearchGlyph">
     <Setter Property="Margin" Value="6,0,4,0" />
+  </Style>
+  <Style Selector="TextBox.toolbar.compact Button#SearchClearButton">
+    <Setter Property="Margin" Value="0,0,5,0" />
   </Style>
 
   <!--

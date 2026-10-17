@@ -19,6 +19,21 @@
     </StackPanel>
 
     <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Search field" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="TextBox with the &quot;search&quot; class: a capsule with a magnifying glass, and a button that clears the text once there's some. The toolbar's search field (&quot;toolbar&quot; class) has it too." />
+      <TextBox Classes="search" PlaceholderText="Search" Width="240" HorizontalAlignment="Left" />
+      <TextBox Classes="search" Text="Channels" Width="240" HorizontalAlignment="Left" />
+      <TextBox Classes="search" Text="Disabled" IsEnabled="False" Width="240" HorizontalAlignment="Left" />
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <TextBox Classes="search mini" PlaceholderText="Mini" Width="120" />
+        <TextBox Classes="search small" Text="Small" Width="120" />
+        <TextBox Classes="search" Text="Regular" Width="120" />
+        <TextBox Classes="search large" PlaceholderText="Large" Width="120" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
       <TextBlock Classes="headline" Text="Steppers" />
       <TextBlock Classes="secondary" TextWrapping="Wrap"
                  Text="NumericUpDown: a field with the stepper inside. Arrow keys, the scroll wheel and the stepper change the value; at the limits, a half dims." />
