@@ -57,6 +57,7 @@ custom accent, their shades are derived from the accent.
 | `Slider`, `ProgressBar`, `Expander`, `ScrollBar` | `small` (progress bar), `button` (expander) |
 | `SplitView` | Pane on the left: a sidebar (on the window's material in a `CupertinoWindow`). On the right: an inspector, in the sidebar's color. `plain`: the pane takes the content's background and a divider, as in Shortcuts. `PaneBackground` and the resources `SplitView…BackgroundBrush`, `SplitViewInspectorLength`, `SplitViewDividerThickness` change the rest |
 | `TabControl` | A segmented control on top of the content (`TabStripPlacement`: `Bottom` below it, `Left` and `Right` beside it). `toolbar`: a settings window's tabs, on glass. `Icon="gearshape"` gives a tab an SF Symbol |
+| `GroupBox` | A rounded box with its title above it, as macOS's group box. `Padding` sets the space around its content |
 
 - **Sizes:** `mini`, `small`, `large` (and `xlarge` on buttons, segmented controls and steppers).
 - **Toolbar items:** add `toolbar` to a `Button`, `ToggleButton`, `DropDownButton`, `ComboBox`, `TextBox` (a search field) or
