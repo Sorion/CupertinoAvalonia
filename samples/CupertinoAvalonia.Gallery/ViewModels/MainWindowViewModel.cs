@@ -29,6 +29,7 @@ public partial class MainWindowViewModel : ObservableObject
         new("Lists", "list.bullet.indent", "ListBox: table rows, sidebar and alternating rows. TreeView: an outline, in a table or a sidebar.", () => new ListsPage()),
         new("Split View", "rectangle.split.2x1", "SplitView: a sidebar on the window's material, an inspector on the right.", () => new SplitViewPage()),
         new("Tab View", "rectangle.topthird.inset.filled", "TabControl: a settings window's tabs, or a segmented control.", () => new TabViewPage()),
+        new("Group Box", "square.on.square", "GroupBox: a rounded box with its title above it.", () => new GroupBoxPage()),
         new("Toolbar and Segmented", "wrench.adjustable", "Liquid Glass toolbar items, and the segmented control.", () => new ToolbarPage()),
         new("Menus and Pop-ups", "filemenu.and.pointer.arrow", "ComboBox, MenuFlyout, ContextMenu, Flyout and ToolTip.", () => new MenusPage()),
         new("Typography", "textformat", "macOS text styles, as TextBlock classes.", () => new TypographyPage()),

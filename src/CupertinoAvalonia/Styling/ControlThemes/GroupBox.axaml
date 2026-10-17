@@ -1,0 +1,53 @@
+<!-- GroupBox as NSBox, the kit's "Group Box": a rounded box in Fills/Quaternary with its title above it. -->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <StackPanel Margin="20" Spacing="20" Width="280">
+      <GroupBox Header="Output">
+        <TextBlock Text="48 000 Hz, 2 channels" />
+      </GroupBox>
+      <GroupBox>
+        <TextBlock Text="Without a title" />
+      </GroupBox>
+    </StackPanel>
+  </Design.PreviewWith>
+
+  <ControlTheme x:Key="{x:Type GroupBox}" TargetType="GroupBox">
+    <!-- At 100 %, as measured on macOS 27 (the kit's layer is at 50 %). -->
+    <Setter Property="Background" Value="{DynamicResource FillQuaternaryBrush}" />
+    <Setter Property="CornerRadius" Value="12" />
+    <!-- The kit's form insets its rows 10 pt; NSBox's content margins are 5 pt. -->
+    <Setter Property="Padding" Value="10" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <DockPanel>
+          <!-- Measured on macOS 27: an 11 pt title, its baseline 1 pt above the box and its text 11 pt from the box's
+               edge. Its 14 pt line overlaps the box. -->
+          <ContentPresenter Name="PART_HeaderPresenter"
+                            DockPanel.Dock="Top"
+                            ZIndex="1"
+                            Margin="11,0,0,-3"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            IsVisible="{TemplateBinding Header, Converter={x:Static ObjectConverters.IsNotNull}}"
+                            RecognizesAccessKey="True"
+                            LineHeight="{DynamicResource SubheadlineLineHeight}"
+                            TextElement.FontSize="{DynamicResource SubheadlineFontSize}"
+                            TextElement.LetterSpacing="{DynamicResource SubheadlineLetterSpacing}"
+                            TextElement.Foreground="{DynamicResource LabelPrimaryBrush}" />
+          <ContentPresenter Name="PART_ContentPresenter"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Padding="{TemplateBinding Padding}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            RecognizesAccessKey="True" />
+        </DockPanel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

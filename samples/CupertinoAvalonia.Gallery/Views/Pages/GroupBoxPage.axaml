@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CupertinoAvalonia.Gallery.Views.Pages.GroupBoxPage">
+  <StackPanel Spacing="28">
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Group box" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="GroupBox: a rounded box with its title above it, as in a settings window. Padding sets the space around its content." />
+      <GroupBox Header="Output" Width="360" HorizontalAlignment="Left">
+        <StackPanel Spacing="10">
+          <ComboBox SelectedIndex="0" Width="200">
+            <ComboBoxItem Content="48 000 Hz" />
+            <ComboBoxItem Content="44 100 Hz" />
+          </ComboBox>
+          <CheckBox Content="Mute when headphones are unplugged" IsChecked="True" />
+          <CheckBox Content="Show volume in the menu bar" />
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="Without a title" />
+      <GroupBox Width="360" HorizontalAlignment="Left">
+        <TextBlock Classes="secondary" TextWrapping="Wrap"
+                   Text="Without a Header, the box starts at the top." />
+      </GroupBox>
+    </StackPanel>
+  </StackPanel>
+</UserControl>
