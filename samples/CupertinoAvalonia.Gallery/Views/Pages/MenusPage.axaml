@@ -17,16 +17,37 @@
         <ComboBox SelectedIndex="0" IsEnabled="False">
           <ComboBoxItem Content="Disabled" />
         </ComboBox>
-        <ComboBox IsEditable="True" Text="Editable" MinWidth="140">
-          <ComboBoxItem Content="Editable" />
-          <ComboBoxItem Content="Other" />
-        </ComboBox>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Spacing="12">
         <ComboBox Classes="mini" SelectedIndex="0"><ComboBoxItem Content="Mini" /></ComboBox>
         <ComboBox Classes="small" SelectedIndex="0"><ComboBoxItem Content="Small" /></ComboBox>
         <ComboBox SelectedIndex="0"><ComboBoxItem Content="Regular" /></ComboBox>
         <ComboBox Classes="large" SelectedIndex="0"><ComboBoxItem Content="Large" /></ComboBox>
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10">
+      <TextBlock Classes="headline" Text="ComboBox (combo box)" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="IsEditable=&quot;True&quot;: a text field with an arrow button inside. Typing edits the text; the arrow opens the list." />
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <ComboBox IsEditable="True" Text="48 000 Hz" Width="160">
+          <x:String>48 000 Hz</x:String>
+          <x:String>44 100 Hz</x:String>
+          <x:String>96 000 Hz</x:String>
+        </ComboBox>
+        <ComboBox IsEditable="True" PlaceholderText="Buffer size" Width="160">
+          <x:String>128 samples</x:String>
+          <x:String>256 samples</x:String>
+          <x:String>512 samples</x:String>
+        </ComboBox>
+        <ComboBox IsEditable="True" Text="Disabled" IsEnabled="False" Width="160" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <ComboBox Classes="mini" IsEditable="True" Text="Mini" Width="120"><x:String>Mini</x:String></ComboBox>
+        <ComboBox Classes="small" IsEditable="True" Text="Small" Width="120"><x:String>Small</x:String></ComboBox>
+        <ComboBox IsEditable="True" Text="Regular" Width="120"><x:String>Regular</x:String></ComboBox>
+        <ComboBox Classes="large" IsEditable="True" Text="Large" Width="120"><x:String>Large</x:String></ComboBox>
       </StackPanel>
     </StackPanel>
 

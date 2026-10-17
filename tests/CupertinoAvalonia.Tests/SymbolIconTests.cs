@@ -104,6 +104,7 @@ public class SymbolIconTests
 
         var glyphs = new Control[] { popUp, numberBox, expander, search }
             .SelectMany(c => c.GetVisualDescendants().OfType<SymbolIcon>())
+            .Where(icon => icon.IsEffectivelyVisible)
             .ToDictionary(icon => icon.Symbol!, icon => icon);
         Assert.Equal(["chevron.up.chevron.down", "chevron.up", "chevron.down", "chevron.right", "magnifyingglass"], glyphs.Keys);
         Assert.All(glyphs.Values, icon => Assert.True(icon.IsNative, icon.Symbol));

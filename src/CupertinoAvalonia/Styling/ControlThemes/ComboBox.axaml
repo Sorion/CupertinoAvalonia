@@ -19,6 +19,7 @@
 
   <StreamGeometry x:Key="ComboBoxItemCheckGlyph">M 0.9,4.6 L 3.6,7.6 L 8.4,1.2</StreamGeometry>
   <StreamGeometry x:Key="PopUpButtonChevron">M 0.75,3.75 L 3.5,1 L 6.25,3.75 M 0.75,7.25 L 3.5,10 L 6.25,7.25</StreamGeometry>
+  <StreamGeometry x:Key="ComboBoxArrowChevron">M 0.75,0.75 L 4,4 L 7.25,0.75</StreamGeometry>
 
   <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
     <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
@@ -69,6 +70,7 @@
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
             <TextBox Name="PART_EditableTextBox"
+                     Grid.ColumnSpan="2"
                      Classes="embedded"
                      Padding="{TemplateBinding Padding}"
                      MinHeight="0"
@@ -93,7 +95,28 @@
                             FontWeight="Bold"
                             FallbackData="{StaticResource PopUpButtonChevron}"
                             FallbackStrokeThickness="1.6"
-                            Foreground="{TemplateBinding Foreground}" />
+                            Foreground="{TemplateBinding Foreground}"
+                            IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
+            <!-- Editable: the kit's "Combo Box Button", over the field's text inset; a press there opens the list. -->
+            <Border Name="ArrowButton"
+                    Grid.Column="1"
+                    Width="23.5"
+                    Height="17.5"
+                    Margin="0,0,4,0"
+                    VerticalAlignment="Center"
+                    CornerRadius="{DynamicResource ComboBoxRadiusButton}"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    IsVisible="{TemplateBinding IsEditable}">
+              <cac:SymbolIcon Name="ArrowGlyph"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Symbol="chevron.down"
+                              FontSize="8.5"
+                              FontWeight="Bold"
+                              FallbackData="{StaticResource ComboBoxArrowChevron}"
+                              FallbackStrokeThickness="1.6"
+                              Foreground="{TemplateBinding Foreground}" />
+            </Border>
             <Popup Name="PART_Popup"
                    WindowManagerAddShadowHint="False"
                    IsOpen="{TemplateBinding IsDropDownOpen, Mode=TwoWay}"
@@ -135,12 +158,6 @@
         </Template>
       </Setter>
     </Style>
-    <Style Selector="^[IsEditable=True]">
-      <Setter Property="Background" Value="{DynamicResource TextFieldBackgroundBrush}" />
-      <Setter Property="Padding" Value="{DynamicResource TextFieldPadding}" />
-      <Setter Property="BorderBrush" Value="{DynamicResource TextFieldBorderBrush}" />
-      <Setter Property="BorderThickness" Value="1" />
-    </Style>
     <Style Selector="^:pressed, ^:dropdownopen">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
     </Style>
@@ -179,6 +196,65 @@
       <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingLarge}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+    </Style>
+
+    <!-- Editable: the kit's "Combo Box", a text field with an arrow button inside; after the pop-up button's styles,
+         which it overrides. The padding is the kit's field inset on the left, its "Text - Inset - Right" on the right.
+         The arrow button's sizes and chevrons are measured on macOS 27 (NSComboBox), smaller than the kit's. -->
+    <Style Selector="^[IsEditable=True]">
+      <Setter Property="Background" Value="{DynamicResource TextFieldBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource TextFieldBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ControlRadius}" />
+      <Setter Property="Padding" Value="8,0,28,0" />
+
+      <Style Selector="^:pressed /template/ Border#ArrowButton, ^:dropdownopen /template/ Border#ArrowButton">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
+      </Style>
+      <Style Selector="^:disabled">
+        <Setter Property="Background" Value="{DynamicResource TextFieldBackgroundDisabledBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextFieldBorderDisabledBrush}" />
+      </Style>
+      <Style Selector="^:disabled /template/ Border#ArrowButton">
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />
+      </Style>
+
+      <Style Selector="^.mini">
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusMini}" />
+        <Setter Property="Padding" Value="6,0,20,0" />
+      </Style>
+      <Style Selector="^.mini /template/ Border#ArrowButton">
+        <Setter Property="Width" Value="14.5" />
+        <Setter Property="Height" Value="9" />
+        <Setter Property="Margin" Value="0,0,3.5,0" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxRadiusButtonMini}" />
+      </Style>
+      <Style Selector="^.mini /template/ cac|SymbolIcon#ArrowGlyph">
+        <Setter Property="FontSize" Value="7.5" />
+      </Style>
+      <Style Selector="^.small">
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusSmall}" />
+        <Setter Property="Padding" Value="6,0,24,0" />
+      </Style>
+      <Style Selector="^.small /template/ Border#ArrowButton">
+        <Setter Property="Width" Value="19.5" />
+        <Setter Property="Height" Value="13.5" />
+        <Setter Property="Margin" Value="0,0,3,0" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxRadiusButtonSmall}" />
+      </Style>
+      <Style Selector="^.large">
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusLarge}" />
+        <Setter Property="Padding" Value="8,0,28,0" />
+      </Style>
+      <Style Selector="^.large /template/ Border#ArrowButton">
+        <Setter Property="Width" Value="22" />
+        <Setter Property="Height" Value="19.5" />
+        <Setter Property="Margin" Value="0,0,4.5,0" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxRadiusButtonLarge}" />
+      </Style>
+      <Style Selector="^.large /template/ cac|SymbolIcon#ArrowGlyph">
+        <Setter Property="FontSize" Value="10" />
+      </Style>
     </Style>
   </ControlTheme>
 
