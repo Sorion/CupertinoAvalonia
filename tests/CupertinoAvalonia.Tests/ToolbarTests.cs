@@ -348,28 +348,39 @@ public class ToolbarTests
     [AvaloniaFact]
     public void Groups_and_segmented_controls_swell_as_a_whole()
     {
-        var back = new Button { Content = "<" };
-        var group = new Border { Classes = { "toolbar-group" }, Child = new StackPanel { Children = { back, new Button { Content = ">" } } } };
-        var segmented = new ListBox { Classes = { "segmented", "toolbar" }, ItemsSource = new[] { "List", "Icons" }, SelectedIndex = 0 };
-        var window = Show(group, segmented);
-        var icons = segmented.GetVisualDescendants().OfType<ListBoxItem>().Last();
+        // A longer minimum than the swell's 0.25 s: on a slow machine (CI), the group's swell would end during the
+        // second click.
+        var minimum = GlassLift.MinimumDuration;
+        GlassLift.MinimumDuration = TimeSpan.FromMilliseconds(800);
+        try
+        {
+            var back = new Button { Content = "<" };
+            var group = new Border { Classes = { "toolbar-group" }, Child = new StackPanel { Children = { back, new Button { Content = ">" } } } };
+            var segmented = new ListBox { Classes = { "segmented", "toolbar" }, ItemsSource = new[] { "List", "Icons" }, SelectedIndex = 0 };
+            var window = Show(group, segmented);
+            var icons = segmented.GetVisualDescendants().OfType<ListBoxItem>().Last();
 
-        window.MouseDown(Center(back), MouseButton.Left);
-        window.MouseUp(Center(back), MouseButton.Left);
-        window.MouseDown(Center(icons), MouseButton.Left);
-        window.MouseUp(Center(icons), MouseButton.Left);
-        Assert.Equal(1, segmented.SelectedIndex);
-        Pump(window, 150);
-        // The container swells, not the item clicked in it.
-        Assert.True(Scale(group) > 1.04);
-        Assert.Equal(1, Scale(back), 3);
-        Assert.True(Scale(segmented) > 1.04);
-        Assert.Equal(1, Scale(icons), 3);
+            window.MouseDown(Center(back), MouseButton.Left);
+            window.MouseUp(Center(back), MouseButton.Left);
+            window.MouseDown(Center(icons), MouseButton.Left);
+            window.MouseUp(Center(icons), MouseButton.Left);
+            Assert.Equal(1, segmented.SelectedIndex);
+            Pump(window, 350);
+            // The container swells, not the item clicked in it.
+            Assert.True(Scale(group) > 1.04);
+            Assert.Equal(1, Scale(back), 3);
+            Assert.True(Scale(segmented) > 1.04);
+            Assert.Equal(1, Scale(icons), 3);
 
-        Pump(window, 700);
-        Assert.Equal(1, Scale(group), 3);
-        Assert.Equal(1, Scale(segmented), 3);
-        window.Close();
+            Pump(window, 1200);
+            Assert.Equal(1, Scale(group), 3);
+            Assert.Equal(1, Scale(segmented), 3);
+            window.Close();
+        }
+        finally
+        {
+            GlassLift.MinimumDuration = minimum;
+        }
     }
 
     [AvaloniaFact]
