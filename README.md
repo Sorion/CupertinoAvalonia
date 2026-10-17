@@ -1,4 +1,15 @@
+<p align="center">
+<img src="https://github.com/Sorion/CupertinoAvalonia/blob/main/assets/icon.png" width="128" alt="CupertinoAvalonia logo">
+</p>
+
+
 # CupertinoAvalonia
+
+
+[![Nuget](https://img.shields.io/nuget/vpre/CupertinoAvalonia?color=%236A5ACD&label=CupertinoAvalonia%20%28nuget%29)](https://www.nuget.org/packages/CupertinoAvalonia/)
+[![CI](https://github.com/Sorion/CupertinoAvalonia/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/Sorion/CupertinoAvalonia/actions/workflows/ci.yml)
+[![Avalonia](https://img.shields.io/badge/Avalonia-v12-%236A5ACD)](https://avaloniaui.net)
+
 
 Give your [Avalonia](https://avaloniaui.net) application a native macOS look.
 Inspired by [FluentAvalonia](https://github.com/amwx/FluentAvalonia).
