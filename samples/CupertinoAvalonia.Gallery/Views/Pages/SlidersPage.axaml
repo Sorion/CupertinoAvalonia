@@ -23,6 +23,22 @@
     </StackPanel>
 
     <StackPanel Spacing="10" Width="320" HorizontalAlignment="Left">
+      <TextBlock Classes="headline" Text="Circular progress" />
+      <TextBlock Classes="secondary" TextWrapping="Wrap"
+                 Text="ProgressBar with the &quot;circular&quot; class: a ring, or the spinner when indeterminate. Sizes: mini, small, regular. Below the spinners, the slider sets the rings' value (a mini ring is the small one)." />
+      <StackPanel Orientation="Horizontal" Spacing="20">
+        <ProgressBar Classes="circular mini" IsIndeterminate="True" VerticalAlignment="Center" />
+        <ProgressBar Classes="circular small" IsIndeterminate="True" VerticalAlignment="Center" />
+        <ProgressBar Classes="circular" IsIndeterminate="True" VerticalAlignment="Center" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Spacing="20">
+        <ProgressBar Classes="circular small" Value="{Binding #RingValue.Value}" VerticalAlignment="Center" />
+        <ProgressBar Classes="circular" Value="{Binding #RingValue.Value}" VerticalAlignment="Center" />
+        <Slider Name="RingValue" Value="30" Width="160" VerticalAlignment="Center" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Spacing="10" Width="320" HorizontalAlignment="Left">
       <TextBlock Classes="headline" Text="Expander" />
       <Expander Header="Output" IsExpanded="True">
         <StackPanel Spacing="6">

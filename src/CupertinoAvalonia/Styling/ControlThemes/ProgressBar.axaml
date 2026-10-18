@@ -1,4 +1,7 @@
-<!-- ProgressBar, from the kit's "Linear - Determinate" and "Linear - Indeterminate" (page Progress Indicators). -->
+<!--
+  ProgressBar, from the kit's "Linear - Determinate" and "Linear - Indeterminate", and with the circular class its
+  "Circular - Determinate" and "Circular - Indeterminate ("Spinner")" (page Progress Indicators).
+-->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cas="using:CupertinoAvalonia.Styling">
@@ -7,15 +10,34 @@
       <ProgressBar Value="40" />
       <ProgressBar Classes="small" Value="70" />
       <ProgressBar IsIndeterminate="True" />
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <ProgressBar Classes="circular" IsIndeterminate="True" />
+        <ProgressBar Classes="circular" Value="30" />
+        <ProgressBar Classes="circular small" Value="75" />
+      </StackPanel>
     </StackPanel>
   </Design.PreviewWith>
 
   <ResourceDictionary.ThemeDictionaries>
+    <!--
+      The bar's track is the kit's "_Tracks - Unfilled", the label color at 10 %. Measured on macOS 27
+      (NSProgressIndicator, spinning style): the spinner's leading spoke at 55 % (the label color at 65 %), half in an
+      inactive window; the ring's track at 5 % in light, 10 % in dark; its fill in an inactive window at 27.5 %, 32 %
+      in dark.
+    -->
     <ResourceDictionary x:Key="Default">
-      <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="#16000000" />
+      <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.1" />
+      <SolidColorBrush x:Key="ProgressSpinnerBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.65" />
+      <SolidColorBrush x:Key="ProgressSpinnerInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
+      <SolidColorBrush x:Key="ProgressRingTrackBrush" Color="{DynamicResource FillTertiaryColor}" />
+      <SolidColorBrush x:Key="ProgressRingFillInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="#16FFFFFF" />
+      <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.1" />
+      <SolidColorBrush x:Key="ProgressSpinnerBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.65" />
+      <SolidColorBrush x:Key="ProgressSpinnerInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
+      <SolidColorBrush x:Key="ProgressRingTrackBrush" Color="{DynamicResource FillPrimaryColor}" />
+      <SolidColorBrush x:Key="ProgressRingFillInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.38" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -111,6 +133,63 @@
           </KeyFrame>
         </Animation>
       </Style.Animations>
+    </Style>
+
+    <!--
+      circular: a 5 pt ring filled clockwise from the top in the accent, or eight spokes whose brightness turns when
+      indeterminate (ProgressSpinner). After the inactive window's style, which it overrides. Sizes measured on macOS 27
+      (NSProgressIndicator, spinning style): 32 pt, 16 pt small, a 10 pt spinner in mini (its ring stays 16 pt).
+    -->
+    <Style Selector="^.circular">
+      <Setter Property="Background" Value="{DynamicResource ProgressRingTrackBrush}" />
+      <Setter Property="Width" Value="32" />
+      <Setter Property="Height" Value="32" />
+      <Setter Property="MinWidth" Value="0" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="Template">
+        <ControlTemplate TargetType="ProgressBar">
+          <Panel>
+            <!-- Required by ProgressBar, which computes Percentage with it. -->
+            <Border Name="PART_Indicator" IsVisible="False" />
+            <Panel Name="Ring" IsVisible="{Binding !IsIndeterminate, RelativeSource={RelativeSource TemplatedParent}}">
+              <!-- The track and its 0.5 pt outline, as the bar's. -->
+              <Ellipse Stroke="{TemplateBinding Background}" StrokeThickness="5" />
+              <Ellipse Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0.5" />
+              <Ellipse Margin="5" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0.5" />
+              <Arc Name="RingFill"
+                   Stroke="{TemplateBinding Foreground}"
+                   StrokeThickness="5"
+                   StrokeLineCap="Round"
+                   StartAngle="-90"
+                   SweepAngle="{Binding Percentage, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static cas:ProgressAngleConverter.Instance}}" />
+            </Panel>
+            <cas:ProgressSpinner Name="Spinner"
+                                 Foreground="{TemplateBinding Foreground}"
+                                 IsVisible="{TemplateBinding IsIndeterminate}" />
+          </Panel>
+        </ControlTemplate>
+      </Setter>
+
+      <Style Selector="^:indeterminate">
+        <Setter Property="Foreground" Value="{DynamicResource ProgressSpinnerBrush}" />
+      </Style>
+      <!-- In an inactive window: lighter, the spinner at half its opacity. -->
+      <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">
+        <Setter Property="Foreground" Value="{DynamicResource ProgressRingFillInactiveBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ProgressRingTrackBrush}" />
+        <Style Selector="^:indeterminate">
+          <Setter Property="Foreground" Value="{DynamicResource ProgressSpinnerInactiveBrush}" />
+        </Style>
+      </Style>
+
+      <Style Selector="^.small, ^.mini">
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="16" />
+      </Style>
+      <Style Selector="^.mini:indeterminate">
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="10" />
+      </Style>
     </Style>
   </ControlTheme>
 </ResourceDictionary>
