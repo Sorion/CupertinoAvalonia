@@ -79,6 +79,16 @@
       <Color x:Key="MaterialMenuColor">#B8F6F6F6</Color>
       <Color x:Key="MaterialPopoverColor">#99F6F6F6</Color>
       <Color x:Key="MaterialUnderWindowBackgroundColor">#D6F6F6F6</Color>
+      <Color x:Key="FillVibrantPrimaryTranslucentColor">#26000000</Color>
+      <Color x:Key="FillVibrantSecondaryTranslucentColor">#19000000</Color>
+      <Color x:Key="FillVibrantTertiaryTranslucentColor">#0D000000</Color>
+      <Color x:Key="FillVibrantQuaternaryTranslucentColor">#08000000</Color>
+      <Color x:Key="FillVibrantQuinaryTranslucentColor">#04000000</Color>
+      <Color x:Key="LabelVibrantPrimaryTranslucentColor">#E5000000</Color>
+      <Color x:Key="LabelVibrantSecondaryTranslucentColor">#8D000000</Color>
+      <Color x:Key="LabelVibrantTertiaryTranslucentColor">#40000000</Color>
+      <Color x:Key="LabelVibrantQuaternaryTranslucentColor">#26000000</Color>
+      <Color x:Key="LabelVibrantQuinaryTranslucentColor">#19000000</Color>
 
       <SolidColorBrush x:Key="AccentRedBrush" Color="{StaticResource AccentRedColor}" />
       <SolidColorBrush x:Key="AccentOrangeBrush" Color="{StaticResource AccentOrangeColor}" />
@@ -153,6 +163,16 @@
       <SolidColorBrush x:Key="MaterialMenuBrush" Color="{StaticResource MaterialMenuColor}" />
       <SolidColorBrush x:Key="MaterialPopoverBrush" Color="{StaticResource MaterialPopoverColor}" />
       <SolidColorBrush x:Key="MaterialUnderWindowBackgroundBrush" Color="{StaticResource MaterialUnderWindowBackgroundColor}" />
+      <SolidColorBrush x:Key="FillVibrantPrimaryTranslucentBrush" Color="{StaticResource FillVibrantPrimaryTranslucentColor}" />
+      <SolidColorBrush x:Key="FillVibrantSecondaryTranslucentBrush" Color="{StaticResource FillVibrantSecondaryTranslucentColor}" />
+      <SolidColorBrush x:Key="FillVibrantTertiaryTranslucentBrush" Color="{StaticResource FillVibrantTertiaryTranslucentColor}" />
+      <SolidColorBrush x:Key="FillVibrantQuaternaryTranslucentBrush" Color="{StaticResource FillVibrantQuaternaryTranslucentColor}" />
+      <SolidColorBrush x:Key="FillVibrantQuinaryTranslucentBrush" Color="{StaticResource FillVibrantQuinaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantPrimaryTranslucentBrush" Color="{StaticResource LabelVibrantPrimaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantSecondaryTranslucentBrush" Color="{StaticResource LabelVibrantSecondaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantTertiaryTranslucentBrush" Color="{StaticResource LabelVibrantTertiaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantQuaternaryTranslucentBrush" Color="{StaticResource LabelVibrantQuaternaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantQuinaryTranslucentBrush" Color="{StaticResource LabelVibrantQuinaryTranslucentColor}" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <Color x:Key="AccentRedColor">#FF4245</Color>
@@ -228,6 +248,16 @@
       <Color x:Key="MaterialMenuColor">#94282828</Color>
       <Color x:Key="MaterialPopoverColor">#47000000</Color>
       <Color x:Key="MaterialUnderWindowBackgroundColor">#73000000</Color>
+      <Color x:Key="FillVibrantPrimaryTranslucentColor">#24FFFFFF</Color>
+      <Color x:Key="FillVibrantSecondaryTranslucentColor">#14FFFFFF</Color>
+      <Color x:Key="FillVibrantTertiaryTranslucentColor">#0DFFFFFF</Color>
+      <Color x:Key="FillVibrantQuaternaryTranslucentColor">#09FFFFFF</Color>
+      <Color x:Key="FillVibrantQuinaryTranslucentColor">#07FFFFFF</Color>
+      <Color x:Key="LabelVibrantPrimaryTranslucentColor">#F5FFFFFF</Color>
+      <Color x:Key="LabelVibrantSecondaryTranslucentColor">#8AFFFFFF</Color>
+      <Color x:Key="LabelVibrantTertiaryTranslucentColor">#40FFFFFF</Color>
+      <Color x:Key="LabelVibrantQuaternaryTranslucentColor">#26FFFFFF</Color>
+      <Color x:Key="LabelVibrantQuinaryTranslucentColor">#11FFFFFF</Color>
 
       <SolidColorBrush x:Key="AccentRedBrush" Color="{StaticResource AccentRedColor}" />
       <SolidColorBrush x:Key="AccentOrangeBrush" Color="{StaticResource AccentOrangeColor}" />
@@ -302,6 +332,16 @@
       <SolidColorBrush x:Key="MaterialMenuBrush" Color="{StaticResource MaterialMenuColor}" />
       <SolidColorBrush x:Key="MaterialPopoverBrush" Color="{StaticResource MaterialPopoverColor}" />
       <SolidColorBrush x:Key="MaterialUnderWindowBackgroundBrush" Color="{StaticResource MaterialUnderWindowBackgroundColor}" />
+      <SolidColorBrush x:Key="FillVibrantPrimaryTranslucentBrush" Color="{StaticResource FillVibrantPrimaryTranslucentColor}" />
+      <SolidColorBrush x:Key="FillVibrantSecondaryTranslucentBrush" Color="{StaticResource FillVibrantSecondaryTranslucentColor}" />
+      <SolidColorBrush x:Key="FillVibrantTertiaryTranslucentBrush" Color="{StaticResource FillVibrantTertiaryTranslucentColor}" />
+      <SolidColorBrush x:Key="FillVibrantQuaternaryTranslucentBrush" Color="{StaticResource FillVibrantQuaternaryTranslucentColor}" />
+      <SolidColorBrush x:Key="FillVibrantQuinaryTranslucentBrush" Color="{StaticResource FillVibrantQuinaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantPrimaryTranslucentBrush" Color="{StaticResource LabelVibrantPrimaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantSecondaryTranslucentBrush" Color="{StaticResource LabelVibrantSecondaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantTertiaryTranslucentBrush" Color="{StaticResource LabelVibrantTertiaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantQuaternaryTranslucentBrush" Color="{StaticResource LabelVibrantQuaternaryTranslucentColor}" />
+      <SolidColorBrush x:Key="LabelVibrantQuinaryTranslucentBrush" Color="{StaticResource LabelVibrantQuinaryTranslucentColor}" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

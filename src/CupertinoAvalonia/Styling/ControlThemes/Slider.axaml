@@ -12,27 +12,19 @@
   </Design.PreviewWith>
 
   <ResourceDictionary.ThemeDictionaries>
-    <!-- _Tracks - Unfilled, _Ticks. The lens is measured on macOS 27 in dark mode; light mode follows the switch's. -->
+    <!-- _Ticks: the label color at 25 %. The lens is measured on macOS 27 in dark mode; light mode follows the switch's. -->
     <ResourceDictionary x:Key="Default">
-      <SolidColorBrush x:Key="SliderTrackBrush" Color="#16000000" />
-      <SolidColorBrush x:Key="SliderTrackPressedBrush" Color="#29000000" />
-      <SolidColorBrush x:Key="SliderTrackDisabledBrush" Color="#0D000000" />
-      <SolidColorBrush x:Key="SliderTickBrush" Color="#36000000" />
+      <SolidColorBrush x:Key="SliderTickBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.25" />
       <Color x:Key="SliderLensTint">#0B000000</Color>
       <Color x:Key="SliderLensHighlightColor">#6BFFFFFF</Color>
       <Color x:Key="SliderLensGlowColor">#33FFFFFF</Color>
-      <Color x:Key="SliderLensRimColor">#4D000000</Color>
       <BoxShadows x:Key="SliderLensShadow">0 6 10 2 #1F000000, 0 0.8 0.3 0 #26000000</BoxShadows>
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="SliderTrackBrush" Color="#16FFFFFF" />
-      <SolidColorBrush x:Key="SliderTrackPressedBrush" Color="#29FFFFFF" />
-      <SolidColorBrush x:Key="SliderTrackDisabledBrush" Color="#0DFFFFFF" />
-      <SolidColorBrush x:Key="SliderTickBrush" Color="#36FFFFFF" />
+      <SolidColorBrush x:Key="SliderTickBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.25" />
       <Color x:Key="SliderLensTint">#3D2A2B2F</Color>
       <Color x:Key="SliderLensHighlightColor">#1AFFFFFF</Color>
       <Color x:Key="SliderLensGlowColor">#27FFFFFF</Color>
-      <Color x:Key="SliderLensRimColor">#38000000</Color>
       <BoxShadows x:Key="SliderLensShadow">0 6 10 2 #29000000</BoxShadows>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
@@ -109,11 +101,11 @@
                          HighlightFalloff="0.6"
                          GlowColor="{DynamicResource SliderLensGlowColor}"
                          GlowFalloff="7"
-                         RimColor="{DynamicResource SliderLensRimColor}"
+                         RimColor="{DynamicResource GlassLensRimColor}"
                          RimWidth="1"
                          RimFringe="0"
                          FallbackBackground="{DynamicResource WindowBackgroundBrush}"
-                         FallbackForeground="{DynamicResource SliderTrackPressedBrush}" />
+                         FallbackForeground="{DynamicResource ControlTrackPressedBrush}" />
           <!-- After the glass, so the glass doesn't refract it. -->
           <Border CornerRadius="100"
                   Background="Transparent"
@@ -153,7 +145,7 @@
   <ControlTheme x:Key="{x:Type Slider}" TargetType="Slider">
     <!-- Would clip the knob's shadow at the track's ends. -->
     <Setter Property="ClipToBounds" Value="False" />
-    <Setter Property="Background" Value="{DynamicResource SliderTrackBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ControlTrackBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
@@ -335,7 +327,7 @@
     </Style>
 
     <Style Selector="^:pressed">
-      <Setter Property="Background" Value="{DynamicResource SliderTrackPressedBrush}" />
+      <Setter Property="Background" Value="{DynamicResource ControlTrackPressedBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
       <Style Selector="^ /template/ Thumb">
         <Setter Property="Opacity" Value="0" />
@@ -362,8 +354,8 @@
 
     <Style Selector="^:disabled">
       <!-- The kit grays the fill too. -->
-      <Setter Property="Background" Value="{DynamicResource SliderTrackDisabledBrush}" />
-      <Setter Property="Foreground" Value="{DynamicResource SliderTrackDisabledBrush}" />
+      <Setter Property="Background" Value="{DynamicResource ControlTrackDisabledBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource ControlTrackDisabledBrush}" />
     </Style>
 
     <Style Selector="^:error /template/ Thumb">

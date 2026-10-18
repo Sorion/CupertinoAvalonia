@@ -49,10 +49,9 @@
           <!-- Active=False, measured on macOS 27 (the kit's linear burn #FBFBFB is lighter). -->
           <SolidColorBrush x:Key="ToolbarGlassInactiveBrush" Color="#1A000000" />
           <SolidColorBrush x:Key="ToolbarGlassInactiveRimBrush" Color="#14000000" />
-          <!-- _Buttons, State=Selected: linear burn #E6E6E6 -->
-          <SolidColorBrush x:Key="ToolbarItemSelectedBrush" Color="#1A000000" />
-          <!-- Separator: linear burn #D9D9D9 -->
-          <SolidColorBrush x:Key="ToolbarSeparatorBrush" Color="#26000000" />
+          <!-- _Buttons, State=Selected: the vibrant secondary fill. Separator: the vibrant quaternary label. -->
+          <SolidColorBrush x:Key="ToolbarItemSelectedBrush" Color="{DynamicResource FillVibrantSecondaryTranslucentColor}" />
+          <SolidColorBrush x:Key="ToolbarSeparatorBrush" Color="{DynamicResource LabelVibrantQuaternaryTranslucentColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
           <!-- Measured on macOS 27 (the kit: #2B999999). -->
@@ -72,10 +71,8 @@
           <!-- linear dodge #0D0D0D; rim linear burn #E6E6E6 -->
           <SolidColorBrush x:Key="ToolbarGlassInactiveBrush" Color="#12FFFFFF" />
           <SolidColorBrush x:Key="ToolbarGlassInactiveRimBrush" Color="#1A000000" />
-          <!-- linear dodge #141414 -->
-          <SolidColorBrush x:Key="ToolbarItemSelectedBrush" Color="#14FFFFFF" />
-          <!-- linear dodge #262626 -->
-          <SolidColorBrush x:Key="ToolbarSeparatorBrush" Color="#26FFFFFF" />
+          <SolidColorBrush x:Key="ToolbarItemSelectedBrush" Color="{DynamicResource FillVibrantSecondaryTranslucentColor}" />
+          <SolidColorBrush x:Key="ToolbarSeparatorBrush" Color="{DynamicResource LabelVibrantQuaternaryTranslucentColor}" />
         </ResourceDictionary>
       </ResourceDictionary.ThemeDictionaries>
 

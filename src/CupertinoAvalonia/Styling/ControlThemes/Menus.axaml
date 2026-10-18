@@ -24,10 +24,9 @@
       <!-- Menu Background: glass over #D9D9D9, made nearly opaque. -->
       <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#F7F1F1F1" />
       <SolidColorBrush x:Key="MenuBorderBrush" Color="#1F000000" />
-      <!-- Menu Items, State=Hover: linear burn #E6E6E6 -->
-      <SolidColorBrush x:Key="MenuItemHighlightBrush" Color="#1A000000" />
-      <!-- Separators: linear burn #E6E6E6 -->
-      <SolidColorBrush x:Key="MenuSeparatorBrush" Color="#1A000000" />
+      <!-- Menu Items, State=Hover, and Separators: the vibrant secondary fill. -->
+      <SolidColorBrush x:Key="MenuItemHighlightBrush" Color="{DynamicResource FillVibrantSecondaryTranslucentColor}" />
+      <SolidColorBrush x:Key="MenuSeparatorBrush" Color="{DynamicResource FillVibrantSecondaryTranslucentColor}" />
       <!-- Popover: white glass -->
       <SolidColorBrush x:Key="PopoverBackgroundBrush" Color="#F7FAFAFA" />
       <SolidColorBrush x:Key="PopoverBorderBrush" Color="#0F000000" />
@@ -38,9 +37,8 @@
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#F7363636" />
       <SolidColorBrush x:Key="MenuBorderBrush" Color="#33FFFFFF" />
-      <!-- linear dodge #141414 -->
-      <SolidColorBrush x:Key="MenuItemHighlightBrush" Color="#14FFFFFF" />
-      <SolidColorBrush x:Key="MenuSeparatorBrush" Color="#14FFFFFF" />
+      <SolidColorBrush x:Key="MenuItemHighlightBrush" Color="{DynamicResource FillVibrantSecondaryTranslucentColor}" />
+      <SolidColorBrush x:Key="MenuSeparatorBrush" Color="{DynamicResource FillVibrantSecondaryTranslucentColor}" />
       <SolidColorBrush x:Key="PopoverBackgroundBrush" Color="#F7262626" />
       <SolidColorBrush x:Key="PopoverBorderBrush" Color="#33FFFFFF" />
       <SolidColorBrush x:Key="ToolTipBackgroundBrush" Color="#F5323232" />

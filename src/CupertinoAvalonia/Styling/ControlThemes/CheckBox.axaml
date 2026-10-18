@@ -22,8 +22,8 @@
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="CheckBoxBackgroundPressedBrush" Color="#30FFFFFF" />
-      <SolidColorBrush x:Key="CheckBoxBackgroundOnInactiveBrush" Color="#1AFFFFFF" />
-      <SolidColorBrush x:Key="CheckBoxGlyphInactiveBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="CheckBoxBackgroundOnInactiveBrush" Color="{DynamicResource FillPrimaryColor}" />
+      <SolidColorBrush x:Key="CheckBoxGlyphInactiveBrush" Color="{DynamicResource WhiteColor}" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

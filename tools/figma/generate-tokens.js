@@ -89,6 +89,18 @@ const materials = {
     rows.Default.push([key, light]);
     rows.Dark.push([key, dark]);
   }
+  // Avalonia has no blend modes: the vibrant fills and labels as the translucent colors they amount to, black under
+  // a linear burn in light mode, white under a linear dodge in dark mode (FillVibrantSecondary #E6E6E6 → #1A000000).
+  const h2 = (n) => n.toString(16).padStart(2, '0').toUpperCase();
+  for (const variant of ['Default', 'Dark']) {
+    for (const [key, value] of [...rows[variant]]) {
+      if (!/^(Fill|Label)Vibrant/.test(key)) continue;
+      const gray = /^#([0-9A-F]{2})\1\1$/i.exec(value);
+      if (!gray) throw new Error(`${key} isn't an opaque gray: ${value}`);
+      const level = parseInt(gray[1], 16);
+      rows[variant].push([key.replace(/Color$/, 'TranslucentColor'), variant === 'Dark' ? `#${h2(level)}FFFFFF` : `#${h2(255 - level)}000000`]);
+    }
+  }
   const dict = (variant) => rows[variant].map(([k, v]) => `      <Color x:Key="${k}">${v}</Color>`).join('\n') + '\n\n' +
     rows[variant].map(([k]) => `      <SolidColorBrush x:Key="${k.replace(/Color$/, 'Brush')}" Color="{StaticResource ${k}}" />`).join('\n');
   write('Colors.g.axaml', header('Colors and Materials') + `  <ResourceDictionary.ThemeDictionaries>

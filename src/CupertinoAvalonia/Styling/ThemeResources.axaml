@@ -33,10 +33,11 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
-      <!-- _Control BG/Bordered, Content Area -->
+      <!-- _Control BG/Bordered, Content Area. Disabled, the same layer as a disabled field's edge. -->
+      <Color x:Key="ControlDisabledColor">#0A000000</Color>
       <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#14000000" />
       <SolidColorBrush x:Key="ButtonBackgroundPressedBrush" Color="#29000000" />
-      <SolidColorBrush x:Key="ButtonBackgroundDisabledBrush" Color="#0A000000" />
+      <SolidColorBrush x:Key="ButtonBackgroundDisabledBrush" Color="{DynamicResource ControlDisabledColor}" />
       <!-- _Control BG/Bordered, On=True (toggle buttons) -->
       <SolidColorBrush x:Key="ButtonCheckedBackgroundBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.06" />
       <SolidColorBrush x:Key="ButtonCheckedBackgroundPressedBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.16" />
@@ -53,22 +54,29 @@
       <Color x:Key="ButtonProminentDestructiveBackgroundPressedColor">#E61F23</Color>
       <SolidColorBrush x:Key="ButtonProminentDestructiveBackgroundPressedBrush" Color="{DynamicResource ButtonProminentDestructiveBackgroundPressedColor}" />
       <SolidColorBrush x:Key="TextSelectionBrush" Color="{DynamicResource AccentColor}" Opacity="0.3" />
+      <!-- "_Tracks - Unfilled": the label color at 10 %, 19 % clicked, 6 % disabled or Active=False. -->
+      <SolidColorBrush x:Key="ControlTrackBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.1" />
+      <SolidColorBrush x:Key="ControlTrackPressedBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.19" />
+      <SolidColorBrush x:Key="ControlTrackDisabledBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.06" />
       <!-- Active=False: "_Tracks - Filled", "_Tracks - Unfilled" -->
       <SolidColorBrush x:Key="ControlFillInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.17" />
       <SolidColorBrush x:Key="ControlTrackInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.06" />
+      <!-- The glass lenses' rim (slider and switch knobs), measured on macOS 27. -->
+      <Color x:Key="GlassLensRimColor">#4D000000</Color>
 
-      <!-- _Input Fields -->
-      <SolidColorBrush x:Key="TextFieldBackgroundBrush" Color="#FFFFFF" />
-      <SolidColorBrush x:Key="TextFieldBackgroundDisabledBrush" Color="#80FFFFFF" />
+      <!-- _Input Fields: the window's background, at 50 % when disabled. -->
+      <SolidColorBrush x:Key="TextFieldBackgroundBrush" Color="{DynamicResource WindowBackgroundColor}" />
+      <SolidColorBrush x:Key="TextFieldBackgroundDisabledBrush" Color="{DynamicResource WindowBackgroundColor}" Opacity="0.5" />
       <!-- The kit's 1 px outside shadow, as a border: it renders crisper. -->
       <SolidColorBrush x:Key="TextFieldBorderBrush" Color="#14000000" />
-      <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="#0A000000" />
+      <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="{DynamicResource ControlDisabledColor}" />
     </ResourceDictionary>
 
     <ResourceDictionary x:Key="Dark">
+      <Color x:Key="ControlDisabledColor">#0AFFFFFF</Color>
       <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#12FFFFFF" />
       <SolidColorBrush x:Key="ButtonBackgroundPressedBrush" Color="#29FFFFFF" />
-      <SolidColorBrush x:Key="ButtonBackgroundDisabledBrush" Color="#0AFFFFFF" />
+      <SolidColorBrush x:Key="ButtonBackgroundDisabledBrush" Color="{DynamicResource ControlDisabledColor}" />
       <SolidColorBrush x:Key="ButtonCheckedBackgroundBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.09" />
       <SolidColorBrush x:Key="ButtonCheckedBackgroundPressedBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.19" />
       <SolidColorBrush x:Key="ButtonCheckedBackgroundDisabledBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.05" />
@@ -82,13 +90,17 @@
       <Color x:Key="ButtonProminentDestructiveBackgroundPressedColor">#FF4B4E</Color>
       <SolidColorBrush x:Key="ButtonProminentDestructiveBackgroundPressedBrush" Color="{DynamicResource ButtonProminentDestructiveBackgroundPressedColor}" />
       <SolidColorBrush x:Key="TextSelectionBrush" Color="{DynamicResource AccentColor}" Opacity="0.3" />
+      <SolidColorBrush x:Key="ControlTrackBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.1" />
+      <SolidColorBrush x:Key="ControlTrackPressedBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.19" />
+      <SolidColorBrush x:Key="ControlTrackDisabledBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.06" />
       <SolidColorBrush x:Key="ControlFillInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.17" />
       <SolidColorBrush x:Key="ControlTrackInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.06" />
+      <Color x:Key="GlassLensRimColor">#38000000</Color>
 
-      <SolidColorBrush x:Key="TextFieldBackgroundBrush" Color="#1E1E1E" />
-      <SolidColorBrush x:Key="TextFieldBackgroundDisabledBrush" Color="#801E1E1E" />
+      <SolidColorBrush x:Key="TextFieldBackgroundBrush" Color="{DynamicResource WindowBackgroundColor}" />
+      <SolidColorBrush x:Key="TextFieldBackgroundDisabledBrush" Color="{DynamicResource WindowBackgroundColor}" Opacity="0.5" />
       <SolidColorBrush x:Key="TextFieldBorderBrush" Color="#0AFFFFFF" />
-      <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="#0AFFFFFF" />
+      <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="{DynamicResource ControlDisabledColor}" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

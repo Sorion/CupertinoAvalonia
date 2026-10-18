@@ -10,11 +10,12 @@
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
       <SolidColorBrush x:Key="ToolbarBandBrush" Color="#F7FFFFFF" />
-      <SolidColorBrush x:Key="ToolbarBandEdgeBrush" Color="#1A000000" />
+      <!-- The edge line, measured on macOS 27 (#1A000000, #14FFFFFF in dark mode). -->
+      <SolidColorBrush x:Key="ToolbarBandEdgeBrush" Color="{DynamicResource FillPrimaryColor}" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <SolidColorBrush x:Key="ToolbarBandBrush" Color="#F7262626" />
-      <SolidColorBrush x:Key="ToolbarBandEdgeBrush" Color="#14FFFFFF" />
+      <SolidColorBrush x:Key="ToolbarBandEdgeBrush" Color="{DynamicResource FillSecondaryColor}" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

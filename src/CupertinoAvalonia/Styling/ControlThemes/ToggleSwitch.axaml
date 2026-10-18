@@ -19,19 +19,14 @@
   <ResourceDictionary.ThemeDictionaries>
     <!-- The pressed lens, measured on macOS 27 (System Settings): the kit's "_Knob Clicked" predates it. -->
     <ResourceDictionary x:Key="Default">
-      <Color x:Key="SwitchLensRimColor">#4D000000</Color>
       <Color x:Key="SwitchLensHighlightColor">#6BFFFFFF</Color>
       <x:Double x:Key="SwitchLensIridescence">0.16</x:Double>
       <BoxShadows x:Key="SwitchLensShadow">0 6 6 -2.5 #17000000, 0 0.8 0.3 0 #26000000</BoxShadows>
-      <!-- _Tracks - Unfilled, State=Clicked -->
-      <SolidColorBrush x:Key="SwitchTrackPressedBrush" Color="#29000000" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <Color x:Key="SwitchLensRimColor">#38000000</Color>
       <Color x:Key="SwitchLensHighlightColor">#3DFFFFFF</Color>
       <x:Double x:Key="SwitchLensIridescence">0.07</x:Double>
       <BoxShadows x:Key="SwitchLensShadow">0 6 6 -2.5 #12000000</BoxShadows>
-      <SolidColorBrush x:Key="SwitchTrackPressedBrush" Color="#29FFFFFF" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
@@ -54,11 +49,11 @@
                          Tint="#0B000000"
                          HighlightColor="{DynamicResource SwitchLensHighlightColor}"
                          HighlightFalloff="3.7"
-                         RimColor="{DynamicResource SwitchLensRimColor}"
+                         RimColor="{DynamicResource GlassLensRimColor}"
                          RimWidth="0.85"
                          Iridescence="{DynamicResource SwitchLensIridescence}"
                          FallbackBackground="{DynamicResource WindowBackgroundBrush}"
-                         FallbackForeground="{DynamicResource SwitchTrackPressedBrush}" />
+                         FallbackForeground="{DynamicResource ControlTrackPressedBrush}" />
           <!-- After the glass, so the glass doesn't refract it. Shadow offsets ignore render transforms: they are
                screen DIPs, while blur and spread scale with the lens. -->
           <Border CornerRadius="100"

@@ -20,14 +20,16 @@
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
       <!-- A sidebar or inspector where no material shows, measured on macOS 27 with wallpaper tinting off. -->
-      <SolidColorBrush x:Key="SplitViewSidebarBackgroundBrush" Color="#EDEDED" />
-      <SolidColorBrush x:Key="SplitViewInspectorBackgroundBrush" Color="#EDEDED" />
+      <Color x:Key="SplitViewPaneBackgroundColor">#EDEDED</Color>
+      <SolidColorBrush x:Key="SplitViewSidebarBackgroundBrush" Color="{DynamicResource SplitViewPaneBackgroundColor}" />
+      <SolidColorBrush x:Key="SplitViewInspectorBackgroundBrush" Color="{DynamicResource SplitViewPaneBackgroundColor}" />
       <!-- Table Column Separator -->
       <SolidColorBrush x:Key="SplitViewDividerBrush" Color="{DynamicResource TableColumnSeparatorColor}" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="SplitViewSidebarBackgroundBrush" Color="#252525" />
-      <SolidColorBrush x:Key="SplitViewInspectorBackgroundBrush" Color="#252525" />
+      <Color x:Key="SplitViewPaneBackgroundColor">#252525</Color>
+      <SolidColorBrush x:Key="SplitViewSidebarBackgroundBrush" Color="{DynamicResource SplitViewPaneBackgroundColor}" />
+      <SolidColorBrush x:Key="SplitViewInspectorBackgroundBrush" Color="{DynamicResource SplitViewPaneBackgroundColor}" />
       <SolidColorBrush x:Key="SplitViewDividerBrush" Color="{DynamicResource TableColumnSeparatorColor}" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>

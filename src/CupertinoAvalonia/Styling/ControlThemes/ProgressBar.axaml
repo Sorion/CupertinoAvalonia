@@ -20,20 +20,17 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <!--
-      The bar's track is the kit's "_Tracks - Unfilled", the label color at 10 %. Measured on macOS 27
-      (NSProgressIndicator, spinning style): the spinner's leading spoke at 55 % (the label color at 65 %), half in an
+      Measured on macOS 27 (NSProgressIndicator, spinning style): the spinner's leading spoke at 55 % (the label color at 65 %), half in an
       inactive window; the ring's track at 5 % in light, 10 % in dark; its fill in an inactive window at 27.5 %, 32 %
       in dark.
     -->
     <ResourceDictionary x:Key="Default">
-      <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="ProgressSpinnerBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.65" />
       <SolidColorBrush x:Key="ProgressSpinnerInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
       <SolidColorBrush x:Key="ProgressRingTrackBrush" Color="{DynamicResource FillTertiaryColor}" />
       <SolidColorBrush x:Key="ProgressRingFillInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="ProgressBarTrackBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="ProgressSpinnerBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.65" />
       <SolidColorBrush x:Key="ProgressSpinnerInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
       <SolidColorBrush x:Key="ProgressRingTrackBrush" Color="{DynamicResource FillPrimaryColor}" />
@@ -43,7 +40,7 @@
 
   <ControlTheme x:Key="{x:Type ProgressBar}" TargetType="ProgressBar">
     <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
-    <Setter Property="Background" Value="{DynamicResource ProgressBarTrackBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ControlTrackBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ProgressTrackStrokeBrush}" />
     <Setter Property="BorderThickness" Value="0.5" />
     <Setter Property="CornerRadius" Value="100" />

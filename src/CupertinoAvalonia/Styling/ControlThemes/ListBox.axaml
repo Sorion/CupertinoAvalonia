@@ -18,14 +18,14 @@
 
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
-      <!-- _Selection (sidebar): linear burn #F2F2F2, or #FBFBFB when the window is inactive. -->
-      <SolidColorBrush x:Key="SidebarSelectionBrush" Color="#0D000000" />
-      <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="#04000000" />
+      <!-- _Selection (sidebar): the vibrant tertiary fill, the quinary one when the window is inactive. -->
+      <SolidColorBrush x:Key="SidebarSelectionBrush" Color="{DynamicResource FillVibrantTertiaryTranslucentColor}" />
+      <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="{DynamicResource FillVibrantQuinaryTranslucentColor}" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <!-- linear dodge #0D0D0D, also when inactive: the kit lightens it, Notes doesn't. -->
-      <SolidColorBrush x:Key="SidebarSelectionBrush" Color="#0DFFFFFF" />
-      <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="#0DFFFFFF" />
+      <!-- Also when inactive: the kit lightens it, Notes doesn't. -->
+      <SolidColorBrush x:Key="SidebarSelectionBrush" Color="{DynamicResource FillVibrantTertiaryTranslucentColor}" />
+      <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="{DynamicResource FillVibrantTertiaryTranslucentColor}" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
