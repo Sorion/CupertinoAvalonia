@@ -23,7 +23,7 @@
   <x:Double x:Key="HeadlineFontSize">13</x:Double>
   <x:Double x:Key="HeadlineLineHeight">16</x:Double>
   <FontWeight x:Key="HeadlineFontWeight">Bold</FontWeight>
-  <FontWeight x:Key="HeadlineEmphasizedFontWeight">Heavy</FontWeight>
+  <FontWeight x:Key="HeadlineEmphasizedFontWeight">ExtraBold</FontWeight>
   <x:Double x:Key="BodyFontSize">13</x:Double>
   <x:Double x:Key="BodyLineHeight">16</x:Double>
   <FontWeight x:Key="BodyFontWeight">Regular</FontWeight>

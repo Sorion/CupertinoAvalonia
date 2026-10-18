@@ -154,7 +154,8 @@ const sizeGroups = { 'Global': 'Control', 'Toggle (Switch)': 'Switch', 'Radio Bu
 
 // ---------- Typography ----------
 {
-  const weight = (font) => ({ Regular: 'Regular', Medium: 'Medium', Semibold: 'SemiBold', Bold: 'Bold', Heavy: 'Heavy' })[font.split(' ').slice(-1)[0]];
+  // SF's Heavy is 800, Avalonia's ExtraBold: Avalonia's Heavy is 900, SF's Black.
+  const weight = (font) => ({ Regular: 'Regular', Medium: 'Medium', Semibold: 'SemiBold', Bold: 'Bold', Heavy: 'ExtraBold' })[font.split(' ').slice(-1)[0]];
   const lines = [];
   for (const s of styles.filter((x) => x.type === 'TEXT')) {
     const m = s.name.match(/^(.+)\/(Regular|Emphasized)$/);

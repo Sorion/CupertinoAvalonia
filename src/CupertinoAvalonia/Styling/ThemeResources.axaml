@@ -8,19 +8,31 @@
   <!-- macOS's system font, on every Mac. No ", $Default": with a fallback list, Avalonia picks Helvetica on macOS. -->
   <FontFamily x:Key="ContentControlThemeFontFamily">.AppleSystemUIFont</FontFamily>
   <x:Double x:Key="ControlContentThemeFontSize">13</x:Double>
-  <FontWeight x:Key="ControlFontWeight">Medium</FontWeight>
+  <!-- Not the kit's Medium: measured on macOS 27, AppKit's controls use the regular system font. -->
+  <FontWeight x:Key="ControlFontWeight">Regular</FontWeight>
   <!-- Set by SystemFontTracking at startup. -->
   <x:Double x:Key="LargeTitleLetterSpacing">0</x:Double>
+  <x:Double x:Key="LargeTitleEmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="Title1LetterSpacing">0</x:Double>
+  <x:Double x:Key="Title1EmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="Title2LetterSpacing">0</x:Double>
+  <x:Double x:Key="Title2EmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="Title3LetterSpacing">0</x:Double>
+  <x:Double x:Key="Title3EmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="HeadlineLetterSpacing">0</x:Double>
+  <x:Double x:Key="HeadlineEmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="BodyLetterSpacing">0</x:Double>
+  <x:Double x:Key="BodyEmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="CalloutLetterSpacing">0</x:Double>
+  <x:Double x:Key="CalloutEmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="SubheadlineLetterSpacing">0</x:Double>
+  <x:Double x:Key="SubheadlineEmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="FootnoteLetterSpacing">0</x:Double>
+  <x:Double x:Key="FootnoteEmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="Caption1LetterSpacing">0</x:Double>
+  <x:Double x:Key="Caption1EmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="Caption2LetterSpacing">0</x:Double>
+  <x:Double x:Key="Caption2EmphasizedLetterSpacing">0</x:Double>
   <x:Double x:Key="ControlLetterSpacingMini">0</x:Double>
   <x:Double x:Key="ControlLetterSpacingSmall">0</x:Double>
   <x:Double x:Key="ControlLetterSpacing">0</x:Double>

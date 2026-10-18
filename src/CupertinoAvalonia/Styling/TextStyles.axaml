@@ -26,6 +26,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource LargeTitleFontWeight}" />
   </Style>
   <Style Selector="TextBlock.largeTitle.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource LargeTitleEmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource LargeTitleEmphasizedFontWeight}" />
   </Style>
 
@@ -36,6 +37,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource Title1FontWeight}" />
   </Style>
   <Style Selector="TextBlock.title1.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource Title1EmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource Title1EmphasizedFontWeight}" />
   </Style>
 
@@ -46,6 +48,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource Title2FontWeight}" />
   </Style>
   <Style Selector="TextBlock.title2.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource Title2EmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource Title2EmphasizedFontWeight}" />
   </Style>
 
@@ -56,6 +59,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource Title3FontWeight}" />
   </Style>
   <Style Selector="TextBlock.title3.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource Title3EmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource Title3EmphasizedFontWeight}" />
   </Style>
 
@@ -66,6 +70,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource HeadlineFontWeight}" />
   </Style>
   <Style Selector="TextBlock.headline.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource HeadlineEmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource HeadlineEmphasizedFontWeight}" />
   </Style>
 
@@ -76,6 +81,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource BodyFontWeight}" />
   </Style>
   <Style Selector="TextBlock.body.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource BodyEmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource BodyEmphasizedFontWeight}" />
   </Style>
 
@@ -86,6 +92,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource CalloutFontWeight}" />
   </Style>
   <Style Selector="TextBlock.callout.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource CalloutEmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource CalloutEmphasizedFontWeight}" />
   </Style>
 
@@ -96,6 +103,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource SubheadlineFontWeight}" />
   </Style>
   <Style Selector="TextBlock.subheadline.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource SubheadlineEmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource SubheadlineEmphasizedFontWeight}" />
   </Style>
 
@@ -106,6 +114,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource FootnoteFontWeight}" />
   </Style>
   <Style Selector="TextBlock.footnote.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource FootnoteEmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource FootnoteEmphasizedFontWeight}" />
   </Style>
 
@@ -116,6 +125,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource Caption1FontWeight}" />
   </Style>
   <Style Selector="TextBlock.caption1.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource Caption1EmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource Caption1EmphasizedFontWeight}" />
   </Style>
 
@@ -126,6 +136,7 @@
     <Setter Property="FontWeight" Value="{DynamicResource Caption2FontWeight}" />
   </Style>
   <Style Selector="TextBlock.caption2.emphasized">
+    <Setter Property="LetterSpacing" Value="{DynamicResource Caption2EmphasizedLetterSpacing}" />
     <Setter Property="FontWeight" Value="{DynamicResource Caption2EmphasizedFontWeight}" />
   </Style>
 
