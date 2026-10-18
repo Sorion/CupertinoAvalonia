@@ -8,7 +8,7 @@
                  Text="GroupBox: a rounded box with its title above it, as in a settings window. Padding sets the space around its content." />
       <GroupBox Header="Output" Width="360" HorizontalAlignment="Left">
         <StackPanel Spacing="10">
-          <ComboBox SelectedIndex="0" Width="200">
+          <ComboBox SelectedIndex="0">
             <ComboBoxItem Content="48 000 Hz" />
             <ComboBoxItem Content="44 100 Hz" />
           </ComboBox>

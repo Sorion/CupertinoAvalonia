@@ -138,9 +138,11 @@ public class SymbolIcon : Control
                 _mask = new ImageBrush(symbol.Mask);
             }
 
-            // Snapped to device pixels, so the mask stays sharp.
-            var rect = new Rect(Snap((Bounds.Width - symbol.Size.Width) / 2, scale), Snap((Bounds.Height - symbol.Size.Height) / 2, scale),
-                symbol.Size.Width, symbol.Size.Height);
+            // Snapped to device pixels, so the mask stays sharp. Masked at the origin: at 2x, Skia misplaces an image
+            // mask whose rectangle starts elsewhere, cutting off part of the symbol.
+            var origin = new Point(Snap((Bounds.Width - symbol.Size.Width) / 2, scale), Snap((Bounds.Height - symbol.Size.Height) / 2, scale));
+            var rect = new Rect(symbol.Size);
+            using (context.PushTransform(Matrix.CreateTranslation(origin.X, origin.Y)))
             using (context.PushOpacityMask(_mask!, rect))
                 context.FillRectangle(Foreground ?? Brushes.Black, rect);
         }

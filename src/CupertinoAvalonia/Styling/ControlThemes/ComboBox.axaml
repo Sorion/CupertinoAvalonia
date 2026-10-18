@@ -1,4 +1,8 @@
-<!-- ComboBox as a pop-up button, from the kit's "Pop-Up Button" (page Pop-up and Pull-down Buttons). -->
+<!--
+  ComboBox as a pop-up button, from the kit's "Pop-Up Button" (page Pop-up and Pull-down Buttons). Its chevron is
+  NSPopUpButton's, measured on macOS 27: chevron.up.chevron.down (Medium) 35.75 pt after the label, its ink centered 13.75
+  pt from the end. A 10 pt box holds it; the symbol's ink sits 0.25 pt left of the box's center.
+-->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cas="using:CupertinoAvalonia.Styling"
@@ -73,6 +77,8 @@
                      Grid.ColumnSpan="2"
                      Classes="embedded"
                      Padding="{TemplateBinding Padding}"
+                     FontSize="{TemplateBinding FontSize}"
+                     LetterSpacing="{TemplateBinding LetterSpacing}"
                      MinHeight="0"
                      VerticalAlignment="Stretch"
                      Foreground="{TemplateBinding Foreground}"
@@ -87,17 +93,19 @@
             </TextBox>
             <cac:SymbolIcon Name="DropDownGlyph"
                             Grid.Column="1"
-                            Width="{DynamicResource ControlHeight}"
-                            Margin="8,0,0,0"
+                            Width="10"
+                            Margin="17.25,0,8.5,0"
                             VerticalAlignment="Center"
                             IsHitTestVisible="False"
                             Symbol="chevron.up.chevron.down"
-                            FontWeight="Bold"
+                            FontSize="10.75"
+                            FontWeight="Medium"
                             FallbackData="{StaticResource PopUpButtonChevron}"
                             FallbackStrokeThickness="1.6"
                             Foreground="{TemplateBinding Foreground}"
                             IsVisible="{TemplateBinding IsEditable, Converter={x:Static BoolConverters.Not}}" />
-            <!-- Editable: the kit's "Combo Box Button", over the field's text inset; a press there opens the list. -->
+            <!-- Editable: the kit's "Combo Box Button", over the field's text inset; a press there opens the list. The
+                 chevron is NSComboBox's (Bold), its ink 0.25 pt above the center, which the margins offset. -->
             <Border Name="ArrowButton"
                     Grid.Column="1"
                     Width="23.5"
@@ -108,10 +116,11 @@
                     Background="{DynamicResource ButtonBackgroundBrush}"
                     IsVisible="{TemplateBinding IsEditable}">
               <cac:SymbolIcon Name="ArrowGlyph"
+                              Margin="0.5,0,0,1"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
                               Symbol="chevron.down"
-                              FontSize="8.5"
+                              FontSize="8.25"
                               FontWeight="Bold"
                               FallbackData="{StaticResource ComboBoxArrowChevron}"
                               FallbackStrokeThickness="1.6"
@@ -166,23 +175,22 @@
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
 
-    <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
-      <Setter Property="FontSize" Value="11" />
-    </Style>
-
-    <!-- The kit has no chevron sizes: scaled with the text. -->
+    <!-- Mini and small: the ink 0.5 pt below the center, which the bottom margin offsets. -->
     <Style Selector="^.mini /template/ cac|SymbolIcon#DropDownGlyph">
-      <Setter Property="FontSize" Value="8" />
+      <Setter Property="Margin" Value="9.75,0,4,1" />
+      <Setter Property="FontSize" Value="9.25" />
     </Style>
     <Style Selector="^.mini">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
-      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingMini}" />
+      <!-- Measured on macOS 27, 1 pt more than the kit's. -->
+      <Setter Property="Padding" Value="8,0,0,0" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
     </Style>
     <Style Selector="^.small /template/ cac|SymbolIcon#DropDownGlyph">
-      <Setter Property="FontSize" Value="9" />
+      <Setter Property="Margin" Value="13.75,0,6,1" />
+      <Setter Property="FontSize" Value="9.25" />
     </Style>
     <Style Selector="^.small">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
@@ -191,11 +199,26 @@
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
     </Style>
+    <Style Selector="^.large /template/ cac|SymbolIcon#DropDownGlyph">
+      <Setter Property="Margin" Value="21.75,0,10,0" />
+      <Setter Property="FontSize" Value="13.5" />
+    </Style>
     <Style Selector="^.large">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
       <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingLarge}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
+    </Style>
+    <Style Selector="^.xlarge /template/ cac|SymbolIcon#DropDownGlyph">
+      <Setter Property="Margin" Value="28.75,0,13,0" />
+      <Setter Property="FontSize" Value="13.5" />
+    </Style>
+    <Style Selector="^.xlarge">
+      <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingXLarge}" />
+      <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusXLarge}" />
+      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeXLarge}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingXLarge}" />
     </Style>
 
     <!-- Editable: the kit's "Combo Box", a text field with an arrow button inside; after the pop-up button's styles,
@@ -230,7 +253,8 @@
         <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxRadiusButtonMini}" />
       </Style>
       <Style Selector="^.mini /template/ cac|SymbolIcon#ArrowGlyph">
-        <Setter Property="FontSize" Value="7.5" />
+        <Setter Property="Margin" Value="0.5,0,0,0" />
+        <Setter Property="FontSize" Value="7.25" />
       </Style>
       <Style Selector="^.small">
         <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusSmall}" />
@@ -253,7 +277,8 @@
         <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxRadiusButtonLarge}" />
       </Style>
       <Style Selector="^.large /template/ cac|SymbolIcon#ArrowGlyph">
-        <Setter Property="FontSize" Value="10" />
+        <Setter Property="Margin" Value="0,0,0,1" />
+        <Setter Property="FontSize" Value="9.75" />
       </Style>
     </Style>
   </ControlTheme>

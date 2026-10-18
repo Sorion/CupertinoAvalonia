@@ -55,6 +55,46 @@ public class SymbolIconTests
         window.Close();
     }
 
+    // On a 2x screen, Skia misplaced an image mask that didn't start at the origin: small symbols lost their left part.
+    [AvaloniaFact]
+    public void Small_symbols_are_drawn_whole_at_2x()
+    {
+        Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
+        var icon = new SymbolIcon
+        {
+            Symbol = "chevron.up.chevron.down", FontSize = 8, FontWeight = FontWeight.Bold, Width = 24, Height = 20,
+            Foreground = Brushes.Black,
+        };
+        var window = Show(icon);
+
+        using var bitmap = new RenderTargetBitmap(new PixelSize(48, 40), new Vector(192, 192));
+        bitmap.Render(icon);
+        var pixels = new byte[48 * 40 * 4];
+        var buffer = System.Runtime.InteropServices.Marshal.AllocHGlobal(pixels.Length);
+        try
+        {
+            bitmap.CopyPixels(new PixelRect(0, 0, 48, 40), buffer, pixels.Length, 48 * 4);
+            System.Runtime.InteropServices.Marshal.Copy(buffer, pixels, 0, pixels.Length);
+        }
+        finally
+        {
+            System.Runtime.InteropServices.Marshal.FreeHGlobal(buffer);
+        }
+        int Ink(int from, int to)
+        {
+            var count = 0;
+            for (var y = 0; y < 40; y++)
+                for (var x = from; x < to; x++)
+                    count += pixels[(y * 48 + x) * 4 + 3] > 128 ? 1 : 0;
+            return count;
+        }
+
+        // The symbol is symmetric: as much ink on each side of its center.
+        var (left, right) = (Ink(0, 24), Ink(24, 48));
+        Assert.True(left > 20 && Math.Abs(left - right) <= Math.Max(left, right) / 4, $"Ink left {left}, right {right}.");
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void Unknown_symbol_uses_its_fallback_glyph()
     {
@@ -108,8 +148,8 @@ public class SymbolIconTests
             .ToDictionary(icon => icon.Symbol!, icon => icon);
         Assert.Equal(["chevron.up.chevron.down", "chevron.up", "chevron.down", "chevron.right", "magnifyingglass"], glyphs.Keys);
         Assert.All(glyphs.Values, icon => Assert.True(icon.IsNative, icon.Symbol));
-        // The kit's sizes and weights: the pop-up's Bold 11, the stepper's Medium 12.
-        Assert.Equal((11, FontWeight.Bold), (glyphs["chevron.up.chevron.down"].FontSize, glyphs["chevron.up.chevron.down"].FontWeight));
+        // The pop-up's Medium 10.75 (measured on macOS 27), the kit's stepper's Medium 12.
+        Assert.Equal((10.75, FontWeight.Medium), (glyphs["chevron.up.chevron.down"].FontSize, glyphs["chevron.up.chevron.down"].FontWeight));
         Assert.Equal((12, FontWeight.Medium), (glyphs["chevron.up"].FontSize, glyphs["chevron.up"].FontWeight));
         window.Close();
     }

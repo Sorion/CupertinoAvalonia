@@ -37,7 +37,7 @@ public class ComboBoxTests
         Assert.Equal(12, arrow.TranslatePoint(new Point(0, arrow.Bounds.Height / 2), combo)!.Value.Y, tolerance: 1);
         Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundBrush", variant)), Color(arrow.Background));
         var glyph = Part<SymbolIcon>(combo, "ArrowGlyph");
-        Assert.Equal(("chevron.down", 8.5, FontWeight.Bold), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
+        Assert.Equal(("chevron.down", 8.25, FontWeight.Bold), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         // The text stops before the button (the kit's "Text - Inset - Right").
         Assert.Equal(new Thickness(8, 0, 28, 0), Part<TextBox>(combo, "PART_EditableTextBox").Padding);
         window.Close();
@@ -72,9 +72,9 @@ public class ComboBoxTests
 
     [AvaloniaTheory]
     // Measured on macOS 27: button size, its right margin, chevron.down's point size (Bold).
-    [InlineData("mini", 16, 14.5, 9, 3.5, 7.5, 6, 20)]
-    [InlineData("small", 20, 19.5, 13.5, 3, 8.5, 6, 24)]
-    [InlineData("large", 28, 22, 19.5, 4.5, 10, 8, 28)]
+    [InlineData("mini", 16, 14.5, 9, 3.5, 7.25, 6, 20)]
+    [InlineData("small", 20, 19.5, 13.5, 3, 8.25, 6, 24)]
+    [InlineData("large", 28, 22, 19.5, 4.5, 9.75, 8, 28)]
     public void Sizes_reach_the_arrow_button(string size, double height, double width, double arrowHeight, double right,
         double glyphSize, double textLeft, double textRight)
     {
@@ -98,6 +98,47 @@ public class ComboBoxTests
         Assert.Equal(Color(Resource<IBrush>("TextFieldBackgroundDisabledBrush", ThemeVariant.Light)), Color(Part<Border>(combo, "Background").Background));
         Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundDisabledBrush", ThemeVariant.Light)), Color(Part<Border>(combo, "ArrowButton").Background));
         Assert.Equal(Color(Resource<IBrush>("LabelTertiaryBrush", ThemeVariant.Light)), Color(Part<SymbolIcon>(combo, "ArrowGlyph").Foreground));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void An_editable_combo_box_sizes_its_text()
+    {
+        var (window, combo) = Show(new ComboBox { IsEditable = true, ItemsSource = Rates, Text = "48 000 Hz", Classes = { "mini" } });
+
+        var field = Part<TextBox>(combo, "PART_EditableTextBox");
+        Assert.Equal(combo.FontSize, field.FontSize);
+        Assert.Equal(combo.LetterSpacing, field.LetterSpacing);
+        Assert.Equal(10, field.FontSize);
+        window.Close();
+    }
+
+    // NSPopUpButton on macOS 27: its width sized to fit, chevron.up.chevron.down (Medium), the chevron's 10 pt box
+    // centered 13.5 pt from the end (its ink, 13.75 pt). Mini controls are left out: their label is 9 pt in AppKit.
+    [AvaloniaTheory]
+    [InlineData("small", "Small", 68.5, 9.25, 11)]
+    [InlineData("", "Regular", 94, 10.75, 13.5)]
+    [InlineData("large", "Large", 90, 13.5, 15)]
+    [InlineData("xlarge", "Extra Large", 138.5, 13.5, 18)]
+    public void A_pop_up_button_is_as_wide_as_in_AppKit(string size, string label, double width, double glyphSize, double glyphCenter)
+    {
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "The labels' widths are the system font's.");
+        var combo = new ComboBox { ItemsSource = new[] { label }, SelectedIndex = 0 };
+        if (size.Length > 0)
+            combo.Classes.Add(size);
+        var window = new Window { Width = 400, Height = 300, Content = new StackPanel { Margin = new Thickness(20), Children = { combo } } };
+        window.Styles.Add(new Style(x => x.Is<Avalonia.Layout.Layoutable>())
+        {
+            Setters = { new Setter(Avalonia.Layout.Layoutable.UseLayoutRoundingProperty, false) },
+        });
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+
+        Assert.Equal(width, combo.Bounds.Width, tolerance: 0.5);
+        var glyph = Part<SymbolIcon>(combo, "DropDownGlyph");
+        Assert.Equal(("chevron.up.chevron.down", glyphSize, FontWeight.Medium), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
+        Assert.Equal(combo.Bounds.Width - glyphCenter, glyph.TranslatePoint(new Point(5, 0), combo)!.Value.X, tolerance: 0.01);
         window.Close();
     }
 
