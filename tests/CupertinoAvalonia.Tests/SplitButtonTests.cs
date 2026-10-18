@@ -1,9 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -24,15 +24,44 @@ public class SplitButtonTests
         var small = new DropDownButton { Classes = { "small" }, Content = "Export" };
         var window = Show(pullDown, small);
 
-        // Pulldown Button: the label 12 pt in, a chevron.down (Bold 13) in a 24 pt box at the end.
+        // Measured on macOS 27: the label 12 pt in, a chevron.down (Semibold, small scale), its 10 pt box centered 13 pt
+        // from the end (the ink, 13.25 pt).
         var glyph = Part<SymbolIcon>(pullDown, "DropDownGlyph");
-        Assert.Equal(("chevron.down", 13, FontWeight.Bold), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
-        Assert.Equal(pullDown.Bounds.Width, Origin(glyph, pullDown).X + glyph.Bounds.Width, 1);
+        Assert.Equal(("chevron.down", 10.75, FontWeight.SemiBold, SymbolScale.Small),
+            (glyph.Symbol, glyph.FontSize, glyph.FontWeight, glyph.SymbolScale));
+        Assert.Equal(pullDown.Bounds.Width - 13, Origin(glyph, pullDown).X + glyph.Bounds.Width / 2, tolerance: 0.5);
         Assert.Equal(new Thickness(12, 0, 0, 0), pullDown.Padding);
         Assert.Equal(Color(Resource("ButtonBackgroundBrush")), Color(pullDown.Background));
-        // Disclosure/Font Size: 10 when small.
-        Assert.Equal(10, Part<SymbolIcon>(small, "DropDownGlyph").FontSize);
+        // 8.75 pt when small.
+        Assert.Equal(8.75, Part<SymbolIcon>(small, "DropDownGlyph").FontSize);
         Assert.Equal(20, small.Bounds.Height);
+        window.Close();
+    }
+
+    // AppKit's widths on macOS 27: NSPopUpButton (pull-down) and NSComboButton, sized to fit. Mini controls are left
+    // out: their label is 9 pt in AppKit, 10 pt in the kit.
+    [AvaloniaTheory]
+    [InlineData("small", 68.5, 70.5)]
+    [InlineData("", 94, 94.5)]
+    [InlineData("large", 90, 90.5)]
+    [InlineData("xlarge", 138.5, 145)]
+    public void Pull_down_and_split_buttons_are_as_wide_as_in_AppKit(string size, double pullDownWidth, double splitWidth)
+    {
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "The labels' widths are the system font's.");
+        var label = size switch { "small" => "Small", "large" => "Large", "xlarge" => "Extra Large", _ => "Regular" };
+        var pullDown = new DropDownButton { Content = label };
+        var split = new SplitButton { Content = label };
+        if (size.Length > 0)
+        {
+            pullDown.Classes.Add(size);
+            split.Classes.Add(size);
+        }
+        var window = Show(pullDown, split);
+        window.Styles.Add(new Style(x => x.Is<Layoutable>()) { Setters = { new Setter(Layoutable.UseLayoutRoundingProperty, false) } });
+        window.UpdateLayout();
+
+        Assert.Equal(pullDownWidth, pullDown.Bounds.Width, tolerance: 0.5);
+        Assert.Equal(splitWidth, split.Bounds.Width, tolerance: 0.5);
         window.Close();
     }
 
@@ -69,26 +98,45 @@ public class SplitButtonTests
     }
 
     [AvaloniaFact]
-    public void Split_button_has_two_parts_without_a_separator()
+    public void Split_button_has_a_separator_before_its_menu()
     {
         Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         var split = new SplitButton { Content = new SymbolIcon { Symbol = "plus" } };
         var window = Show(split);
 
-        // Measured on macOS 27: 61 x 24 pt with a plus, the menu's part square, a 9 pt chevron, no separator.
+        // Measured on macOS 27: 48 x 24 pt with a plus, both parts square, the segmented control's separator starting
+        // the menu's part, a chevron.down (Regular 10.5) centered in it.
         var primary = Part<Button>(split, "PART_PrimaryButton");
         var secondary = Part<Button>(split, "PART_SecondaryButton");
         Assert.Equal(new CornerRadius(6, 0, 0, 6), primary.CornerRadius);
         Assert.Equal(new CornerRadius(0, 6, 6, 0), secondary.CornerRadius);
-        Assert.Equal(new Thickness(12, 0), primary.Padding);
-        Assert.Equal(24, secondary.Bounds.Width);
+        Assert.Equal(new Thickness(0), primary.Padding);
+        Assert.Equal((24, 24), (primary.Bounds.Width, secondary.Bounds.Width));
         Assert.Equal(24, split.Bounds.Height);
         Assert.Equal(Origin(primary, split).X + primary.Bounds.Width, Origin(secondary, split).X);
-        Assert.Empty(split.GetVisualDescendants().OfType<Rectangle>());
+
+        var separator = Part<Border>(split, "Separator");
+        Assert.Equal(new Rect(0, 5, 1, 14), new Rect(Origin(separator, secondary), separator.Bounds.Size));
+        Assert.Equal(Color(Resource("LabelTertiaryBrush")), Color(separator.Background));
         var glyph = Part<SymbolIcon>(split, "DropDownGlyph");
-        Assert.Equal(("chevron.down", 9, FontWeight.SemiBold), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
-        if (glyph.IsNative)
-            Assert.InRange(split.Bounds.Width, 59, 63);
+        Assert.Equal(("chevron.down", 10.5, FontWeight.Regular), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
+        Assert.Equal(12, Origin(glyph, secondary).X + glyph.Bounds.Width / 2, tolerance: 0.5);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Disabled_split_button_keeps_its_background()
+    {
+        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        var split = new SplitButton { Content = "Reply", IsEnabled = false };
+        var window = Show(split);
+
+        // Measured on macOS 27: only the label and the chevron fade.
+        foreach (var part in new[] { Part<Button>(split, "PART_PrimaryButton"), Part<Button>(split, "PART_SecondaryButton") })
+        {
+            Assert.Equal(Color(Resource("ButtonBackgroundBrush")), Color(part.Background));
+            Assert.Equal(Color(Resource("LabelTertiaryBrush")), Color(part.Foreground));
+        }
         window.Close();
     }
 
@@ -143,8 +191,9 @@ public class SplitButtonTests
         Assert.Equal(20, split.Bounds.Height);
         Assert.Equal(11, primary.FontSize);
         Assert.Equal(new Thickness(10, 0), primary.Padding);
-        Assert.Equal(20, Part<Button>(split, "PART_SecondaryButton").Bounds.Width);
-        Assert.Equal(8, Part<SymbolIcon>(split, "DropDownGlyph").FontSize);
+        Assert.Equal(21.5, Part<Button>(split, "PART_SecondaryButton").Width);
+        Assert.Equal(12, Part<Border>(split, "Separator").Height);
+        Assert.Equal(8.75, Part<SymbolIcon>(split, "DropDownGlyph").FontSize);
         window.Close();
     }
 
