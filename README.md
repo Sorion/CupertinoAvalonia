@@ -93,6 +93,8 @@ On macOS (elsewhere it's a plain `Window`):
 - `ToolbarStyle`: `Unified` (52 pt) or `UnifiedCompact` (40 pt) title bar, the window controls centered in it.
 - `Material`: a system material behind the window (`Sidebar`, `WindowBackground`, `UnderWindowBackground`,
   `HudWindow`), shown wherever the content is transparent.
+- `AlwaysLooksActive`: keeps the active look, the controls' and the material's, while another window is active:
+  for a palette, or to compare with a native app side by side (the Gallery's View menu).
 
 The Gallery's window ([MainWindow.axaml](https://github.com/Sorion/CupertinoAvalonia/blob/main/samples/CupertinoAvalonia.Gallery/Views/MainWindow.axaml)) is a
 complete example: a sidebar on the sidebar material, a toolbar over the content.
@@ -148,7 +150,9 @@ An SF Symbol by its name in Apple's catalog, at the size, weight and color of th
   [LiquidAvalonia](https://github.com/A1isandr/LiquidAvalonia)). Menus, popovers and sidebars aren't glass yet.
 - Focus rings and lenses are drawn in the adorner layer so containers don't clip them:
   [docs/avalonia-clipping.md](https://github.com/Sorion/CupertinoAvalonia/blob/main/docs/avalonia-clipping.md) explains how, for any control.
-- The theme adds letter spacing to the system font, which Skia renders tighter than macOS does.
+- Avalonia lays out every weight of the system font with the regular weight's advances, so text, bold text most,
+  renders tighter than on macOS. The text styles and controls add letter spacing to match; a `FontWeight` you set
+  yourself keeps the regular spacing (prefer `emphasized`).
 - On macOS, the theme tags every window as sRGB. Avalonia leaves the color space unset, so on a wide-gamut display
   (every recent Mac) colors looked more saturated than in native apps. Your own colors and images are affected too.
   Avalonia's [#21847](https://github.com/AvaloniaUI/Avalonia/pull/21847) proposes an option for it, which the theme
