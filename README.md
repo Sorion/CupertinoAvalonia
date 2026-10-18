@@ -54,7 +54,7 @@ custom accent, their shades are derived from the accent.
 | `ListBox` | `sidebar`, `alternating`, `segmented` (a segmented control; `SelectionMode="Multiple"` for several) |
 | `TreeView` | An outline view; `sidebar` for nested sidebar items |
 | `MenuFlyout`, `ContextMenu`, `Flyout`, `ToolTip` | |
-| `Slider`, `ProgressBar`, `Expander`, `ScrollBar` | `small` (progress bar), `button` (expander) |
+| `Slider`, `ProgressBar`, `Expander`, `ScrollBar` | `small` (progress bar), `circular` (progress: a ring, or the spinner when indeterminate; `mini`, `small`), `button` (expander) |
 | `SplitView` | Pane on the left: a sidebar (on the window's material in a `CupertinoWindow`). On the right: an inspector, in the sidebar's color. `plain`: the pane takes the content's background and a divider, as in Shortcuts. `PaneBackground` and the resources `SplitView…BackgroundBrush`, `SplitViewInspectorLength`, `SplitViewDividerThickness` change the rest |
 | `TabControl` | A segmented control on top of the content (`TabStripPlacement`: `Bottom` below it, `Left` and `Right` beside it). `toolbar`: a settings window's tabs, on glass. `Icon="gearshape"` gives a tab an SF Symbol |
 | `GroupBox` | A rounded box with its title above it, as macOS's group box. `Padding` sets the space around its content |
