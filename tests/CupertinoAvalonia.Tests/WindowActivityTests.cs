@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using CupertinoAvalonia.Controls;
 using CupertinoAvalonia.Styling;
 using Xunit;
 
@@ -111,6 +112,26 @@ public class WindowActivityTests
 
         WindowActivity.SetIsInactive(window, true);
         Assert.False(ring.IsVisible);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Window_that_always_looks_active_keeps_the_accent()
+    {
+        var accent = new Button { Content = "OK", Classes = { "accent" } };
+        var window = new CupertinoWindow { AlwaysLooksActive = true, Content = accent };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        var active = Describe(accent.Background);
+
+        // As WindowActivity does once another window is active.
+        WindowActivity.SetIsInactive(window, true);
+        Assert.False(WindowActivity.GetIsInactive(window));
+        Assert.Equal(active, Describe(accent.Background));
+
+        window.AlwaysLooksActive = false;
+        Assert.True(WindowActivity.GetIsInactive(window));
+        Assert.NotEqual(active, Describe(accent.Background));
         window.Close();
     }
 

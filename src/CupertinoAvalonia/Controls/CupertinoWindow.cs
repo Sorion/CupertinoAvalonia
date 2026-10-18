@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Platform;
+using CupertinoAvalonia.Styling;
 
 namespace CupertinoAvalonia.Controls;
 
@@ -30,6 +32,9 @@ public class CupertinoWindow : Window
     public static readonly StyledProperty<CupertinoWindowMaterial> MaterialProperty =
         AvaloniaProperty.Register<CupertinoWindow, CupertinoWindowMaterial>(nameof(Material));
 
+    public static readonly StyledProperty<bool> AlwaysLooksActiveProperty =
+        AvaloniaProperty.Register<CupertinoWindow, bool>(nameof(AlwaysLooksActive));
+
     public static readonly DirectProperty<CupertinoWindow, Thickness> WindowControlsInsetProperty =
         AvaloniaProperty.RegisterDirect<CupertinoWindow, Thickness>(nameof(WindowControlsInset), o => o.WindowControlsInset);
 
@@ -44,6 +49,7 @@ public class CupertinoWindow : Window
     private bool _materialSetTransparency;
     private bool _materialApplied;
     private Thickness _windowControlsInset;
+    private IDisposable? _activeLook;
 
     public CupertinoWindow()
     {
@@ -75,6 +81,16 @@ public class CupertinoWindow : Window
     }
 
     /// <summary>
+    /// Keeps the active look, the controls' and the material's, while another window is active: for a palette, or to
+    /// compare the window side by side with a native app.
+    /// </summary>
+    public bool AlwaysLooksActive
+    {
+        get => GetValue(AlwaysLooksActiveProperty);
+        set => SetValue(AlwaysLooksActiveProperty, value);
+    }
+
+    /// <summary>
     /// The room the window controls take over the content: padding for title bar content that starts at the window's
     /// left edge. Empty when they don't cover the content.
     /// </summary>
@@ -91,6 +107,13 @@ public class CupertinoWindow : Window
         if (change.Property == ExtendsContentIntoTitleBarProperty || change.Property == ToolbarStyleProperty
             || change.Property == MaterialProperty)
         {
+            ApplyChrome();
+        }
+        else if (change.Property == AlwaysLooksActiveProperty)
+        {
+            // Above the local value WindowActivity sets on activation.
+            _activeLook?.Dispose();
+            _activeLook = AlwaysLooksActive ? SetValue(WindowActivity.IsInactiveProperty, false, BindingPriority.Animation) : null;
             ApplyChrome();
         }
         else if (change.Property == ActualTransparencyLevelProperty)
@@ -148,7 +171,7 @@ public class CupertinoWindow : Window
                 // Avalonia removes any toolbar when it extends the content: set it after.
                 MacOSWindowChrome.SetToolbar(nsWindow, extended ? ToolbarStyle : CupertinoToolbarStyle.None, extended);
                 _materialApplied = Material != CupertinoWindowMaterial.None
-                    && MacOSWindowChrome.SetBehindWindowMaterial(nsWindow, Material);
+                    && MacOSWindowChrome.SetBehindWindowMaterial(nsWindow, Material, AlwaysLooksActive);
             }
             catch (Exception e) when (e is DllNotFoundException or EntryPointNotFoundException)
             {

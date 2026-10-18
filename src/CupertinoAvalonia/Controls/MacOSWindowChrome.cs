@@ -15,6 +15,9 @@ internal static class MacOSWindowChrome
     private const nint TitlebarSeparatorNone = 1;
     // NSVisualEffectBlendingMode
     private const nint BlendingBehindWindow = 0;
+    // NSVisualEffectState
+    private const nint StateFollowsWindowActiveState = 0;
+    private const nint StateActive = 1;
 
     // An empty NSToolbar sets the title bar's height and centers the window controls in it; the app draws the rest.
     public static void SetToolbar(IntPtr nsWindow, CupertinoToolbarStyle style, bool extended)
@@ -42,7 +45,7 @@ internal static class MacOSWindowChrome
     }
 
     // Avalonia's AcrylicBlur uses NSVisualEffectMaterialLight, which stays light in dark mode.
-    public static bool SetBehindWindowMaterial(IntPtr nsWindow, CupertinoWindowMaterial material)
+    public static bool SetBehindWindowMaterial(IntPtr nsWindow, CupertinoWindowMaterial material, bool alwaysActive)
     {
         var subviews = Send(Send(nsWindow, Sel("contentView")), Sel("subviews"));
         var effectView = Class("NSVisualEffectView");
@@ -52,6 +55,7 @@ internal static class MacOSWindowChrome
             if (SendBool(view, Sel("isKindOfClass:"), effectView) && SendGetInt(view, Sel("blendingMode")) == BlendingBehindWindow)
             {
                 SendInt(view, Sel("setMaterial:"), ToNSVisualEffectMaterial(material));
+                SendInt(view, Sel("setState:"), alwaysActive ? StateActive : StateFollowsWindowActiveState);
                 return true;
             }
         }

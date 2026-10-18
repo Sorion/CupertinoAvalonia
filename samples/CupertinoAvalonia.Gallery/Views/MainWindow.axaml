@@ -19,6 +19,18 @@
     <vm:MainWindowViewModel />
   </Design.DataContext>
 
+  <!-- macOS's menu bar. -->
+  <NativeMenu.Menu>
+    <NativeMenu>
+      <NativeMenuItem Header="View">
+        <NativeMenu>
+          <!-- To compare the gallery with a native app side by side, as only one window is active at a time. -->
+          <NativeMenuItem Header="Always Look Active" ToggleType="CheckBox" Click="OnAlwaysLookActiveClick" />
+        </NativeMenu>
+      </NativeMenuItem>
+    </NativeMenu>
+  </NativeMenu.Menu>
+
   <cac:CupertinoWindow.Styles>
     <!-- Without the sidebar, the toolbar makes room for the window controls, in step with the sidebar. -->
     <Style Selector="Border#ToolbarInset">
