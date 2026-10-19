@@ -45,6 +45,9 @@
             <ContentPresenter Name="PART_SidebarPresenter" Content="{TemplateBinding Sidebar}" />
           </Panel>
 
+          <!-- The sidebar's edge, which a drag moves. -->
+          <Border Name="PART_SidebarGrip" HorizontalAlignment="Left" Background="Transparent" Cursor="SizeWestEast" />
+
           <!-- The sidebar button, over both, centered in the toolbar's height. -->
           <Panel Name="PART_ToggleBand" VerticalAlignment="Top">
             <Button Name="PART_SidebarToggle"

@@ -31,7 +31,8 @@
     </NativeMenu>
   </NativeMenu.Menu>
 
-  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" ContentScrollViewer="{Binding #PageScroll}">
+  <!-- TestNav's minimum width, to compare them. -->
+  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" MinSidebarWidth="180" ContentScrollViewer="{Binding #PageScroll}">
     <cac:NavigationSplitView.Sidebar>
       <DockPanel>
         <TextBlock DockPanel.Dock="Top" Classes="caption1 emphasized secondary" Margin="18,0,0,6" Text="Controls" />

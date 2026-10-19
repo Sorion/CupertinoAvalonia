@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
@@ -30,6 +31,7 @@ namespace CupertinoAvalonia.Controls;
 [TemplatePart(PartToolbar, typeof(CupertinoToolbar))]
 [TemplatePart(PartContentToolbarPresenter, typeof(ContentPresenter))]
 [TemplatePart(PartSidebarPresenter, typeof(ContentPresenter))]
+[TemplatePart(PartSidebarGrip, typeof(Control))]
 [TemplatePart(PartToggleBand, typeof(Control))]
 [TemplatePart(PartSidebarToggle, typeof(Button))]
 public class NavigationSplitView : ContentControl
@@ -39,6 +41,7 @@ public class NavigationSplitView : ContentControl
     private const string PartToolbar = "PART_Toolbar";
     private const string PartContentToolbarPresenter = "PART_ContentToolbarPresenter";
     private const string PartSidebarPresenter = "PART_SidebarPresenter";
+    private const string PartSidebarGrip = "PART_SidebarGrip";
     private const string PartToggleBand = "PART_ToggleBand";
     private const string PartSidebarToggle = "PART_SidebarToggle";
 
@@ -48,6 +51,14 @@ public class NavigationSplitView : ContentControl
     private const double ButtonInset = 8;
     private const double ToolbarGap = 21;
     private const double EdgeMargin = 8;
+    // Dragging the sidebar's edge, measured on macOS 27 (SwiftUI, TestNav): the edge can be grabbed from 5 pt inside to
+    // 1 pt outside; past half the minimum width the sidebar folds away, and comes back at its minimum width past about
+    // five eighths of it, in the same drag.
+    private const double GripInside = 5;
+    private const double GripOutside = 1;
+    private const double CollapseFraction = 0.5;
+    private const double ReopenFraction = 0.625;
+
     // The window's toolbar, Unified or UnifiedCompact.
     private const double ToolbarHeight = 52;
     private const double CompactToolbarHeight = 40;
@@ -62,7 +73,13 @@ public class NavigationSplitView : ContentControl
         AvaloniaProperty.Register<NavigationSplitView, bool>(nameof(IsSidebarOpen), true, defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<double> SidebarWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(SidebarWidth), 220);
+        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(SidebarWidth), 220, defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly StyledProperty<double> MinSidebarWidthProperty =
+        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(MinSidebarWidth), 140);
+
+    public static readonly StyledProperty<double> MaxSidebarWidthProperty =
+        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(MaxSidebarWidth), double.PositiveInfinity);
 
     public static readonly StyledProperty<IBrush?> SidebarBackgroundProperty =
         AvaloniaProperty.Register<NavigationSplitView, IBrush?>(nameof(SidebarBackground));
@@ -83,10 +100,14 @@ public class NavigationSplitView : ContentControl
     private CupertinoToolbar? _toolbar;
     private ContentPresenter? _contentToolbarPresenter;
     private ContentPresenter? _sidebarPresenter;
+    private Control? _sidebarGrip;
     private Control? _toggleBand;
     private Button? _sidebarToggle;
     private CupertinoWindow? _window;
     private TopLevel? _topLevel;
+    // A drag on the sidebar's edge: the pointer's distance from the edge, and the transitions it suspends.
+    private double? _gripOffset;
+    private Transitions? _suspendedTransitions;
 
     /// <summary>The sidebar's content, usually a <c>ListBox</c> with the <c>sidebar</c> class.</summary>
     public object? Sidebar
@@ -112,10 +133,27 @@ public class NavigationSplitView : ContentControl
         set => SetValue(IsSidebarOpenProperty, value);
     }
 
+    /// <summary>The sidebar's width when it shows; dragging its edge changes it (bind it to keep it).</summary>
     public double SidebarWidth
     {
         get => GetValue(SidebarWidthProperty);
         set => SetValue(SidebarWidthProperty, value);
+    }
+
+    /// <summary>
+    /// The narrowest a drag makes the sidebar: 140 pt, SwiftUI's. Dragged past half of it, the sidebar folds away.
+    /// </summary>
+    public double MinSidebarWidth
+    {
+        get => GetValue(MinSidebarWidthProperty);
+        set => SetValue(MinSidebarWidthProperty, value);
+    }
+
+    /// <summary>The widest a drag makes the sidebar: none by default. It never narrows the content below its MinWidth.</summary>
+    public double MaxSidebarWidth
+    {
+        get => GetValue(MaxSidebarWidthProperty);
+        set => SetValue(MaxSidebarWidthProperty, value);
     }
 
     /// <summary>The sidebar's background where the window shows no material.</summary>
@@ -158,12 +196,20 @@ public class NavigationSplitView : ContentControl
             _sidebarToggle.Click -= OnSidebarToggleClick;
             _sidebarToggle.SizeChanged -= OnSidebarToggleSizeChanged;
         }
+        if (_sidebarGrip is not null)
+        {
+            _sidebarGrip.PointerPressed -= OnGripPressed;
+            _sidebarGrip.PointerMoved -= OnGripMoved;
+            _sidebarGrip.PointerReleased -= OnGripReleased;
+            _sidebarGrip.PointerCaptureLost -= OnGripCaptureLost;
+        }
 
         _sidebarRoot = e.NameScope.Find<Control>(PartSidebarRoot);
         _contentRoot = e.NameScope.Find<Control>(PartContentRoot);
         _toolbar = e.NameScope.Find<CupertinoToolbar>(PartToolbar);
         _contentToolbarPresenter = e.NameScope.Find<ContentPresenter>(PartContentToolbarPresenter);
         _sidebarPresenter = e.NameScope.Find<ContentPresenter>(PartSidebarPresenter);
+        _sidebarGrip = e.NameScope.Find<Control>(PartSidebarGrip);
         _toggleBand = e.NameScope.Find<Control>(PartToggleBand);
         _sidebarToggle = e.NameScope.Find<Button>(PartSidebarToggle);
 
@@ -174,6 +220,14 @@ public class NavigationSplitView : ContentControl
             _sidebarToggle.Click += OnSidebarToggleClick;
             // Compact toolbars have smaller buttons.
             _sidebarToggle.SizeChanged += OnSidebarToggleSizeChanged;
+        }
+        if (_sidebarGrip is not null)
+        {
+            _sidebarGrip.Width = GripInside + GripOutside;
+            _sidebarGrip.PointerPressed += OnGripPressed;
+            _sidebarGrip.PointerMoved += OnGripMoved;
+            _sidebarGrip.PointerReleased += OnGripReleased;
+            _sidebarGrip.PointerCaptureLost += OnGripCaptureLost;
         }
 
         UpdateChrome();
@@ -234,6 +288,54 @@ public class NavigationSplitView : ContentControl
 
     private void OnSidebarToggleSizeChanged(object? sender, SizeChangedEventArgs e) => UpdatePositions();
 
+    private void OnGripPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!IsSidebarOpen || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            return;
+        _gripOffset = e.GetPosition(this).X - VisibleSidebarWidth;
+        // The sidebar follows the pointer, without the open and close animation.
+        _suspendedTransitions = Transitions;
+        Transitions = null;
+        e.Pointer.Capture(_sidebarGrip);
+        e.Handled = true;
+    }
+
+    private void OnGripMoved(object? sender, PointerEventArgs e)
+    {
+        if (_gripOffset is not { } offset)
+            return;
+
+        var proposed = e.GetPosition(this).X - offset;
+        var min = MinSidebarWidth;
+        var max = Math.Max(min, Math.Min(MaxSidebarWidth, Bounds.Width - ((Content as Control)?.MinWidth ?? 0)));
+        if (IsSidebarOpen && proposed < min * CollapseFraction)
+        {
+            SetCurrentValue(IsSidebarOpenProperty, false);
+        }
+        else if (IsSidebarOpen || proposed > min * ReopenFraction)
+        {
+            SetCurrentValue(SidebarWidthProperty, Math.Clamp(proposed, min, max));
+            SetCurrentValue(IsSidebarOpenProperty, true);
+        }
+        e.Handled = true;
+    }
+
+    private void OnGripReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (_gripOffset is null)
+            return;
+        e.Pointer.Capture(null);
+        e.Handled = true;
+    }
+
+    private void OnGripCaptureLost(object? sender, PointerCaptureLostEventArgs e)
+    {
+        _gripOffset = null;
+        Transitions = _suspendedTransitions;
+        _suspendedTransitions = null;
+        UpdatePositions();
+    }
+
     private bool IsCompact => _window is { ToolbarStyle: CupertinoToolbarStyle.UnifiedCompact };
 
     // The toolbar's height: the band the button is centered in, and the room the sidebar leaves at its top.
@@ -264,6 +366,12 @@ public class NavigationSplitView : ContentControl
         var toolbarX = Math.Max(edge, buttonX + buttonWidth) + ToolbarGap;
 
         _sidebarOffset.X = edge - SidebarWidth;
+        if (_sidebarGrip is not null)
+        {
+            _sidebarGrip.Margin = new Thickness(edge - GripInside, 0, 0, 0);
+            // Off while the sidebar is away, except during the drag that folded it.
+            _sidebarGrip.IsHitTestVisible = IsSidebarOpen || _gripOffset is not null;
+        }
         _contentRoot.Margin = new Thickness(edge, 0, 0, 0);
         _sidebarToggle.Margin = new Thickness(buttonX, 0, 0, 0);
         _contentToolbarPresenter.Margin = new Thickness(toolbarX - edge, 0, EdgeMargin, 0);

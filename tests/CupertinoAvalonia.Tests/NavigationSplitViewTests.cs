@@ -125,6 +125,73 @@ public class NavigationSplitViewTests
     }
 
     [AvaloniaFact]
+    public void Dragging_the_edge_resizes_the_sidebar_between_its_limits()
+    {
+        var (window, split) = Show(isSidebarOpen: true);
+        split.MinSidebarWidth = 180;
+        split.MaxSidebarWidth = 400;
+        var grip = Part<Control>(split, "PART_SidebarGrip");
+
+        // The edge is grabbed from 5 pt inside to 1 pt outside.
+        Assert.Equal((215, 6), (Origin(grip, window).X, grip.Bounds.Width));
+        window.MouseDown(new Point(217, 300), MouseButton.Left);
+        window.MouseMove(new Point(267, 300));
+        Assert.Equal(270, split.SidebarWidth);
+        // Instantly: the open and close animation waits for the release.
+        Assert.Equal(270, split.VisibleSidebarWidth);
+        Assert.Equal(270, Origin(Part<Control>(split, "PART_ContentRoot"), window).X);
+        window.MouseMove(new Point(600, 300));
+        Assert.Equal(400, split.SidebarWidth);
+        window.MouseMove(new Point(140, 300));
+        Assert.Equal(180, split.SidebarWidth);
+        Assert.True(split.IsSidebarOpen);
+        window.MouseUp(new Point(140, 300), MouseButton.Left);
+        Assert.NotNull(split.Transitions);
+        window.Close();
+    }
+
+    // Measured on macOS 27 with a 180 pt minimum: the sidebar folds once the edge passes 90 pt, and comes back at its
+    // minimum width past about 112 pt, in the same drag.
+    [AvaloniaFact]
+    public void Dragging_past_half_the_minimum_folds_the_sidebar_away_and_back()
+    {
+        var (window, split) = Show(isSidebarOpen: true);
+        split.MinSidebarWidth = 180;
+
+        window.MouseDown(new Point(218, 300), MouseButton.Left);
+        window.MouseMove(new Point(95, 300));
+        Assert.True(split.IsSidebarOpen);
+        window.MouseMove(new Point(85, 300));
+        Assert.False(split.IsSidebarOpen);
+        Assert.Equal(0, split.VisibleSidebarWidth);
+        window.MouseMove(new Point(105, 300));
+        Assert.False(split.IsSidebarOpen);
+        window.MouseMove(new Point(115, 300));
+        Assert.True(split.IsSidebarOpen);
+        Assert.Equal(180, split.VisibleSidebarWidth);
+        window.MouseMove(new Point(60, 300));
+        window.MouseUp(new Point(60, 300), MouseButton.Left);
+        Assert.False(split.IsSidebarOpen);
+        // Away, the sidebar's edge can't be grabbed.
+        Assert.False(Part<Control>(split, "PART_SidebarGrip").IsHitTestVisible);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void The_sidebar_never_narrows_the_content_below_its_minimum_width()
+    {
+        var (window, split) = Show(isSidebarOpen: true);
+        ((Control)split.Content!).MinWidth = 600;
+
+        window.MouseDown(new Point(218, 300), MouseButton.Left);
+        window.MouseMove(new Point(500, 300));
+        window.MouseUp(new Point(500, 300), MouseButton.Left);
+        // The window is 900 pt wide.
+        Assert.Equal(300, split.SidebarWidth);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void The_toolbar_content_is_toolbar_items_and_a_logical_child()
     {
         var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" } };
