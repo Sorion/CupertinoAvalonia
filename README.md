@@ -107,7 +107,7 @@ turns it off, `CupertinoMacOSSdkVersion` declares another SDK.
 ## NavigationSplitView
 
 A window's sidebar and content, as SwiftUI's `NavigationSplitView`: the sidebar runs the window's full height with its
-button over it, and the content has its own toolbar.
+button over it, and the content has its own toolbar. An inspector can show on the right, as SwiftUI's `inspector`.
 
 ```xml
 <cac:CupertinoWindow ExtendsContentIntoTitleBar="True" ToolbarStyle="Unified" Material="Sidebar" …>
@@ -138,6 +138,13 @@ button over it, and the content has its own toolbar.
 - ⌃⌘S shows or hides the sidebar wherever the focus is, on macOS (`ToggleSidebarGesture` changes or removes it; there
   is none elsewhere). For the View menu, add a `NativeMenuItem` with the same gesture that toggles `IsSidebarOpen`: the
   menu takes the shortcut first.
+- `Inspector` is a column on the right, the window's full height, on the sidebar's material, without a divider.
+  `IsInspectorOpen` (closed by default, two-way) slides it in and pushes the content; the toolbar keeps its trailing
+  items at the window's edge, over the inspector, and shows its band over the content. There is no built-in button:
+  put one in `ContentToolbar`, with the `sidebar.right` symbol. ⌃⌘I toggles it on macOS (`ToggleInspectorGesture`).
+- `InspectorWidth` is 270, fixed, as SwiftUI's. Give `MinInspectorWidth` and `MaxInspectorWidth` different values (the
+  Gallery: 220 to 400, at 280) and a drag on its edge resizes it, folds it away and brings it back, as the sidebar's.
+  `InspectorBackground` applies where the window shows no material.
 
 ## CupertinoToolbar
 
