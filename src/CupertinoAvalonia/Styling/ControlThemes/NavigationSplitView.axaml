@@ -1,0 +1,63 @@
+<!--
+  NavigationSplitView, after SwiftUI's on macOS 27 (measured in TestNav): the sidebar slides out over the window's full
+  height and the content follows its edge, in SplitView's 0.25 s; the sidebar button sits over the sidebar.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cac="using:CupertinoAvalonia.Controls">
+
+  <!-- SwiftUI's ideal sidebar width. -->
+  <x:Double x:Key="NavigationSplitViewSidebarWidth">220</x:Double>
+
+  <ControlTheme x:Key="{x:Type cac:NavigationSplitView}" TargetType="cac:NavigationSplitView">
+    <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
+    <Setter Property="SidebarBackground" Value="{DynamicResource SplitViewSidebarBackgroundBrush}" />
+    <Setter Property="SidebarWidth" Value="{DynamicResource NavigationSplitViewSidebarWidth}" />
+    <Setter Property="Transitions">
+      <Transitions>
+        <DoubleTransition Property="VisibleSidebarWidth" Duration="{StaticResource SplitViewPaneDuration}" Easing="{StaticResource SplitViewPaneEasing}" />
+      </Transitions>
+    </Setter>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Panel>
+          <!-- The content, with its toolbar over its top: it starts at the sidebar's edge. -->
+          <Panel Name="PART_ContentRoot" Background="{TemplateBinding Background}">
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            <cac:CupertinoToolbar Name="PART_Toolbar" ScrollViewer="{TemplateBinding ContentScrollViewer}">
+              <ContentPresenter Name="PART_ContentToolbarPresenter"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding ContentToolbar}" />
+            </cac:CupertinoToolbar>
+          </Panel>
+
+          <!-- The sidebar, the window's full height: it slides out. Its top drags the window. -->
+          <Panel Name="PART_SidebarRoot" Width="{TemplateBinding SidebarWidth}" HorizontalAlignment="Left">
+            <Border Background="{TemplateBinding SidebarBackground}" />
+            <Border Height="{Binding #PART_ToggleBand.Height}"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    WindowDecorationProperties.ElementRole="TitleBar" />
+            <ContentPresenter Name="PART_SidebarPresenter" Content="{TemplateBinding Sidebar}" />
+          </Panel>
+
+          <!-- The sidebar button, over both, centered in the toolbar's height. -->
+          <Panel Name="PART_ToggleBand" VerticalAlignment="Top">
+            <Button Name="PART_SidebarToggle"
+                    Classes="toolbar"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    ToolTip.Tip="Show or hide the sidebar"
+                    AutomationProperties.Name="Sidebar">
+              <cac:SymbolIcon Symbol="sidebar.left" />
+            </Button>
+          </Panel>
+        </Panel>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

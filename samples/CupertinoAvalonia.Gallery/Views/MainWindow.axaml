@@ -31,26 +31,9 @@
     </NativeMenu>
   </NativeMenu.Menu>
 
-  <cac:CupertinoWindow.Styles>
-    <!-- Without the sidebar, the toolbar makes room for the window controls, in step with the sidebar. -->
-    <Style Selector="Border#ToolbarInset">
-      <Setter Property="Transitions">
-        <Transitions>
-          <ThicknessTransition Property="Padding" Duration="{StaticResource SplitViewPaneDuration}" Easing="{StaticResource SplitViewPaneEasing}" />
-        </Transitions>
-      </Setter>
-    </Style>
-    <Style Selector="SplitView#Split:closed Border#ToolbarInset">
-      <Setter Property="Padding" Value="{Binding $parent[cac:CupertinoWindow].WindowControlsInset}" />
-    </Style>
-  </cac:CupertinoWindow.Styles>
-
-  <SplitView Name="Split" DisplayMode="Inline" IsPaneOpen="{Binding IsSidebarOpen}">
-    <SplitView.Pane>
+  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" ContentScrollViewer="{Binding #PageScroll}">
+    <cac:NavigationSplitView.Sidebar>
       <DockPanel>
-        <!-- Room for the window controls. -->
-        <Border DockPanel.Dock="Top" Height="52" Background="Transparent"
-                WindowDecorationProperties.ElementRole="TitleBar" />
         <TextBlock DockPanel.Dock="Top" Classes="caption1 emphasized secondary" Margin="18,0,0,6" Text="Controls" />
         <ListBox Classes="sidebar"
                  ItemsSource="{Binding Pages}"
@@ -66,30 +49,22 @@
           </ListBox.ItemTemplate>
         </ListBox>
       </DockPanel>
-    </SplitView.Pane>
+    </cac:NavigationSplitView.Sidebar>
 
-    <Panel>
-      <ScrollViewer Name="PageScroll">
-        <ContentControl Margin="20,72,20,20" Content="{Binding SelectedPage.Content}" />
-      </ScrollViewer>
-      <cac:CupertinoToolbar ScrollViewer="{Binding #PageScroll}">
-        <Border Name="ToolbarInset">
-          <Grid Margin="10,0,12,0" ColumnDefinitions="Auto,*,Auto">
-            <Button VerticalAlignment="Center"
-                    Command="{Binding ToggleSidebarCommand}"
-                    ToolTip.Tip="Show or hide the sidebar">
-              <cac:SymbolIcon Symbol="sidebar.left" />
-            </Button>
-            <StackPanel Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" Spacing="2" IsHitTestVisible="False">
-              <TextBlock Classes="headline" Text="{Binding SelectedPage.Title}" TextTrimming="CharacterEllipsis" />
-              <TextBlock Classes="subheadline secondary" Text="{Binding SelectedPage.Description}" TextTrimming="CharacterEllipsis" />
-            </StackPanel>
-            <ComboBox Grid.Column="2" Margin="12,0,0,0" MinWidth="90"
-                      ItemsSource="{Binding Themes}"
-                      SelectedItem="{Binding SelectedTheme}" />
-          </Grid>
-        </Border>
-      </cac:CupertinoToolbar>
-    </Panel>
-  </SplitView>
+    <cac:NavigationSplitView.ContentToolbar>
+      <Grid ColumnDefinitions="*,Auto">
+        <StackPanel VerticalAlignment="Center" Spacing="2" IsHitTestVisible="False">
+          <TextBlock Classes="headline" Text="{Binding SelectedPage.Title}" TextTrimming="CharacterEllipsis" />
+          <TextBlock Classes="subheadline secondary" Text="{Binding SelectedPage.Description}" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+        <ComboBox Grid.Column="1" Margin="12,0,0,0" MinWidth="90"
+                  ItemsSource="{Binding Themes}"
+                  SelectedItem="{Binding SelectedTheme}" />
+      </Grid>
+    </cac:NavigationSplitView.ContentToolbar>
+
+    <ScrollViewer Name="PageScroll">
+      <ContentControl Margin="20,72,20,20" Content="{Binding SelectedPage.Content}" />
+    </ScrollViewer>
+  </cac:NavigationSplitView>
 </cac:CupertinoWindow>

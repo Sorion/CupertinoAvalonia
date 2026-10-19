@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using CupertinoAvalonia.Gallery.Views.Pages;
 
 namespace CupertinoAvalonia.Gallery.ViewModels;
@@ -53,8 +52,6 @@ public partial class MainWindowViewModel : ObservableObject
         _selectedPage = Pages[0];
     }
 
-    [RelayCommand]
-    private void ToggleSidebar() => IsSidebarOpen = !IsSidebarOpen;
 
     partial void OnSelectedThemeChanged(string value) =>
         Application.Current!.RequestedThemeVariant = value switch

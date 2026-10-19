@@ -30,8 +30,8 @@ public class GalleryWindowTests
         }
         window.UpdateLayout();
 
-        // The toolbar's first control, the sidebar button, starts past the room the window controls take.
-        var toggle = window.GetVisualDescendants().OfType<Button>().First(b => b.Command == vm.ToggleSidebarCommand);
+        // The sidebar button starts past the room the window controls take.
+        var toggle = window.GetVisualDescendants().OfType<Button>().First(b => b.Name == "PART_SidebarToggle");
         var left = toggle.TranslatePoint(default, window)!.Value.X;
         Assert.True(left >= window.WindowControlsInset.Left, $"sidebar button at {left}, window controls up to {window.WindowControlsInset.Left}");
         window.Close();
@@ -44,9 +44,9 @@ public class GalleryWindowTests
         var window = new MainWindow { DataContext = vm, Width = 1100, Height = 760 };
         window.Show();
         Pump(window, 600);
-        var toggle = window.GetVisualDescendants().OfType<Button>().First(b => b.Command == vm.ToggleSidebarCommand);
+        var toggle = window.GetVisualDescendants().OfType<Button>().First(b => b.Name == "PART_SidebarToggle");
 
-        // The room for the window controls slides out with the sidebar: the button never jumps under them.
+        // The sidebar's edge pushes the button back into place: it never jumps under the window controls.
         vm.IsSidebarOpen = true;
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         while (stopwatch.ElapsedMilliseconds < 400)

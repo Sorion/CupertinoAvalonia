@@ -34,6 +34,9 @@
   <Style Selector="cac|CupertinoWindow:material SplitView:left /template/ Panel#ContentRoot">
     <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
   </Style>
+  <Style Selector="cac|CupertinoWindow:material cac|NavigationSplitView">
+    <Setter Property="SidebarBackground" Value="Transparent" />
+  </Style>
 
   <Style Selector="Border.focus-ring[(cas|WindowActivity.IsInactive)=True]">
     <Setter Property="IsVisible" Value="False" />
