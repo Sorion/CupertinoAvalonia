@@ -13,12 +13,19 @@
     <Setter Property="Padding" Value="10,0" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
   </Style>
+  <!-- Selected, the label is emphasized, as in Apple's apps (Mail, Notes, Settings on macOS 27). -->
   <Style Selector="ListBox.sidebar ListBoxItem:selected">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="TextElement.FontWeight" Value="{DynamicResource BodyEmphasizedFontWeight}" />
+    <Setter Property="TextElement.LetterSpacing" Value="{DynamicResource BodyEmphasizedLetterSpacing}" />
   </Style>
+  <!-- The symbol at the label's size, in the large scale, as in Apple's apps and SwiftUI (AppKit's default and the kit
+       use the medium scale); Medium as in the kit, whether the label is emphasized or not. -->
   <Style Selector="ListBox.sidebar ListBoxItem cac|SymbolIcon">
     <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
+    <Setter Property="SymbolScale" Value="Large" />
+    <Setter Property="FontWeight" Value="Medium" />
   </Style>
   <!-- Active=False: "Sidebar/Label - Inactive" (linear burn #878787, dodge #666666) is the secondary label. -->
   <Style Selector="ListBox.sidebar ListBoxItem:selected[(cas|WindowActivity.IsInactive)=True]">
@@ -55,14 +62,19 @@
   <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ Border#PART_LayoutRoot">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionBrush}" />
   </Style>
+  <!-- On the header only: an emphasized parent leaves its children regular. -->
   <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+    <Setter Property="TextElement.FontWeight" Value="{DynamicResource BodyEmphasizedFontWeight}" />
+    <Setter Property="TextElement.LetterSpacing" Value="{DynamicResource BodyEmphasizedLetterSpacing}" />
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ ToggleButton#PART_ExpandCollapseChevron">
     <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem cac|SymbolIcon:not(#Chevron)">
     <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
+    <Setter Property="SymbolScale" Value="Large" />
+    <Setter Property="FontWeight" Value="Medium" />
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem:selected[(cas|WindowActivity.IsInactive)=True] /template/ Border#PART_LayoutRoot">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionInactiveBrush}" />
