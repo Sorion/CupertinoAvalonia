@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cac="using:CupertinoAvalonia.Controls"
         xmlns:vm="using:CupertinoAvalonia.Gallery.ViewModels"
+        xmlns:views="using:CupertinoAvalonia.Gallery.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="760"
@@ -31,8 +32,18 @@
     </NativeMenu>
   </NativeMenu.Menu>
 
-  <!-- TestNav's minimum width, to compare them. -->
-  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" MinSidebarWidth="180" ContentScrollViewer="{Binding #PageScroll}">
+  <cac:CupertinoWindow.Styles>
+    <!-- Wide content runs to the column's edge, as in SwiftUI: only the scroll viewer clips it, not the page's margin. -->
+    <Style Selector="ContentControl#PageHost, ContentControl#PageHost > :is(UserControl)">
+      <Setter Property="ClipToBounds" Value="False" />
+    </Style>
+  </cac:CupertinoWindow.Styles>
+
+  <!-- TestNav's sidebar and inspector widths, to compare them. -->
+  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" MinSidebarWidth="180"
+                           IsInspectorOpen="{Binding IsInspectorOpen}"
+                           InspectorWidth="280" MinInspectorWidth="220" MaxInspectorWidth="400"
+                           ContentScrollViewer="{Binding #PageScroll}">
     <cac:NavigationSplitView.Sidebar>
       <DockPanel>
         <TextBlock DockPanel.Dock="Top" Classes="caption1 emphasized secondary" Margin="18,0,0,6" Text="Controls" />
@@ -53,7 +64,7 @@
     </cac:NavigationSplitView.Sidebar>
 
     <cac:NavigationSplitView.ContentToolbar>
-      <Grid ColumnDefinitions="*,Auto">
+      <Grid ColumnDefinitions="*,Auto,Auto">
         <StackPanel VerticalAlignment="Center" Spacing="2" IsHitTestVisible="False">
           <TextBlock Classes="headline" Text="{Binding SelectedPage.Title}" TextTrimming="CharacterEllipsis" />
           <TextBlock Classes="subheadline secondary" Text="{Binding SelectedPage.Description}" TextTrimming="CharacterEllipsis" />
@@ -61,11 +72,21 @@
         <ComboBox Grid.Column="1" Margin="12,0,0,0" MinWidth="90"
                   ItemsSource="{Binding Themes}"
                   SelectedItem="{Binding SelectedTheme}" />
+        <Button Grid.Column="2" Margin="8,0,0,0"
+                Command="{Binding ToggleInspectorCommand}"
+                ToolTip.Tip="Show or hide the inspector"
+                AutomationProperties.Name="Inspector">
+          <cac:SymbolIcon Symbol="sidebar.right" />
+        </Button>
       </Grid>
     </cac:NavigationSplitView.ContentToolbar>
 
+    <cac:NavigationSplitView.Inspector>
+      <views:ChannelInspector />
+    </cac:NavigationSplitView.Inspector>
+
     <ScrollViewer Name="PageScroll">
-      <ContentControl Margin="20,72,20,20" Content="{Binding SelectedPage.Content}" />
+      <ContentControl Name="PageHost" Margin="20,72,20,20" Content="{Binding SelectedPage.Content}" />
     </ScrollViewer>
   </cac:NavigationSplitView>
 </cac:CupertinoWindow>

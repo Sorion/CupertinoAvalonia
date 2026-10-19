@@ -1,6 +1,7 @@
 <!--
   NavigationSplitView, after SwiftUI's on macOS 27 (measured in TestNav): the sidebar slides out over the window's full
-  height and the content follows its edge, in SplitView's 0.25 s; the sidebar button sits over the sidebar.
+  height and the content follows its edge, in SplitView's 0.25 s; the sidebar button sits over the sidebar. The
+  inspector, after SwiftUI's: the sidebar's material, no divider, the content's toolbar over it.
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,21 +14,38 @@
     <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
     <Setter Property="SidebarBackground" Value="{DynamicResource SplitViewSidebarBackgroundBrush}" />
     <Setter Property="SidebarWidth" Value="{DynamicResource NavigationSplitViewSidebarWidth}" />
+    <Setter Property="InspectorBackground" Value="{DynamicResource SplitViewInspectorBackgroundBrush}" />
     <Setter Property="Transitions">
       <Transitions>
         <DoubleTransition Property="VisibleSidebarWidth" Duration="{StaticResource SplitViewPaneDuration}" Easing="{StaticResource SplitViewPaneEasing}" />
+        <DoubleTransition Property="VisibleInspectorWidth" Duration="{StaticResource SplitViewPaneDuration}" Easing="{StaticResource SplitViewPaneEasing}" />
       </Transitions>
     </Setter>
     <Setter Property="Template">
       <ControlTemplate>
         <Panel>
-          <!-- The content, with its toolbar over its top: it starts at the sidebar's edge. -->
-          <Panel Name="PART_ContentRoot" Background="{TemplateBinding Background}">
+          <!-- The inspector, the window's full height, under the content's toolbar: it slides in from the right. Its top
+               drags the window. -->
+          <Panel Name="PART_InspectorRoot" Width="{TemplateBinding InspectorWidth}" HorizontalAlignment="Right">
+            <Border Background="{TemplateBinding InspectorBackground}" />
+            <Border Height="{Binding #PART_ToggleBand.Height}"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    WindowDecorationProperties.ElementRole="TitleBar" />
+            <ContentPresenter Name="PART_InspectorPresenter" Content="{TemplateBinding Inspector}" />
+          </Panel>
+
+          <!-- From the sidebar's edge: the content, to the inspector's edge, and its toolbar over its top, whose items run
+               to the window's edge, over the inspector. -->
+          <Panel Name="PART_ContentRoot">
             <ContentPresenter Name="PART_ContentPresenter"
+                              Background="{TemplateBinding Background}"
                               Content="{TemplateBinding Content}"
                               ContentTemplate="{TemplateBinding ContentTemplate}"
                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            <!-- The inspector's edge, which a drag moves: under the toolbar's items. -->
+            <Border Name="PART_InspectorGrip" HorizontalAlignment="Right" Background="Transparent" Cursor="SizeWestEast" />
             <cac:CupertinoToolbar Name="PART_Toolbar" ScrollViewer="{TemplateBinding ContentScrollViewer}">
               <ContentPresenter Name="PART_ContentToolbarPresenter"
                                 VerticalAlignment="Center"

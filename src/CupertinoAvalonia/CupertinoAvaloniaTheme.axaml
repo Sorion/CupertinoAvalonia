@@ -36,6 +36,7 @@
   </Style>
   <Style Selector="cac|CupertinoWindow:material cac|NavigationSplitView">
     <Setter Property="SidebarBackground" Value="Transparent" />
+    <Setter Property="InspectorBackground" Value="Transparent" />
   </Style>
 
   <Style Selector="Border.focus-ring[(cas|WindowActivity.IsInactive)=True]">

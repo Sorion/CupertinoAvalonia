@@ -2,6 +2,7 @@ using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Primitives;
 using Avalonia.VisualTree;
 
 namespace CupertinoAvalonia.Controls;
@@ -25,9 +26,11 @@ public enum ToolbarBackgroundVisibility
 /// Put it over the scroll viewer, in a Panel, and leave room for it at the top of the scrolled content. Its buttons,
 /// pop-ups and segmented controls are toolbar items without the <c>toolbar</c> class, except in a button group.
 /// </remarks>
+[TemplatePart(PartBackground, typeof(Control))]
 [PseudoClasses(PcScrolled)]
 public class CupertinoToolbar : ContentControl
 {
+    private const string PartBackground = "PART_Background";
     private const string PcScrolled = ":scrolled";
     private const string ItemClass = "toolbar";
     private const string CompactClass = "compact";
@@ -41,6 +44,9 @@ public class CupertinoToolbar : ContentControl
     // The classes the toolbar gave a control, removed when it leaves: not those its XAML has.
     private static readonly AttachedProperty<string[]?> AddedClassesProperty =
         AvaloniaProperty.RegisterAttached<CupertinoToolbar, Control, string[]?>("AddedClasses");
+
+    private Control? _background;
+    private Thickness _backgroundMargin;
 
     static CupertinoToolbar()
     {
@@ -64,6 +70,27 @@ public class CupertinoToolbar : ContentControl
     {
         get => GetValue(BackgroundVisibilityProperty);
         set => SetValue(BackgroundVisibilityProperty, value);
+    }
+
+    // Where the band stops short of the items: NavigationSplitView ends it at the inspector's edge, while the items run
+    // to the window's.
+    internal Thickness BackgroundMargin
+    {
+        get => _backgroundMargin;
+        set
+        {
+            _backgroundMargin = value;
+            if (_background is not null)
+                _background.Margin = value;
+        }
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _background = e.NameScope.Find<Control>(PartBackground);
+        if (_background is not null)
+            _background.Margin = _backgroundMargin;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

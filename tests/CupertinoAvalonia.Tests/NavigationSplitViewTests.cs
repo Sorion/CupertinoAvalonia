@@ -4,6 +4,8 @@ using Avalonia.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -219,15 +221,172 @@ public class NavigationSplitViewTests
         window.Close();
     }
 
-    private static (CupertinoWindow, NavigationSplitView) Show(bool isSidebarOpen, Control? toolbar = null, Control? sidebar = null)
+
+    // SwiftUI's inspector, measured on macOS 27: 270 pt by default, the window's full height, the toolbar's trailing items
+    // over it, 8 pt from the window's edge; the toolbar's band shows over the content only.
+    [AvaloniaFact]
+    public void The_open_inspector_pushes_the_content_and_leaves_the_toolbar_items_in_place()
+    {
+        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
+        var (window, split) = Show(isSidebarOpen: true, toolbar: share, configure: s => s.IsInspectorOpen = true);
+        var inspector = Part<Control>(split, "PART_InspectorRoot");
+        var content = split.Presenter!;
+        var toolbar = Part<CupertinoToolbar>(split, "PART_Toolbar");
+
+        Assert.Equal(new Point(630, 0), Origin(inspector, window));
+        Assert.Equal((270, 600), (inspector.Bounds.Width, inspector.Bounds.Height));
+        Assert.Equal((220, 410), (Origin(content, window).X, content.Bounds.Width));
+        Assert.Equal(410, Part<Control>(toolbar, "PART_Background").Bounds.Width);
+        Assert.Equal(ToolbarBackgroundVisibility.Visible, toolbar.BackgroundVisibility);
+        Assert.Equal(892, Origin(share, window).X + share.Bounds.Width);
+        // Its content starts below the toolbar, and is a logical child.
+        var inspectorContent = (Control)split.Inspector!;
+        Assert.Equal(52, Origin(inspectorContent, window).Y);
+        Assert.Same(split, inspectorContent.GetLogicalParent());
+
+        // A trailing item over the inspector takes clicks.
+        var clicked = false;
+        share.Click += (_, _) => clicked = true;
+        var center = share.TranslatePoint(new Point(share.Bounds.Width / 2, share.Bounds.Height / 2), window)!.Value;
+        Assert.True(center.X > 630);
+        window.MouseDown(center, MouseButton.Left);
+        window.MouseUp(center, MouseButton.Left);
+        Assert.True(clicked);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void The_inspector_is_closed_by_default()
+    {
+        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
+        var (window, split) = Show(isSidebarOpen: true, toolbar: share);
+
+        Assert.False(split.IsInspectorOpen);
+        Assert.Equal(900, Origin(Part<Control>(split, "PART_InspectorRoot"), window).X);
+        Assert.Equal(680, split.Presenter!.Bounds.Width);
+        Assert.Equal(ToolbarBackgroundVisibility.Automatic, Part<CupertinoToolbar>(split, "PART_Toolbar").BackgroundVisibility);
+        Assert.Equal(892, Origin(share, window).X + share.Bounds.Width);
+        window.Close();
+    }
+
+    // The inspector's edge on its way: the content follows it, the toolbar's items stay.
+    [AvaloniaTheory]
+    [InlineData(200)]
+    [InlineData(60)]
+    public void The_content_follows_the_inspector_edge(double edge)
+    {
+        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
+        var (window, split) = Show(isSidebarOpen: true, toolbar: share, configure: s => s.IsInspectorOpen = true);
+
+        split.SetValue(NavigationSplitView.VisibleInspectorWidthProperty, edge, BindingPriority.Animation);
+        window.UpdateLayout();
+
+        Assert.Equal(900 - edge, Origin(Part<Control>(split, "PART_InspectorRoot"), window).X);
+        Assert.Equal(900 - edge - 220, split.Presenter!.Bounds.Width);
+        Assert.Equal(892, Origin(share, window).X + share.Bounds.Width);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Control_Command_I_toggles_the_inspector()
+    {
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "⌃⌘I is macOS's shortcut; there is none elsewhere.");
+        var (window, split) = Show(isSidebarOpen: true);
+
+        window.KeyPressQwerty(PhysicalKey.I, RawInputModifiers.Control | RawInputModifiers.Meta);
+        Assert.True(split.IsInspectorOpen);
+        window.KeyPressQwerty(PhysicalKey.I, RawInputModifiers.Control | RawInputModifiers.Meta);
+        Assert.False(split.IsInspectorOpen);
+        // Not without an inspector.
+        split.Inspector = null;
+        window.KeyPressQwerty(PhysicalKey.I, RawInputModifiers.Control | RawInputModifiers.Meta);
+        Assert.False(split.IsInspectorOpen);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void The_inspector_keeps_its_width_unless_given_limits()
+    {
+        var (window, split) = Show(isSidebarOpen: true, configure: s => s.IsInspectorOpen = true);
+        Assert.False(Part<Control>(split, "PART_InspectorGrip").IsHitTestVisible);
+        window.Close();
+    }
+
+    // TestNav's inspector: 220 to 400 pt, 280 at first. Its edge is the sidebar's, mirrored.
+    [AvaloniaFact]
+    public void Dragging_the_inspector_edge_resizes_it_folds_it_and_brings_it_back()
+    {
+        var (window, split) = Show(isSidebarOpen: true, configure: s =>
+        {
+            s.IsInspectorOpen = true;
+            s.InspectorWidth = 280;
+            s.MinInspectorWidth = 220;
+            s.MaxInspectorWidth = 400;
+        });
+        var grip = Part<Control>(split, "PART_InspectorGrip");
+
+        // Grabbed from 1 pt outside, over the content, to 5 pt inside.
+        Assert.True(grip.IsHitTestVisible);
+        Assert.Equal((619, 6), (Origin(grip, window).X, grip.Bounds.Width));
+        window.MouseDown(new Point(622, 300), MouseButton.Left);
+        window.MouseMove(new Point(572, 300));
+        Assert.Equal(330, split.InspectorWidth);
+        Assert.Equal(330, split.VisibleInspectorWidth);
+        Assert.Equal(570, Origin(split.Presenter!, window).X + split.Presenter!.Bounds.Width);
+        window.MouseMove(new Point(300, 300));
+        Assert.Equal(400, split.InspectorWidth);
+        window.MouseMove(new Point(700, 300));
+        Assert.Equal(220, split.InspectorWidth);
+        // Past half its minimum, 110 pt from the window's edge, it folds; past about 137 pt it comes back.
+        window.MouseMove(new Point(795, 300));
+        Assert.False(split.IsInspectorOpen);
+        Assert.Equal(0, split.VisibleInspectorWidth);
+        window.MouseMove(new Point(765, 300));
+        Assert.False(split.IsInspectorOpen);
+        window.MouseMove(new Point(760, 300));
+        Assert.True(split.IsInspectorOpen);
+        Assert.Equal(220, split.VisibleInspectorWidth);
+        window.MouseUp(new Point(760, 300), MouseButton.Left);
+        Assert.NotNull(split.Transitions);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Neither_column_narrows_the_content_below_its_minimum_width()
+    {
+        var (window, split) = Show(isSidebarOpen: true, configure: s =>
+        {
+            s.IsInspectorOpen = true;
+            s.MinInspectorWidth = 220;
+            s.MaxInspectorWidth = 400;
+            ((Control)s.Content!).MinWidth = 400;
+        });
+
+        // The window is 900 pt wide: 220 for the sidebar leaves the inspector 280.
+        window.MouseDown(new Point(632, 300), MouseButton.Left);
+        window.MouseMove(new Point(400, 300));
+        window.MouseUp(new Point(400, 300), MouseButton.Left);
+        Assert.Equal(280, split.InspectorWidth);
+        window.MouseDown(new Point(218, 300), MouseButton.Left);
+        window.MouseMove(new Point(500, 300));
+        window.MouseUp(new Point(500, 300), MouseButton.Left);
+        Assert.Equal(220, split.SidebarWidth);
+        window.Close();
+    }
+
+    // Set before the window shows, so that nothing animates.
+    private static (CupertinoWindow, NavigationSplitView) Show(bool isSidebarOpen, Control? toolbar = null, Control? sidebar = null,
+        Action<NavigationSplitView>? configure = null)
     {
         var split = new NavigationSplitView
         {
             IsSidebarOpen = isSidebarOpen,
             Sidebar = sidebar ?? new TextBlock { Text = "Sidebar" },
             ContentToolbar = toolbar ?? new TextBlock { Text = "Title" },
+            Inspector = new TextBlock { Text = "Inspector" },
             Content = new TextBlock { Text = "Content" },
         };
+        configure?.Invoke(split);
         var window = new CupertinoWindow
         {
             Width = 900, Height = 600, ExtendsContentIntoTitleBar = true, ToolbarStyle = CupertinoToolbarStyle.Unified,

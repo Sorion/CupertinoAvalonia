@@ -13,7 +13,8 @@ namespace CupertinoAvalonia.Controls;
 
 /// <summary>
 /// A window's sidebar and content, as SwiftUI's NavigationSplitView on macOS 27: the sidebar runs the window's full
-/// height with its button over it, and the content has its own toolbar.
+/// height with its button over it, and the content has its own toolbar. An inspector can show on the right, as
+/// SwiftUI's inspector.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -22,26 +23,36 @@ namespace CupertinoAvalonia.Controls;
 /// starts past the button or the edge, whichever is further.
 /// </para>
 /// <para>
-/// Fill a <see cref="CupertinoWindow"/> that extends its content into the title bar: the sidebar shows the window's
-/// material and the button stops past the window controls. Elsewhere it stops near the edge.
+/// The inspector slides in from the right and pushes the content. The content's toolbar keeps its trailing items at
+/// the window's edge, over the inspector, and shows its background over the content only.
+/// </para>
+/// <para>
+/// Fill a <see cref="CupertinoWindow"/> that extends its content into the title bar: the sidebar and the inspector show
+/// the window's material and the button stops past the window controls. Elsewhere it stops near the edge.
 /// </para>
 /// </remarks>
 [TemplatePart(PartSidebarRoot, typeof(Control))]
 [TemplatePart(PartContentRoot, typeof(Control))]
+[TemplatePart(PartInspectorRoot, typeof(Control))]
 [TemplatePart(PartToolbar, typeof(CupertinoToolbar))]
 [TemplatePart(PartContentToolbarPresenter, typeof(ContentPresenter))]
 [TemplatePart(PartSidebarPresenter, typeof(ContentPresenter))]
+[TemplatePart(PartInspectorPresenter, typeof(ContentPresenter))]
 [TemplatePart(PartSidebarGrip, typeof(Control))]
+[TemplatePart(PartInspectorGrip, typeof(Control))]
 [TemplatePart(PartToggleBand, typeof(Control))]
 [TemplatePart(PartSidebarToggle, typeof(Button))]
 public class NavigationSplitView : ContentControl
 {
     private const string PartSidebarRoot = "PART_SidebarRoot";
     private const string PartContentRoot = "PART_ContentRoot";
+    private const string PartInspectorRoot = "PART_InspectorRoot";
     private const string PartToolbar = "PART_Toolbar";
     private const string PartContentToolbarPresenter = "PART_ContentToolbarPresenter";
     private const string PartSidebarPresenter = "PART_SidebarPresenter";
+    private const string PartInspectorPresenter = "PART_InspectorPresenter";
     private const string PartSidebarGrip = "PART_SidebarGrip";
+    private const string PartInspectorGrip = "PART_InspectorGrip";
     private const string PartToggleBand = "PART_ToggleBand";
     private const string PartSidebarToggle = "PART_SidebarToggle";
 
@@ -53,7 +64,7 @@ public class NavigationSplitView : ContentControl
     private const double EdgeMargin = 8;
     // Dragging the sidebar's edge, measured on macOS 27 (SwiftUI, TestNav): the edge can be grabbed from 5 pt inside to
     // 1 pt outside; past half the minimum width the sidebar folds away, and comes back at its minimum width past about
-    // five eighths of it, in the same drag.
+    // five eighths of it, in the same drag. The inspector's edge does the same, mirrored.
     private const double GripInside = 5;
     private const double GripOutside = 1;
     private const double CollapseFraction = 0.5;
@@ -68,6 +79,9 @@ public class NavigationSplitView : ContentControl
 
     public static readonly StyledProperty<object?> ContentToolbarProperty =
         AvaloniaProperty.Register<NavigationSplitView, object?>(nameof(ContentToolbar));
+
+    public static readonly StyledProperty<object?> InspectorProperty =
+        AvaloniaProperty.Register<NavigationSplitView, object?>(nameof(Inspector));
 
     public static readonly StyledProperty<bool> IsSidebarOpenProperty =
         AvaloniaProperty.Register<NavigationSplitView, bool>(nameof(IsSidebarOpen), true, defaultBindingMode: BindingMode.TwoWay);
@@ -84,29 +98,58 @@ public class NavigationSplitView : ContentControl
     public static readonly StyledProperty<IBrush?> SidebarBackgroundProperty =
         AvaloniaProperty.Register<NavigationSplitView, IBrush?>(nameof(SidebarBackground));
 
+    public static readonly StyledProperty<bool> IsInspectorOpenProperty =
+        AvaloniaProperty.Register<NavigationSplitView, bool>(nameof(IsInspectorOpen), defaultBindingMode: BindingMode.TwoWay);
+
+    // SwiftUI's inspector, measured on macOS 27: 270 pt, neither narrower nor wider.
+    public static readonly StyledProperty<double> InspectorWidthProperty =
+        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(InspectorWidth), 270, defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly StyledProperty<double> MinInspectorWidthProperty =
+        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(MinInspectorWidth), 270);
+
+    public static readonly StyledProperty<double> MaxInspectorWidthProperty =
+        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(MaxInspectorWidth), 270);
+
+    public static readonly StyledProperty<IBrush?> InspectorBackgroundProperty =
+        AvaloniaProperty.Register<NavigationSplitView, IBrush?>(nameof(InspectorBackground));
+
     public static readonly StyledProperty<ScrollViewer?> ContentScrollViewerProperty =
         AvaloniaProperty.Register<NavigationSplitView, ScrollViewer?>(nameof(ContentScrollViewer));
 
     public static readonly StyledProperty<double> VisibleSidebarWidthProperty =
         AvaloniaProperty.Register<NavigationSplitView, double>(nameof(VisibleSidebarWidth), 220);
 
+    public static readonly StyledProperty<double> VisibleInspectorWidthProperty =
+        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(VisibleInspectorWidth));
+
     public static readonly StyledProperty<KeyGesture?> ToggleSidebarGestureProperty =
         AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleSidebarGesture),
             OperatingSystem.IsMacOS() ? new KeyGesture(Key.S, KeyModifiers.Control | KeyModifiers.Meta) : null);
 
+    // SwiftUI's InspectorCommands: View › Show Inspector, ⌃⌘I.
+    public static readonly StyledProperty<KeyGesture?> ToggleInspectorGestureProperty =
+        AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleInspectorGesture),
+            OperatingSystem.IsMacOS() ? new KeyGesture(Key.I, KeyModifiers.Control | KeyModifiers.Meta) : null);
+
     private readonly TranslateTransform _sidebarOffset = new();
+    private readonly TranslateTransform _inspectorOffset = new();
     private Control? _sidebarRoot;
     private Control? _contentRoot;
+    private Control? _inspectorRoot;
     private CupertinoToolbar? _toolbar;
     private ContentPresenter? _contentToolbarPresenter;
     private ContentPresenter? _sidebarPresenter;
+    private ContentPresenter? _inspectorPresenter;
     private Control? _sidebarGrip;
+    private Control? _inspectorGrip;
     private Control? _toggleBand;
     private Button? _sidebarToggle;
     private CupertinoWindow? _window;
     private TopLevel? _topLevel;
-    // A drag on the sidebar's edge: the pointer's distance from the edge, and the transitions it suspends.
-    private double? _gripOffset;
+    // A drag on a column's edge: its grip, the pointer's distance from the edge, and the transitions it suspends.
+    private Control? _draggedGrip;
+    private double _gripOffset;
     private Transitions? _suspendedTransitions;
 
     /// <summary>The sidebar's content, usually a <c>ListBox</c> with the <c>sidebar</c> class.</summary>
@@ -118,12 +161,22 @@ public class NavigationSplitView : ContentControl
 
     /// <summary>
     /// The content's toolbar, after the sidebar button: a title and subtitle, items, trailing items. Buttons, pop-ups
-    /// and segmented controls in it are toolbar items.
+    /// and segmented controls in it are toolbar items. It runs to the window's edge, over the inspector.
     /// </summary>
     public object? ContentToolbar
     {
         get => GetValue(ContentToolbarProperty);
         set => SetValue(ContentToolbarProperty, value);
+    }
+
+    /// <summary>
+    /// The inspector's content, below the toolbar. There is no built-in button: put one in <see cref="ContentToolbar"/>
+    /// (the <c>sidebar.right</c> symbol) that toggles <see cref="IsInspectorOpen"/>.
+    /// </summary>
+    public object? Inspector
+    {
+        get => GetValue(InspectorProperty);
+        set => SetValue(InspectorProperty, value);
     }
 
     /// <summary>Whether the sidebar shows; the sidebar button toggles it.</summary>
@@ -163,6 +216,44 @@ public class NavigationSplitView : ContentControl
         set => SetValue(SidebarBackgroundProperty, value);
     }
 
+    /// <summary>Whether the inspector shows: closed by default.</summary>
+    public bool IsInspectorOpen
+    {
+        get => GetValue(IsInspectorOpenProperty);
+        set => SetValue(IsInspectorOpenProperty, value);
+    }
+
+    /// <summary>The inspector's width when it shows: 270 pt, SwiftUI's. Dragging its edge changes it (bind it to keep it).</summary>
+    public double InspectorWidth
+    {
+        get => GetValue(InspectorWidthProperty);
+        set => SetValue(InspectorWidthProperty, value);
+    }
+
+    /// <summary>
+    /// The narrowest a drag makes the inspector: 270 pt, as its maximum, so that it keeps its width as in SwiftUI. Give
+    /// them different values for a drag on its edge to resize it; dragged past half the minimum, it folds away.
+    /// </summary>
+    public double MinInspectorWidth
+    {
+        get => GetValue(MinInspectorWidthProperty);
+        set => SetValue(MinInspectorWidthProperty, value);
+    }
+
+    /// <summary>The widest a drag makes the inspector: 270 pt. It never narrows the content below its MinWidth.</summary>
+    public double MaxInspectorWidth
+    {
+        get => GetValue(MaxInspectorWidthProperty);
+        set => SetValue(MaxInspectorWidthProperty, value);
+    }
+
+    /// <summary>The inspector's background where the window shows no material: the sidebar's color.</summary>
+    public IBrush? InspectorBackground
+    {
+        get => GetValue(InspectorBackgroundProperty);
+        set => SetValue(InspectorBackgroundProperty, value);
+    }
+
     /// <summary>The scroll viewer whose content passes under the content's toolbar, which then shows its background.</summary>
     public ScrollViewer? ContentScrollViewer
     {
@@ -180,11 +271,28 @@ public class NavigationSplitView : ContentControl
         set => SetValue(ToggleSidebarGestureProperty, value);
     }
 
+    /// <summary>
+    /// The shortcut that shows or hides the inspector, when there is one: ⌃⌘I on macOS, as in native apps; none
+    /// elsewhere. A menu item with the same gesture takes it first.
+    /// </summary>
+    public KeyGesture? ToggleInspectorGesture
+    {
+        get => GetValue(ToggleInspectorGestureProperty);
+        set => SetValue(ToggleInspectorGestureProperty, value);
+    }
+
     /// <summary>How much of the sidebar shows: animated between 0 and <see cref="SidebarWidth"/>.</summary>
     public double VisibleSidebarWidth
     {
         get => GetValue(VisibleSidebarWidthProperty);
         set => SetValue(VisibleSidebarWidthProperty, value);
+    }
+
+    /// <summary>How much of the inspector shows: animated between 0 and <see cref="InspectorWidth"/>.</summary>
+    public double VisibleInspectorWidth
+    {
+        get => GetValue(VisibleInspectorWidthProperty);
+        set => SetValue(VisibleInspectorWidthProperty, value);
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -196,46 +304,56 @@ public class NavigationSplitView : ContentControl
             _sidebarToggle.Click -= OnSidebarToggleClick;
             _sidebarToggle.SizeChanged -= OnSidebarToggleSizeChanged;
         }
-        if (_sidebarGrip is not null)
+        foreach (var grip in new[] { _sidebarGrip, _inspectorGrip })
         {
-            _sidebarGrip.PointerPressed -= OnGripPressed;
-            _sidebarGrip.PointerMoved -= OnGripMoved;
-            _sidebarGrip.PointerReleased -= OnGripReleased;
-            _sidebarGrip.PointerCaptureLost -= OnGripCaptureLost;
+            if (grip is null)
+                continue;
+            grip.PointerPressed -= OnGripPressed;
+            grip.PointerMoved -= OnGripMoved;
+            grip.PointerReleased -= OnGripReleased;
+            grip.PointerCaptureLost -= OnGripCaptureLost;
         }
 
         _sidebarRoot = e.NameScope.Find<Control>(PartSidebarRoot);
         _contentRoot = e.NameScope.Find<Control>(PartContentRoot);
+        _inspectorRoot = e.NameScope.Find<Control>(PartInspectorRoot);
         _toolbar = e.NameScope.Find<CupertinoToolbar>(PartToolbar);
         _contentToolbarPresenter = e.NameScope.Find<ContentPresenter>(PartContentToolbarPresenter);
         _sidebarPresenter = e.NameScope.Find<ContentPresenter>(PartSidebarPresenter);
+        _inspectorPresenter = e.NameScope.Find<ContentPresenter>(PartInspectorPresenter);
         _sidebarGrip = e.NameScope.Find<Control>(PartSidebarGrip);
+        _inspectorGrip = e.NameScope.Find<Control>(PartInspectorGrip);
         _toggleBand = e.NameScope.Find<Control>(PartToggleBand);
         _sidebarToggle = e.NameScope.Find<Button>(PartSidebarToggle);
 
         if (_sidebarRoot is not null)
             _sidebarRoot.RenderTransform = _sidebarOffset;
+        if (_inspectorRoot is not null)
+            _inspectorRoot.RenderTransform = _inspectorOffset;
         if (_sidebarToggle is not null)
         {
             _sidebarToggle.Click += OnSidebarToggleClick;
             // Compact toolbars have smaller buttons.
             _sidebarToggle.SizeChanged += OnSidebarToggleSizeChanged;
         }
-        if (_sidebarGrip is not null)
+        foreach (var grip in new[] { _sidebarGrip, _inspectorGrip })
         {
-            _sidebarGrip.Width = GripInside + GripOutside;
-            _sidebarGrip.PointerPressed += OnGripPressed;
-            _sidebarGrip.PointerMoved += OnGripMoved;
-            _sidebarGrip.PointerReleased += OnGripReleased;
-            _sidebarGrip.PointerCaptureLost += OnGripCaptureLost;
+            if (grip is null)
+                continue;
+            grip.Width = GripInside + GripOutside;
+            grip.PointerPressed += OnGripPressed;
+            grip.PointerMoved += OnGripMoved;
+            grip.PointerReleased += OnGripReleased;
+            grip.PointerCaptureLost += OnGripCaptureLost;
         }
 
         UpdateChrome();
     }
 
-    // The sidebar's and the toolbar's contents are this control's logical children, as its content is.
+    // The sidebar's, the inspector's and the toolbar's contents are this control's logical children, as its content is.
     protected override bool RegisterContentPresenter(ContentPresenter presenter) =>
-        base.RegisterContentPresenter(presenter) || presenter.Name is PartSidebarPresenter or PartContentToolbarPresenter;
+        base.RegisterContentPresenter(presenter)
+        || presenter.Name is PartSidebarPresenter or PartInspectorPresenter or PartContentToolbarPresenter;
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -262,10 +380,17 @@ public class NavigationSplitView : ContentControl
     {
         base.OnPropertyChanged(change);
 
-        // A local value: a current value would be lost once the transition ends, back to the default.
+        // Local values: a current value would be lost once the transition ends, back to the default.
         if (change.Property == IsSidebarOpenProperty || change.Property == SidebarWidthProperty)
             SetValue(VisibleSidebarWidthProperty, IsSidebarOpen ? SidebarWidth : 0);
-        if (change.Property == VisibleSidebarWidthProperty || change.Property == SidebarWidthProperty)
+        if (change.Property == IsInspectorOpenProperty || change.Property == InspectorWidthProperty)
+            SetValue(VisibleInspectorWidthProperty, IsInspectorOpen ? InspectorWidth : 0);
+
+        if (change.Property == IsInspectorOpenProperty)
+            UpdateChrome();
+        else if (change.Property == VisibleSidebarWidthProperty || change.Property == SidebarWidthProperty
+            || change.Property == VisibleInspectorWidthProperty || change.Property == InspectorWidthProperty
+            || change.Property == MinInspectorWidthProperty || change.Property == MaxInspectorWidthProperty)
             UpdatePositions();
     }
 
@@ -280,49 +405,72 @@ public class NavigationSplitView : ContentControl
     // Before the focused control sees it, as a menu's key equivalent would.
     private void OnTopLevelKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Handled || !IsEffectivelyVisible || ToggleSidebarGesture?.Matches(e) != true)
+        if (e.Handled || !IsEffectivelyVisible)
             return;
-        SetCurrentValue(IsSidebarOpenProperty, !IsSidebarOpen);
+        if (ToggleSidebarGesture?.Matches(e) == true)
+            SetCurrentValue(IsSidebarOpenProperty, !IsSidebarOpen);
+        else if (Inspector is not null && ToggleInspectorGesture?.Matches(e) == true)
+            SetCurrentValue(IsInspectorOpenProperty, !IsInspectorOpen);
+        else
+            return;
         e.Handled = true;
     }
 
     private void OnSidebarToggleSizeChanged(object? sender, SizeChangedEventArgs e) => UpdatePositions();
 
+    // How far the pointer is from the dragged column's side of the window.
+    private double DistanceFromSide(Control grip, PointerEventArgs e)
+    {
+        var x = e.GetPosition(this).X;
+        return grip == _sidebarGrip ? x : Bounds.Width - x;
+    }
+
     private void OnGripPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!IsSidebarOpen || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        var grip = (Control)sender!;
+        var isOpen = grip == _sidebarGrip ? IsSidebarOpen : IsInspectorOpen;
+        if (!isOpen || !e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
             return;
-        _gripOffset = e.GetPosition(this).X - VisibleSidebarWidth;
-        // The sidebar follows the pointer, without the open and close animation.
+        _draggedGrip = grip;
+        _gripOffset = DistanceFromSide(grip, e) - (grip == _sidebarGrip ? VisibleSidebarWidth : VisibleInspectorWidth);
+        // The column follows the pointer, without the open and close animation.
         _suspendedTransitions = Transitions;
         Transitions = null;
-        e.Pointer.Capture(_sidebarGrip);
+        e.Pointer.Capture(grip);
         e.Handled = true;
     }
 
     private void OnGripMoved(object? sender, PointerEventArgs e)
     {
-        if (_gripOffset is not { } offset)
+        if (_draggedGrip is not { } grip)
             return;
 
-        var proposed = e.GetPosition(this).X - offset;
-        var min = MinSidebarWidth;
-        var max = Math.Max(min, Math.Min(MaxSidebarWidth, Bounds.Width - ((Content as Control)?.MinWidth ?? 0)));
-        if (IsSidebarOpen && proposed < min * CollapseFraction)
+        var isSidebar = grip == _sidebarGrip;
+        var (isOpenProperty, widthProperty) = isSidebar
+            ? (IsSidebarOpenProperty, SidebarWidthProperty)
+            : (IsInspectorOpenProperty, InspectorWidthProperty);
+        var (min, max, otherColumn) = isSidebar
+            ? (MinSidebarWidth, MaxSidebarWidth, VisibleInspectorWidth)
+            : (MinInspectorWidth, MaxInspectorWidth, VisibleSidebarWidth);
+        max = Math.Max(min, Math.Min(max, Bounds.Width - otherColumn - ((Content as Control)?.MinWidth ?? 0)));
+
+        var proposed = DistanceFromSide(grip, e) - _gripOffset;
+        var isOpen = GetValue(isOpenProperty);
+        if (isOpen && proposed < min * CollapseFraction)
         {
-            SetCurrentValue(IsSidebarOpenProperty, false);
+            SetCurrentValue(isOpenProperty, false);
         }
-        else if (IsSidebarOpen || proposed > min * ReopenFraction)
+        else if (isOpen || proposed > min * ReopenFraction)
         {
-            SetCurrentValue(SidebarWidthProperty, Math.Clamp(proposed, min, max));
-            SetCurrentValue(IsSidebarOpenProperty, true);
+            SetCurrentValue(widthProperty, Math.Clamp(proposed, min, max));
+            SetCurrentValue(isOpenProperty, true);
         }
         e.Handled = true;
     }
 
     private void OnGripReleased(object? sender, PointerReleasedEventArgs e)
     {
-        if (_gripOffset is null)
+        if (_draggedGrip is null)
             return;
         e.Pointer.Capture(null);
         e.Handled = true;
@@ -330,7 +478,9 @@ public class NavigationSplitView : ContentControl
 
     private void OnGripCaptureLost(object? sender, PointerCaptureLostEventArgs e)
     {
-        _gripOffset = null;
+        if (_draggedGrip is null)
+            return;
+        _draggedGrip = null;
         Transitions = _suspendedTransitions;
         _suspendedTransitions = null;
         UpdatePositions();
@@ -338,27 +488,35 @@ public class NavigationSplitView : ContentControl
 
     private bool IsCompact => _window is { ToolbarStyle: CupertinoToolbarStyle.UnifiedCompact };
 
-    // The toolbar's height: the band the button is centered in, and the room the sidebar leaves at its top.
+    // The toolbar's height: the band the button is centered in, and the room the columns leave at their top. Its
+    // background shows while the inspector does, as on macOS 27.
     private void UpdateChrome()
     {
         var compact = IsCompact;
         var bandHeight = compact ? CompactToolbarHeight : ToolbarHeight;
-        _toolbar?.Classes.Set("compact", compact);
+        if (_toolbar is not null)
+        {
+            _toolbar.Classes.Set("compact", compact);
+            _toolbar.BackgroundVisibility = IsInspectorOpen ? ToolbarBackgroundVisibility.Visible : ToolbarBackgroundVisibility.Automatic;
+        }
         _sidebarToggle?.Classes.Set("compact", compact);
         if (_toggleBand is not null)
             _toggleBand.Height = bandHeight;
         if (_sidebarPresenter is not null)
             _sidebarPresenter.Margin = new Thickness(0, bandHeight, 0, 0);
+        if (_inspectorPresenter is not null)
+            _inspectorPresenter.Margin = new Thickness(0, bandHeight, 0, 0);
         UpdatePositions();
     }
 
-    // Everything follows the sidebar's visible edge.
+    // Everything follows the columns' visible edges.
     private void UpdatePositions()
     {
         if (_sidebarRoot is null || _contentRoot is null || _sidebarToggle is null || _contentToolbarPresenter is null)
             return;
 
         var edge = Math.Clamp(VisibleSidebarWidth, 0, SidebarWidth);
+        var inspectorEdge = Math.Clamp(VisibleInspectorWidth, 0, InspectorWidth);
         // Past the window controls, which the window reports when they cover its content.
         var stop = Math.Max(EdgeMargin, _window?.WindowControlsInset.Left ?? 0);
         var buttonWidth = _sidebarToggle.Bounds.Width > 0 ? _sidebarToggle.Bounds.Width : ButtonSize;
@@ -366,13 +524,25 @@ public class NavigationSplitView : ContentControl
         var toolbarX = Math.Max(edge, buttonX + buttonWidth) + ToolbarGap;
 
         _sidebarOffset.X = edge - SidebarWidth;
+        _inspectorOffset.X = InspectorWidth - inspectorEdge;
+        // Off while their column is away, except during the drag that folded it; the inspector's while its width is fixed.
         if (_sidebarGrip is not null)
         {
             _sidebarGrip.Margin = new Thickness(edge - GripInside, 0, 0, 0);
-            // Off while the sidebar is away, except during the drag that folded it.
-            _sidebarGrip.IsHitTestVisible = IsSidebarOpen || _gripOffset is not null;
+            _sidebarGrip.IsHitTestVisible = IsSidebarOpen || _draggedGrip == _sidebarGrip;
         }
+        if (_inspectorGrip is not null)
+        {
+            _inspectorGrip.Margin = new Thickness(0, 0, inspectorEdge - GripInside, 0);
+            _inspectorGrip.IsHitTestVisible = (IsInspectorOpen && MinInspectorWidth < MaxInspectorWidth)
+                || _draggedGrip == _inspectorGrip;
+        }
+        // The content and the toolbar's band end at the inspector's edge; the toolbar's items run to the window's edge.
         _contentRoot.Margin = new Thickness(edge, 0, 0, 0);
+        if (Presenter is not null)
+            Presenter.Margin = new Thickness(0, 0, inspectorEdge, 0);
+        if (_toolbar is not null)
+            _toolbar.BackgroundMargin = new Thickness(0, 0, inspectorEdge, 0);
         _sidebarToggle.Margin = new Thickness(buttonX, 0, 0, 0);
         _contentToolbarPresenter.Margin = new Thickness(toolbarX - edge, 0, EdgeMargin, 0);
     }
