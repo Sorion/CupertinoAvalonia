@@ -4,7 +4,8 @@
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <!-- Medium is macOS's regular control size and has no suffix. -->
+  <!-- Medium is macOS's regular control size and has no suffix. Values marked "macOS 27" were measured on it and replace
+       the kit's (see `measured` in the generator). -->
   <x:Double x:Key="ControlHeightMini">16</x:Double>
   <x:Double x:Key="ControlHeightSmall">20</x:Double>
   <x:Double x:Key="ControlHeight">24</x:Double>
@@ -15,11 +16,11 @@
   <CornerRadius x:Key="ControlRadius">6</CornerRadius>
   <CornerRadius x:Key="ControlRadiusLarge">7</CornerRadius>
   <CornerRadius x:Key="ControlRadiusXLarge">9</CornerRadius>
-  <x:Double x:Key="ButtonPaddingHorizontalMini">7</x:Double>
+  <x:Double x:Key="ButtonPaddingHorizontalMini">8</x:Double> <!-- macOS 27; the kit's 7 -->
   <x:Double x:Key="ButtonPaddingHorizontalSmall">10</x:Double>
-  <x:Double x:Key="ButtonPaddingHorizontal">16</x:Double>
-  <x:Double x:Key="ButtonPaddingHorizontalLarge">16</x:Double>
-  <x:Double x:Key="ButtonPaddingHorizontalXLarge">16</x:Double>
+  <x:Double x:Key="ButtonPaddingHorizontal">12</x:Double> <!-- macOS 27; the kit's 16 -->
+  <x:Double x:Key="ButtonPaddingHorizontalLarge">14</x:Double> <!-- macOS 27; the kit's 16 -->
+  <x:Double x:Key="ButtonPaddingHorizontalXLarge">18</x:Double> <!-- macOS 27; the kit's 16 -->
   <x:Double x:Key="ButtonVerticalPaddingMini">2</x:Double>
   <x:Double x:Key="ButtonVerticalPaddingSmall">3</x:Double>
   <x:Double x:Key="ButtonVerticalPadding">4</x:Double>
@@ -55,7 +56,7 @@
   <x:Double x:Key="CursorHeight">18</x:Double>
   <x:Double x:Key="CursorHeightLarge">18</x:Double>
   <x:Double x:Key="CursorHeightXLarge">18</x:Double>
-  <x:Double x:Key="ControlFontSizeMini">10</x:Double>
+  <x:Double x:Key="ControlFontSizeMini">9</x:Double> <!-- macOS 27; the kit's 10 -->
   <x:Double x:Key="ControlFontSizeSmall">11</x:Double>
   <x:Double x:Key="ControlFontSize">13</x:Double>
   <x:Double x:Key="ControlFontSizeLarge">13</x:Double>
@@ -110,7 +111,7 @@
   <x:Double x:Key="PopUpButtonFontSizeChevron">11</x:Double>
   <x:Double x:Key="PopUpButtonFontSizeChevronLarge">13</x:Double>
   <x:Double x:Key="PopUpButtonFontSizeChevronXLarge">13</x:Double>
-  <x:Double x:Key="PopUpButtonInsetLeftMini">7</x:Double>
+  <x:Double x:Key="PopUpButtonInsetLeftMini">8</x:Double> <!-- macOS 27; the kit's 7 -->
   <x:Double x:Key="PopUpButtonInsetLeftSmall">10</x:Double>
   <x:Double x:Key="PopUpButtonInsetLeft">12</x:Double>
   <x:Double x:Key="PopUpButtonInsetLeftLarge">14</x:Double>
@@ -340,17 +341,17 @@
   <x:Double x:Key="ComboBoxTextInsetRight">28</x:Double>
   <x:Double x:Key="ComboBoxTextInsetRightLarge">28</x:Double>
   <x:Double x:Key="ComboBoxTextInsetRightXLarge">34</x:Double>
-  <Thickness x:Key="ButtonPaddingMini">7,0</Thickness>
+  <Thickness x:Key="ButtonPaddingMini">8,0</Thickness>
   <Thickness x:Key="ButtonPaddingSmall">10,0</Thickness>
-  <Thickness x:Key="ButtonPadding">16,0</Thickness>
-  <Thickness x:Key="ButtonPaddingLarge">16,0</Thickness>
-  <Thickness x:Key="ButtonPaddingXLarge">16,0</Thickness>
+  <Thickness x:Key="ButtonPadding">12,0</Thickness>
+  <Thickness x:Key="ButtonPaddingLarge">14,0</Thickness>
+  <Thickness x:Key="ButtonPaddingXLarge">18,0</Thickness>
   <Thickness x:Key="TextFieldPaddingMini">6,0,6,0</Thickness>
   <Thickness x:Key="TextFieldPaddingSmall">6,0,6,0</Thickness>
   <Thickness x:Key="TextFieldPadding">8,0,8,0</Thickness>
   <Thickness x:Key="TextFieldPaddingLarge">8,0,8,0</Thickness>
   <Thickness x:Key="TextFieldPaddingXLarge">10,0,10,0</Thickness>
-  <Thickness x:Key="PopUpButtonPaddingMini">7,0,0,0</Thickness>
+  <Thickness x:Key="PopUpButtonPaddingMini">8,0,0,0</Thickness>
   <Thickness x:Key="PopUpButtonPaddingSmall">10,0,0,0</Thickness>
   <Thickness x:Key="PopUpButtonPadding">12,0,0,0</Thickness>
   <Thickness x:Key="PopUpButtonPaddingLarge">14,0,0,0</Thickness>

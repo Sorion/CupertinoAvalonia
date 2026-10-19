@@ -109,13 +109,14 @@ public class ComboBoxTests
         var field = Part<TextBox>(combo, "PART_EditableTextBox");
         Assert.Equal(combo.FontSize, field.FontSize);
         Assert.Equal(combo.LetterSpacing, field.LetterSpacing);
-        Assert.Equal(10, field.FontSize);
+        Assert.Equal(9, field.FontSize);
         window.Close();
     }
 
     // NSPopUpButton on macOS 27: its width sized to fit, chevron.up.chevron.down (Medium), the chevron's 10 pt box
-    // centered 13.5 pt from the end (its ink, 13.75 pt). Mini controls are left out: their label is 9 pt in AppKit.
+    // centered 13.5 pt from the end (its ink, 13.75 pt).
     [AvaloniaTheory]
+    [InlineData("mini", "Mini", 50, 9.25, 9)]
     [InlineData("small", "Small", 68.5, 9.25, 11)]
     [InlineData("", "Regular", 94, 10.75, 13.5)]
     [InlineData("large", "Large", 90, 13.5, 15)]

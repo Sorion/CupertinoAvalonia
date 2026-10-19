@@ -16,6 +16,21 @@ namespace CupertinoAvalonia.Tests;
 public class ToggleSwitchTests
 {
     [AvaloniaTheory]
+    [InlineData("mini")]
+    [InlineData("small")]
+    public void The_label_keeps_the_regular_size_as_the_switch_shrinks(string size)
+    {
+        // Measured on macOS 27 (SwiftUI): 13 pt at every control size.
+        var toggle = new ToggleSwitch { Content = "Mute", Classes = { size } };
+        var window = new Window { Content = toggle };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(13, toggle.FontSize);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
     [InlineData(false, "", "Light")]
     [InlineData(true, "", "Light")]
     [InlineData(true, "small", "Light")]

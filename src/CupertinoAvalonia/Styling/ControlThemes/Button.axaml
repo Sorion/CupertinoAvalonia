@@ -258,7 +258,7 @@
     symbol's ink sits 0.25 pt left of the box's center.
   -->
   <ControlTheme x:Key="{x:Type DropDownButton}" TargetType="DropDownButton" BasedOn="{StaticResource {x:Type Button}}">
-    <Setter Property="Padding" Value="12,0,0,0" />
+    <Setter Property="Padding" Value="{DynamicResource PopUpButtonPadding}" />
     <Setter Property="HorizontalContentAlignment" Value="Left" />
     <Setter Property="Template">
       <ControlTemplate>
@@ -306,28 +306,28 @@
     </Style>
 
     <Style Selector="^.mini">
-      <Setter Property="Padding" Value="8,0,0,0" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingMini}" />
       <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="9.75,0,4,0" />
         <Setter Property="FontSize" Value="8.75" />
       </Style>
     </Style>
     <Style Selector="^.small">
-      <Setter Property="Padding" Value="10,0,0,0" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingSmall}" />
       <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="13.75,0,6,0" />
         <Setter Property="FontSize" Value="8.75" />
       </Style>
     </Style>
     <Style Selector="^.large">
-      <Setter Property="Padding" Value="14,0,0,0" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingLarge}" />
       <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="21.75,0,10,0" />
         <Setter Property="FontSize" Value="13" />
       </Style>
     </Style>
     <Style Selector="^.xlarge">
-      <Setter Property="Padding" Value="18,0,0,0" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingXLarge}" />
       <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="28.75,0,13,0" />
         <Setter Property="FontSize" Value="13" />
@@ -343,7 +343,7 @@
   <ControlTheme x:Key="{x:Type SplitButton}" TargetType="SplitButton">
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
     <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
-    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
@@ -454,7 +454,7 @@
 
     <Style Selector="^.mini">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
-      <Setter Property="Padding" Value="8,0" />
+      <Setter Property="Padding" Value="{DynamicResource ButtonPaddingMini}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
@@ -471,7 +471,7 @@
     </Style>
     <Style Selector="^.small">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
-      <Setter Property="Padding" Value="10,0" />
+      <Setter Property="Padding" Value="{DynamicResource ButtonPaddingSmall}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusSmall}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
@@ -488,7 +488,7 @@
     </Style>
     <Style Selector="^.large">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
-      <Setter Property="Padding" Value="14,0" />
+      <Setter Property="Padding" Value="{DynamicResource ButtonPaddingLarge}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingLarge}" />
@@ -501,7 +501,7 @@
     </Style>
     <Style Selector="^.xlarge">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
-      <Setter Property="Padding" Value="18,0" />
+      <Setter Property="Padding" Value="{DynamicResource ButtonPaddingXLarge}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusXLarge}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeXLarge}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingXLarge}" />

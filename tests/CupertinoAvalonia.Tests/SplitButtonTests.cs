@@ -38,30 +38,33 @@ public class SplitButtonTests
         window.Close();
     }
 
-    // AppKit's widths on macOS 27: NSPopUpButton (pull-down) and NSComboButton, sized to fit. Mini controls are left
-    // out: their label is 9 pt in AppKit, 10 pt in the kit.
+    // AppKit's widths on macOS 27: NSPopUpButton (pull-down), NSComboButton and the push button (NSButton), sized to fit.
     [AvaloniaTheory]
-    [InlineData("small", 68.5, 70.5)]
-    [InlineData("", 94, 94.5)]
-    [InlineData("large", 90, 90.5)]
-    [InlineData("xlarge", 138.5, 145)]
-    public void Pull_down_and_split_buttons_are_as_wide_as_in_AppKit(string size, double pullDownWidth, double splitWidth)
+    [InlineData("mini", 50, 51.5, 34.5)]
+    [InlineData("small", 68.5, 70.5, 49)]
+    [InlineData("", 94, 94.5, 70.5)]
+    [InlineData("large", 90, 90.5, 62.5)]
+    [InlineData("xlarge", 138.5, 145, 105)]
+    public void Buttons_are_as_wide_as_in_AppKit(string size, double pullDownWidth, double splitWidth, double buttonWidth)
     {
         Assert.SkipUnless(OperatingSystem.IsMacOS(), "The labels' widths are the system font's.");
-        var label = size switch { "small" => "Small", "large" => "Large", "xlarge" => "Extra Large", _ => "Regular" };
+        var label = size switch { "mini" => "Mini", "small" => "Small", "large" => "Large", "xlarge" => "Extra Large", _ => "Regular" };
         var pullDown = new DropDownButton { Content = label };
         var split = new SplitButton { Content = label };
+        var button = new Button { Content = label };
         if (size.Length > 0)
         {
             pullDown.Classes.Add(size);
             split.Classes.Add(size);
+            button.Classes.Add(size);
         }
-        var window = Show(pullDown, split);
+        var window = Show(pullDown, split, button);
         window.Styles.Add(new Style(x => x.Is<Layoutable>()) { Setters = { new Setter(Layoutable.UseLayoutRoundingProperty, false) } });
         window.UpdateLayout();
 
         Assert.Equal(pullDownWidth, pullDown.Bounds.Width, tolerance: 0.5);
         Assert.Equal(splitWidth, split.Bounds.Width, tolerance: 0.5);
+        Assert.Equal(buttonWidth, button.Bounds.Width, tolerance: 0.5);
         window.Close();
     }
 

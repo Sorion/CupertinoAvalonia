@@ -118,6 +118,15 @@ ${dict('Dark')}
 // ---------- Metrics (control sizes) ----------
 const sizeSuffix = { Mini: 'Mini', Small: 'Small', Medium: '', Large: 'Large', XL: 'XLarge' };
 const sizeGroups = { 'Global': 'Control', 'Toggle (Switch)': 'Switch', 'Radio Button': 'RadioButton', 'Checkboxes': 'CheckBox', 'Fields': 'TextField', 'Segmented Control': 'SegmentedControl', 'Combo Button': 'ComboBox', 'Arrow Button': 'ArrowButton', 'Color Well': 'ColorWell', 'Popup': 'PopUpButton' };
+// Measured on macOS 27 where the kit differs: what AppKit and SwiftUI draw wins. Marked in the output.
+const measured = {
+  // NSFont.systemFontSize(for: .mini): every mini control's text, in AppKit and SwiftUI.
+  'Global/Font Size': { Mini: 9 },
+  // A push button sized to fit is its label plus this on each side (NSButton, SwiftUI's Button).
+  'Button/Padding - Horizontal': { Mini: 8, Medium: 12, Large: 14, XL: 18 },
+  // NSPopUpButton's label inset.
+  'Popup/Inset - Left': { Mini: 8 },
+};
 {
   const sizes = collection('Sizes');
   const lines = [];
@@ -128,12 +137,15 @@ const sizeGroups = { 'Global': 'Control', 'Toggle (Switch)': 'Switch', 'Radio Bu
     const base = (sizeGroups[group] ?? pascal(group)) + pascal(rest.join(' '));
     byName[name] = {};
     for (const mode of sizes.modes) {
-      const v = Math.round(valueOf(row[mode]) * 100) / 100;
+      const kit = Math.round(valueOf(row[mode]) * 100) / 100;
+      const v = measured[name]?.[mode] ?? kit;
       byName[name][mode] = v;
       const key = base + sizeSuffix[mode];
-      lines.push(/Radius/.test(name) ? `  <CornerRadius x:Key="${key}">${v}</CornerRadius>` : `  <x:Double x:Key="${key}">${v}</x:Double>`);
+      const note = v !== kit ? ` <!-- macOS 27; the kit's ${kit} -->` : '';
+      lines.push((/Radius/.test(name) ? `  <CornerRadius x:Key="${key}">${v}</CornerRadius>` : `  <x:Double x:Key="${key}">${v}</x:Double>`) + note);
     }
   }
+  for (const name of Object.keys(measured)) if (!byName[name]) throw new Error(`No kit variable ${name}`);
   // Thickness resources can't be composed from doubles in XAML: generate them here.
   const composites = [
     ['ButtonPadding', (m) => `${byName['Button/Padding - Horizontal'][m]},0`],
@@ -149,7 +161,7 @@ const sizeGroups = { 'Global': 'Control', 'Toggle (Switch)': 'Switch', 'Radio Bu
   ];
   for (const [key, f] of derived) for (const mode of sizes.modes) lines.push(`  <x:Double x:Key="${key}${sizeSuffix[mode]}">${Math.round(f(mode) * 100) / 100}</x:Double>`);
   for (const mode of sizes.modes) lines.push(`  <Thickness x:Key="SwitchKnobMargin${sizeSuffix[mode]}">${byName['Toggle (Switch)/Knob - Inset'][mode]},0,0,0</Thickness>`);
-  write('Metrics.g.axaml', header('Sizes collection: Mini, Small, Medium, Large, XL') + `  <!-- Medium is macOS's regular control size and has no suffix. -->\n` + lines.join('\n') + '\n</ResourceDictionary>\n');
+  write('Metrics.g.axaml', header('Sizes collection: Mini, Small, Medium, Large, XL') + `  <!-- Medium is macOS's regular control size and has no suffix. Values marked "macOS 27" were measured on it and replace\n       the kit's (see \`measured\` in the generator). -->\n` + lines.join('\n') + '\n</ResourceDictionary>\n');
 }
 
 // ---------- Typography ----------

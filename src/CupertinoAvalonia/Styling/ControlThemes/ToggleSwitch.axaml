@@ -228,9 +228,8 @@
       </Style>
     </Style>
 
+    <!-- Measured on macOS 27 (SwiftUI): the label keeps the regular size, only the switch shrinks. -->
     <Style Selector="^.mini">
-      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
-      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
       <Style Selector="^ /template/ Panel#PART_Track">
         <Setter Property="Width" Value="{DynamicResource SwitchTrackWidthMini}" />
         <Setter Property="Height" Value="{DynamicResource SwitchTrackHeightMini}" />
@@ -246,8 +245,6 @@
       </Style>
     </Style>
     <Style Selector="^.small">
-      <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
-      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
       <Style Selector="^ /template/ Panel#PART_Track">
         <Setter Property="Width" Value="{DynamicResource SwitchTrackWidthSmall}" />
         <Setter Property="Height" Value="{DynamicResource SwitchTrackHeightSmall}" />

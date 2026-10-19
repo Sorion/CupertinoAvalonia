@@ -18,6 +18,7 @@ internal static class SystemFontTracking
     // At the weights 100 (ultra light) to 900 (black).
     private static readonly (double FontSize, double[] ByWeight)[] Table =
     [
+        (9, [0.49, 0.53, 0.62, 0.69, 0.80, 0.87, 0.98, 1.13, 1.26]),
         (10, [0.47, 0.52, 0.62, 0.70, 0.82, 0.90, 1.02, 1.19, 1.34]),
         (11, [0.46, 0.51, 0.62, 0.71, 0.83, 0.93, 1.06, 1.24, 1.41]),
         (12, [0.43, 0.49, 0.61, 0.70, 0.84, 0.94, 1.08, 1.29, 1.46]),

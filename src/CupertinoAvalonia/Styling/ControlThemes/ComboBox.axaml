@@ -182,8 +182,7 @@
     </Style>
     <Style Selector="^.mini">
       <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
-      <!-- Measured on macOS 27, 1 pt more than the kit's. -->
-      <Setter Property="Padding" Value="8,0,0,0" />
+      <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingMini}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />

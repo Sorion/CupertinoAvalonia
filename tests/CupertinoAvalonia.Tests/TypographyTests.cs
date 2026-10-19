@@ -34,10 +34,10 @@ public class TypographyTests
         window.Close();
     }
 
-    // AppKit's controls use the regular system font, 10 pt in mini controls.
+    // AppKit's controls use the regular system font, 9 pt in mini controls.
     [AvaloniaTheory]
     [InlineData("", 259.207)]
-    [InlineData("mini", 206.597)]
+    [InlineData("mini", 188.459)]
     public void Controls_are_as_wide_as_in_native_apps(string size, double width)
     {
         Assert.SkipUnless(OperatingSystem.IsMacOS(), "The system font is macOS's.");
