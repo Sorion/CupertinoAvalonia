@@ -4,6 +4,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 
@@ -72,6 +73,10 @@ public class NavigationSplitView : ContentControl
     public static readonly StyledProperty<double> VisibleSidebarWidthProperty =
         AvaloniaProperty.Register<NavigationSplitView, double>(nameof(VisibleSidebarWidth), 220);
 
+    public static readonly StyledProperty<KeyGesture?> ToggleSidebarGestureProperty =
+        AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleSidebarGesture),
+            OperatingSystem.IsMacOS() ? new KeyGesture(Key.S, KeyModifiers.Control | KeyModifiers.Meta) : null);
+
     private readonly TranslateTransform _sidebarOffset = new();
     private Control? _sidebarRoot;
     private Control? _contentRoot;
@@ -81,6 +86,7 @@ public class NavigationSplitView : ContentControl
     private Control? _toggleBand;
     private Button? _sidebarToggle;
     private CupertinoWindow? _window;
+    private TopLevel? _topLevel;
 
     /// <summary>The sidebar's content, usually a <c>ListBox</c> with the <c>sidebar</c> class.</summary>
     public object? Sidebar
@@ -124,6 +130,16 @@ public class NavigationSplitView : ContentControl
     {
         get => GetValue(ContentScrollViewerProperty);
         set => SetValue(ContentScrollViewerProperty, value);
+    }
+
+    /// <summary>
+    /// The shortcut that shows or hides the sidebar wherever the focus is in the window: ⌃⌘S on macOS, as in native apps;
+    /// none elsewhere. A menu item with the same gesture takes it first, so the sidebar doesn't toggle twice.
+    /// </summary>
+    public KeyGesture? ToggleSidebarGesture
+    {
+        get => GetValue(ToggleSidebarGestureProperty);
+        set => SetValue(ToggleSidebarGestureProperty, value);
     }
 
     /// <summary>How much of the sidebar shows: animated between 0 and <see cref="SidebarWidth"/>.</summary>
@@ -170,7 +186,9 @@ public class NavigationSplitView : ContentControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        _window = TopLevel.GetTopLevel(this) as CupertinoWindow;
+        _topLevel = TopLevel.GetTopLevel(this);
+        _topLevel?.AddHandler(KeyDownEvent, OnTopLevelKeyDown, RoutingStrategies.Tunnel);
+        _window = _topLevel as CupertinoWindow;
         if (_window is not null)
             _window.PropertyChanged += OnWindowPropertyChanged;
         UpdateChrome();
@@ -179,6 +197,8 @@ public class NavigationSplitView : ContentControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _topLevel?.RemoveHandler(KeyDownEvent, OnTopLevelKeyDown);
+        _topLevel = null;
         if (_window is not null)
             _window.PropertyChanged -= OnWindowPropertyChanged;
         _window = null;
@@ -202,6 +222,15 @@ public class NavigationSplitView : ContentControl
     }
 
     private void OnSidebarToggleClick(object? sender, RoutedEventArgs e) => SetCurrentValue(IsSidebarOpenProperty, !IsSidebarOpen);
+
+    // Before the focused control sees it, as a menu's key equivalent would.
+    private void OnTopLevelKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Handled || !IsEffectivelyVisible || ToggleSidebarGesture?.Matches(e) != true)
+            return;
+        SetCurrentValue(IsSidebarOpenProperty, !IsSidebarOpen);
+        e.Handled = true;
+    }
 
     private void OnSidebarToggleSizeChanged(object? sender, SizeChangedEventArgs e) => UpdatePositions();
 

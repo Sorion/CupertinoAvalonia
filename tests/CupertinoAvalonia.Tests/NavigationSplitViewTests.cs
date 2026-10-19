@@ -93,6 +93,38 @@ public class NavigationSplitViewTests
     }
 
     [AvaloniaFact]
+    public void Control_Command_S_toggles_the_sidebar_wherever_the_focus_is()
+    {
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "⌃⌘S is macOS's shortcut; there is none elsewhere.");
+        var field = new TextBox();
+        var (window, split) = Show(isSidebarOpen: true, toolbar: field);
+        field.Focus();
+
+        window.KeyPressQwerty(PhysicalKey.S, RawInputModifiers.Control | RawInputModifiers.Meta);
+        Assert.False(split.IsSidebarOpen);
+        window.KeyPressQwerty(PhysicalKey.S, RawInputModifiers.Control | RawInputModifiers.Meta);
+        Assert.True(split.IsSidebarOpen);
+        // Not ⌘S alone.
+        window.KeyPressQwerty(PhysicalKey.S, RawInputModifiers.Meta);
+        Assert.True(split.IsSidebarOpen);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void The_shortcut_can_be_changed_or_removed()
+    {
+        var (window, split) = Show(isSidebarOpen: true);
+
+        split.ToggleSidebarGesture = new KeyGesture(Key.L, KeyModifiers.Control | KeyModifiers.Shift);
+        window.KeyPressQwerty(PhysicalKey.L, RawInputModifiers.Control | RawInputModifiers.Shift);
+        Assert.False(split.IsSidebarOpen);
+        split.ToggleSidebarGesture = null;
+        window.KeyPressQwerty(PhysicalKey.L, RawInputModifiers.Control | RawInputModifiers.Shift);
+        Assert.False(split.IsSidebarOpen);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void The_toolbar_content_is_toolbar_items_and_a_logical_child()
     {
         var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" } };
