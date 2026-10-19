@@ -36,6 +36,8 @@ public class CupertinoAvaloniaTheme : Styles
 
         ApplyFluentPalettes();
         SystemFontTracking.Apply(Resources);
+        ApplySidebarSize(MacOSSidebarSize.Read());
+        MacOSSidebarSize.Observe(() => ApplySidebarSize(MacOSSidebarSize.Read()));
         WindowActivity.Initialize();
         Stepper.Initialize();
         MacOSColorSpace.Initialize();
@@ -73,6 +75,23 @@ public class CupertinoAvaloniaTheme : Styles
     }
 
     private void OnPlatformColorValuesChanged(object? sender, PlatformColorValues e) => UpdateAccent();
+
+    // Measured on macOS 27 (AppKit and SwiftUI sidebars): row height, text and symbol size, and the symbols' column,
+    // which starts the labels 42, 46 or 48 pt in.
+    internal void ApplySidebarSize(SidebarSize size)
+    {
+        var (itemHeight, fontSize, iconWidth) = size switch
+        {
+            SidebarSize.Small => (24d, 11d, 20d),
+            SidebarSize.Large => (40d, 15d, 26d),
+            _ => (32d, 13d, 24d),
+        };
+        Resources["SidebarItemHeight"] = itemHeight;
+        Resources["SidebarFontSize"] = fontSize;
+        Resources["SidebarIconWidth"] = iconWidth;
+        Resources["SidebarLetterSpacing"] = SystemFontTracking.For(Resources, fontSize, "ControlFontWeight");
+        Resources["SidebarEmphasizedLetterSpacing"] = SystemFontTracking.For(Resources, fontSize, "BodyEmphasizedFontWeight");
+    }
 
     private void UpdateAccent()
     {

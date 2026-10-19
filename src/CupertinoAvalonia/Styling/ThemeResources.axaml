@@ -38,6 +38,12 @@
   <x:Double x:Key="ControlLetterSpacing">0</x:Double>
   <x:Double x:Key="ControlLetterSpacingLarge">0</x:Double>
   <x:Double x:Key="ControlLetterSpacingXLarge">0</x:Double>
+  <!-- Sidebars, at System Settings' sidebar icon size: set at startup and when it changes; medium off macOS. -->
+  <x:Double x:Key="SidebarItemHeight">32</x:Double>
+  <x:Double x:Key="SidebarFontSize">13</x:Double>
+  <x:Double x:Key="SidebarIconWidth">24</x:Double>
+  <x:Double x:Key="SidebarLetterSpacing">0</x:Double>
+  <x:Double x:Key="SidebarEmphasizedLetterSpacing">0</x:Double>
 
   <!-- For the Fluent fallback (Global/Radius). -->
   <CornerRadius x:Key="ControlCornerRadius">6</CornerRadius>

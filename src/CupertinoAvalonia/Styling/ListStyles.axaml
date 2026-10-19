@@ -4,26 +4,30 @@
         xmlns:cas="using:CupertinoAvalonia.Styling"
         xmlns:cac="using:CupertinoAvalonia.Controls">
 
-  <!-- Sidebars / Item, Size=Medium -->
+  <!-- Sidebars / Item, at the system's sidebar icon size (Sidebar… resources). -->
   <Style Selector="ListBox.sidebar">
     <Setter Property="Padding" Value="8,0" />
   </Style>
   <Style Selector="ListBox.sidebar ListBoxItem">
-    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="MinHeight" Value="{DynamicResource SidebarItemHeight}" />
     <Setter Property="Padding" Value="10,0" />
+    <Setter Property="FontSize" Value="{DynamicResource SidebarFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource SidebarLetterSpacing}" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
   </Style>
   <!-- Selected, the label is emphasized, as in Apple's apps (Mail, Notes, Settings on macOS 27). -->
   <Style Selector="ListBox.sidebar ListBoxItem:selected">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
-    <Setter Property="TextElement.FontWeight" Value="{DynamicResource BodyEmphasizedFontWeight}" />
-    <Setter Property="TextElement.LetterSpacing" Value="{DynamicResource BodyEmphasizedLetterSpacing}" />
+    <Setter Property="FontWeight" Value="{DynamicResource BodyEmphasizedFontWeight}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource SidebarEmphasizedLetterSpacing}" />
   </Style>
   <!-- The symbol at the label's size, in the large scale, as in Apple's apps and SwiftUI (AppKit's default and the kit
-       use the medium scale); Medium as in the kit, whether the label is emphasized or not. -->
+       use the medium scale); Medium as in the kit, whether the label is emphasized or not. A column as wide for all
+       symbols lines the labels up. -->
   <Style Selector="ListBox.sidebar ListBoxItem cac|SymbolIcon">
     <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
+    <Setter Property="Width" Value="{DynamicResource SidebarIconWidth}" />
     <Setter Property="SymbolScale" Value="Large" />
     <Setter Property="FontWeight" Value="Medium" />
   </Style>
@@ -38,12 +42,14 @@
     <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
 
-  <!-- Sidebars / Item, Size=Medium, Level=0…3 -->
+  <!-- Sidebars / Item, Level=0…3, at the system's sidebar icon size -->
   <Style Selector="TreeView.sidebar">
     <Setter Property="Padding" Value="8,0" />
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem">
-    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="MinHeight" Value="{DynamicResource SidebarItemHeight}" />
+    <Setter Property="FontSize" Value="{DynamicResource SidebarFontSize}" />
+    <Setter Property="LetterSpacing" Value="{DynamicResource SidebarLetterSpacing}" />
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem /template/ Grid#PART_Header">
     <Setter Property="Margin"
@@ -66,13 +72,14 @@
   <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ ContentPresenter#PART_HeaderPresenter">
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
     <Setter Property="TextElement.FontWeight" Value="{DynamicResource BodyEmphasizedFontWeight}" />
-    <Setter Property="TextElement.LetterSpacing" Value="{DynamicResource BodyEmphasizedLetterSpacing}" />
+    <Setter Property="TextElement.LetterSpacing" Value="{DynamicResource SidebarEmphasizedLetterSpacing}" />
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ ToggleButton#PART_ExpandCollapseChevron">
     <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem cac|SymbolIcon:not(#Chevron)">
     <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
+    <Setter Property="Width" Value="{DynamicResource SidebarIconWidth}" />
     <Setter Property="SymbolScale" Value="Large" />
     <Setter Property="FontWeight" Value="Medium" />
   </Style>

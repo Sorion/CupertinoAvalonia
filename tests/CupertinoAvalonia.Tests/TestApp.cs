@@ -14,6 +14,9 @@ public class TestApp : Application
 
     public override void Initialize()
     {
-        Styles.Add(new CupertinoAvaloniaTheme());
+        var theme = new CupertinoAvaloniaTheme();
+        // The tests expect the default sidebar size, whatever the Mac's setting.
+        theme.ApplySidebarSize(Media.SidebarSize.Medium);
+        Styles.Add(theme);
     }
 }

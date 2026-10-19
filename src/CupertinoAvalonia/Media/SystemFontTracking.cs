@@ -35,16 +35,17 @@ internal static class SystemFontTracking
 
     private static readonly string[] ControlSizes = ["Mini", "Small", "", "Large", "XLarge"];
 
-    // 0 on other OSes, where ".AppleSystemUIFont" falls back to another font.
+    private static bool? _isSystemFont;
+
+    // False on other OSes, where ".AppleSystemUIFont" falls back to another font.
+    private static bool IsSystemFont => _isSystemFont ??=
+        FontManager.Current.TryGetGlyphTypeface(new Typeface(".AppleSystemUIFont"), out var glyphTypeface)
+        && glyphTypeface.FamilyName == "System Font";
+
     public static void Apply(IResourceDictionary resources)
     {
-        var isSystemFont = FontManager.Current.TryGetGlyphTypeface(new Typeface(".AppleSystemUIFont"), out var glyphTypeface)
-                           && glyphTypeface.FamilyName == "System Font";
-
         void Set(string key, string fontSizeKey, string fontWeightKey) =>
-            resources[key] = isSystemFont
-                ? Lookup(Get<double>(resources, fontSizeKey), Get<FontWeight>(resources, fontWeightKey))
-                : 0d;
+            resources[key] = For(resources, Get<double>(resources, fontSizeKey), fontWeightKey);
 
         foreach (var style in TextStyles)
         {
@@ -55,6 +56,10 @@ internal static class SystemFontTracking
         foreach (var size in ControlSizes)
             Set($"ControlLetterSpacing{size}", $"ControlFontSize{size}", "ControlFontWeight");
     }
+
+    /// <summary>The spacing at a size and at the weight a resource holds; 0 off macOS.</summary>
+    public static double For(IResourceDictionary resources, double fontSize, string fontWeightKey) =>
+        IsSystemFont ? Lookup(fontSize, Get<FontWeight>(resources, fontWeightKey)) : 0d;
 
     /// <summary>The spacing at a size and weight, interpolated between the measured ones.</summary>
     internal static double Lookup(double fontSize, FontWeight fontWeight)

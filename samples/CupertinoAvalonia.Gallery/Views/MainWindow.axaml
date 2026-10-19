@@ -59,7 +59,7 @@
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="vm:GalleryPage">
               <StackPanel Orientation="Horizontal" Spacing="4">
-                <cac:SymbolIcon Width="24" Symbol="{Binding Icon}" />
+                <cac:SymbolIcon Symbol="{Binding Icon}" />
                 <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
               </StackPanel>
             </DataTemplate>

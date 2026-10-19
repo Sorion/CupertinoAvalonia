@@ -5,6 +5,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CupertinoAvalonia.Controls;
+using CupertinoAvalonia.Media;
 using Xunit;
 
 namespace CupertinoAvalonia.Tests;
@@ -50,6 +51,38 @@ public class SidebarTests
         // Not the rows nested under it.
         Assert.Equal(FontWeight.Regular, channelsLabel.FontWeight);
         window.Close();
+    }
+
+    // System Settings › Appearance › Sidebar icon size, measured on macOS 27.
+    [AvaloniaTheory]
+    // 1 small, 2 medium, 3 large, as NSTableViewDefaultSizeMode.
+    [InlineData(1, 24, 11, 20)]
+    [InlineData(2, 32, 13, 24)]
+    [InlineData(3, 40, 15, 26)]
+    public void Sidebars_follow_the_system_sidebar_size(int size, double height, double fontSize, double iconWidth)
+    {
+        var theme = Application.Current!.Styles.OfType<CupertinoAvaloniaTheme>().Single();
+        theme.ApplySidebarSize((SidebarSize)size);
+        try
+        {
+            var (icon, label) = (new SymbolIcon { Symbol = "folder" }, new TextBlock { Text = "Notes" });
+            var row = Row(icon, label);
+            var list = new ListBox { Classes = { "sidebar" }, Items = { row } };
+            var treeLabel = new TextBlock { Text = "Mixer" };
+            var treeRow = new TreeViewItem { Header = treeLabel };
+            var tree = new TreeView { Classes = { "sidebar" }, Items = { treeRow } };
+            var window = Show(list, tree);
+
+            Assert.Equal(height, row.Bounds.Height);
+            Assert.Equal(height, treeRow.Bounds.Height);
+            Assert.Equal((fontSize, fontSize, fontSize), (label.FontSize, icon.FontSize, treeLabel.FontSize));
+            Assert.Equal(iconWidth, icon.Bounds.Width);
+            window.Close();
+        }
+        finally
+        {
+            theme.ApplySidebarSize(SidebarSize.Medium);
+        }
     }
 
     private static ListBoxItem Row(SymbolIcon icon, TextBlock label) => new() { Content = Label(icon, label) };
