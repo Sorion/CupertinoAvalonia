@@ -204,8 +204,10 @@
     <Setter Property="Opacity" Value="1" />
   </Style>
 
+  <!-- Medium, measured on macOS 27 (the sidebar button in Notes and SwiftUI), whatever the controls' text weight. -->
   <Style Selector=":is(Button).toolbar cac|SymbolIcon, Border.toolbar-group cac|SymbolIcon, ListBox.segmented.toolbar cac|SymbolIcon">
     <Setter Property="SymbolScale" Value="Large" />
+    <Setter Property="FontWeight" Value="Medium" />
     <!-- Wide symbols (up to 24 pt) draw past it, so icon buttons stay round. -->
     <Setter Property="MaxWidth" Value="20" />
   </Style>

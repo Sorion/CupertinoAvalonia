@@ -81,8 +81,9 @@ public class CupertinoWindowTests
 
         if (OperatingSystem.IsMacOS())
         {
-            // The kit's window controls end at 86 points in a toolbar, 76 in a standard title bar, then a gap.
-            Assert.Equal(new Thickness(94, 0, 0, 0), window.WindowControlsInset);
+            // A toolbar's first item starts 96 points in (measured on macOS 27); the kit's controls end at 76 points in a
+            // standard title bar, then a gap.
+            Assert.Equal(new Thickness(96, 0, 0, 0), window.WindowControlsInset);
             window.ToolbarStyle = CupertinoToolbarStyle.None;
             Assert.Equal(new Thickness(84, 0, 0, 0), window.WindowControlsInset);
             window.WindowState = WindowState.FullScreen;

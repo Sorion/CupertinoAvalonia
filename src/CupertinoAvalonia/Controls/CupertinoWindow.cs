@@ -41,9 +41,11 @@ public class CupertinoWindow : Window
     private const double UnifiedToolbarHeight = 52;
     private const double UnifiedCompactToolbarHeight = 40;
 
-    // The kit's window controls: 68 pt wide, 8 pt from the edge in a standard title bar, 18 pt in a toolbar.
+    // The kit's window controls: 68 pt wide, 8 pt from the edge in a standard title bar, then an 8 pt gap.
     private const double WindowControlsEnd = 68;
     private const double WindowControlsGap = 8;
+    // In a toolbar, measured on macOS 27 (Notes, SwiftUI): the first item starts 96 pt in, the controls ending at 79.
+    private const double ToolbarItemsStart = 96;
 
     private readonly bool _isMacOS = OperatingSystem.IsMacOS() && !Design.IsDesignMode;
     private bool _materialSetTransparency;
@@ -184,8 +186,8 @@ public class CupertinoWindow : Window
     private void UpdateWindowControlsInset()
     {
         var covered = _isMacOS && ExtendsContentIntoTitleBar && WindowState != WindowState.FullScreen;
-        var start = ToolbarStyle == CupertinoToolbarStyle.None ? 8 : 18;
-        WindowControlsInset = covered ? new Thickness(start + WindowControlsEnd + WindowControlsGap, 0, 0, 0) : default;
+        var end = ToolbarStyle == CupertinoToolbarStyle.None ? 8 + WindowControlsEnd + WindowControlsGap : ToolbarItemsStart;
+        WindowControlsInset = covered ? new Thickness(end, 0, 0, 0) : default;
     }
 
     private void UpdateMaterialPseudoClass() =>
