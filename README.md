@@ -97,12 +97,41 @@ On macOS (elsewhere it's a plain `Window`):
   for a palette, or to compare with a native app side by side (the Gallery's View menu).
 
 The Gallery's window ([MainWindow.axaml](https://github.com/Sorion/CupertinoAvalonia/blob/main/samples/CupertinoAvalonia.Gallery/Views/MainWindow.axaml)) is a
-complete example: a sidebar on the sidebar material, a toolbar over the content.
+complete example: a `NavigationSplitView` with a sidebar on the sidebar material and a toolbar over the content.
 
 **Liquid Glass chrome:** macOS draws it only for apps whose executable declares a recent SDK (26 or later), which
 .NET's app host doesn't. The package's `buildTransitive/CupertinoAvalonia.targets` declares macOS 27's SDK after each build on
 macOS; with a project reference, import that file in your app (as the Gallery does). `CupertinoDeclareMacOSSdk=false`
 turns it off, `CupertinoMacOSSdkVersion` declares another SDK.
+
+## NavigationSplitView
+
+A window's sidebar and content, as SwiftUI's `NavigationSplitView`: the sidebar runs the window's full height with its
+button over it, and the content has its own toolbar.
+
+```xml
+<cac:CupertinoWindow ExtendsContentIntoTitleBar="True" ToolbarStyle="Unified" Material="Sidebar" …>
+  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" ContentScrollViewer="{Binding #Scroll}">
+    <cac:NavigationSplitView.Sidebar>
+      <ListBox Classes="sidebar" ItemsSource="{Binding Pages}" />
+    </cac:NavigationSplitView.Sidebar>
+    <cac:NavigationSplitView.ContentToolbar>
+      <TextBlock Classes="headline" Text="{Binding Title}" VerticalAlignment="Center" />
+    </cac:NavigationSplitView.ContentToolbar>
+    <ScrollViewer Name="Scroll">
+      <ContentControl Margin="20,72,20,20" Content="{Binding Page}" />
+    </ScrollViewer>
+  </cac:NavigationSplitView>
+</cac:CupertinoWindow>
+```
+
+- Closing, the sidebar slides out and the content follows its edge, which pushes the button until the window controls
+  stop it; opening, the edge picks the button up on its way (measured on macOS 27).
+- `ContentToolbar` is the content's toolbar after the button: a title, items, trailing items, as you lay them out. Its
+  buttons, pop-ups and segmented controls are toolbar items. Leave room for the toolbar at the top of the content;
+  `ContentScrollViewer` shows the toolbar's background once the content scrolls under it.
+- `SidebarWidth` (220), `SidebarBackground` where the window shows no material. In a `CupertinoWindow` that extends
+  its content, the sidebar shows the window's material; elsewhere the columns start under the title bar.
 
 ## CupertinoToolbar
 
