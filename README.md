@@ -132,6 +132,9 @@ button over it, and the content has its own toolbar.
   `ContentScrollViewer` shows the toolbar's background once the content scrolls under it.
 - `SidebarWidth` (220), `SidebarBackground` where the window shows no material. In a `CupertinoWindow` that extends
   its content, the sidebar shows the window's material; elsewhere the columns start under the title bar.
+- Dragging the sidebar's edge resizes it between `MinSidebarWidth` (140, SwiftUI's) and `MaxSidebarWidth` (none), never
+  narrowing the content below its `MinWidth`. Past half the minimum the sidebar folds away; it comes back in the same
+  drag, as on macOS 27. `SidebarWidth` is two-way: bind it to keep the width.
 - ⌃⌘S shows or hides the sidebar wherever the focus is, on macOS (`ToggleSidebarGesture` changes or removes it; there
   is none elsewhere). For the View menu, add a `NativeMenuItem` with the same gesture that toggles `IsSidebarOpen`: the
   menu takes the shortcut first.
