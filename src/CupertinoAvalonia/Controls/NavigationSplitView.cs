@@ -27,6 +27,11 @@ namespace CupertinoAvalonia.Controls;
 /// the window's edge, over the inspector, and shows its background over the content only.
 /// </para>
 /// <para>
+/// Give the content's scroll viewer <see cref="CupertinoToolbar.ScrollsUnderProperty"/>, directly or with a style: its
+/// content starts below the toolbar and scrolls under it. Other content finds the toolbar's room in
+/// <see cref="CupertinoToolbar.ContentInsetProperty"/>.
+/// </para>
+/// <para>
 /// Fill a <see cref="CupertinoWindow"/> that extends its content into the title bar: the sidebar and the inspector show
 /// the window's material and the button stops past the window controls. Elsewhere it stops near the edge.
 /// </para>
@@ -113,9 +118,6 @@ public class NavigationSplitView : ContentControl
 
     public static readonly StyledProperty<IBrush?> InspectorBackgroundProperty =
         AvaloniaProperty.Register<NavigationSplitView, IBrush?>(nameof(InspectorBackground));
-
-    public static readonly StyledProperty<ScrollViewer?> ContentScrollViewerProperty =
-        AvaloniaProperty.Register<NavigationSplitView, ScrollViewer?>(nameof(ContentScrollViewer));
 
     // The columns' animation state, for the theme's transitions: not part of the API.
     internal static readonly StyledProperty<double> VisibleSidebarWidthProperty =
@@ -251,13 +253,6 @@ public class NavigationSplitView : ContentControl
     {
         get => GetValue(InspectorBackgroundProperty);
         set => SetValue(InspectorBackgroundProperty, value);
-    }
-
-    /// <summary>The scroll viewer whose content passes under the content's toolbar, which then shows its background.</summary>
-    public ScrollViewer? ContentScrollViewer
-    {
-        get => GetValue(ContentScrollViewerProperty);
-        set => SetValue(ContentScrollViewerProperty, value);
     }
 
     /// <summary>

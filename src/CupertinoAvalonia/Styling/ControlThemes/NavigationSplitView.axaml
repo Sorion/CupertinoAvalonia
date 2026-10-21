@@ -51,7 +51,7 @@
                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
             <!-- The inspector's edge, which a drag moves: under the toolbar's items. -->
             <Border Name="PART_InspectorGrip" HorizontalAlignment="Right" Background="Transparent" Cursor="SizeWestEast" />
-            <cac:CupertinoToolbar Name="PART_Toolbar" ScrollViewer="{TemplateBinding ContentScrollViewer}">
+            <cac:CupertinoToolbar Name="PART_Toolbar">
               <ContentPresenter Name="PART_ContentToolbarPresenter"
                                 VerticalAlignment="Center"
                                 Content="{TemplateBinding ContentToolbar}" />

@@ -35,6 +35,48 @@ public class CupertinoToolbarTests
         window.Close();
     }
 
+    // As AppKit's content insets: the content starts below the toolbar, as the scroll bar does; scrolled, it passes under
+    // the toolbar, and its end stays in reach.
+    [AvaloniaFact]
+    public void Content_starts_below_the_toolbar_and_scrolls_under_it()
+    {
+        var (window, _, scrollViewer) = Show();
+        var content = (Control)scrollViewer.Content!;
+        var bar = scrollViewer.GetVisualDescendants().OfType<ScrollBar>().First(b => b.Orientation == Orientation.Vertical);
+
+        Assert.Equal(52, content.TranslatePoint(default, window)!.Value.Y);
+        Assert.Equal(52, bar.TranslatePoint(default, window)!.Value.Y);
+        Assert.Equal(300 - 52, scrollViewer.Viewport.Height);
+
+        scrollViewer.Offset = new Vector(0, 30);
+        window.UpdateLayout();
+        Assert.Equal(22, content.TranslatePoint(default, window)!.Value.Y);
+        // Drawn up to the toolbar's top.
+        var presenter = scrollViewer.Presenter!;
+        Assert.Equal(new Rect(0, -52, presenter.Bounds.Width, presenter.Bounds.Height + 52), ((RectangleGeometry)presenter.Clip!).Rect);
+
+        scrollViewer.Offset = new Vector(0, scrollViewer.Extent.Height - scrollViewer.Viewport.Height);
+        window.UpdateLayout();
+        Assert.Equal(300, content.TranslatePoint(new Point(0, content.Bounds.Height), window)!.Value.Y, tolerance: 0.5);
+        // Content that doesn't scroll finds the toolbar's room.
+        Assert.Equal(new Thickness(0, 52, 0, 0), CupertinoToolbar.GetContentInset(content));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Without_the_property_the_scroll_viewer_is_left_alone()
+    {
+        var (window, toolbar, scrollViewer) = Show();
+
+        CupertinoToolbar.SetScrollsUnder(scrollViewer, false);
+        window.UpdateLayout();
+        Assert.Equal(0, ((Control)scrollViewer.Content!).TranslatePoint(default, window)!.Value.Y);
+        Assert.True(scrollViewer.Presenter!.ClipToBounds);
+        scrollViewer.Offset = new Vector(0, 40);
+        Assert.DoesNotContain(":scrolled", toolbar.Classes);
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void Background_appears_while_the_pointer_is_over_the_toolbar()
     {
@@ -196,7 +238,8 @@ public class CupertinoToolbarTests
     private static (Window, CupertinoToolbar, ScrollViewer) Show(Control? content = null)
     {
         var scrollViewer = new ScrollViewer { Content = new Border { Height = 2000 } };
-        var toolbar = new CupertinoToolbar { ScrollViewer = scrollViewer, Content = content ?? new TextBlock { Text = "Title" } };
+        CupertinoToolbar.SetScrollsUnder(scrollViewer, true);
+        var toolbar = new CupertinoToolbar { Content = content ?? new TextBlock { Text = "Title" } };
         var window = new Window { Width = 400, Height = 300, Content = new Panel { Children = { scrollViewer, toolbar } } };
         window.Show();
         Dispatcher.UIThread.RunJobs();

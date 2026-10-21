@@ -48,8 +48,7 @@
   <!-- TestNav's sidebar and inspector widths, to compare them. -->
   <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" MinSidebarWidth="180"
                            IsInspectorOpen="{Binding IsInspectorOpen}"
-                           InspectorWidth="280" MinInspectorWidth="220" MaxInspectorWidth="400"
-                           ContentScrollViewer="{Binding #PageScroll}">
+                           InspectorWidth="280" MinInspectorWidth="220" MaxInspectorWidth="400">
     <cac:NavigationSplitView.Sidebar>
       <DockPanel>
         <TextBlock DockPanel.Dock="Top" Classes="caption1 emphasized secondary" Margin="18,0,0,6" Text="Controls" />
@@ -92,8 +91,9 @@
       <views:ChannelInspector />
     </cac:NavigationSplitView.Inspector>
 
-    <ScrollViewer Name="PageScroll">
-      <ContentControl Name="PageHost" Margin="20,72,20,20" Content="{Binding SelectedPage.Content}" />
+    <!-- The page starts below the toolbar and scrolls under it. -->
+    <ScrollViewer Name="PageScroll" cac:CupertinoToolbar.ScrollsUnder="True">
+      <ContentControl Name="PageHost" Margin="20" Content="{Binding SelectedPage.Content}" />
     </ScrollViewer>
   </cac:NavigationSplitView>
 </cac:CupertinoWindow>

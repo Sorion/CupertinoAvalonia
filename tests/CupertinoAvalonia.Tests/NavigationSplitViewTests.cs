@@ -7,6 +7,7 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using Avalonia.Styling;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -109,6 +110,44 @@ public class NavigationSplitViewTests
         window.Resources["NavigationSplitViewShowSidebarText"] = "Afficher la barre latérale";
         Assert.Equal(("Afficher la barre latérale", "Afficher la barre latérale"), (ToolTip.GetTip(toggle), AutomationProperties.GetName(toggle)));
         window.Close();
+    }
+
+    // A page a view locator shows: a style marks its scroll viewer, which scrolls under the content's toolbar.
+    [AvaloniaFact]
+    public void A_style_lets_the_page_s_scroll_viewer_scroll_under_the_toolbar()
+    {
+        var first = Page();
+        var host = new ContentControl { Content = first };
+        var (window, split) = Show(isSidebarOpen: true, configure: s =>
+        {
+            s.Content = host;
+            s.Styles.Add(new Style(x => x.OfType<ScrollViewer>().Class("page")) { Setters = { new Setter(CupertinoToolbar.ScrollsUnderProperty, true) } });
+        });
+        var toolbar = Part<CupertinoToolbar>(split, "PART_Toolbar");
+
+        Assert.Equal(52, Origin((Control)first.Content!, window).Y);
+        first.Offset = new Vector(0, 40);
+        Assert.Contains(":scrolled", toolbar.Classes);
+
+        // The next page takes its place.
+        var next = Page();
+        host.Content = next;
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Assert.DoesNotContain(":scrolled", toolbar.Classes);
+        Assert.Equal(52, Origin((Control)next.Content!, window).Y);
+        Assert.Equal(default, first.Presenter?.Margin ?? default);
+
+        // Content that doesn't scroll finds the toolbar's room, smaller in a compact toolbar.
+        Assert.Equal(new Thickness(0, 52, 0, 0), CupertinoToolbar.GetContentInset(host));
+        window.ToolbarStyle = CupertinoToolbarStyle.UnifiedCompact;
+        Dispatcher.UIThread.RunJobs();
+        window.UpdateLayout();
+        Assert.Equal(new Thickness(0, 40, 0, 0), CupertinoToolbar.GetContentInset(host));
+        Assert.Equal(40, Origin((Control)next.Content!, window).Y);
+        window.Close();
+
+        static ScrollViewer Page() => new() { Classes = { "page" }, Content = new Border { Height = 2000 } };
     }
 
     // As in SwiftUI without SidebarCommands and InspectorCommands, measured on macOS 27.

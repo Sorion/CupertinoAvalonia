@@ -3,6 +3,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 
 namespace CupertinoAvalonia.Controls;
@@ -19,12 +21,12 @@ public enum ToolbarBackgroundVisibility
 }
 
 /// <summary>
-/// The window's toolbar band, laid over the top of <see cref="ScrollViewer"/>: transparent at rest, its background
-/// fades in once the content scrolls under it.
+/// The window's toolbar band, laid over the top of the content: transparent at rest, its background fades in once the
+/// content scrolls under it.
 /// </summary>
 /// <remarks>
-/// Put it over the scroll viewer, in a Panel, and leave room for it at the top of the scrolled content. Its buttons,
-/// pop-ups and segmented controls are toolbar items without the <c>toolbar</c> class, except in a button group.
+/// Put it over the content, in a Panel, and give the content's scroll viewer <see cref="ScrollsUnderProperty"/>. Its
+/// buttons, pop-ups and segmented controls are toolbar items without the <c>toolbar</c> class, except in a button group.
 /// </remarks>
 [TemplatePart(PartBackground, typeof(Control))]
 [PseudoClasses(PcScrolled)]
@@ -35,8 +37,21 @@ public class CupertinoToolbar : ContentControl
     private const string ItemClass = "toolbar";
     private const string CompactClass = "compact";
 
-    public static readonly StyledProperty<ScrollViewer?> ScrollViewerProperty =
-        AvaloniaProperty.Register<CupertinoToolbar, ScrollViewer?>(nameof(ScrollViewer));
+    /// <summary>
+    /// On a scroll viewer: its content scrolls under the toolbar laid over it, the content's toolbar in a
+    /// <see cref="NavigationSplitView"/>, elsewhere a toolbar beside it in a Panel. The content starts below the toolbar,
+    /// as the scroll bar does, and the toolbar shows its background once the content scrolls under it. A style can set
+    /// it, for pages a view locator shows.
+    /// </summary>
+    public static readonly AttachedProperty<bool> ScrollsUnderProperty =
+        AvaloniaProperty.RegisterAttached<CupertinoToolbar, ScrollViewer, bool>("ScrollsUnder");
+
+    /// <summary>
+    /// The room the toolbar takes at the top of the content beside it, inherited by that content: a padding for content
+    /// that doesn't scroll under it. (0, 52, 0, 0) under a Unified toolbar. Set by the toolbar.
+    /// </summary>
+    public static readonly AttachedProperty<Thickness> ContentInsetProperty =
+        AvaloniaProperty.RegisterAttached<CupertinoToolbar, Control, Thickness>("ContentInset", inherits: true);
 
     public static readonly StyledProperty<ToolbarBackgroundVisibility> BackgroundVisibilityProperty =
         AvaloniaProperty.Register<CupertinoToolbar, ToolbarBackgroundVisibility>(nameof(BackgroundVisibility));
@@ -45,13 +60,22 @@ public class CupertinoToolbar : ContentControl
     private static readonly AttachedProperty<string[]?> AddedClassesProperty =
         AvaloniaProperty.RegisterAttached<CupertinoToolbar, Control, string[]?>("AddedClasses");
 
+    // The toolbar a scroll viewer scrolls under.
+    private static readonly AttachedProperty<CupertinoToolbar?> OwnerProperty =
+        AvaloniaProperty.RegisterAttached<CupertinoToolbar, ScrollViewer, CupertinoToolbar?>("Owner");
+
     private Control? _background;
     private Thickness _backgroundMargin;
+    private ScrollViewer? _scrollViewer;
+    private Control? _contentInsetHost;
 
     static CupertinoToolbar()
     {
         LoadedEvent.AddClassHandler<Control>((control, _) => AddItemClasses(control), handledEventsToo: true);
         UnloadedEvent.AddClassHandler<Control>((control, _) => RemoveItemClasses(control), handledEventsToo: true);
+        ScrollsUnderProperty.Changed.AddClassHandler<ScrollViewer>((scrollViewer, _) => FindOwner(scrollViewer, scrollViewer.IsLoaded));
+        LoadedEvent.AddClassHandler<ScrollViewer>((scrollViewer, _) => FindOwner(scrollViewer, true), handledEventsToo: true);
+        UnloadedEvent.AddClassHandler<ScrollViewer>((scrollViewer, _) => FindOwner(scrollViewer, false), handledEventsToo: true);
     }
 
     public CupertinoToolbar()
@@ -59,12 +83,13 @@ public class CupertinoToolbar : ContentControl
         ((INotifyCollectionChanged)Classes).CollectionChanged += OnClassesChanged;
     }
 
-    /// <summary>The scroll viewer whose content passes under the toolbar.</summary>
-    public ScrollViewer? ScrollViewer
-    {
-        get => GetValue(ScrollViewerProperty);
-        set => SetValue(ScrollViewerProperty, value);
-    }
+    public static bool GetScrollsUnder(ScrollViewer scrollViewer) => scrollViewer.GetValue(ScrollsUnderProperty);
+
+    public static void SetScrollsUnder(ScrollViewer scrollViewer, bool value) => scrollViewer.SetValue(ScrollsUnderProperty, value);
+
+    public static Thickness GetContentInset(Control control) => control.GetValue(ContentInsetProperty);
+
+    public static void SetContentInset(Control control, Thickness value) => control.SetValue(ContentInsetProperty, value);
 
     public ToolbarBackgroundVisibility BackgroundVisibility
     {
@@ -93,17 +118,83 @@ public class CupertinoToolbar : ContentControl
             _background.Margin = _backgroundMargin;
     }
 
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        base.OnPropertyChanged(change);
-        if (change.Property == ScrollViewerProperty)
+        base.OnAttachedToVisualTree(e);
+        // A NavigationSplitView's toolbar tells its content; elsewhere, the toolbar tells the panel it's laid out in.
+        _contentInsetHost = TemplatedParent as Control ?? this.GetVisualParent() as Control;
+        UpdateContentInset();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _contentInsetHost?.ClearValue(ContentInsetProperty);
+        _contentInsetHost = null;
+    }
+
+    protected override void OnSizeChanged(SizeChangedEventArgs e)
+    {
+        base.OnSizeChanged(e);
+        UpdateContentInset();
+    }
+
+    private void UpdateContentInset() => _contentInsetHost?.SetValue(ContentInsetProperty, new Thickness(0, Bounds.Height, 0, 0));
+
+    // The nearest toolbar laid over a loaded scroll viewer: the first beside one of its ancestors, as in a Panel.
+    private static void FindOwner(ScrollViewer scrollViewer, bool isLoaded)
+    {
+        CupertinoToolbar? owner = null;
+        if (isLoaded && GetScrollsUnder(scrollViewer))
         {
-            if (change.OldValue is ScrollViewer old)
-                old.PropertyChanged -= OnScrollViewerPropertyChanged;
-            if (change.NewValue is ScrollViewer scrollViewer)
-                scrollViewer.PropertyChanged += OnScrollViewerPropertyChanged;
-            UpdateScrolled();
+            Visual child = scrollViewer;
+            foreach (var ancestor in scrollViewer.GetVisualAncestors())
+            {
+                if (ancestor is CupertinoToolbar)
+                    break;
+                owner = ancestor.GetVisualChildren().OfType<CupertinoToolbar>().FirstOrDefault(t => t != child);
+                if (owner is not null)
+                    break;
+                child = ancestor;
+            }
         }
+
+        var current = scrollViewer.GetValue(OwnerProperty);
+        if (ReferenceEquals(current, owner))
+            return;
+        current?.Release(scrollViewer);
+        owner?.Take(scrollViewer);
+    }
+
+    // One scroll viewer at a time: a page that replaces another takes its place.
+    private void Take(ScrollViewer scrollViewer)
+    {
+        if (_scrollViewer is { } previous)
+            Release(previous);
+        _scrollViewer = scrollViewer;
+        scrollViewer.SetValue(OwnerProperty, this);
+        scrollViewer.PropertyChanged += OnScrollViewerPropertyChanged;
+        scrollViewer.LayoutUpdated += OnScrollViewerLayoutUpdated;
+        UpdateInset();
+        UpdateScrolled();
+    }
+
+    private void Release(ScrollViewer scrollViewer)
+    {
+        scrollViewer.ClearValue(OwnerProperty);
+        if (_scrollViewer != scrollViewer)
+            return;
+        scrollViewer.PropertyChanged -= OnScrollViewerPropertyChanged;
+        scrollViewer.LayoutUpdated -= OnScrollViewerLayoutUpdated;
+        if (scrollViewer.Presenter is { } presenter)
+        {
+            presenter.ClearValue(MarginProperty);
+            presenter.ClearValue(ClipToBoundsProperty);
+            presenter.ClearValue(ClipProperty);
+        }
+        VerticalScrollBar(scrollViewer)?.ClearValue(MarginProperty);
+        _scrollViewer = null;
+        UpdateScrolled();
     }
 
     private void OnScrollViewerPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -112,7 +203,32 @@ public class CupertinoToolbar : ContentControl
             UpdateScrolled();
     }
 
-    private void UpdateScrolled() => PseudoClasses.Set(PcScrolled, ScrollViewer is { Offset.Y: > 0 });
+    private void OnScrollViewerLayoutUpdated(object? sender, EventArgs e) => UpdateInset();
+
+    // The scroll viewer's content starts below the toolbar, as its scroll bar, but shows under it once scrolled: the
+    // viewport starts lower and its clip reaches up to the toolbar's top. Its padding can't do it: Avalonia leaves it out
+    // of the extent, so the end of the content would be out of reach.
+    private void UpdateInset()
+    {
+        if (_scrollViewer is not { Presenter: { } presenter } scrollViewer)
+            return;
+        var overlap = Math.Clamp(this.TranslatePoint(new Point(0, Bounds.Height), scrollViewer)?.Y ?? 0, 0, scrollViewer.Bounds.Height);
+        var margin = new Thickness(0, overlap, 0, 0);
+        if (presenter.Margin != margin)
+            presenter.Margin = margin;
+        if (VerticalScrollBar(scrollViewer) is { } bar && bar.Margin != margin)
+            bar.Margin = margin;
+        presenter.ClipToBounds = false;
+        var clip = new Rect(0, -overlap, presenter.Bounds.Width, presenter.Bounds.Height + overlap);
+        if ((presenter.Clip as RectangleGeometry)?.Rect != clip)
+            presenter.Clip = new RectangleGeometry(clip);
+    }
+
+    private static ScrollBar? VerticalScrollBar(ScrollViewer scrollViewer) =>
+        scrollViewer.GetVisualDescendants().OfType<ScrollBar>()
+            .FirstOrDefault(b => b.Orientation == Orientation.Vertical && b.TemplatedParent == scrollViewer);
+
+    private void UpdateScrolled() => PseudoClasses.Set(PcScrolled, _scrollViewer is { Offset.Y: > 0 });
 
     // A compact toolbar has compact items. Pseudo-classes change in the same collection: only "compact" matters.
     private void OnClassesChanged(object? sender, NotifyCollectionChangedEventArgs e)
