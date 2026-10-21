@@ -121,15 +121,15 @@ button over it, and the content has its own toolbar. An inspector can show on th
 
 ```xml
 <cac:CupertinoWindow ExtendsContentIntoTitleBar="True" ToolbarStyle="Unified" Material="Sidebar" …>
-  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" ContentScrollViewer="{Binding #Scroll}">
+  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}">
     <cac:NavigationSplitView.Sidebar>
       <ListBox Classes="sidebar" ItemsSource="{Binding Pages}" />
     </cac:NavigationSplitView.Sidebar>
     <cac:NavigationSplitView.ContentToolbar>
       <TextBlock Classes="headline" Text="{Binding Title}" VerticalAlignment="Center" />
     </cac:NavigationSplitView.ContentToolbar>
-    <ScrollViewer Name="Scroll">
-      <ContentControl Margin="20,72,20,20" Content="{Binding Page}" />
+    <ScrollViewer cac:CupertinoToolbar.ScrollsUnder="True">
+      <ContentControl Margin="20" Content="{Binding Page}" />
     </ScrollViewer>
   </cac:NavigationSplitView>
 </cac:CupertinoWindow>
@@ -138,8 +138,10 @@ button over it, and the content has its own toolbar. An inspector can show on th
 - Closing, the sidebar slides out and the content follows its edge, which pushes the button until the window controls
   stop it; opening, the edge picks the button up on its way (measured on macOS 27).
 - `ContentToolbar` is the content's toolbar after the button: a title, items, trailing items, as you lay them out. Its
-  buttons, pop-ups and segmented controls are toolbar items. Leave room for the toolbar at the top of the content;
-  `ContentScrollViewer` shows the toolbar's background once the content scrolls under it.
+  buttons, pop-ups and segmented controls are toolbar items.
+- `CupertinoToolbar.ScrollsUnder` on the content's scroll viewer: its content starts below the toolbar and scrolls
+  under it, which then shows its background (see CupertinoToolbar). A style can set it, for pages a view locator shows:
+  `<Style Selector="cac|NavigationSplitView ScrollViewer.page">`.
 - `SidebarWidth` (220), `SidebarBackground` where the window shows no material. In a `CupertinoWindow` that extends
   its content, the sidebar shows the window's material; elsewhere the columns start under the title bar.
 - Dragging the sidebar's edge resizes it between `MinSidebarWidth` (140, SwiftUI's) and `MaxSidebarWidth` (none), never
@@ -161,10 +163,10 @@ button over it, and the content has its own toolbar. An inspector can show on th
 
 ```xml
 <Panel>
-  <ScrollViewer Name="Scroll">
-    <ContentControl Margin="20,72,20,20" Content="{Binding Page}" />
+  <ScrollViewer cac:CupertinoToolbar.ScrollsUnder="True">
+    <ContentControl Margin="20" Content="{Binding Page}" />
   </ScrollViewer>
-  <cac:CupertinoToolbar ScrollViewer="{Binding #Scroll}">
+  <cac:CupertinoToolbar>
     <!-- toolbar items -->
   </cac:CupertinoToolbar>
 </Panel>
@@ -173,8 +175,15 @@ button over it, and the content has its own toolbar. An inspector can show on th
 The window's toolbar band, laid over the top of the content as in macOS 27: transparent at rest, its background
 (and its 1 pt edge line) fades in when the content scrolls under it or the pointer is over it. In dark mode it is a
 third color, lighter than the content; in an inactive window it shows, at rest too. `BackgroundVisibility`:
-`Automatic` (default), `Visible` (always), `Hidden` (never). Dragging the band moves the window. Leave room for it at
-the top of the scrolled content. The content passing under it isn't blurred yet: the background is nearly opaque.
+`Automatic` (default), `Visible` (always), `Hidden` (never). Dragging the band moves the window. The content passing
+under it isn't blurred yet: the background is nearly opaque.
+
+- `CupertinoToolbar.ScrollsUnder="True"` on a scroll viewer ties it to the toolbar laid over it (the first beside one of
+  its ancestors, as in a `Panel`): its content and its scroll bar start below the toolbar, as AppKit's content insets,
+  and the content scrolls under it.
+- `CupertinoToolbar.ContentInset`, inherited by the content beside the toolbar, is the room it takes:
+  `(0, 52, 0, 0)`, or 40 in a compact toolbar. A padding for content that doesn't scroll:
+  `Padding="{Binding $self.(cac:CupertinoToolbar.ContentInset)}"`.
 
 Its buttons, pop-ups and segmented controls are toolbar items without the `toolbar` class (and `compact` ones in a
 `compact` toolbar), except in a `toolbar-group`. Controls in a flyout or in another control's template stay as they are.
