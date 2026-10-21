@@ -72,6 +72,16 @@ custom accent, their shades are derived from the accent.
   `ControlHeight`… `AccentMulticolorBrush` is System Settings' multicolor swatch, for an accent picker.
 - **Inactive windows** gray out their controls, as on macOS. Your styles can do the same with
   `[(cas|WindowActivity.IsInactive)=True]` (`xmlns:cas="using:CupertinoAvalonia.Styling"`).
+- **Texts** are AppKit's English labels, as resources to redefine in your app's language:
+  `NavigationSplitViewHideSidebarText` and `NavigationSplitViewShowSidebarText` (the sidebar button's tooltip and
+  accessibility name), `SearchFieldClearButtonText` (the search field's clear button).
+
+  ```xml
+  <Application.Resources>
+    <x:String x:Key="NavigationSplitViewHideSidebarText">Masquer la barre latérale</x:String>
+    <x:String x:Key="NavigationSplitViewShowSidebarText">Afficher la barre latérale</x:String>
+  </Application.Resources>
+  ```
 - **Other controls** (date and time pickers, `Calendar`…) keep Fluent's templates,
   recolored with Apple's palette.
 
@@ -135,13 +145,14 @@ button over it, and the content has its own toolbar. An inspector can show on th
 - Dragging the sidebar's edge resizes it between `MinSidebarWidth` (140, SwiftUI's) and `MaxSidebarWidth` (none), never
   narrowing the content below its `MinWidth`. Past half the minimum the sidebar folds away; it comes back in the same
   drag, as on macOS 27. `SidebarWidth` is two-way: bind it to keep the width.
-- ⌃⌘S shows or hides the sidebar wherever the focus is, on macOS (`ToggleSidebarGesture` changes or removes it; there
-  is none elsewhere). For the View menu, add a `NativeMenuItem` with the same gesture that toggles `IsSidebarOpen`: the
-  menu takes the shortcut first.
+- No shortcut by default, as in SwiftUI, where an app adds `SidebarCommands` and `InspectorCommands`. For native apps'
+  View › Show Sidebar (⌃⌘S) and Show Inspector (⌃⌘I), add `NativeMenuItem`s with these gestures that toggle
+  `IsSidebarOpen` and `IsInspectorOpen`, as the Gallery does. Without a menu, `ToggleSidebarGesture` and
+  `ToggleInspectorGesture` take a shortcut wherever the focus is in the window.
 - `Inspector` is a column on the right, the window's full height, on the sidebar's material, without a divider.
   `IsInspectorOpen` (closed by default, two-way) slides it in and pushes the content; the toolbar keeps its trailing
   items at the window's edge, over the inspector, and shows its band over the content. There is no built-in button:
-  put one in `ContentToolbar`, with the `sidebar.right` symbol. ⌃⌘I toggles it on macOS (`ToggleInspectorGesture`).
+  put one in `ContentToolbar`, with the `sidebar.right` symbol.
 - `InspectorWidth` is 270, fixed, as SwiftUI's. Give `MinInspectorWidth` and `MaxInspectorWidth` different values (the
   Gallery: 220 to 400, at 280) and a drag on its edge resizes it, folds it away and brings it back, as the sidebar's.
   `InspectorBackground` applies where the window shows no material.
