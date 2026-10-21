@@ -21,11 +21,14 @@
       <!-- _Selection (sidebar): the vibrant tertiary fill, the quinary one when the window is inactive. -->
       <SolidColorBrush x:Key="SidebarSelectionBrush" Color="{DynamicResource FillVibrantTertiaryTranslucentColor}" />
       <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="{DynamicResource FillVibrantQuinaryTranslucentColor}" />
+      <!-- The "accent" class, while the list has the focus: the accent itself, as a prominent button (measured on macOS 27). -->
+      <SolidColorBrush x:Key="SidebarSelectionAccentBrush" Color="{DynamicResource AccentColor}" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
       <!-- Also when inactive: the kit lightens it, Notes doesn't. -->
       <SolidColorBrush x:Key="SidebarSelectionBrush" Color="{DynamicResource FillVibrantTertiaryTranslucentColor}" />
       <SolidColorBrush x:Key="SidebarSelectionInactiveBrush" Color="{DynamicResource FillVibrantTertiaryTranslucentColor}" />
+      <SolidColorBrush x:Key="SidebarSelectionAccentBrush" Color="{DynamicResource AccentColor}" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 

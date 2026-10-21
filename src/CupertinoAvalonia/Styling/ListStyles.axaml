@@ -31,6 +31,16 @@
     <Setter Property="SymbolScale" Value="Large" />
     <Setter Property="FontWeight" Value="Medium" />
   </Style>
+  <!-- "accent": while the list has the focus, the selection takes the accent and its label and symbol turn white, as in
+       SwiftUI's sidebars (TestNav on macOS 27); gray otherwise, as without the class. Before the inactive styles, which
+       win. -->
+  <Style Selector="ListBox.sidebar.accent ListBoxItem:selected:focus-within">
+    <Setter Property="Background" Value="{DynamicResource SidebarSelectionAccentBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+  </Style>
+  <Style Selector="ListBox.sidebar.accent ListBoxItem:selected:focus-within cac|SymbolIcon">
+    <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+  </Style>
   <!-- Active=False: "Sidebar/Label - Inactive" (linear burn #878787, dodge #666666) is the secondary label. -->
   <Style Selector="ListBox.sidebar ListBoxItem:selected[(cas|WindowActivity.IsInactive)=True]">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionInactiveBrush}" />
@@ -82,6 +92,22 @@
     <Setter Property="Width" Value="{DynamicResource SidebarIconWidth}" />
     <Setter Property="SymbolScale" Value="Large" />
     <Setter Property="FontWeight" Value="Medium" />
+  </Style>
+  <!-- "accent", as the list's. -->
+  <Style Selector="TreeView.sidebar.accent TreeViewItem:selected:focus-within">
+    <Style Selector="^ /template/ Border#PART_LayoutRoot">
+      <Setter Property="Background" Value="{DynamicResource SidebarSelectionAccentBrush}" />
+    </Style>
+    <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter, ^ /template/ ToggleButton#PART_ExpandCollapseChevron">
+      <Setter Property="TextElement.Foreground" Value="{DynamicResource WhiteBrush}" />
+    </Style>
+    <!-- Its symbol, not those of the rows nested under it. -->
+    <Style Selector="^ cac|SymbolIcon:not(#Chevron)">
+      <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+    </Style>
+    <Style Selector="^ TreeViewItem cac|SymbolIcon:not(#Chevron)">
+      <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
+    </Style>
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem:selected[(cas|WindowActivity.IsInactive)=True] /template/ Border#PART_LayoutRoot">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionInactiveBrush}" />

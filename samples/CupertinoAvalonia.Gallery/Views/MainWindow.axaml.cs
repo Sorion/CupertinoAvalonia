@@ -15,4 +15,11 @@ public partial class MainWindow : CupertinoWindow
         AlwaysLooksActive = !AlwaysLooksActive;
         ((NativeMenuItem)sender!).IsChecked = AlwaysLooksActive;
     }
+
+    private void OnAccentSidebarSelectionClick(object? sender, EventArgs e)
+    {
+        var accent = !Sidebar.Classes.Contains("accent");
+        Sidebar.Classes.Set("accent", accent);
+        ((NativeMenuItem)sender!).IsChecked = accent;
+    }
 }

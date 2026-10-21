@@ -27,6 +27,8 @@
         <NativeMenu>
           <!-- To compare the gallery with a native app side by side, as only one window is active at a time. -->
           <NativeMenuItem Header="Always Look Active" ToggleType="CheckBox" Click="OnAlwaysLookActiveClick" />
+          <!-- The sidebar's two selections: the accent while it has the focus (as TestNav), or always gray. -->
+          <NativeMenuItem Header="Accent Sidebar Selection" ToggleType="CheckBox" IsChecked="True" Click="OnAccentSidebarSelectionClick" />
         </NativeMenu>
       </NativeMenuItem>
     </NativeMenu>
@@ -47,7 +49,8 @@
     <cac:NavigationSplitView.Sidebar>
       <DockPanel>
         <TextBlock DockPanel.Dock="Top" Classes="caption1 emphasized secondary" Margin="18,0,0,6" Text="Controls" />
-        <ListBox Classes="sidebar"
+        <ListBox Name="Sidebar"
+                 Classes="sidebar accent"
                  ItemsSource="{Binding Pages}"
                  SelectedItem="{Binding SelectedPage}"
                  Background="Transparent">
