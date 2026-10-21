@@ -26,6 +26,26 @@ public class SymbolIconTests
         window.Close();
     }
 
+    // The theme changes its accent brushes' color in place when the system accent changes.
+    [AvaloniaFact]
+    public void Follows_a_brush_whose_color_changes()
+    {
+        Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
+        var brush = new SolidColorBrush(Colors.Red);
+        var icon = new SymbolIcon { Symbol = "folder", FontSize = 26, Foreground = brush };
+        var window = Show(icon);
+        Assert.True(CountPixels(window, icon, IsRed) > 30, "No red pixels where the symbol is.");
+
+        brush.Color = Colors.Blue;
+        AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        Dispatcher.UIThread.RunJobs();
+        Assert.Equal(0, CountPixels(window, icon, IsRed));
+        Assert.True(CountPixels(window, icon, c => c.B > 200 && c.R < 60 && c.G < 60) > 30, "No blue pixels where the symbol is.");
+        window.Close();
+
+        static bool IsRed(Color c) => c.R > 200 && c.G < 60 && c.B < 60;
+    }
+
     [AvaloniaFact]
     public void Follows_the_font_size()
     {

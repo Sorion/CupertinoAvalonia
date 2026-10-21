@@ -47,6 +47,7 @@ public class SymbolIcon : Control
 
     private MacOSSymbols.Symbol? _maskSymbol;
     private ImageBrush? _mask;
+    private AvaloniaObject? _observedForeground;
 
     static SymbolIcon()
     {
@@ -115,6 +116,42 @@ public class SymbolIcon : Control
     internal bool IsNative => NativeSymbol() is not null;
 
     internal (string Text, FontFamily Family)? Glyph => NativeSymbol() is null && FallbackData is null ? FallbackText() : null;
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+        if (change.Property == ForegroundProperty)
+            ObserveForeground();
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        ObserveForeground();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        ObserveForeground();
+    }
+
+    // A brush whose color changes in place, as the theme's accent brushes when the system accent changes: the
+    // compositor doesn't redraw what an opacity mask covers, so the symbol redraws itself. Only while it shows, so a
+    // shared brush doesn't keep it alive.
+    private void ObserveForeground()
+    {
+        var brush = VisualRoot is not null ? Foreground as AvaloniaObject : null;
+        if (ReferenceEquals(brush, _observedForeground))
+            return;
+        if (_observedForeground is not null)
+            _observedForeground.PropertyChanged -= OnForegroundBrushChanged;
+        _observedForeground = brush;
+        if (brush is not null)
+            brush.PropertyChanged += OnForegroundBrushChanged;
+    }
+
+    private void OnForegroundBrushChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => InvalidateVisual();
 
     protected override Size MeasureOverride(Size availableSize)
     {
