@@ -117,10 +117,11 @@ public class NavigationSplitView : ContentControl
     public static readonly StyledProperty<ScrollViewer?> ContentScrollViewerProperty =
         AvaloniaProperty.Register<NavigationSplitView, ScrollViewer?>(nameof(ContentScrollViewer));
 
-    public static readonly StyledProperty<double> VisibleSidebarWidthProperty =
+    // The columns' animation state, for the theme's transitions: not part of the API.
+    internal static readonly StyledProperty<double> VisibleSidebarWidthProperty =
         AvaloniaProperty.Register<NavigationSplitView, double>(nameof(VisibleSidebarWidth), 220);
 
-    public static readonly StyledProperty<double> VisibleInspectorWidthProperty =
+    internal static readonly StyledProperty<double> VisibleInspectorWidthProperty =
         AvaloniaProperty.Register<NavigationSplitView, double>(nameof(VisibleInspectorWidth));
 
     // None by default, as in SwiftUI, where an app adds SidebarCommands and InspectorCommands (measured on macOS 27).
@@ -279,19 +280,11 @@ public class NavigationSplitView : ContentControl
         set => SetValue(ToggleInspectorGestureProperty, value);
     }
 
-    /// <summary>How much of the sidebar shows: animated between 0 and <see cref="SidebarWidth"/>.</summary>
-    public double VisibleSidebarWidth
-    {
-        get => GetValue(VisibleSidebarWidthProperty);
-        set => SetValue(VisibleSidebarWidthProperty, value);
-    }
+    // How much of the sidebar shows: animated between 0 and SidebarWidth.
+    internal double VisibleSidebarWidth => GetValue(VisibleSidebarWidthProperty);
 
-    /// <summary>How much of the inspector shows: animated between 0 and <see cref="InspectorWidth"/>.</summary>
-    public double VisibleInspectorWidth
-    {
-        get => GetValue(VisibleInspectorWidthProperty);
-        set => SetValue(VisibleInspectorWidthProperty, value);
-    }
+    // How much of the inspector shows: animated between 0 and InspectorWidth.
+    internal double VisibleInspectorWidth => GetValue(VisibleInspectorWidthProperty);
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
