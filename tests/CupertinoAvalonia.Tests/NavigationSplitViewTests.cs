@@ -111,12 +111,27 @@ public class NavigationSplitViewTests
         window.Close();
     }
 
+    // As in SwiftUI without SidebarCommands and InspectorCommands, measured on macOS 27.
     [AvaloniaFact]
-    public void Control_Command_S_toggles_the_sidebar_wherever_the_focus_is()
+    public void There_is_no_shortcut_by_default()
     {
-        Assert.SkipUnless(OperatingSystem.IsMacOS(), "⌃⌘S is macOS's shortcut; there is none elsewhere.");
+        var (window, split) = Show(isSidebarOpen: true);
+
+        Assert.Null(split.ToggleSidebarGesture);
+        Assert.Null(split.ToggleInspectorGesture);
+        window.KeyPressQwerty(PhysicalKey.S, RawInputModifiers.Control | RawInputModifiers.Meta);
+        window.KeyPressQwerty(PhysicalKey.I, RawInputModifiers.Control | RawInputModifiers.Meta);
+        Assert.True(split.IsSidebarOpen);
+        Assert.False(split.IsInspectorOpen);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void The_sidebar_shortcut_works_wherever_the_focus_is()
+    {
         var field = new TextBox();
-        var (window, split) = Show(isSidebarOpen: true, toolbar: field);
+        var (window, split) = Show(isSidebarOpen: true, toolbar: field,
+            configure: s => s.ToggleSidebarGesture = new KeyGesture(Key.S, KeyModifiers.Control | KeyModifiers.Meta));
         field.Focus();
 
         window.KeyPressQwerty(PhysicalKey.S, RawInputModifiers.Control | RawInputModifiers.Meta);
@@ -305,10 +320,10 @@ public class NavigationSplitViewTests
     }
 
     [AvaloniaFact]
-    public void Control_Command_I_toggles_the_inspector()
+    public void The_inspector_shortcut_toggles_it_when_there_is_one()
     {
-        Assert.SkipUnless(OperatingSystem.IsMacOS(), "⌃⌘I is macOS's shortcut; there is none elsewhere.");
-        var (window, split) = Show(isSidebarOpen: true);
+        var (window, split) = Show(isSidebarOpen: true,
+            configure: s => s.ToggleInspectorGesture = new KeyGesture(Key.I, KeyModifiers.Control | KeyModifiers.Meta));
 
         window.KeyPressQwerty(PhysicalKey.I, RawInputModifiers.Control | RawInputModifiers.Meta);
         Assert.True(split.IsInspectorOpen);

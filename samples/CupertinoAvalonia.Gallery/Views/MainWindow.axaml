@@ -24,7 +24,11 @@
   <NativeMenu.Menu>
     <NativeMenu>
       <NativeMenuItem Header="View">
-        <NativeMenu>
+        <NativeMenu Opening="OnViewMenuOpening">
+          <!-- SwiftUI's SidebarCommands and InspectorCommands: NavigationSplitView has no shortcut of its own. -->
+          <NativeMenuItem Header="Hide Sidebar" Gesture="Ctrl+Cmd+S" Click="OnToggleSidebarClick" />
+          <NativeMenuItem Header="Show Inspector" Gesture="Ctrl+Cmd+I" Click="OnToggleInspectorClick" />
+          <NativeMenuItemSeparator />
           <!-- To compare the gallery with a native app side by side, as only one window is active at a time. -->
           <NativeMenuItem Header="Always Look Active" ToggleType="CheckBox" Click="OnAlwaysLookActiveClick" />
           <!-- The sidebar's two selections: the accent while it has the focus (as TestNav), or always gray. -->

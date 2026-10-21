@@ -123,14 +123,12 @@ public class NavigationSplitView : ContentControl
     public static readonly StyledProperty<double> VisibleInspectorWidthProperty =
         AvaloniaProperty.Register<NavigationSplitView, double>(nameof(VisibleInspectorWidth));
 
+    // None by default, as in SwiftUI, where an app adds SidebarCommands and InspectorCommands (measured on macOS 27).
     public static readonly StyledProperty<KeyGesture?> ToggleSidebarGestureProperty =
-        AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleSidebarGesture),
-            OperatingSystem.IsMacOS() ? new KeyGesture(Key.S, KeyModifiers.Control | KeyModifiers.Meta) : null);
+        AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleSidebarGesture));
 
-    // SwiftUI's InspectorCommands: View › Show Inspector, ⌃⌘I.
     public static readonly StyledProperty<KeyGesture?> ToggleInspectorGestureProperty =
-        AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleInspectorGesture),
-            OperatingSystem.IsMacOS() ? new KeyGesture(Key.I, KeyModifiers.Control | KeyModifiers.Meta) : null);
+        AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleInspectorGesture));
 
     private readonly TranslateTransform _sidebarOffset = new();
     private readonly TranslateTransform _inspectorOffset = new();
@@ -262,8 +260,8 @@ public class NavigationSplitView : ContentControl
     }
 
     /// <summary>
-    /// The shortcut that shows or hides the sidebar wherever the focus is in the window: ⌃⌘S on macOS, as in native apps;
-    /// none elsewhere. A menu item with the same gesture takes it first, so the sidebar doesn't toggle twice.
+    /// A shortcut that shows or hides the sidebar wherever the focus is in the window: none by default, as in SwiftUI.
+    /// On macOS, prefer a View menu item with native apps' ⌃⌘S, which takes the shortcut first.
     /// </summary>
     public KeyGesture? ToggleSidebarGesture
     {
@@ -272,8 +270,8 @@ public class NavigationSplitView : ContentControl
     }
 
     /// <summary>
-    /// The shortcut that shows or hides the inspector, when there is one: ⌃⌘I on macOS, as in native apps; none
-    /// elsewhere. A menu item with the same gesture takes it first.
+    /// A shortcut that shows or hides the inspector, when there is one: none by default, as in SwiftUI. On macOS, prefer
+    /// a View menu item with native apps' ⌃⌘I, which takes the shortcut first.
     /// </summary>
     public KeyGesture? ToggleInspectorGesture
     {
