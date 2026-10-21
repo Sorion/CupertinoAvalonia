@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -56,6 +57,19 @@ public class SearchFieldTests
         Dispatcher.UIThread.RunJobs();
         Assert.True(string.IsNullOrEmpty(field.Text));
         Assert.False(clear.IsVisible);
+        window.Close();
+    }
+
+    // AppKit's name for NSSearchField's cancel button, measured on macOS 27; an app redefines it in its language.
+    [AvaloniaFact]
+    public void The_clear_button_is_named_in_the_app_s_language()
+    {
+        var (window, field) = Show(new TextBox { Classes = { "search" }, Text = "Value" });
+        var clear = Find<Button>(field, "SearchClearButton");
+
+        Assert.Equal("Close", AutomationProperties.GetName(clear));
+        window.Resources["SearchFieldClearButtonText"] = "Effacer";
+        Assert.Equal("Effacer", AutomationProperties.GetName(clear));
         window.Close();
     }
 

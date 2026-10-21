@@ -17,6 +17,9 @@
   <Styles.Resources>
     <ResourceDictionary>
       <StreamGeometry x:Key="SearchFieldGlyph">M 11.5,6.5 A 5,5 0 1 1 1.5,6.5 A 5,5 0 1 1 11.5,6.5 Z M 10.1,10.1 L 14,14</StreamGeometry>
+      <!-- The clear button's accessibility name: AppKit's, for NSSearchField's cancel button (macOS 27). An app redefines
+           it in its own resources, in its language. -->
+      <x:String x:Key="SearchFieldClearButtonText">Close</x:String>
       <StreamGeometry x:Key="SearchClearGlyph">M 12.25,6.5 A 5.75,5.75 0 1 1 0.75,6.5 A 5.75,5.75 0 1 1 12.25,6.5 Z M 4.5,4.5 L 8.5,8.5 M 8.5,4.5 L 4.5,8.5</StreamGeometry>
 
       <!-- The clear button: the glyph alone, as in NSSearchField, in the placeholder's color. -->
@@ -64,7 +67,7 @@
                 Theme="{StaticResource CupertinoSearchClearButton}"
                 Command="{Binding $parent[TextBox].Clear}"
                 IsVisible="{Binding $parent[TextBox].Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                AutomationProperties.Name="Clear">
+                AutomationProperties.Name="{DynamicResource SearchFieldClearButtonText}">
           <cac:SymbolIcon Name="SearchClearGlyph"
                           Symbol="xmark.circle.fill"
                           FallbackData="{StaticResource SearchClearGlyph}"

@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Automation;
 using Avalonia.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -91,6 +92,22 @@ public class NavigationSplitViewTests
         }
         Assert.True(widths.Any(w => w is > 20 and < 200) && split.VisibleSidebarWidth == 0,
             $"widths {string.Join(", ", widths.Take(12).Select(w => w.ToString("0")))} … {split.VisibleSidebarWidth:0}; open {split.IsSidebarOpen}");
+        window.Close();
+    }
+
+    // AppKit's labels, measured on macOS 27; an app redefines them in its language.
+    [AvaloniaFact]
+    public void The_button_says_what_it_does_in_the_app_s_language()
+    {
+        var (window, split) = Show(isSidebarOpen: true);
+        var toggle = Part<Button>(split, "PART_SidebarToggle");
+
+        Assert.Equal(("Hide Sidebar", "Hide Sidebar"), (ToolTip.GetTip(toggle), AutomationProperties.GetName(toggle)));
+        split.IsSidebarOpen = false;
+        Assert.Equal(("Show Sidebar", "Show Sidebar"), (ToolTip.GetTip(toggle), AutomationProperties.GetName(toggle)));
+
+        window.Resources["NavigationSplitViewShowSidebarText"] = "Afficher la barre latérale";
+        Assert.Equal(("Afficher la barre latérale", "Afficher la barre latérale"), (ToolTip.GetTip(toggle), AutomationProperties.GetName(toggle)));
         window.Close();
     }
 

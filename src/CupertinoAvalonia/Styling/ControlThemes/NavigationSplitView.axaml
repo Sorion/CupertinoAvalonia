@@ -10,6 +10,11 @@
   <!-- SwiftUI's ideal sidebar width. -->
   <x:Double x:Key="NavigationSplitViewSidebarWidth">220</x:Double>
 
+  <!-- The sidebar button's label, as its tooltip and accessibility name, by the sidebar's state: AppKit's (macOS 27). An
+       app redefines them in its own resources, in its language. -->
+  <x:String x:Key="NavigationSplitViewHideSidebarText">Hide Sidebar</x:String>
+  <x:String x:Key="NavigationSplitViewShowSidebarText">Show Sidebar</x:String>
+
   <ControlTheme x:Key="{x:Type cac:NavigationSplitView}" TargetType="cac:NavigationSplitView">
     <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
     <Setter Property="SidebarBackground" Value="{DynamicResource SplitViewSidebarBackgroundBrush}" />
@@ -71,14 +76,22 @@
             <Button Name="PART_SidebarToggle"
                     Classes="toolbar"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    ToolTip.Tip="Show or hide the sidebar"
-                    AutomationProperties.Name="Sidebar">
+                    VerticalAlignment="Center">
               <cac:SymbolIcon Symbol="sidebar.left" />
             </Button>
           </Panel>
         </Panel>
       </ControlTemplate>
     </Setter>
+
+    <!-- Set by styles: a value in the template would block them. -->
+    <Style Selector="^ /template/ Button#PART_SidebarToggle">
+      <Setter Property="ToolTip.Tip" Value="{DynamicResource NavigationSplitViewHideSidebarText}" />
+      <Setter Property="AutomationProperties.Name" Value="{DynamicResource NavigationSplitViewHideSidebarText}" />
+    </Style>
+    <Style Selector="^[IsSidebarOpen=False] /template/ Button#PART_SidebarToggle">
+      <Setter Property="ToolTip.Tip" Value="{DynamicResource NavigationSplitViewShowSidebarText}" />
+      <Setter Property="AutomationProperties.Name" Value="{DynamicResource NavigationSplitViewShowSidebarText}" />
+    </Style>
   </ControlTheme>
 </ResourceDictionary>
