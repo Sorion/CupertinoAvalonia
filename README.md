@@ -152,12 +152,18 @@ button over it, and the content has its own toolbar. An inspector can show on th
   `IsSidebarOpen` and `IsInspectorOpen`, as the Gallery does. Without a menu, `ToggleSidebarGesture` and
   `ToggleInspectorGesture` take a shortcut wherever the focus is in the window.
 - `Inspector` is a column on the right, the window's full height, on the sidebar's material, without a divider.
-  `IsInspectorOpen` (closed by default, two-way) slides it in and pushes the content; the toolbar keeps its trailing
-  items at the window's edge, over the inspector, and shows its band over the content. There is no built-in button:
+  `IsInspectorOpen` (closed by default, two-way) slides it in and pushes the content; the content's toolbar keeps its
+  trailing items at the window's edge, over the inspector, unless the inspector has its own section, and shows its band
+  over the content. There is no built-in button:
   put one in `ContentToolbar`, with the `sidebar.right` symbol.
+- `InspectorToolbar` is the inspector's section of the toolbar, as the toolbar items SwiftUI's inspector declares: a
+  title and subtitle, items, which start at the inspector's edge. The content's toolbar then ends before them. They
+  never run past the window's edge, so once the inspector is closed they stay at the window's trailing edge, as in
+  SwiftUI; bind their `IsVisible` to `IsInspectorOpen` to hide them instead.
 - `InspectorWidth` is 270, fixed, as SwiftUI's. Give `MinInspectorWidth` and `MaxInspectorWidth` different values (the
   Gallery: 220 to 400, at 280) and a drag on its edge resizes it, folds it away and brings it back, as the sidebar's.
-  `InspectorBackground` applies where the window shows no material.
+  `CanCollapseInspector="False"` keeps it open at its minimum, for an inspector that edits and closes through its own
+  buttons. `InspectorBackground` applies where the window shows no material.
 
 ## CupertinoToolbar
 
