@@ -326,6 +326,62 @@ public class NavigationSplitViewTests
         window.Close();
     }
 
+    // SwiftUI's inspector with toolbar items, in a probe on macOS 27: they sit over it from its leading edge, and the
+    // content's items end before them. They never run past the window's edge, so they stay there once it's closed.
+    [AvaloniaFact]
+    public void The_inspector_s_toolbar_sits_over_it_and_the_content_s_ends_at_its_edge()
+    {
+        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
+        var edit = new Button { Content = new SymbolIcon { Symbol = "pencil" } };
+        var header = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { new TextBlock { Text = "Channel options" }, edit } };
+        var (window, split) = Show(isSidebarOpen: true, toolbar: share, configure: s =>
+        {
+            s.IsInspectorOpen = true;
+            s.InspectorToolbar = header;
+        });
+
+        // The inspector runs from 630 to 900.
+        Assert.Equal(new Point(638, 8), Origin(header, window));
+        Assert.Equal(622, Origin(share, window).X + share.Bounds.Width);
+        Assert.Contains("toolbar", edit.Classes);
+        Assert.Same(split, header.GetLogicalParent());
+
+        // On its way out, the section follows the inspector's edge until it meets the window's.
+        split.SetValue(NavigationSplitView.VisibleInspectorWidthProperty, 230.0, BindingPriority.Animation);
+        window.UpdateLayout();
+        Assert.Equal(678, Origin(header, window).X);
+        Assert.Equal(662, Origin(share, window).X + share.Bounds.Width);
+        split.SetValue(NavigationSplitView.VisibleInspectorWidthProperty, 0.0, BindingPriority.Animation);
+        window.UpdateLayout();
+        var closedX = 892 - header.Bounds.Width;
+        Assert.True(header.IsEffectivelyVisible);
+        Assert.Equal(closedX, Origin(header, window).X);
+        Assert.Equal(closedX - 16, Origin(share, window).X + share.Bounds.Width);
+        window.Close();
+    }
+
+    // MixerStudio's editing inspector, with Cancel and Save: a drag doesn't close it.
+    [AvaloniaFact]
+    public void An_inspector_that_can_t_collapse_stops_at_its_minimum()
+    {
+        var (window, split) = Show(isSidebarOpen: true, configure: s =>
+        {
+            s.IsInspectorOpen = true;
+            s.InspectorWidth = 280;
+            s.MinInspectorWidth = 220;
+            s.MaxInspectorWidth = 400;
+            s.CanCollapseInspector = false;
+        });
+
+        window.MouseDown(new Point(622, 300), MouseButton.Left);
+        window.MouseMove(new Point(850, 300));
+        Assert.True(split.IsInspectorOpen);
+        Assert.Equal(220, split.InspectorWidth);
+        window.MouseUp(new Point(850, 300), MouseButton.Left);
+        Assert.True(split.IsInspectorOpen);
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void The_inspector_is_closed_by_default()
     {

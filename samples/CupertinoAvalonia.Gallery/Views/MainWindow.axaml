@@ -87,8 +87,16 @@
       </Grid>
     </cac:NavigationSplitView.ContentToolbar>
 
+    <!-- As in TestNav: the inspector's title in its section of the toolbar. -->
+    <cac:NavigationSplitView.InspectorToolbar>
+      <StackPanel Spacing="2" IsHitTestVisible="False">
+        <TextBlock Classes="headline" Text="Channel options" />
+        <TextBlock Classes="subheadline secondary" Text="Games" />
+      </StackPanel>
+    </cac:NavigationSplitView.InspectorToolbar>
+
     <cac:NavigationSplitView.Inspector>
-      <views:ChannelInspector />
+      <views:ChannelInspector ShowsHeader="False" />
     </cac:NavigationSplitView.Inspector>
 
     <!-- The page starts below the toolbar and scrolls under it. -->

@@ -1,9 +1,10 @@
-<!-- TestNav's inspector, "Channel options": the window's inspector and the Split View page's. -->
+<!-- TestNav's inspector, "Channel options": the window's inspector, whose header is in its toolbar section, and the
+     Split View page's. -->
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="CupertinoAvalonia.Gallery.Views.ChannelInspector">
   <DockPanel>
-    <Border DockPanel.Dock="Top" Padding="16,12" BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="0,0,0,1">
+    <Border Name="Header" DockPanel.Dock="Top" Padding="16,12" BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="0,0,0,1">
       <StackPanel Spacing="2">
         <TextBlock Classes="headline" Text="Channel options" />
         <TextBlock Classes="subheadline secondary" Text="Games" />

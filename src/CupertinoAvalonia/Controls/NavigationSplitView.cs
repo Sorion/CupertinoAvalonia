@@ -43,6 +43,7 @@ namespace CupertinoAvalonia.Controls;
 [TemplatePart(PartContentToolbarPresenter, typeof(ContentPresenter))]
 [TemplatePart(PartSidebarPresenter, typeof(ContentPresenter))]
 [TemplatePart(PartInspectorPresenter, typeof(ContentPresenter))]
+[TemplatePart(PartInspectorToolbarPresenter, typeof(ContentPresenter))]
 [TemplatePart(PartSidebarGrip, typeof(Control))]
 [TemplatePart(PartInspectorGrip, typeof(Control))]
 [TemplatePart(PartToggleBand, typeof(Control))]
@@ -56,6 +57,7 @@ public class NavigationSplitView : ContentControl
     private const string PartContentToolbarPresenter = "PART_ContentToolbarPresenter";
     private const string PartSidebarPresenter = "PART_SidebarPresenter";
     private const string PartInspectorPresenter = "PART_InspectorPresenter";
+    private const string PartInspectorToolbarPresenter = "PART_InspectorToolbarPresenter";
     private const string PartSidebarGrip = "PART_SidebarGrip";
     private const string PartInspectorGrip = "PART_InspectorGrip";
     private const string PartToggleBand = "PART_ToggleBand";
@@ -66,7 +68,7 @@ public class NavigationSplitView : ContentControl
     private const double ButtonSize = 36;
     private const double ButtonInset = 8;
     private const double ToolbarGap = 21;
-    private const double EdgeMargin = 8;
+    internal const double EdgeMargin = 8;
     // Dragging the sidebar's edge, measured on macOS 27 (SwiftUI, TestNav): the edge can be grabbed from 5 pt inside to
     // 1 pt outside; past half the minimum width the sidebar folds away, and comes back at its minimum width past about
     // five eighths of it, in the same drag. The inspector's edge does the same, mirrored.
@@ -102,6 +104,12 @@ public class NavigationSplitView : ContentControl
 
     public static readonly StyledProperty<IBrush?> SidebarBackgroundProperty =
         AvaloniaProperty.Register<NavigationSplitView, IBrush?>(nameof(SidebarBackground));
+
+    public static readonly StyledProperty<object?> InspectorToolbarProperty =
+        AvaloniaProperty.Register<NavigationSplitView, object?>(nameof(InspectorToolbar));
+
+    public static readonly StyledProperty<bool> CanCollapseInspectorProperty =
+        AvaloniaProperty.Register<NavigationSplitView, bool>(nameof(CanCollapseInspector), true);
 
     public static readonly StyledProperty<bool> IsInspectorOpenProperty =
         AvaloniaProperty.Register<NavigationSplitView, bool>(nameof(IsInspectorOpen), defaultBindingMode: BindingMode.TwoWay);
@@ -142,6 +150,8 @@ public class NavigationSplitView : ContentControl
     private ContentPresenter? _contentToolbarPresenter;
     private ContentPresenter? _sidebarPresenter;
     private ContentPresenter? _inspectorPresenter;
+    private ContentPresenter? _inspectorToolbarPresenter;
+    private ToolbarSections? _toolbarSections;
     private Control? _sidebarGrip;
     private Control? _inspectorGrip;
     private Control? _toggleBand;
@@ -162,7 +172,8 @@ public class NavigationSplitView : ContentControl
 
     /// <summary>
     /// The content's toolbar, after the sidebar button: a title and subtitle, items, trailing items. Buttons, pop-ups
-    /// and segmented controls in it are toolbar items. It runs to the window's edge, over the inspector.
+    /// and segmented controls in it are toolbar items. It runs to the window's edge, over the inspector, unless the
+    /// inspector has its own section (<see cref="InspectorToolbar"/>).
     /// </summary>
     public object? ContentToolbar
     {
@@ -178,6 +189,17 @@ public class NavigationSplitView : ContentControl
     {
         get => GetValue(InspectorProperty);
         set => SetValue(InspectorProperty, value);
+    }
+
+    /// <summary>
+    /// The inspector's section of the toolbar, over it from its leading edge, as the toolbar items SwiftUI's inspector
+    /// declares: a title and subtitle, items. Buttons, pop-ups and segmented controls in it are toolbar items. With it,
+    /// the content's toolbar ends at the inspector's edge.
+    /// </summary>
+    public object? InspectorToolbar
+    {
+        get => GetValue(InspectorToolbarProperty);
+        set => SetValue(InspectorToolbarProperty, value);
     }
 
     /// <summary>Whether the sidebar shows; the sidebar button toggles it.</summary>
@@ -248,6 +270,16 @@ public class NavigationSplitView : ContentControl
         set => SetValue(MaxInspectorWidthProperty, value);
     }
 
+    /// <summary>
+    /// Whether dragging the inspector's edge past half its minimum width folds it away, as AppKit's canCollapse: true by
+    /// default. False keeps it open at its minimum, for an inspector that edits and closes through its own buttons.
+    /// </summary>
+    public bool CanCollapseInspector
+    {
+        get => GetValue(CanCollapseInspectorProperty);
+        set => SetValue(CanCollapseInspectorProperty, value);
+    }
+
     /// <summary>The inspector's background where the window shows no material: the sidebar's color.</summary>
     public IBrush? InspectorBackground
     {
@@ -307,6 +339,8 @@ public class NavigationSplitView : ContentControl
         _contentToolbarPresenter = e.NameScope.Find<ContentPresenter>(PartContentToolbarPresenter);
         _sidebarPresenter = e.NameScope.Find<ContentPresenter>(PartSidebarPresenter);
         _inspectorPresenter = e.NameScope.Find<ContentPresenter>(PartInspectorPresenter);
+        _inspectorToolbarPresenter = e.NameScope.Find<ContentPresenter>(PartInspectorToolbarPresenter);
+        _toolbarSections = _contentToolbarPresenter?.Parent as ToolbarSections;
         _sidebarGrip = e.NameScope.Find<Control>(PartSidebarGrip);
         _inspectorGrip = e.NameScope.Find<Control>(PartInspectorGrip);
         _toggleBand = e.NameScope.Find<Control>(PartToggleBand);
@@ -339,7 +373,7 @@ public class NavigationSplitView : ContentControl
     // The sidebar's, the inspector's and the toolbar's contents are this control's logical children, as its content is.
     protected override bool RegisterContentPresenter(ContentPresenter presenter) =>
         base.RegisterContentPresenter(presenter)
-        || presenter.Name is PartSidebarPresenter or PartInspectorPresenter or PartContentToolbarPresenter;
+        || presenter.Name is PartSidebarPresenter or PartInspectorPresenter or PartContentToolbarPresenter or PartInspectorToolbarPresenter;
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -376,7 +410,8 @@ public class NavigationSplitView : ContentControl
             UpdateChrome();
         else if (change.Property == VisibleSidebarWidthProperty || change.Property == SidebarWidthProperty
             || change.Property == VisibleInspectorWidthProperty || change.Property == InspectorWidthProperty
-            || change.Property == MinInspectorWidthProperty || change.Property == MaxInspectorWidthProperty)
+            || change.Property == MinInspectorWidthProperty || change.Property == MaxInspectorWidthProperty
+            || change.Property == InspectorToolbarProperty)
             UpdatePositions();
     }
 
@@ -442,7 +477,8 @@ public class NavigationSplitView : ContentControl
 
         var proposed = DistanceFromSide(grip, e) - _gripOffset;
         var isOpen = GetValue(isOpenProperty);
-        if (isOpen && proposed < min * CollapseFraction)
+        var canCollapse = isSidebar || CanCollapseInspector;
+        if (isOpen && canCollapse && proposed < min * CollapseFraction)
         {
             SetCurrentValue(isOpenProperty, false);
         }
@@ -530,6 +566,13 @@ public class NavigationSplitView : ContentControl
         if (_toolbar is not null)
             _toolbar.BackgroundMargin = new Thickness(0, 0, inspectorEdge, 0);
         _sidebarToggle.Margin = new Thickness(buttonX, 0, 0, 0);
-        _contentToolbarPresenter.Margin = new Thickness(toolbarX - edge, 0, EdgeMargin, 0);
+        // With a section of its own, the inspector's items sit over it, and the content's end before them, as in SwiftUI.
+        if (_toolbarSections is not null)
+        {
+            _toolbarSections.ContentStart = toolbarX - edge;
+            _toolbarSections.InspectorEdge = inspectorEdge;
+        }
+        if (_inspectorToolbarPresenter is not null)
+            _inspectorToolbarPresenter.IsVisible = InspectorToolbar is not null;
     }
 }
