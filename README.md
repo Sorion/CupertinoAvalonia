@@ -51,8 +51,8 @@ custom accent, their shades are derived from the accent.
 | `CheckBox`, `RadioButton`, `ToggleSwitch` | |
 | `TextBox`, `ComboBox`, `AutoCompleteBox` | `search`: a search field, a capsule with a magnifying glass and a button that clears it (the toolbar's search field has the button too). A `ComboBox` is a pop-up button; `IsEditable="True"` makes it a combo box, a text field with an arrow button. The autocomplete box's suggestions open in a menu |
 | `NumericUpDown`, `ButtonSpinner` | A field with the stepper inside; the stepper alone |
-| `ListBox` | `sidebar` (at System Settings' sidebar icon size on macOS, medium elsewhere), `alternating`, `segmented` (a segmented control; `SelectionMode="Multiple"` for several) |
-| `TreeView` | An outline view; `sidebar` for nested sidebar items, sized as the sidebar list |
+| `ListBox` | `sidebar` (at System Settings' sidebar icon size on macOS, medium elsewhere; a gray selection, or with `accent` the accent while the list has the focus, as in SwiftUI), `alternating`, `segmented` (a segmented control; `SelectionMode="Multiple"` for several) |
+| `TreeView` | An outline view; `sidebar` for nested sidebar items, sized as the sidebar list, `accent` as the list's |
 | `MenuFlyout`, `ContextMenu`, `Flyout`, `ToolTip` | |
 | `Slider`, `ProgressBar`, `Expander`, `ScrollBar` | `small` (progress bar), `circular` (progress: a ring, or the spinner when indeterminate; `mini`, `small`), `button` (expander) |
 | `SplitView` | Pane on the left: a sidebar (on the window's material in a `CupertinoWindow`). On the right: an inspector, in the sidebar's color. `plain`: the pane takes the content's background and a divider, as in Shortcuts. `PaneBackground` and the resources `SplitView…BackgroundBrush`, `SplitViewInspectorLength`, `SplitViewDividerThickness` change the rest |
