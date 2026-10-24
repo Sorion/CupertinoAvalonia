@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Threading;
 
 namespace CupertinoAvalonia.Styling;
 
@@ -19,11 +20,29 @@ public sealed class ProgressSpinner : Control
     internal const int Frames = 24;
     private static readonly TimeSpan Period = TimeSpan.FromSeconds(0.8);
 
+    // Spinners waiting for a hidden parent to show again: any visibility change wakes them.
+    private static readonly HashSet<ProgressSpinner> Waiting = [];
+
     private readonly long _start = Stopwatch.GetTimestamp();
     private int _frame;
     private bool _running;
 
-    static ProgressSpinner() => AffectsRender<ProgressSpinner>(ForegroundProperty);
+    internal bool IsRunning => _running;
+
+    static ProgressSpinner()
+    {
+        AffectsRender<ProgressSpinner>(ForegroundProperty);
+        // Once the visual tree has updated its effective visibility.
+        IsVisibleProperty.Changed.AddClassHandler<Visual>((_, _) =>
+        {
+            if (Waiting.Count > 0)
+                Dispatcher.UIThread.Post(() =>
+                {
+                    foreach (var spinner in Waiting.ToArray())
+                        spinner.Start();
+                });
+        });
+    }
 
     public IBrush? Foreground
     {
@@ -67,31 +86,33 @@ public sealed class ProgressSpinner : Control
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         _running = false;
+        Waiting.Remove(this);
         base.OnDetachedFromVisualTree(e);
     }
 
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        if (change.Property == IsVisibleProperty)
-            Start();
-    }
-
-    // Runs only while shown: a determinate ring hides the spinner.
+    // Runs only while shown, its parents too: a determinate ring hides the spinner, and a spinner in a hidden panel
+    // would keep the render loop awake.
     private void Start()
     {
-        if (_running || !IsVisible || TopLevel.GetTopLevel(this) is not { } topLevel)
+        if (_running || TopLevel.GetTopLevel(this) is not { } topLevel)
             return;
+        if (!IsEffectivelyVisible)
+        {
+            Waiting.Add(this);
+            return;
+        }
 
+        Waiting.Remove(this);
         _running = true;
         topLevel.RequestAnimationFrame(_ => OnFrame());
     }
 
     private void OnFrame()
     {
-        if (!IsVisible || TopLevel.GetTopLevel(this) is not { } topLevel)
+        if (!IsEffectivelyVisible || TopLevel.GetTopLevel(this) is not { } topLevel)
         {
             _running = false;
+            Start();
             return;
         }
 

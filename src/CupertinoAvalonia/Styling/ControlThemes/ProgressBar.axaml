@@ -101,17 +101,17 @@
       </Style>
     </Style>
 
+    <!-- The segment's own property, not its TranslateTransform's: the animation pauses while the bar isn't shown. -->
     <Style Selector="^:horizontal:indeterminate /template/ Border#IndeterminateSegment">
       <Setter Property="HorizontalAlignment" Value="Left" />
       <Setter Property="Width" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerWidth}" />
-      <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
       <Style.Animations>
         <Animation Duration="0:0:1.6" IterationCount="Infinite" Easing="SineEaseInOut">
           <KeyFrame KeyTime="0:0:0">
-            <Setter Property="TranslateTransform.X" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationStartPosition}" />
+            <Setter Property="cas:IndeterminateSlide.X" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationStartPosition}" />
           </KeyFrame>
           <KeyFrame KeyTime="0:0:1.6">
-            <Setter Property="TranslateTransform.X" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationEndPosition}" />
+            <Setter Property="cas:IndeterminateSlide.X" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationEndPosition}" />
           </KeyFrame>
         </Animation>
       </Style.Animations>
@@ -119,14 +119,13 @@
     <Style Selector="^:vertical:indeterminate /template/ Border#IndeterminateSegment">
       <Setter Property="VerticalAlignment" Value="Top" />
       <Setter Property="Height" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerWidth}" />
-      <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
       <Style.Animations>
         <Animation Duration="0:0:1.6" IterationCount="Infinite" Easing="SineEaseInOut">
           <KeyFrame KeyTime="0:0:0">
-            <Setter Property="TranslateTransform.Y" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationStartPosition}" />
+            <Setter Property="cas:IndeterminateSlide.Y" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationStartPosition}" />
           </KeyFrame>
           <KeyFrame KeyTime="0:0:1.6">
-            <Setter Property="TranslateTransform.Y" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationEndPosition}" />
+            <Setter Property="cas:IndeterminateSlide.Y" Value="{Binding $parent[ProgressBar].TemplateSettings.ContainerAnimationEndPosition}" />
           </KeyFrame>
         </Animation>
       </Style.Animations>
