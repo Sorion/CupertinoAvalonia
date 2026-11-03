@@ -58,6 +58,17 @@ internal static class AccentColorMapper
         return FromEncoded(color.A, srgb);
     }
 
+    // WCAG's relative luminance, 0 for black to 1 for white.
+    public static double RelativeLuminance(Color color)
+    {
+        var c = Encoded(color).Select(ToLinear).ToArray();
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    }
+
+    // Labels and glyphs over an accent fill, measured on macOS 27: black over the yellow accent (luminance 0.62), white
+    // over the others, green and orange included (0.38 and 0.36).
+    public static Color Foreground(Color accent) => RelativeLuminance(accent) > 0.5 ? Colors.Black : Colors.White;
+
     // In OKLCH: the lightness (0 to 1) shifted, the chroma scaled, the hue kept.
     public static Color Shade(Color color, double lightness, double chroma)
     {

@@ -146,6 +146,8 @@ public class CupertinoAvaloniaTheme : Styles
         Set(d, "AccentButtonBackgroundPressedColor", buttonPressed);
         Set(d, "AccentSelectionColor", shades.Selection);
         Set(d, "TextSelectionColor", shades.TextSelection);
+        // On accent fills (prominent buttons, checked boxes, selected segments); selected rows stay white, as AppKit's.
+        Set(d, "AccentForegroundColor", AccentColorMapper.Foreground(accent));
         d["SystemAccentColor"] = accent;
 
         // A spread shadow follows the control's corner radius.

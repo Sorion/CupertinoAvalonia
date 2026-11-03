@@ -158,7 +158,7 @@
     <Style Selector="^:selected">
       <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
       <Style Selector="^ /template/ StackPanel#PART_HeaderStack">
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource WhiteBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AccentForegroundBrush}" />
       </Style>
     </Style>
     <Style Selector="^:selected:pressed">
@@ -171,7 +171,7 @@
     <Style Selector="^:selected:disabled">
       <Setter Property="Opacity" Value="0.45" />
       <Style Selector="^ /template/ StackPanel#PART_HeaderStack">
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource WhiteBrush}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource AccentForegroundBrush}" />
       </Style>
     </Style>
 

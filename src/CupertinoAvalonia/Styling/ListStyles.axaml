@@ -180,7 +180,7 @@
   </Style>
   <Style Selector="ListBox.segmented ListBoxItem:selected">
     <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
-    <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
   </Style>
   <Style Selector="ListBox.segmented ListBoxItem:selected:pressed">
     <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
@@ -195,7 +195,7 @@
   </Style>
   <!-- State=Disabled, Selected=True -->
   <Style Selector="ListBox.segmented ListBoxItem:selected:disabled">
-    <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+    <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
     <Setter Property="Opacity" Value="0.45" />
   </Style>
   <Style Selector="ListBox.segmented ListBoxItem:selected:disabled[(cas|WindowActivity.IsInactive)=True]">

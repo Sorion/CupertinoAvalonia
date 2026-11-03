@@ -7,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CupertinoAvalonia.Media;
 using Xunit;
 
@@ -141,6 +142,53 @@ public class AccentColorMapperTests
         }
         finally
         {
+            cupertino.CustomAccentColor = null;
+        }
+    }
+
+    // AppKit's labels and glyphs over the accent, measured on macOS 27: a default button's label, a checked box's check, a
+    // selected radio and segment are black over the yellow accent only, in both appearances.
+    [Theory]
+    [InlineData("#FFC726", "#000000")] // yellow, light
+    [InlineData("#FFC600", "#000000")] // yellow, dark
+    [InlineData("#62BA46", "#FFFFFF")] // green
+    [InlineData("#F7821B", "#FFFFFF")] // orange
+    [InlineData("#989898", "#FFFFFF")] // graphite, light
+    [InlineData("#8C8C8C", "#FFFFFF")] // graphite, dark
+    [InlineData("#E0383E", "#FFFFFF")] // red
+    [InlineData("#FF5257", "#FFFFFF")] // red, dark
+    [InlineData("#007AFF", "#FFFFFF")] // blue
+    [InlineData("#953D96", "#FFFFFF")] // purple
+    [InlineData("#A550A7", "#FFFFFF")] // purple, dark
+    [InlineData("#F74F9E", "#FFFFFF")] // pink
+    public void Labels_over_the_accent_are_black_over_yellow_only(string accent, string expected) =>
+        Assert.Equal(Color.Parse(expected), AccentColorMapper.Foreground(Color.Parse(accent)));
+
+    [AvaloniaFact]
+    public void A_yellow_accent_darkens_what_it_fills_but_not_selected_rows()
+    {
+        var cupertino = Application.Current!.Styles.OfType<CupertinoAvaloniaTheme>().Single();
+        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        cupertino.CustomAccentColor = Color.Parse("#FFC726");
+        var button = new Button { Classes = { "accent" }, Content = "OK" };
+        var check = new CheckBox { IsChecked = true };
+        var list = new ListBox { Items = { new ListBoxItem { Content = "Row" } }, SelectedIndex = 0 };
+        var window = new Window { Content = new StackPanel { Children = { button, check, list } } };
+        try
+        {
+            window.Show();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(Colors.Black, ((ISolidColorBrush)button.Foreground!).Color);
+            var glyph = check.GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Path>().Single();
+            Assert.Equal(Colors.Black, ((ISolidColorBrush)glyph!.Stroke!).Color);
+            var row = (ListBoxItem)list.ContainerFromIndex(0)!;
+            row.Focus();
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal(Colors.White, ((ISolidColorBrush)row.Foreground!).Color);
+        }
+        finally
+        {
+            window.Close();
             cupertino.CustomAccentColor = null;
         }
     }

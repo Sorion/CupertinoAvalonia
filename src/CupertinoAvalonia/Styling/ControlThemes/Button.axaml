@@ -116,15 +116,16 @@
     </Style>
 
     <!-- Bordered - Prominent -->
+    <!-- Its label in the accent's foreground: black over the yellow accent, as AppKit's (macOS 27). -->
     <Style Selector="^.accent, ^[IsDefault=True]">
       <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
-      <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
       <Style Selector="^:pressed">
         <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
       </Style>
       <Style Selector="^:disabled">
         <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
         <Style Selector="^ /template/ Border#PART_Background">
           <Setter Property="Opacity" Value="0.4" />
         </Style>
