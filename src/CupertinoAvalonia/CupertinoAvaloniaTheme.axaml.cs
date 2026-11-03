@@ -40,6 +40,7 @@ public class CupertinoAvaloniaTheme : Styles
         MacOSSidebarSize.Observe(() => ApplySidebarSize(MacOSSidebarSize.Read()));
         WindowActivity.Initialize();
         Stepper.Initialize();
+        PointerFocus.Initialize();
         MacOSColorSpace.Initialize();
 
         _platformSettings = Application.Current?.PlatformSettings;
