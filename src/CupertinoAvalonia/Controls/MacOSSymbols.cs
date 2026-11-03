@@ -3,6 +3,8 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using CupertinoAvalonia.Interop;
+using static CupertinoAvalonia.Interop.ObjC;
 
 namespace CupertinoAvalonia.Controls;
 
@@ -10,9 +12,8 @@ namespace CupertinoAvalonia.Controls;
 /// Draws SF Symbols with AppKit (macOS 11+). No font installed with macOS has them: SF Pro does, but it is a separate,
 /// non-redistributable download.
 /// </summary>
-internal static class MacOSSymbols
+internal static partial class MacOSSymbols
 {
-    private const string ObjC = "/usr/lib/libobjc.A.dylib";
     private const string CoreGraphics = "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics";
 
     // CGImageAlphaInfo.PremultipliedLast | CGBitmapInfo.ByteOrder32Big: RGBA bytes.
@@ -20,7 +21,7 @@ internal static class MacOSSymbols
 
     private static readonly Dictionary<Key, Symbol?> Cache = [];
 
-    public static bool IsSupported { get; } = OperatingSystem.IsMacOSVersionAtLeast(11) && LoadAppKit();
+    public static bool IsSupported { get; } = OperatingSystem.IsMacOSVersionAtLeast(11) && LoadAppKit("NSImage");
 
     // An opacity mask at the screen's scale, null for an unknown name.
     public static Symbol? Get(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale)
@@ -33,59 +34,50 @@ internal static class MacOSSymbols
 
     private static Symbol? Draw(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale)
     {
-        var pool = objc_autoreleasePoolPush();
-        var nameUtf8 = Marshal.StringToCoTaskMemUTF8(name);
+        using var pool = AutoreleasePool();
+        var nsName = AutoreleasedString(name);
+        var image = Send(Class("NSImage"), Sel("imageWithSystemSymbolName:accessibilityDescription:"), nsName, IntPtr.Zero);
+        if (image == IntPtr.Zero)
+            return null;
+        // NSImageSymbolScale: small 1, medium 2, large 3.
+        var configuration = SendConfiguration(Class("NSImageSymbolConfiguration"),
+            Sel("configurationWithPointSize:weight:scale:"), pointSize, ToNSFontWeight(weight), (nint)symbolScale + 1);
+        image = Send(image, Sel("imageWithSymbolConfiguration:"), configuration);
+        if (image == IntPtr.Zero)
+            return null;
+
+        var size = SendSize(image, Sel("size"));
+        var pixelWidth = (int)Math.Ceiling(size.Width * scale);
+        var pixelHeight = (int)Math.Ceiling(size.Height * scale);
+        if (pixelWidth <= 0 || pixelHeight <= 0)
+            return null;
+
+        var stride = pixelWidth * 4;
+        var pixels = Marshal.AllocHGlobal(stride * pixelHeight);
         try
         {
-            var nsName = Send(Class("NSString"), Sel("stringWithUTF8String:"), nameUtf8);
-            var image = Send(Class("NSImage"), Sel("imageWithSystemSymbolName:accessibilityDescription:"), nsName, IntPtr.Zero);
-            if (image == IntPtr.Zero)
-                return null;
-            // NSImageSymbolScale: small 1, medium 2, large 3.
-            var configuration = SendConfiguration(Class("NSImageSymbolConfiguration"),
-                Sel("configurationWithPointSize:weight:scale:"), pointSize, ToNSFontWeight(weight), (nint)symbolScale + 1);
-            image = Send(image, Sel("imageWithSymbolConfiguration:"), configuration);
-            if (image == IntPtr.Zero)
-                return null;
+            var colorSpace = CGColorSpaceCreateDeviceRGB();
+            var context = CGBitmapContextCreate(pixels, (nuint)pixelWidth, (nuint)pixelHeight, 8, (nuint)stride, colorSpace, RgbaPremultiplied);
+            CGColorSpaceRelease(colorSpace);
+            CGContextClearRect(context, new CGRect(0, 0, pixelWidth, pixelHeight));
+            CGContextScaleCTM(context, scale, scale);
 
-            var size = SendSize(image, Sel("size"));
-            var pixelWidth = (int)Math.Ceiling(size.Width * scale);
-            var pixelHeight = (int)Math.Ceiling(size.Height * scale);
-            if (pixelWidth <= 0 || pixelHeight <= 0)
-                return null;
+            // Outside a view, AppKit draws a symbol (a template image) in black.
+            var graphicsContext = Class("NSGraphicsContext");
+            Send(graphicsContext, Sel("saveGraphicsState"));
+            Send(graphicsContext, Sel("setCurrentContext:"),
+                SendContext(graphicsContext, Sel("graphicsContextWithCGContext:flipped:"), context, false));
+            SendRect(image, Sel("drawInRect:"), new CGRect(0, 0, size.Width, size.Height));
+            Send(graphicsContext, Sel("restoreGraphicsState"));
+            CGContextRelease(context);
 
-            var stride = pixelWidth * 4;
-            var pixels = Marshal.AllocHGlobal(stride * pixelHeight);
-            try
-            {
-                var colorSpace = CGColorSpaceCreateDeviceRGB();
-                var context = CGBitmapContextCreate(pixels, (nuint)pixelWidth, (nuint)pixelHeight, 8, (nuint)stride, colorSpace, RgbaPremultiplied);
-                CGColorSpaceRelease(colorSpace);
-                CGContextClearRect(context, new CGRect(0, 0, pixelWidth, pixelHeight));
-                CGContextScaleCTM(context, scale, scale);
-
-                // Outside a view, AppKit draws a symbol (a template image) in black.
-                var graphicsContext = Class("NSGraphicsContext");
-                Send(graphicsContext, Sel("saveGraphicsState"));
-                Send(graphicsContext, Sel("setCurrentContext:"),
-                    SendContext(graphicsContext, Sel("graphicsContextWithCGContext:flipped:"), context, false));
-                SendRect(image, Sel("drawInRect:"), new CGRect(0, 0, size.Width, size.Height));
-                Send(graphicsContext, Sel("restoreGraphicsState"));
-                CGContextRelease(context);
-
-                var mask = new WriteableBitmap(PixelFormats.Rgba8888, AlphaFormat.Premul, pixels,
-                    new PixelSize(pixelWidth, pixelHeight), new Vector(96 * scale, 96 * scale), stride);
-                return new Symbol(mask, new Size(pixelWidth / scale, pixelHeight / scale));
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(pixels);
-            }
+            var mask = new WriteableBitmap(PixelFormats.Rgba8888, AlphaFormat.Premul, pixels,
+                new PixelSize(pixelWidth, pixelHeight), new Vector(96 * scale, 96 * scale), stride);
+            return new Symbol(mask, new Size(pixelWidth / scale, pixelHeight / scale));
         }
         finally
         {
-            Marshal.FreeCoTaskMem(nameUtf8);
-            objc_autoreleasePoolPop(pool);
+            Marshal.FreeHGlobal(pixels);
         }
     }
 
@@ -103,10 +95,6 @@ internal static class MacOSSymbols
         _ => 0.62,
     };
 
-    // Headless processes haven't loaded AppKit.
-    private static bool LoadAppKit() =>
-        NativeLibrary.TryLoad("/System/Library/Frameworks/AppKit.framework/AppKit", out _) && objc_getClass("NSImage") != IntPtr.Zero;
-
     public sealed record Symbol(WriteableBitmap Mask, Size Size);
 
     private readonly record struct Key(string Name, double PointSize, FontWeight Weight, CASymbolScale SymbolScale, double Scale);
@@ -117,59 +105,34 @@ internal static class MacOSSymbols
     [StructLayout(LayoutKind.Sequential)]
     private readonly record struct CGRect(double X, double Y, double Width, double Height);
 
-    private static IntPtr Class(string name) => objc_getClass(name);
+    [LibraryImport(ObjC.Library, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendConfiguration(IntPtr receiver, IntPtr selector, double pointSize, double weight, nint symbolScale);
 
-    private static IntPtr Sel(string name) => sel_registerName(name);
+    [LibraryImport(ObjC.Library, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendContext(IntPtr receiver, IntPtr selector, IntPtr cgContext, [MarshalAs(UnmanagedType.I1)] bool flipped);
 
-    [DllImport(ObjC)]
-    private static extern IntPtr objc_getClass(string name);
+    [LibraryImport(ObjC.Library, EntryPoint = "objc_msgSend")]
+    private static partial CGSize SendSize(IntPtr receiver, IntPtr selector);
 
-    [DllImport(ObjC)]
-    private static extern IntPtr sel_registerName(string name);
+    [LibraryImport(ObjC.Library, EntryPoint = "objc_msgSend")]
+    private static partial void SendRect(IntPtr receiver, IntPtr selector, CGRect rect);
 
-    [DllImport(ObjC)]
-    private static extern IntPtr objc_autoreleasePoolPush();
+    [LibraryImport(CoreGraphics)]
+    private static partial IntPtr CGColorSpaceCreateDeviceRGB();
 
-    [DllImport(ObjC)]
-    private static extern void objc_autoreleasePoolPop(IntPtr pool);
+    [LibraryImport(CoreGraphics)]
+    private static partial void CGColorSpaceRelease(IntPtr colorSpace);
 
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr Send(IntPtr receiver, IntPtr selector);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr Send(IntPtr receiver, IntPtr selector, IntPtr argument);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr Send(IntPtr receiver, IntPtr selector, IntPtr argument1, IntPtr argument2);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendConfiguration(IntPtr receiver, IntPtr selector, double pointSize, double weight, nint symbolScale);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr SendContext(IntPtr receiver, IntPtr selector, IntPtr cgContext, [MarshalAs(UnmanagedType.I1)] bool flipped);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern CGSize SendSize(IntPtr receiver, IntPtr selector);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern void SendRect(IntPtr receiver, IntPtr selector, CGRect rect);
-
-    [DllImport(CoreGraphics)]
-    private static extern IntPtr CGColorSpaceCreateDeviceRGB();
-
-    [DllImport(CoreGraphics)]
-    private static extern void CGColorSpaceRelease(IntPtr colorSpace);
-
-    [DllImport(CoreGraphics)]
-    private static extern IntPtr CGBitmapContextCreate(IntPtr data, nuint width, nuint height, nuint bitsPerComponent,
+    [LibraryImport(CoreGraphics)]
+    private static partial IntPtr CGBitmapContextCreate(IntPtr data, nuint width, nuint height, nuint bitsPerComponent,
         nuint bytesPerRow, IntPtr colorSpace, uint bitmapInfo);
 
-    [DllImport(CoreGraphics)]
-    private static extern void CGContextRelease(IntPtr context);
+    [LibraryImport(CoreGraphics)]
+    private static partial void CGContextRelease(IntPtr context);
 
-    [DllImport(CoreGraphics)]
-    private static extern void CGContextClearRect(IntPtr context, CGRect rect);
+    [LibraryImport(CoreGraphics)]
+    private static partial void CGContextClearRect(IntPtr context, CGRect rect);
 
-    [DllImport(CoreGraphics)]
-    private static extern void CGContextScaleCTM(IntPtr context, double sx, double sy);
+    [LibraryImport(CoreGraphics)]
+    private static partial void CGContextScaleCTM(IntPtr context, double sx, double sy);
 }

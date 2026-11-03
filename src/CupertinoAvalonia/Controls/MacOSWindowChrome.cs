@@ -1,12 +1,12 @@
 using System.Runtime.InteropServices;
+using CupertinoAvalonia.Interop;
+using static CupertinoAvalonia.Interop.ObjC;
 
 namespace CupertinoAvalonia.Controls;
 
 /// <summary>Window chrome Avalonia doesn't expose, set on the NSWindow through the Objective-C runtime.</summary>
-internal static class MacOSWindowChrome
+internal static partial class MacOSWindowChrome
 {
-    private const string ObjC = "/usr/lib/libobjc.A.dylib";
-
     // NSWindowToolbarStyle
     private const nint ToolbarStyleUnified = 3;
     private const nint ToolbarStyleUnifiedCompact = 4;
@@ -51,7 +51,7 @@ internal static class MacOSWindowChrome
         var effectView = Class("NSVisualEffectView");
         for (nuint i = 0, count = SendUInt(subviews, Sel("count")); i < count; i++)
         {
-            var view = Send(subviews, Sel("objectAtIndex:"), i);
+            var view = SendIndex(subviews, Sel("objectAtIndex:"), i);
             if (SendBool(view, Sel("isKindOfClass:"), effectView) && SendGetInt(view, Sel("blendingMode")) == BlendingBehindWindow)
             {
                 SendInt(view, Sel("setMaterial:"), ToNSVisualEffectMaterial(material));
@@ -71,48 +71,15 @@ internal static class MacOSWindowChrome
         _ => 7, // Sidebar
     };
 
-    private static IntPtr NewString(string value)
-    {
-        var utf8 = Marshal.StringToCoTaskMemUTF8(value);
-        try
-        {
-            return Send(Send(Class("NSString"), Sel("alloc")), Sel("initWithUTF8String:"), utf8);
-        }
-        finally
-        {
-            Marshal.FreeCoTaskMem(utf8);
-        }
-    }
+    [LibraryImport(ObjC.Library, EntryPoint = "objc_msgSend")]
+    private static partial IntPtr SendIndex(IntPtr receiver, IntPtr selector, nuint index);
 
-    private static IntPtr Class(string name) => objc_getClass(name);
+    [LibraryImport(ObjC.Library, EntryPoint = "objc_msgSend")]
+    private static partial void SendInt(IntPtr receiver, IntPtr selector, nint argument);
 
-    private static IntPtr Sel(string name) => sel_registerName(name);
+    [LibraryImport(ObjC.Library, EntryPoint = "objc_msgSend")]
+    private static partial nint SendGetInt(IntPtr receiver, IntPtr selector);
 
-    [DllImport(ObjC)]
-    private static extern IntPtr objc_getClass(string name);
-
-    [DllImport(ObjC)]
-    private static extern IntPtr sel_registerName(string name);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr Send(IntPtr receiver, IntPtr selector);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr Send(IntPtr receiver, IntPtr selector, IntPtr argument);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr Send(IntPtr receiver, IntPtr selector, nuint argument);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern void SendInt(IntPtr receiver, IntPtr selector, nint argument);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern nint SendGetInt(IntPtr receiver, IntPtr selector);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern nuint SendUInt(IntPtr receiver, IntPtr selector);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    [return: MarshalAs(UnmanagedType.I1)]
-    private static extern bool SendBool(IntPtr receiver, IntPtr selector, IntPtr argument);
+    [LibraryImport(ObjC.Library, EntryPoint = "objc_msgSend")]
+    private static partial nuint SendUInt(IntPtr receiver, IntPtr selector);
 }

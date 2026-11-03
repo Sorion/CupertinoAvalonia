@@ -18,7 +18,7 @@ internal enum SidebarSize
 /// the distributed notification <c>AppleSideBarDefaultIconSizeChanged</c>: both names sit together in AppKit's
 /// NSTableView on macOS 27.
 /// </remarks>
-internal static class MacOSSidebarSize
+internal static partial class MacOSSidebarSize
 {
     private const string CoreFoundation = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
     private const string ChangedNotification = "AppleSideBarDefaultIconSizeChanged";
@@ -95,22 +95,22 @@ internal static class MacOSSidebarSize
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void NotificationCallback(IntPtr center, IntPtr observer, IntPtr name, IntPtr obj, IntPtr userInfo);
 
-    [DllImport(CoreFoundation)]
-    private static extern IntPtr CFStringCreateWithCString(IntPtr allocator, [MarshalAs(UnmanagedType.LPUTF8Str)] string value, uint encoding);
+    [LibraryImport(CoreFoundation)]
+    private static partial IntPtr CFStringCreateWithCString(IntPtr allocator, [MarshalAs(UnmanagedType.LPUTF8Str)] string value, uint encoding);
 
-    [DllImport(CoreFoundation)]
-    private static extern void CFRelease(IntPtr value);
+    [LibraryImport(CoreFoundation)]
+    private static partial void CFRelease(IntPtr value);
 
-    [DllImport(CoreFoundation)]
+    [LibraryImport(CoreFoundation)]
     [return: MarshalAs(UnmanagedType.I1)]
-    private static extern bool CFPreferencesAppSynchronize(IntPtr applicationId);
+    private static partial bool CFPreferencesAppSynchronize(IntPtr applicationId);
 
-    [DllImport(CoreFoundation)]
-    private static extern nint CFPreferencesGetAppIntegerValue(IntPtr key, IntPtr applicationId, [MarshalAs(UnmanagedType.I1)] out bool valid);
+    [LibraryImport(CoreFoundation)]
+    private static partial nint CFPreferencesGetAppIntegerValue(IntPtr key, IntPtr applicationId, [MarshalAs(UnmanagedType.I1)] out bool valid);
 
-    [DllImport(CoreFoundation)]
-    private static extern IntPtr CFNotificationCenterGetDistributedCenter();
+    [LibraryImport(CoreFoundation)]
+    private static partial IntPtr CFNotificationCenterGetDistributedCenter();
 
-    [DllImport(CoreFoundation)]
-    private static extern void CFNotificationCenterAddObserver(IntPtr center, IntPtr observer, IntPtr callback, IntPtr name, IntPtr obj, nint suspensionBehavior);
+    [LibraryImport(CoreFoundation)]
+    private static partial void CFNotificationCenterAddObserver(IntPtr center, IntPtr observer, IntPtr callback, IntPtr name, IntPtr obj, nint suspensionBehavior);
 }

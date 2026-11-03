@@ -1,6 +1,6 @@
-using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using static CupertinoAvalonia.Interop.ObjC;
 
 namespace CupertinoAvalonia.Media;
 
@@ -11,8 +11,6 @@ namespace CupertinoAvalonia.Media;
 /// <remarks>To replace with Avalonia's PresentationOptions.PreferredColorSpace once released (AvaloniaUI/Avalonia#21847).</remarks>
 internal static class MacOSColorSpace
 {
-    private const string ObjC = "/usr/lib/libobjc.A.dylib";
-
     // A popup gets its Metal layer at its first frame, after it is loaded.
     private const int FramesToWait = 3;
 
@@ -33,7 +31,7 @@ internal static class MacOSColorSpace
         if (layer == IntPtr.Zero || !SendBool(layer, Sel("respondsToSelector:"), Sel("setColorspace:")))
             return false;
 
-        var srgb = Send(Send(objc_getClass("NSColorSpace"), Sel("sRGBColorSpace")), Sel("CGColorSpace"));
+        var srgb = Send(Send(Class("NSColorSpace"), Sel("sRGBColorSpace")), Sel("CGColorSpace"));
         Send(layer, Sel("setColorspace:"), srgb);
         return true;
     }
@@ -52,22 +50,4 @@ internal static class MacOSColorSpace
         {
         }
     }
-
-    private static IntPtr Sel(string name) => sel_registerName(name);
-
-    [DllImport(ObjC)]
-    private static extern IntPtr objc_getClass(string name);
-
-    [DllImport(ObjC)]
-    private static extern IntPtr sel_registerName(string name);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr Send(IntPtr receiver, IntPtr selector);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    private static extern IntPtr Send(IntPtr receiver, IntPtr selector, IntPtr argument);
-
-    [DllImport(ObjC, EntryPoint = "objc_msgSend")]
-    [return: MarshalAs(UnmanagedType.I1)]
-    private static extern bool SendBool(IntPtr receiver, IntPtr selector, IntPtr argument);
 }
