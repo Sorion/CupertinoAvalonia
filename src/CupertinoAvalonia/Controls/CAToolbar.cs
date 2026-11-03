@@ -224,9 +224,23 @@ public class CAToolbar : ContentControl
             presenter.Clip = new RectangleGeometry(clip);
     }
 
-    private static ScrollBar? VerticalScrollBar(ScrollViewer scrollViewer) =>
-        scrollViewer.GetVisualDescendants().OfType<ScrollBar>()
-            .FirstOrDefault(b => b.Orientation == Orientation.Vertical && b.TemplatedParent == scrollViewer);
+    // Searches the scroll viewer's template, not its content: this runs on every layout pass of the window.
+    private static ScrollBar? VerticalScrollBar(ScrollViewer scrollViewer)
+    {
+        return Find(scrollViewer);
+
+        ScrollBar? Find(Visual visual)
+        {
+            foreach (var child in visual.GetVisualChildren())
+            {
+                if (child is ScrollBar { Orientation: Orientation.Vertical } bar && bar.TemplatedParent == scrollViewer)
+                    return bar;
+                if (child != scrollViewer.Presenter && Find(child) is { } found)
+                    return found;
+            }
+            return null;
+        }
+    }
 
     private void UpdateScrolled() => PseudoClasses.Set(PcScrolled, _scrollViewer is { Offset.Y: > 0 });
 
