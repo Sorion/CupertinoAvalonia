@@ -39,8 +39,8 @@ Add the package (`dotnet add package CupertinoAvalonia`), then use the theme ins
 ```
 
 Light and dark follow `RequestedThemeVariant`; the accent follows System Settings (`CustomAccentColor` forces one).
-On macOS, the accent, the selection and the focus ring are AppKit's own colors in both modes; elsewhere, and for a
-custom accent, their shades are derived from the accent.
+On macOS, the accent, the selection, the focus ring and selected text (System Settings' highlight color) are AppKit's
+own colors in both modes; elsewhere, and for a custom accent, their shades are derived from the accent.
 
 ## Controls
 
