@@ -56,10 +56,6 @@
       <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#14000000" />
       <SolidColorBrush x:Key="ButtonBackgroundPressedBrush" Color="#29000000" />
       <SolidColorBrush x:Key="ButtonBackgroundDisabledBrush" Color="{DynamicResource ControlDisabledColor}" />
-      <!-- _Control BG/Bordered, On=True (toggle buttons) -->
-      <SolidColorBrush x:Key="ButtonCheckedBackgroundBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.06" />
-      <SolidColorBrush x:Key="ButtonCheckedBackgroundPressedBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.16" />
-      <SolidColorBrush x:Key="ButtonCheckedBackgroundDisabledBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.02" />
       <!-- A borderless button's label, measured on macOS 27 (SwiftUI): gray, not the accent (the kit's), whatever its role;
            as SwiftUI's secondary text, 146 over white, 203 disabled. -->
       <SolidColorBrush x:Key="ButtonBorderlessForegroundBrush" Color="#6D000000" />
@@ -98,9 +94,6 @@
       <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#12FFFFFF" />
       <SolidColorBrush x:Key="ButtonBackgroundPressedBrush" Color="#29FFFFFF" />
       <SolidColorBrush x:Key="ButtonBackgroundDisabledBrush" Color="{DynamicResource ControlDisabledColor}" />
-      <SolidColorBrush x:Key="ButtonCheckedBackgroundBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.09" />
-      <SolidColorBrush x:Key="ButtonCheckedBackgroundPressedBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.19" />
-      <SolidColorBrush x:Key="ButtonCheckedBackgroundDisabledBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.05" />
       <!-- 170 over the dark window, 105 disabled. -->
       <SolidColorBrush x:Key="ButtonBorderlessForegroundBrush" Color="#9AFFFFFF" />
       <SolidColorBrush x:Key="ButtonBorderlessForegroundDisabledBrush" Color="#4DFFFFFF" />

@@ -11,7 +11,7 @@ namespace CupertinoAvalonia.Styling;
 /// For visuals drawn past their control (focus rings, glass lenses), hosted in the <see cref="AdornerLayer"/>: every
 /// <see cref="TemplatedControl"/> ancestor would clip them otherwise.
 /// </summary>
-public static class OverflowAdorner
+internal static class OverflowAdorner
 {
     /// <summary>
     /// Clips an element inside an adorner to the adorned element's scroll viewports and, for a Border, copies its corner

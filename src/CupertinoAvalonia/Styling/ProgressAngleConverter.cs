@@ -5,7 +5,7 @@ using Avalonia.Data.Converters;
 namespace CupertinoAvalonia.Styling;
 
 /// <summary>A circular progress indicator's sweep: ProgressBar.Percentage (0 to 100) in degrees.</summary>
-public sealed class ProgressAngleConverter : IValueConverter
+internal sealed class ProgressAngleConverter : IValueConverter
 {
     public static ProgressAngleConverter Instance { get; } = new();
 

@@ -16,7 +16,7 @@ namespace CupertinoAvalonia.Styling;
 /// A quick click still shows the whole swell (<see cref="MinimumDuration"/>); a held item settles after
 /// <see cref="HoldDuration"/>. An item stays lifted while a flyout or drop-down it opened is open.
 /// </remarks>
-public static class GlassLift
+internal static class GlassLift
 {
     public static readonly AttachedProperty<bool> IsEnabledProperty =
         AvaloniaProperty.RegisterAttached<Control, bool>("IsEnabled", typeof(GlassLift));

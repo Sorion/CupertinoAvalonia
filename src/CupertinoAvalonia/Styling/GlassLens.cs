@@ -17,7 +17,7 @@ namespace CupertinoAvalonia.Styling;
 /// The backdrop is a snapshot of the render surface, taken while drawing, refracted by a Skia runtime shader. Without
 /// Skia, the lens draws <see cref="FallbackBackground"/> and <see cref="FallbackForeground"/> instead.
 /// </remarks>
-public class GlassLens : Control
+internal class GlassLens : Control
 {
     public static readonly StyledProperty<double> MagnificationProperty =
         AvaloniaProperty.Register<GlassLens, double>(nameof(Magnification), 1);

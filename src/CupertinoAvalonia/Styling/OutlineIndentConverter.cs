@@ -5,7 +5,7 @@ using Avalonia.Data.Converters;
 namespace CupertinoAvalonia.Styling;
 
 /// <summary>A tree row's indent: TreeViewItem.Level times the parameter.</summary>
-public sealed class OutlineIndentConverter : IValueConverter
+internal sealed class OutlineIndentConverter : IValueConverter
 {
     public static OutlineIndentConverter Instance { get; } = new();
 

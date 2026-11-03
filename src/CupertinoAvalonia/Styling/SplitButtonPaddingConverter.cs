@@ -10,7 +10,7 @@ namespace CupertinoAvalonia.Styling;
 /// A split button's action part: the split button's padding on both sides of a label; none around a lone icon, which
 /// the part's minimum width centers in a square (measured on macOS 27).
 /// </summary>
-public sealed class SplitButtonPaddingConverter : IMultiValueConverter
+internal sealed class SplitButtonPaddingConverter : IMultiValueConverter
 {
     public static SplitButtonPaddingConverter Instance { get; } = new();
 

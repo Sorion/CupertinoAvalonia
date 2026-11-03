@@ -13,7 +13,7 @@ namespace CupertinoAvalonia.Styling;
 /// <remarks>
 /// A StackPanel, so arrow keys still move between segments. Panel.Render is sealed: a child visual draws the separators.
 /// </remarks>
-public class SegmentedPanel : StackPanel
+internal class SegmentedPanel : StackPanel
 {
     private readonly SeparatorLayer _separatorLayer;
 

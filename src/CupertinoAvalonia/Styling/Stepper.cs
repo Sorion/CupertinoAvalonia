@@ -6,7 +6,7 @@ using Avalonia.VisualTree;
 
 namespace CupertinoAvalonia.Styling;
 
-public enum ControlSize
+internal enum ControlSize
 {
     Mini,
     Small,
@@ -16,7 +16,7 @@ public enum ControlSize
 }
 
 /// <summary>The macOS stepper: a ButtonSpinner, alone or inside a NumericUpDown.</summary>
-public static class Stepper
+internal static class Stepper
 {
     /// <summary>
     /// Set by the size classes. Inherited, because a NumericUpDown's classes don't reach the stepper in its template.

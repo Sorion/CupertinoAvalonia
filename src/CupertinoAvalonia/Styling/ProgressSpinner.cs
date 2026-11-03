@@ -10,7 +10,7 @@ namespace CupertinoAvalonia.Styling;
 /// A circular progress indicator's spinner: eight still spokes whose brightness turns clockwise. As AppKit's,
 /// measured on macOS 27 (NSProgressIndicator, spinning style): 24 frames in 0.8 s, a third of a spoke each.
 /// </summary>
-public sealed class ProgressSpinner : Control
+internal sealed class ProgressSpinner : Control
 {
     public static readonly StyledProperty<IBrush?> ForegroundProperty =
         AvaloniaProperty.Register<ProgressSpinner, IBrush?>(nameof(Foreground));
