@@ -55,7 +55,7 @@ custom accent, their shades are derived from the accent.
 | `TreeView` | An outline view; `sidebar` for nested sidebar items, sized as the sidebar list, `accent` as the list's |
 | `MenuFlyout`, `ContextMenu`, `Flyout`, `ToolTip` | |
 | `Slider`, `ProgressBar`, `Expander`, `ScrollBar` | `small` (progress bar), `circular` (progress: a ring, or the spinner when indeterminate; `mini`, `small`), `button` (expander) |
-| `SplitView` | Pane on the left: a sidebar (on the window's material in a `CupertinoWindow`). On the right: an inspector, in the sidebar's color. `plain`: the pane takes the content's background and a divider, as in Shortcuts. `PaneBackground` and the resources `SplitView…BackgroundBrush`, `SplitViewInspectorLength`, `SplitViewDividerThickness` change the rest |
+| `SplitView` | Pane on the left: a sidebar (on the window's material in a `CAWindow`). On the right: an inspector, in the sidebar's color. `plain`: the pane takes the content's background and a divider, as in Shortcuts. `PaneBackground` and the resources `SplitView…BackgroundBrush`, `SplitViewInspectorLength`, `SplitViewDividerThickness` change the rest |
 | `TabControl` | A segmented control on top of the content (`TabStripPlacement`: `Bottom` below it, `Left` and `Right` beside it). `toolbar`: a settings window's tabs, on glass. `Icon="gearshape"` gives a tab an SF Symbol |
 | `GroupBox` | A rounded box with its title above it, as macOS's group box. `Padding` sets the space around its content |
 
@@ -73,22 +73,22 @@ custom accent, their shades are derived from the accent.
 - **Inactive windows** gray out their controls, as on macOS. Your styles can do the same with
   `[(cas|WindowActivity.IsInactive)=True]` (`xmlns:cas="using:CupertinoAvalonia.Styling"`).
 - **Texts** are AppKit's English labels, as resources to redefine in your app's language:
-  `NavigationSplitViewHideSidebarText` and `NavigationSplitViewShowSidebarText` (the sidebar button's tooltip and
+  `CANavigationSplitViewHideSidebarText` and `CANavigationSplitViewShowSidebarText` (the sidebar button's tooltip and
   accessibility name), `SearchFieldClearButtonText` (the search field's clear button).
 
   ```xml
   <Application.Resources>
-    <x:String x:Key="NavigationSplitViewHideSidebarText">Masquer la barre latérale</x:String>
-    <x:String x:Key="NavigationSplitViewShowSidebarText">Afficher la barre latérale</x:String>
+    <x:String x:Key="CANavigationSplitViewHideSidebarText">Masquer la barre latérale</x:String>
+    <x:String x:Key="CANavigationSplitViewShowSidebarText">Afficher la barre latérale</x:String>
   </Application.Resources>
   ```
 - **Other controls** (date and time pickers, `Calendar`…) keep Fluent's templates,
   recolored with Apple's palette.
 
-## CupertinoWindow
+## CAWindow
 
 ```xml
-<cac:CupertinoWindow xmlns="https://github.com/avaloniaui"
+<cac:CAWindow xmlns="https://github.com/avaloniaui"
                      xmlns:cac="using:CupertinoAvalonia.Controls"
                      ExtendsContentIntoTitleBar="True"
                      ToolbarStyle="Unified"
@@ -107,42 +107,42 @@ On macOS (elsewhere it's a plain `Window`):
   for a palette, or to compare with a native app side by side (the Gallery's View menu).
 
 The Gallery's window ([MainWindow.axaml](https://github.com/Sorion/CupertinoAvalonia/blob/main/samples/CupertinoAvalonia.Gallery/Views/MainWindow.axaml)) is a
-complete example: a `NavigationSplitView` with a sidebar on the sidebar material and a toolbar over the content.
+complete example: a `CANavigationSplitView` with a sidebar on the sidebar material and a toolbar over the content.
 
 **Liquid Glass chrome:** macOS draws it only for apps whose executable declares a recent SDK (26 or later), which
 .NET's app host doesn't. The package's `buildTransitive/CupertinoAvalonia.targets` declares macOS 27's SDK after each build on
 macOS; with a project reference, import that file in your app (as the Gallery does). `CupertinoDeclareMacOSSdk=false`
 turns it off, `CupertinoMacOSSdkVersion` declares another SDK.
 
-## NavigationSplitView
+## CANavigationSplitView
 
 A window's sidebar and content, as SwiftUI's `NavigationSplitView`: the sidebar runs the window's full height with its
 button over it, and the content has its own toolbar. An inspector can show on the right, as SwiftUI's `inspector`.
 
 ```xml
-<cac:CupertinoWindow ExtendsContentIntoTitleBar="True" ToolbarStyle="Unified" Material="Sidebar" …>
-  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}">
-    <cac:NavigationSplitView.Sidebar>
+<cac:CAWindow ExtendsContentIntoTitleBar="True" ToolbarStyle="Unified" Material="Sidebar" …>
+  <cac:CANavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}">
+    <cac:CANavigationSplitView.Sidebar>
       <ListBox Classes="sidebar" ItemsSource="{Binding Pages}" />
-    </cac:NavigationSplitView.Sidebar>
-    <cac:NavigationSplitView.ContentToolbar>
+    </cac:CANavigationSplitView.Sidebar>
+    <cac:CANavigationSplitView.ContentToolbar>
       <TextBlock Classes="headline" Text="{Binding Title}" VerticalAlignment="Center" />
-    </cac:NavigationSplitView.ContentToolbar>
-    <ScrollViewer cac:CupertinoToolbar.ScrollsUnder="True">
+    </cac:CANavigationSplitView.ContentToolbar>
+    <ScrollViewer cac:CAToolbar.ScrollsUnder="True">
       <ContentControl Margin="20" Content="{Binding Page}" />
     </ScrollViewer>
-  </cac:NavigationSplitView>
-</cac:CupertinoWindow>
+  </cac:CANavigationSplitView>
+</cac:CAWindow>
 ```
 
 - Closing, the sidebar slides out and the content follows its edge, which pushes the button until the window controls
   stop it; opening, the edge picks the button up on its way (measured on macOS 27).
 - `ContentToolbar` is the content's toolbar after the button: a title, items, trailing items, as you lay them out. Its
   buttons, pop-ups and segmented controls are toolbar items.
-- `CupertinoToolbar.ScrollsUnder` on the content's scroll viewer: its content starts below the toolbar and scrolls
-  under it, which then shows its background (see CupertinoToolbar). A style can set it, for pages a view locator shows:
-  `<Style Selector="cac|NavigationSplitView ScrollViewer.page">`.
-- `SidebarWidth` (220), `SidebarBackground` where the window shows no material. In a `CupertinoWindow` that extends
+- `CAToolbar.ScrollsUnder` on the content's scroll viewer: its content starts below the toolbar and scrolls
+  under it, which then shows its background (see CAToolbar). A style can set it, for pages a view locator shows:
+  `<Style Selector="cac|CANavigationSplitView ScrollViewer.page">`.
+- `SidebarWidth` (220), `SidebarBackground` where the window shows no material. In a `CAWindow` that extends
   its content, the sidebar shows the window's material; elsewhere the columns start under the title bar.
 - Dragging the sidebar's edge resizes it between `MinSidebarWidth` (140, SwiftUI's) and `MaxSidebarWidth` (none), never
   narrowing the content below its `MinWidth`. Past half the minimum the sidebar folds away; it comes back in the same
@@ -165,16 +165,16 @@ button over it, and the content has its own toolbar. An inspector can show on th
   `CanCollapseInspector="False"` keeps it open at its minimum, for an inspector that edits and closes through its own
   buttons. `InspectorBackground` applies where the window shows no material.
 
-## CupertinoToolbar
+## CAToolbar
 
 ```xml
 <Panel>
-  <ScrollViewer cac:CupertinoToolbar.ScrollsUnder="True">
+  <ScrollViewer cac:CAToolbar.ScrollsUnder="True">
     <ContentControl Margin="20" Content="{Binding Page}" />
   </ScrollViewer>
-  <cac:CupertinoToolbar>
+  <cac:CAToolbar>
     <!-- toolbar items -->
-  </cac:CupertinoToolbar>
+  </cac:CAToolbar>
 </Panel>
 ```
 
@@ -184,21 +184,21 @@ third color, lighter than the content; in an inactive window it shows, at rest t
 `Automatic` (default), `Visible` (always), `Hidden` (never). Dragging the band moves the window. The content passing
 under it isn't blurred yet: the background is nearly opaque.
 
-- `CupertinoToolbar.ScrollsUnder="True"` on a scroll viewer ties it to the toolbar laid over it (the first beside one of
+- `CAToolbar.ScrollsUnder="True"` on a scroll viewer ties it to the toolbar laid over it (the first beside one of
   its ancestors, as in a `Panel`): its content and its scroll bar start below the toolbar, as AppKit's content insets,
   and the content scrolls under it.
-- `CupertinoToolbar.ContentInset`, inherited by the content beside the toolbar, is the room it takes:
+- `CAToolbar.ContentInset`, inherited by the content beside the toolbar, is the room it takes:
   `(0, 52, 0, 0)`, or 40 in a compact toolbar. A padding for content that doesn't scroll:
-  `Padding="{Binding $self.(cac:CupertinoToolbar.ContentInset)}"`.
+  `Padding="{Binding $self.(cac:CAToolbar.ContentInset)}"`.
 
 Its buttons, pop-ups and segmented controls are toolbar items without the `toolbar` class (and `compact` ones in a
 `compact` toolbar), except in a `toolbar-group`. Controls in a flyout or in another control's template stay as they are.
 
-## SymbolIcon
+## CASymbolIcon
 
 ```xml
 <Button Classes="toolbar">
-  <cac:SymbolIcon Symbol="square.and.arrow.up" />
+  <cac:CASymbolIcon Symbol="square.and.arrow.up" />
 </Button>
 ```
 
