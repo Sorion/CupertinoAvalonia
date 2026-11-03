@@ -64,8 +64,7 @@ public class TreeViewTests
     [InlineData("Dark")]
     public void Selection_takes_the_accent_while_the_tree_has_the_focus(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var child = new TreeViewItem { Header = "Steam" };
         var row = new TreeViewItem { Header = "Games", IsExpanded = true, Items = { child } };
         var tree = new TreeView { Items = { row } };
@@ -122,41 +121,12 @@ public class TreeViewTests
     private static double Angle(Visual visual) =>
         visual.RenderTransform is { } transform ? Math.Round(Math.Atan2(transform.Value.M12, transform.Value.M11) * 180 / Math.PI) : 0;
 
-    private static Window Show(TreeView tree)
-    {
-        var window = new Window { Width = 400, Height = 300, Content = tree };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        return window;
-    }
-
-    private static Point Center(Control control) =>
-        control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), TopLevel.GetTopLevel(control)!)!.Value;
-
-    // Transitions run on the real clock.
-    private static void Pump(Window window, int milliseconds)
-    {
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < milliseconds)
-        {
-            Thread.Sleep(5);
-            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
-    }
-
-    private static string Describe(IBrush? brush) =>
-        brush is ISolidColorBrush solid ? $"{solid.Color} × {solid.Opacity:0.00}" : brush?.ToString() ?? "null";
-
-    private static IBrush? Resource(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? value as IBrush : null;
-
     // A part of this item's own row, not of the rows nested under it.
     private static T Part<T>(TreeViewItem item, string name) where T : Control =>
         Part<Border>(item, "PART_LayoutRoot", own: true).GetSelfAndVisualDescendants().OfType<T>().First(c => c.Name == name);
 
     private static T Part<T>(TreeViewItem item, string name, bool own) where T : Control =>
         item.GetVisualDescendants().OfType<T>().First(c => c.Name == name && c.TemplatedParent == item);
+
+    private static Window Show(TreeView tree) => TestUi.Show(new Window { Width = 400, Height = 300, Content = tree });
 }

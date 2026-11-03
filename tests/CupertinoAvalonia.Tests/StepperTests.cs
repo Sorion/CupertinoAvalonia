@@ -22,8 +22,7 @@ public class StepperTests
     [InlineData("Dark")]
     public void Number_box_is_a_field_with_the_stepper_inside(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var numberBox = new NumericUpDown { Value = 12, Width = 120 };
         var window = Show(numberBox);
 
@@ -118,8 +117,7 @@ public class StepperTests
     [InlineData("Dark")]
     public void Disabled_stepper_is_lighter(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var numberBox = new NumericUpDown { Value = 1, Width = 120, IsEnabled = false };
         var window = Show(numberBox);
 
@@ -153,27 +151,4 @@ public class StepperTests
         }
         window.Close();
     }
-
-    private static Window Show(params Control[] controls)
-    {
-        var stack = new StackPanel { Spacing = 8 };
-        stack.Children.AddRange(controls);
-        var window = new Window { Width = 400, Height = 300, Content = stack };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        return window;
-    }
-
-    private static Point Center(Control control) =>
-        control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), TopLevel.GetTopLevel(control)!)!.Value;
-
-    private static string Describe(IBrush? brush) =>
-        brush is ISolidColorBrush solid ? $"{solid.Color} × {solid.Opacity:0.00}" : brush?.ToString() ?? "null";
-
-    private static IBrush? Resource(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? value as IBrush : null;
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
 }

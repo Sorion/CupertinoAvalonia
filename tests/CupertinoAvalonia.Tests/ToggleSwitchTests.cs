@@ -39,7 +39,7 @@ public class ToggleSwitchTests
     [InlineData(true, "", "Dark")]
     public void Pressed_knob_becomes_a_lens_overflowing_the_track(bool isChecked, string sizeClass, string theme)
     {
-        Application.Current!.RequestedThemeVariant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        UseTheme(theme);
         var toggle = new ToggleSwitch { IsChecked = isChecked };
         if (sizeClass.Length > 0)
             toggle.Classes.Add(sizeClass);
@@ -70,15 +70,7 @@ public class ToggleSwitchTests
         // The lens is an adorner of the knob, outside the switch's tree.
         var lens = Assert.IsType<Panel>(AdornerLayer.GetAdorner(movingKnobs)).Children.OfType<TemplatedControl>().Single();
         Assert.False(AdornerLayer.GetIsClipEnabled(lens.GetVisualParent()!));
-        // Transitions run on the real clock.
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while ((lens.Opacity < 1 || knob.Opacity > 0) && stopwatch.ElapsedMilliseconds < 2000)
-        {
-            Thread.Sleep(10);
-            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
+        WaitUntil(window, () => lens.Opacity == 1 && knob.Opacity == 0);
 
         var outDir = Environment.GetEnvironmentVariable("GALLERY_SCREENSHOTS");
         if (!string.IsNullOrEmpty(outDir))
@@ -95,7 +87,4 @@ public class ToggleSwitchTests
         window.MouseUp(knobCenter, MouseButton.Left);
         window.Close();
     }
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().Single(c => c.Name == name);
 }

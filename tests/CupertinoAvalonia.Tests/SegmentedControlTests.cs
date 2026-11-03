@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -36,8 +35,7 @@ public class SegmentedControlTests
     [InlineData("Dark")]
     public void Selected_segment_takes_the_accent(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var segmented = Segmented("Day", "Week", "Month");
         segmented.SelectedIndex = 1;
         var window = Show(segmented);
@@ -151,8 +149,7 @@ public class SegmentedControlTests
     [InlineData("Dark")]
     public void Toolbar_segmented_control_is_glass(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var segmented = Segmented("A", "B", "C");
         segmented.Classes.Add("toolbar");
         segmented.SelectedIndex = 0;
@@ -176,24 +173,11 @@ public class SegmentedControlTests
     private static ListBox Segmented(params string[] labels) =>
         new() { Classes = { "segmented" }, ItemsSource = labels };
 
-    private static Window Show(Control content)
-    {
-        var window = new Window { Width = 800, Height = 300, Content = content };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        return window;
-    }
-
     private static List<ListBoxItem> Segments(ListBox listBox) =>
         Panel(listBox).Children.OfType<ListBoxItem>().ToList();
 
     private static SegmentedPanel Panel(ListBox listBox) =>
         listBox.GetVisualDescendants().OfType<SegmentedPanel>().Single();
 
-    private static string Describe(IBrush? brush) =>
-        brush is ISolidColorBrush solid ? $"{solid.Color} × {solid.Opacity:0.00}" : brush?.ToString() ?? "null";
-
-    private static IBrush? Resource(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? value as IBrush : null;
+    private static Window Show(Control content) => TestUi.Show(new Window { Width = 800, Height = 300, Content = content });
 }

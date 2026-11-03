@@ -22,7 +22,7 @@ public class SliderTests
     [InlineData(Orientation.Vertical, "Dark")]
     public void Pressed_knob_becomes_a_lens_over_a_continuous_track(Orientation orientation, string theme)
     {
-        Application.Current!.RequestedThemeVariant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        UseTheme(theme);
         var horizontal = orientation == Orientation.Horizontal;
         var slider = new Slider { Value = 40, Orientation = orientation };
         if (horizontal)
@@ -54,15 +54,7 @@ public class SliderTests
         // The lens is an adorner of the knob, outside the slider's tree.
         var lens = Assert.IsType<Panel>(AdornerLayer.GetAdorner(thumb)).Children.OfType<TemplatedControl>().Single();
         Assert.False(AdornerLayer.GetIsClipEnabled(lens.GetVisualParent()!));
-        // Transitions run on the real clock.
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while ((lens.Opacity < 1 || thumb.Opacity > 0) && stopwatch.ElapsedMilliseconds < 2000)
-        {
-            Thread.Sleep(10);
-            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
+        WaitUntil(window, () => lens.Opacity == 1 && thumb.Opacity == 0);
 
         var outDir = Environment.GetEnvironmentVariable("GALLERY_SCREENSHOTS");
         if (!string.IsNullOrEmpty(outDir))
@@ -91,7 +83,4 @@ public class SliderTests
 
     private static Rect ScreenRect(Visual visual, Visual root) =>
         new Rect(visual.Bounds.Size).TransformToAABB(visual.TransformToVisual(root)!.Value);
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().Single(c => c.Name == name);
 }

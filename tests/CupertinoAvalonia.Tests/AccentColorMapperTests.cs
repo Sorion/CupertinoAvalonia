@@ -5,7 +5,6 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -39,25 +38,13 @@ public class AccentColorMapperTests
         window.Close();
     }
 
-    private static Color Pixel(WriteableBitmap frame, int x, int y)
-    {
-        using var buffer = frame.Lock();
-        var bytes = new byte[4];
-        System.Runtime.InteropServices.Marshal.Copy(buffer.Address + y * buffer.RowBytes + x * 4, bytes, 0, 4);
-        return frame.Format == Avalonia.Platform.PixelFormats.Rgba8888
-            ? Color.FromRgb(bytes[0], bytes[1], bytes[2])
-            : Color.FromRgb(bytes[2], bytes[1], bytes[0]);
-    }
-
     [Fact]
     public void AppKit_gives_the_accent_in_both_appearances()
     {
-        if (!OperatingSystem.IsMacOS())
-            return;
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "AppKit's colors exist only on macOS.");
 
-        var colors = MacOSAccentColors.Read();
-        Assert.NotNull(colors);
-        foreach (var shades in new[] { colors.Value.Light, colors.Value.Dark })
+        var colors = Assert.NotNull(MacOSAccentColors.Read());
+        foreach (var shades in new[] { colors.Light, colors.Dark })
         {
             Assert.Equal(255, shades.Accent.A);
             Assert.Equal(255, shades.Selection.A);
@@ -71,8 +58,8 @@ public class AccentColorMapperTests
     [InlineData("Dark")]
     public void The_theme_takes_AppKit_colors_on_macOS(string theme)
     {
-        if (MacOSAccentColors.Read() is not { } colors)
-            return;
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "AppKit's colors exist only on macOS.");
+        var colors = Assert.NotNull(MacOSAccentColors.Read());
 
         var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
         var expected = theme == "Dark" ? colors.Dark : colors.Light;
@@ -217,9 +204,6 @@ public class AccentColorMapperTests
         }
         window.Close();
     }
-
-    private static T Resource<T>(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? (T)value! : throw new KeyNotFoundException(key);
 
     [Fact]
     public void Pressed_shades_of_the_prominent_button()

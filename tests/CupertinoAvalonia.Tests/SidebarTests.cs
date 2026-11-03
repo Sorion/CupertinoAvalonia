@@ -72,28 +72,28 @@ public class SidebarTests
 
         row.Focus();
         Dispatcher.UIThread.RunJobs();
-        Assert.Equal(Resource<Color>(window, "AccentColor"), ColorOf(row.Background));
+        Assert.Equal(FindResource<Color>(window, "AccentColor"), ColorOf(row.Background));
         Assert.Equal((Colors.White, Colors.White), (ColorOf(notes.Foreground), ColorOf(folder.Foreground)));
         // The other rows keep their colored symbol and their label.
-        Assert.Equal(Resource<Color>(window, "AccentVibrantColor"), ColorOf(trash.Foreground));
-        Assert.Equal(ColorOf(Resource<IBrush>(window, "LabelPrimaryBrush")), ColorOf(deleted.Foreground));
+        Assert.Equal(FindResource<Color>(window, "AccentVibrantColor"), ColorOf(trash.Foreground));
+        Assert.Equal(ColorOf(FindResource<IBrush>(window, "LabelPrimaryBrush")), ColorOf(deleted.Foreground));
 
         // Without the class, gray even with the focus.
         plainRow.Focus();
         Dispatcher.UIThread.RunJobs();
-        Assert.Equal(ColorOf(Resource<IBrush>(window, "SidebarSelectionBrush")), ColorOf(plainRow.Background));
-        Assert.Equal(Resource<Color>(window, "AccentVibrantColor"), ColorOf(plainIcon.Foreground));
+        Assert.Equal(ColorOf(FindResource<IBrush>(window, "SidebarSelectionBrush")), ColorOf(plainRow.Background));
+        Assert.Equal(FindResource<Color>(window, "AccentVibrantColor"), ColorOf(plainIcon.Foreground));
 
         field.Focus();
         Dispatcher.UIThread.RunJobs();
-        Assert.Equal(ColorOf(Resource<IBrush>(window, "SidebarSelectionBrush")), ColorOf(row.Background));
-        Assert.Equal(Resource<Color>(window, "AccentVibrantColor"), ColorOf(folder.Foreground));
+        Assert.Equal(ColorOf(FindResource<IBrush>(window, "SidebarSelectionBrush")), ColorOf(row.Background));
+        Assert.Equal(FindResource<Color>(window, "AccentVibrantColor"), ColorOf(folder.Foreground));
 
         row.Focus();
         WindowActivity.SetIsInactive(window, true);
         Dispatcher.UIThread.RunJobs();
-        Assert.Equal(ColorOf(Resource<IBrush>(window, "SidebarSelectionInactiveBrush")), ColorOf(row.Background));
-        Assert.Equal(ColorOf(Resource<IBrush>(window, "LabelSecondaryBrush")), ColorOf(folder.Foreground));
+        Assert.Equal(ColorOf(FindResource<IBrush>(window, "SidebarSelectionInactiveBrush")), ColorOf(row.Background));
+        Assert.Equal(ColorOf(FindResource<IBrush>(window, "LabelSecondaryBrush")), ColorOf(folder.Foreground));
         window.Close();
     }
 
@@ -112,9 +112,9 @@ public class SidebarTests
         Dispatcher.UIThread.RunJobs();
         // Its own, before its nested rows'.
         var layoutRoot = mixer.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_LayoutRoot");
-        Assert.Equal(Resource<Color>(window, "AccentColor"), ColorOf(layoutRoot.Background));
+        Assert.Equal(FindResource<Color>(window, "AccentColor"), ColorOf(layoutRoot.Background));
         Assert.Equal((Colors.White, Colors.White), (ColorOf(mixerLabel.Foreground), ColorOf(mixerIcon.Foreground)));
-        Assert.Equal(Resource<Color>(window, "AccentVibrantColor"), ColorOf(channelsIcon.Foreground));
+        Assert.Equal(FindResource<Color>(window, "AccentVibrantColor"), ColorOf(channelsIcon.Foreground));
         window.Close();
     }
 
@@ -155,22 +155,6 @@ public class SidebarTests
     private static StackPanel Label(CASymbolIcon icon, TextBlock label) =>
         new() { Orientation = Orientation.Horizontal, Spacing = 4, Children = { icon, label } };
 
-    private static Window Show(params Control[] controls)
-    {
-        var stack = new StackPanel { Spacing = 8 };
-        stack.Children.AddRange(controls);
-        var window = new Window { Width = 400, Height = 300, Content = stack };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        return window;
-    }
-
-    private static Color ColorOf(IBrush? brush) => Assert.IsAssignableFrom<ISolidColorBrush>(brush).Color;
-
-    private static T Resource<T>(Control control, string key) =>
+    private static T FindResource<T>(Control control, string key) =>
         control.TryFindResource(key, control.ActualThemeVariant, out var value) ? (T)value! : throw new KeyNotFoundException(key);
-
-    private static T Resource<T>(string key) =>
-        Application.Current!.TryGetResource(key, null, out var value) ? (T)value! : throw new KeyNotFoundException(key);
 }

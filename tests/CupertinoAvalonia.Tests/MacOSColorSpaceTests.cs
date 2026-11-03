@@ -11,8 +11,7 @@ public class MacOSColorSpaceTests
     [Fact]
     public void Metal_layers_become_sRGB()
     {
-        if (!OperatingSystem.IsMacOS())
-            return;
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "Metal layers exist only on macOS.");
 
         NativeLibrary.Load("/System/Library/Frameworks/QuartzCore.framework/QuartzCore");
         NativeLibrary.Load("/System/Library/Frameworks/AppKit.framework/AppKit");

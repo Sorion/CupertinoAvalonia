@@ -1,5 +1,4 @@
 using Avalonia;
-using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Headless.XUnit;
@@ -7,7 +6,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using CupertinoAvalonia.Controls;
 using Xunit;
 
@@ -20,8 +18,7 @@ public class SplitViewTests
     [InlineData("Dark")]
     public void Sidebar_on_the_left_inspector_on_the_right(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var sidebar = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true };
         var inspector = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
         var window = new Window { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
@@ -31,9 +28,9 @@ public class SplitViewTests
         // Measured on macOS 27 (SwiftGallery, Shortcuts): both panes in the sidebar's color, without a divider.
         var paneColor = theme == "Dark" ? Avalonia.Media.Color.Parse("#252525") : Avalonia.Media.Color.Parse("#EDEDED");
         Assert.Equal(240, sidebar.OpenPaneLength);
-        Assert.Equal(paneColor, Color(sidebar.PaneBackground));
+        Assert.Equal(paneColor, ColorOf(sidebar.PaneBackground));
         Assert.Equal(280, inspector.OpenPaneLength);
-        Assert.Equal(paneColor, Color(inspector.PaneBackground));
+        Assert.Equal(paneColor, ColorOf(inspector.PaneBackground));
         Assert.False(Part<Rectangle>(sidebar, "PaneDivider").IsVisible);
         Assert.False(Part<Rectangle>(inspector, "PaneDivider").IsVisible);
         window.Close();
@@ -44,8 +41,7 @@ public class SplitViewTests
     [InlineData("Dark")]
     public void Plain_pane_takes_the_content_background_and_a_divider(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var sidebar = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true };
         var inspector = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
         var window = new CAWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
@@ -54,10 +50,10 @@ public class SplitViewTests
         // Even where the window shows its material.
         ((IPseudoClasses)window.Classes).Set(":material", true);
 
-        Assert.Equal(Color("WindowBackgroundBrush", variant), Color(sidebar.PaneBackground));
-        Assert.Equal(Color("WindowBackgroundBrush", variant), Color(inspector.PaneBackground));
+        Assert.Equal(ColorOf(Resource("WindowBackgroundBrush", variant)), ColorOf(sidebar.PaneBackground));
+        Assert.Equal(ColorOf(Resource("WindowBackgroundBrush", variant)), ColorOf(inspector.PaneBackground));
         // On the edge that faces the content (#E6E6E6 over white in Shortcuts), hidden once the pane is closed.
-        Assert.Equal(Color("TableColumnSeparatorBrush", variant), Color(Part<Rectangle>(inspector, "PaneDivider").Fill));
+        Assert.Equal(ColorOf(Resource("TableColumnSeparatorBrush", variant)), ColorOf(Part<Rectangle>(inspector, "PaneDivider").Fill));
         Assert.Equal(HorizontalAlignment.Right, Part<Rectangle>(sidebar, "PaneDivider").HorizontalAlignment);
         Assert.Equal(HorizontalAlignment.Left, Part<Rectangle>(inspector, "PaneDivider").HorizontalAlignment);
         Assert.True(Part<Rectangle>(sidebar, "PaneDivider").IsVisible);
@@ -79,7 +75,7 @@ public class SplitViewTests
         Dispatcher.UIThread.RunJobs();
         ((IPseudoClasses)window.Classes).Set(":material", true);
 
-        Assert.Equal(Colors.Red, Color(Part<Border>(inspector, "PaneBackground").Background));
+        Assert.Equal(Colors.Red, ColorOf(Part<Border>(inspector, "PaneBackground").Background));
         window.Close();
     }
 
@@ -95,9 +91,9 @@ public class SplitViewTests
 
         // Headless windows have no native material: show it as CAWindow does on macOS.
         ((IPseudoClasses)window.Classes).Set(":material", true);
-        Assert.Equal(Colors.Transparent, Color(sidebar.PaneBackground));
-        Assert.Equal(Color("WindowBackgroundBrush", ThemeVariant.Light), Color(Part<Panel>(sidebar, "ContentRoot").Background));
-        Assert.Equal(Color("SplitViewInspectorBackgroundBrush", ThemeVariant.Light), Color(inspector.PaneBackground));
+        Assert.Equal(Colors.Transparent, ColorOf(sidebar.PaneBackground));
+        Assert.Equal(ColorOf(Resource("WindowBackgroundBrush", ThemeVariant.Light)), ColorOf(Part<Panel>(sidebar, "ContentRoot").Background));
+        Assert.Equal(ColorOf(Resource("SplitViewInspectorBackgroundBrush", ThemeVariant.Light)), ColorOf(inspector.PaneBackground));
         window.Close();
     }
 
@@ -112,7 +108,7 @@ public class SplitViewTests
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
-        Assert.Equal(Colors.Red, Color(inspector.PaneBackground));
+        Assert.Equal(Colors.Red, ColorOf(inspector.PaneBackground));
         Assert.Equal(2, Part<Rectangle>(plain, "PaneDivider").Bounds.Width);
         window.Close();
     }
@@ -128,7 +124,7 @@ public class SplitViewTests
         Assert.True(Part<Border>(overlay, "PaneUnderlay").IsVisible);
         var dismiss = Part<Rectangle>(overlay, "LightDismissLayer");
         Assert.True(dismiss.IsVisible);
-        Assert.Equal(Colors.Transparent, Color(dismiss.Fill));
+        Assert.Equal(Colors.Transparent, ColorOf(dismiss.Fill));
         window.Close();
     }
 
@@ -166,26 +162,5 @@ public class SplitViewTests
         window.Close();
     }
 
-    // Transitions run on the real clock.
-    private static void Pump(Window window, int milliseconds)
-    {
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < milliseconds)
-        {
-            Thread.Sleep(5);
-            Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
-    }
-
     private static Control Sized(SplitView splitView) => new Border { Height = 180, Child = splitView };
-
-    private static Color? Color(IBrush? brush) => (brush as ISolidColorBrush)?.Color;
-
-    private static Color? Color(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? (value as ISolidColorBrush)?.Color : null;
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().Single(c => c.Name == name);
 }

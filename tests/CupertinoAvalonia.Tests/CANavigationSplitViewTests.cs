@@ -5,13 +5,11 @@ using Avalonia.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Animation;
 using Avalonia.Layout;
 using Avalonia.Styling;
 using Avalonia.LogicalTree;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using CupertinoAvalonia.Controls;
 using Xunit;
 
@@ -530,22 +528,4 @@ public class CANavigationSplitViewTests
         window.UpdateLayout();
         return (window, split);
     }
-
-    // Transitions run on the real clock.
-    private static void Pump(Window window, int milliseconds)
-    {
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < milliseconds)
-        {
-            Thread.Sleep(5);
-            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
-    }
-
-    private static Point Origin(Visual visual, Visual relativeTo) => visual.TranslatePoint(default, relativeTo)!.Value;
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
 }

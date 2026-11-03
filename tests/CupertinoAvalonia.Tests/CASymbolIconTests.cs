@@ -231,17 +231,6 @@ public class CASymbolIconTests
         }
     }
 
-    private static Window Show(params Control[] controls)
-    {
-        var stack = new StackPanel { Spacing = 8, Margin = new Thickness(10) };
-        stack.Children.AddRange(controls);
-        var window = new Window { Width = 400, Height = 300, Background = Brushes.White, Content = stack };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        return window;
-    }
-
     // The width of the dark pixels drawn inside the control.
     private static int InkWidth(Window window, Control control)
     {
@@ -275,4 +264,7 @@ public class CASymbolIconTests
         }
         return count;
     }
+
+    private static Window Show(params Control[] controls) =>
+        TestUi.Show(new Window { Width = 400, Height = 300, Background = Brushes.White, Content = Stack(controls) });
 }

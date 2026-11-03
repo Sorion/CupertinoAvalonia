@@ -26,11 +26,11 @@ public class CAToolbarTests
         Assert.Equal(0, background.Opacity);
 
         scrollViewer.Offset = new Vector(0, 40);
-        Pump(window, 300);
+        WaitUntil(window, () => background.Opacity == 1);
         Assert.Equal(1, background.Opacity);
 
         scrollViewer.Offset = default;
-        Pump(window, 300);
+        WaitUntil(window, () => background.Opacity == 0);
         Assert.Equal(0, background.Opacity);
         window.Close();
     }
@@ -83,11 +83,11 @@ public class CAToolbarTests
         var (window, toolbar, _) = Show();
 
         window.MouseMove(new Point(200, 20));
-        Pump(window, 300);
+        WaitUntil(window, () => Background(toolbar).Opacity == 1);
         Assert.Equal(1, Background(toolbar).Opacity);
 
         window.MouseMove(new Point(200, 200));
-        Pump(window, 300);
+        WaitUntil(window, () => Background(toolbar).Opacity == 0);
         Assert.Equal(0, Background(toolbar).Opacity);
         window.Close();
     }
@@ -98,12 +98,12 @@ public class CAToolbarTests
         var (window, toolbar, scrollViewer) = Show();
 
         toolbar.BackgroundVisibility = CAToolbarBackgroundVisibility.Visible;
-        Pump(window, 300);
+        WaitUntil(window, () => Background(toolbar).Opacity == 1);
         Assert.Equal(1, Background(toolbar).Opacity);
 
         toolbar.BackgroundVisibility = CAToolbarBackgroundVisibility.Hidden;
         scrollViewer.Offset = new Vector(0, 40);
-        Pump(window, 300);
+        WaitUntil(window, () => Background(toolbar).Opacity == 0);
         Assert.Equal(0, Background(toolbar).Opacity);
         window.Close();
     }
@@ -113,8 +113,7 @@ public class CAToolbarTests
     [InlineData("Dark")]
     public void Band_is_the_windows_color_with_an_edge_line(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var (window, toolbar, _) = Show();
         var background = Background(toolbar);
 
@@ -122,8 +121,8 @@ public class CAToolbarTests
         Assert.Equal(new Thickness(0, 0, 0, 1), background.BorderThickness);
         Assert.Equal(WindowDecorationsElementRole.TitleBar, WindowDecorationProperties.GetElementRole(background));
         // Dark mode: a third color, lighter than the window's; light mode: the window's white.
-        var band = Opaque(background.Background, Color(Resource("WindowBackgroundBrush", variant)));
-        var window_ = Color(Resource("WindowBackgroundBrush", variant));
+        var window_ = ColorOf(Resource("WindowBackgroundBrush", variant))!.Value;
+        var band = Opaque(background.Background, window_);
         if (variant == ThemeVariant.Dark)
             Assert.True(band.R > window_.R + 5, $"{band} isn't lighter than {window_}");
         else
@@ -142,17 +141,18 @@ public class CAToolbarTests
 
         // Active=False: shown at rest, the title in the tertiary label.
         WindowActivity.SetIsInactive(window, true);
-        Pump(window, 300);
+        WaitUntil(window, () => background.Opacity == 1);
         Assert.Equal(1, background.Opacity);
-        Assert.Equal(Color(Resource("ToolbarBandBrush", ThemeVariant.Dark)), Color(background.Background));
-        Assert.Equal(Color(Resource("LabelTertiaryBrush", ThemeVariant.Dark)), Color(((TextBlock)toolbar.Content!).Foreground));
+        Assert.Equal(ColorOf(Resource("ToolbarBandBrush", ThemeVariant.Dark)), ColorOf(background.Background));
+        Assert.Equal(ColorOf(Resource("LabelTertiaryBrush", ThemeVariant.Dark)), ColorOf(((TextBlock)toolbar.Content!).Foreground));
 
         toolbar.BackgroundVisibility = CAToolbarBackgroundVisibility.Hidden;
-        Pump(window, 300);
+        WaitUntil(window, () => background.Opacity == 0);
         Assert.Equal(0, background.Opacity);
 
         toolbar.BackgroundVisibility = CAToolbarBackgroundVisibility.Automatic;
         WindowActivity.SetIsInactive(window, false);
+        // Stays hidden: a fixed time.
         Pump(window, 300);
         Assert.Equal(0, background.Opacity);
         window.Close();
@@ -241,9 +241,7 @@ public class CAToolbarTests
         CAToolbar.SetScrollsUnder(scrollViewer, true);
         var toolbar = new CAToolbar { Content = content ?? new TextBlock { Text = "Title" } };
         var window = new Window { Width = 400, Height = 300, Content = new Panel { Children = { scrollViewer, toolbar } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        Pump(window, 300);
+        TestUi.Show(window);
         return (window, toolbar, scrollViewer);
     }
 
@@ -253,27 +251,9 @@ public class CAToolbarTests
     // The brush's color over the given backdrop.
     private static Color Opaque(IBrush? brush, Color backdrop)
     {
-        var c = Color(brush);
+        var c = Assert.IsAssignableFrom<ISolidColorBrush>(brush).Color;
         var a = c.A / 255.0;
         byte Mix(byte top, byte bottom) => (byte)Math.Round(top * a + bottom * (1 - a));
         return Avalonia.Media.Color.FromRgb(Mix(c.R, backdrop.R), Mix(c.G, backdrop.G), Mix(c.B, backdrop.B));
-    }
-
-    private static Color Color(IBrush? brush) => (brush as ISolidColorBrush)?.Color ?? default;
-
-    private static IBrush? Resource(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? value as IBrush : null;
-
-    // Transitions run on the real clock.
-    private static void Pump(Window window, int milliseconds)
-    {
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < milliseconds)
-        {
-            Thread.Sleep(5);
-            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
     }
 }

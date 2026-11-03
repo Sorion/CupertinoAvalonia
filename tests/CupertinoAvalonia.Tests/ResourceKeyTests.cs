@@ -1,8 +1,6 @@
 using System.Text.RegularExpressions;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
-using Avalonia.Styling;
 using Xunit;
 
 namespace CupertinoAvalonia.Tests;
@@ -23,8 +21,11 @@ public partial class ResourceKeyTests
     [MemberData(nameof(Variants))]
     public void All_referenced_resources_resolve(string variantName)
     {
-        var variant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        var sources = Directory.GetFiles(ThemeSourceDirectory(), "*.axaml", SearchOption.AllDirectories);
+        var variant = UseTheme(variantName);
+        // The theme's own file too, not only Styling/; never the build output.
+        var sources = Directory.GetFiles(ThemeSourceDirectory(), "*.axaml", SearchOption.AllDirectories)
+            .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}") && !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"))
+            .ToList();
         Assert.NotEmpty(sources);
 
         var missing = new List<string>();
@@ -45,11 +46,11 @@ public partial class ResourceKeyTests
     {
         for (var dir = new DirectoryInfo(AppContext.BaseDirectory); dir is not null; dir = dir.Parent)
         {
-            var candidate = Path.Combine(dir.FullName, "src", "CupertinoAvalonia", "Styling");
+            var candidate = Path.Combine(dir.FullName, "src", "CupertinoAvalonia");
             if (Directory.Exists(candidate))
                 return candidate;
         }
 
-        throw new DirectoryNotFoundException("src/CupertinoAvalonia/Styling not found above " + AppContext.BaseDirectory);
+        throw new DirectoryNotFoundException("src/CupertinoAvalonia not found above " + AppContext.BaseDirectory);
     }
 }

@@ -167,14 +167,4 @@ public class PointerFocusTests
     }
 
     private static IInputElement? Focused(Window window) => window.FocusManager!.GetFocusedElement();
-
-    private static void Click(Window window, Control control) =>
-        Click(window, control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), window)!.Value);
-
-    private static void Click(Window window, Point point)
-    {
-        window.MouseDown(point, MouseButton.Left);
-        window.MouseUp(point, MouseButton.Left);
-        Dispatcher.UIThread.RunJobs();
-    }
 }

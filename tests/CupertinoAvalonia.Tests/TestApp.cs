@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Headless;
-using Avalonia.Markup.Xaml.Styling;
 
 [assembly: AvaloniaTestApplication(typeof(CupertinoAvalonia.Tests.TestApp))]
 

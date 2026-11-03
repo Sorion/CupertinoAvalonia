@@ -21,8 +21,7 @@ public class TabControlTests
     [InlineData("Dark")]
     public void Segmented_tabs_sit_centered_over_the_content(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var content = new TextBlock { Text = "Output" };
         var (window, tabs) = Show(new TabControl(), new TabItem { Header = "Input", Content = content }, new TabItem { Header = "Output" });
 
@@ -32,8 +31,8 @@ public class TabControlTests
         Assert.Equal(0, Origin(strip, tabs).Y);
         // Centered, to layout rounding.
         Assert.InRange(Origin(strip, tabs).X + strip.Bounds.Width / 2, tabs.Bounds.Width / 2 - 1, tabs.Bounds.Width / 2 + 1);
-        Assert.Equal(Colors.Transparent, Color(tabs.Background));
-        Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundBrush", variant)), Color(strip.Background));
+        Assert.Equal(Colors.Transparent, ColorOf(tabs.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("ButtonBackgroundBrush", variant)), ColorOf(strip.Background));
         Assert.Equal(24 + 16, Origin(content, tabs).Y);
         window.Close();
     }
@@ -48,15 +47,15 @@ public class TabControlTests
         var advanced = new TabItem { Header = "Advanced" };
         var (window, _) = Show(new TabControl(), general, advanced);
 
-        Assert.Equal(Color(Resource<IBrush>("AccentButtonBackgroundBrush", ThemeVariant.Light)), Color(general.Background));
-        Assert.Equal(Colors.White, Color(header.Foreground));
-        Assert.Equal(Colors.Transparent, Color(advanced.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("AccentButtonBackgroundBrush", ThemeVariant.Light)), ColorOf(general.Background));
+        Assert.Equal(Colors.White, ColorOf(header.Foreground));
+        Assert.Equal(Colors.Transparent, ColorOf(advanced.Background));
         // The header's white mustn't reach the tab's content.
-        Assert.Equal(Color(Resource<IBrush>("LabelPrimaryBrush", ThemeVariant.Light)), Color(content.Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelPrimaryBrush", ThemeVariant.Light)), ColorOf(content.Foreground));
 
         WindowActivity.SetIsInactive(window, true);
-        Assert.Equal(Color(Resource<IBrush>("FillPrimaryBrush", ThemeVariant.Light)), Color(general.Background));
-        Assert.Equal(Color(Resource<IBrush>("LabelPrimaryBrush", ThemeVariant.Light)), Color(header.Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("FillPrimaryBrush", ThemeVariant.Light)), ColorOf(general.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelPrimaryBrush", ThemeVariant.Light)), ColorOf(header.Foreground));
         window.Close();
     }
 
@@ -102,15 +101,14 @@ public class TabControlTests
     [InlineData("Dark")]
     public void Toolbar_tabs_put_symbols_over_labels_and_the_selection_on_glass(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var general = new TabItem { Header = "General", Icon = "gearshape" };
         var network = new TabItem { Header = "Network", Icon = "network" };
         var (window, tabs) = Show(new TabControl { Classes = { "toolbar" } }, general, network);
 
         // Measured on macOS 27 (printer settings): the toolbar band with a 0.5 pt edge.
         var band = Part<Border>(tabs, "PART_StripBand");
-        Assert.Equal(Color(Resource<IBrush>("ToolbarBandBrush", variant)), Color(band.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("ToolbarBandBrush", variant)), ColorOf(band.Background));
         Assert.Equal(new Thickness(0, 0, 0, 0.5), band.BorderThickness);
         // A 13 pt symbol at the large scale over an 11 pt label.
         var icon = Icon(general);
@@ -120,15 +118,15 @@ public class TabControlTests
         Assert.True(general.Bounds.Height >= 48);
         // The selected tab on glass, in the accent; the others gray.
         Assert.Same(Resource<IBrush>("ToolbarGlassBrush", variant), general.Background);
-        Assert.Equal(Color(Resource<IBrush>("AccentBrush", variant)), Color(Label(general).Foreground));
-        Assert.Equal(Color(Resource<IBrush>("AccentBrush", variant)), Color(icon.Foreground));
-        Assert.Equal(Colors.Transparent, Color(network.Background));
-        Assert.Equal(Color(Resource<IBrush>("LabelSecondaryBrush", variant)), Color(Label(network).Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("AccentBrush", variant)), ColorOf(Label(general).Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("AccentBrush", variant)), ColorOf(icon.Foreground));
+        Assert.Equal(Colors.Transparent, ColorOf(network.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelSecondaryBrush", variant)), ColorOf(Label(network).Foreground));
 
         WindowActivity.SetIsInactive(window, true);
-        Assert.Equal(Color(Resource<IBrush>("ToolbarGlassInactiveBrush", variant)), Color(general.Background));
-        Assert.Equal(Color(Resource<IBrush>("LabelSecondaryBrush", variant)), Color(Label(general).Foreground));
-        Assert.Equal(Color(Resource<IBrush>("LabelTertiaryBrush", variant)), Color(Label(network).Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("ToolbarGlassInactiveBrush", variant)), ColorOf(general.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelSecondaryBrush", variant)), ColorOf(Label(general).Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelTertiaryBrush", variant)), ColorOf(Label(network).Foreground));
         window.Close();
     }
 
@@ -144,8 +142,8 @@ public class TabControlTests
         // Measured on macOS 27 (printer settings): no glass until released.
         window.MouseDown(center, MouseButton.Left);
         Assert.Same(general, tabs.SelectedItem);
-        Assert.Equal(Color(Resource<IBrush>("LabelPrimaryBrush", ThemeVariant.Light)), Color(Icon(network).Foreground));
-        Assert.Equal(Color(Resource<IBrush>("LabelSecondaryBrush", ThemeVariant.Light)), Color(Label(network).Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelPrimaryBrush", ThemeVariant.Light)), ColorOf(Icon(network).Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelSecondaryBrush", ThemeVariant.Light)), ColorOf(Label(network).Foreground));
         window.MouseUp(center, MouseButton.Left);
         Assert.Same(network, tabs.SelectedItem);
 
@@ -170,8 +168,6 @@ public class TabControlTests
         return (window, tabs);
     }
 
-    private static Point Origin(Visual visual, Visual relativeTo) => visual.TranslatePoint(default, relativeTo)!.Value;
-
     private static CASymbolIcon Icon(TabItem item) =>
         Part<ContentPresenter>(item, "PART_IconPresenter").GetVisualDescendants().OfType<CASymbolIcon>().Single();
 
@@ -181,9 +177,4 @@ public class TabControlTests
 
     private static T Part<T>(Control control, string name) where T : Control =>
         control.GetVisualDescendants().OfType<T>().First(c => c.Name == name && c.TemplatedParent == control);
-
-    private static Color? Color(IBrush? brush) => (brush as ISolidColorBrush)?.Color;
-
-    private static T Resource<T>(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? (T)value! : throw new KeyNotFoundException(key);
 }

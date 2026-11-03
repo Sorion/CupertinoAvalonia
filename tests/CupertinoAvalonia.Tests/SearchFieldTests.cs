@@ -22,17 +22,16 @@ public class SearchFieldTests
     [InlineData("Dark")]
     public void A_search_field_is_a_capsule_with_a_magnifier(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var (window, field) = Show(new TextBox { Classes = { "search" }, PlaceholderText = "Search" });
 
         Assert.Equal(24, field.Bounds.Height);
         Assert.Equal(new CornerRadius(12), field.CornerRadius);
-        var secondary = Color(Resource<IBrush>("LabelSecondaryBrush", variant));
-        Assert.Equal(secondary, Color(field.PlaceholderForeground));
+        var secondary = ColorOf(Resource<IBrush>("LabelSecondaryBrush", variant));
+        Assert.Equal(secondary, ColorOf(field.PlaceholderForeground));
         var glyph = Find<CASymbolIcon>(field, "SearchGlyph");
         Assert.Equal(("magnifyingglass", 13, FontWeight.Medium), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
-        Assert.Equal(secondary, Color(glyph.Foreground));
+        Assert.Equal(secondary, ColorOf(glyph.Foreground));
         Assert.False(Find<Button>(field, "SearchClearButton").IsVisible);
         window.Close();
     }
@@ -49,7 +48,7 @@ public class SearchFieldTests
         Assert.True(clear.IsVisible);
         var glyph = Find<CASymbolIcon>(field, "SearchClearGlyph");
         Assert.Equal(("xmark.circle.fill", 13), (glyph.Symbol, glyph.FontSize));
-        Assert.Equal(Color(Resource<IBrush>("LabelSecondaryBrush", ThemeVariant.Light)), Color(glyph.Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelSecondaryBrush", ThemeVariant.Light)), ColorOf(glyph.Foreground));
 
         var center = clear.TranslatePoint(new Point(clear.Bounds.Width / 2, clear.Bounds.Height / 2), window)!.Value;
         window.MouseDown(center, MouseButton.Left);
@@ -140,19 +139,4 @@ public class SearchFieldTests
 
     private static T Find<T>(Control control, string name) where T : Control =>
         control.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
-
-    private static Color? Color(IBrush? brush) => (brush as ISolidColorBrush)?.Color;
-
-    private static T Resource<T>(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? (T)value! : throw new KeyNotFoundException(key);
-
-    private static Color Pixel(WriteableBitmap frame, int x, int y)
-    {
-        using var buffer = frame.Lock();
-        var bytes = new byte[4];
-        System.Runtime.InteropServices.Marshal.Copy(buffer.Address + y * buffer.RowBytes + x * 4, bytes, 0, 4);
-        return frame.Format == Avalonia.Platform.PixelFormats.Rgba8888
-            ? Avalonia.Media.Color.FromRgb(bytes[0], bytes[1], bytes[2])
-            : Avalonia.Media.Color.FromRgb(bytes[2], bytes[1], bytes[0]);
-    }
 }

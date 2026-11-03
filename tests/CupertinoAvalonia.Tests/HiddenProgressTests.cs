@@ -1,9 +1,6 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CupertinoAvalonia.Styling;
 using Xunit;
@@ -63,24 +60,5 @@ public class HiddenProgressTests
         window.Close();
     }
 
-    private static Window Show(Control content)
-    {
-        var window = new Window { Width = 300, Height = 200, Content = content };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        return window;
-    }
-
-    // Animations and animation frames run on the render timer.
-    private static void Pump(Window window, int milliseconds)
-    {
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < milliseconds)
-        {
-            Thread.Sleep(5);
-            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
-    }
+    private static Window Show(Control content) => TestUi.Show(new Window { Width = 300, Height = 200, Content = content });
 }

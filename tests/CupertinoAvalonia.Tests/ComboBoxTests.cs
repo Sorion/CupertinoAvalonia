@@ -6,7 +6,6 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using CupertinoAvalonia.Controls;
 using Xunit;
 
@@ -21,12 +20,11 @@ public class ComboBoxTests
     [InlineData("Dark")]
     public void An_editable_combo_box_is_a_field_with_an_arrow_button(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var (window, combo) = Show(new ComboBox { IsEditable = true, ItemsSource = Rates, Text = "48 000 Hz" });
 
         Assert.Equal(24, combo.Bounds.Height);
-        Assert.Equal(Color(Resource<IBrush>("TextFieldBackgroundBrush", variant)), Color(Part<Border>(combo, "Background").Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("TextFieldBackgroundBrush", variant)), ColorOf(Part<Border>(combo, "Background").Background));
         Assert.False(Part<CASymbolIcon>(combo, "DropDownGlyph").IsVisible);
         // Measured on macOS 27 (NSComboBox): a 23.5 × 17.5 button, 4 pt from the right, vertically centered.
         var arrow = Part<Border>(combo, "ArrowButton");
@@ -35,7 +33,7 @@ public class ComboBoxTests
         Assert.Equal((23.5, 17.5), (arrow.Width, arrow.Height));
         Assert.Equal(combo.Bounds.Width - 4, Right(arrow, combo), tolerance: 1);
         Assert.Equal(12, arrow.TranslatePoint(new Point(0, arrow.Bounds.Height / 2), combo)!.Value.Y, tolerance: 1);
-        Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundBrush", variant)), Color(arrow.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("ButtonBackgroundBrush", variant)), ColorOf(arrow.Background));
         var glyph = Part<CASymbolIcon>(combo, "ArrowGlyph");
         Assert.Equal(("chevron.down", 8.25, FontWeight.Bold), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         // The text stops before the button (the kit's "Text - Inset - Right").
@@ -50,7 +48,7 @@ public class ComboBoxTests
         var (window, combo) = Show(new ComboBox { IsEditable = true, ItemsSource = Rates });
         var field = Part<Border>(combo, "Background");
         var arrow = Part<Border>(combo, "ArrowButton");
-        var fieldColor = Color(field.Background);
+        var fieldColor = ColorOf(field.Background);
 
         Click(window, combo.TranslatePoint(new Point(30, 12), window)!.Value);
         Assert.False(combo.IsDropDownOpen);
@@ -59,13 +57,13 @@ public class ComboBoxTests
         // Pressed, only the arrow button darkens; it stays so while the list is open.
         var arrowCenter = arrow.TranslatePoint(new Point(arrow.Bounds.Width / 2, arrow.Bounds.Height / 2), window)!.Value;
         window.MouseDown(arrowCenter, MouseButton.Left);
-        Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundPressedBrush", ThemeVariant.Light)), Color(arrow.Background));
-        Assert.Equal(fieldColor, Color(field.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("ButtonBackgroundPressedBrush", ThemeVariant.Light)), ColorOf(arrow.Background));
+        Assert.Equal(fieldColor, ColorOf(field.Background));
         window.MouseUp(arrowCenter, MouseButton.Left);
         Dispatcher.UIThread.RunJobs();
         Assert.True(combo.IsDropDownOpen);
-        Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundPressedBrush", ThemeVariant.Light)), Color(arrow.Background));
-        Assert.Equal(fieldColor, Color(field.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("ButtonBackgroundPressedBrush", ThemeVariant.Light)), ColorOf(arrow.Background));
+        Assert.Equal(fieldColor, ColorOf(field.Background));
         combo.IsDropDownOpen = false;
         window.Close();
     }
@@ -95,9 +93,9 @@ public class ComboBoxTests
         Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         var (window, combo) = Show(new ComboBox { IsEditable = true, ItemsSource = Rates, Text = "48 000 Hz", IsEnabled = false });
 
-        Assert.Equal(Color(Resource<IBrush>("TextFieldBackgroundDisabledBrush", ThemeVariant.Light)), Color(Part<Border>(combo, "Background").Background));
-        Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundDisabledBrush", ThemeVariant.Light)), Color(Part<Border>(combo, "ArrowButton").Background));
-        Assert.Equal(Color(Resource<IBrush>("LabelTertiaryBrush", ThemeVariant.Light)), Color(Part<CASymbolIcon>(combo, "ArrowGlyph").Foreground));
+        Assert.Equal(ColorOf(Resource<IBrush>("TextFieldBackgroundDisabledBrush", ThemeVariant.Light)), ColorOf(Part<Border>(combo, "Background").Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("ButtonBackgroundDisabledBrush", ThemeVariant.Light)), ColorOf(Part<Border>(combo, "ArrowButton").Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("LabelTertiaryBrush", ThemeVariant.Light)), ColorOf(Part<CASymbolIcon>(combo, "ArrowGlyph").Foreground));
         window.Close();
     }
 
@@ -163,20 +161,5 @@ public class ComboBoxTests
         return (window, combo);
     }
 
-    private static void Click(Window window, Point point)
-    {
-        window.MouseDown(point, MouseButton.Left);
-        window.MouseUp(point, MouseButton.Left);
-        Dispatcher.UIThread.RunJobs();
-    }
-
     private static double Right(Visual part, Visual combo) => part.TranslatePoint(new Point(part.Bounds.Width, 0), combo)!.Value.X;
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
-
-    private static Color? Color(IBrush? brush) => (brush as ISolidColorBrush)?.Color;
-
-    private static T Resource<T>(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? (T)value! : throw new KeyNotFoundException(key);
 }

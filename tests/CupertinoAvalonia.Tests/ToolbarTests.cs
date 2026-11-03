@@ -1,15 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Shapes;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CupertinoAvalonia.Styling;
 using Xunit;
@@ -24,8 +21,7 @@ public class ToolbarTests
     [InlineData("Dark")]
     public void Toolbar_items_are_glass_capsules(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var button = new Button { Classes = { "toolbar" }, Content = "Share" };
         var popUp = new ComboBox { Classes = { "toolbar" }, ItemsSource = new[] { "Default" }, SelectedIndex = 0 };
         var search = new TextBox { Classes = { "toolbar" }, PlaceholderText = "Search" };
@@ -82,8 +78,7 @@ public class ToolbarTests
     [InlineData("Dark")]
     public void Glass_has_bright_lines_inside_its_top_and_bottom_edges(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var button = new Button { Classes = { "toolbar" }, Content = "Share" };
         var window = Show(button);
 
@@ -125,8 +120,7 @@ public class ToolbarTests
     [InlineData("Dark")]
     public void Primary_item_takes_the_accent(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var button = new Button { Classes = { "toolbar", "accent" }, Content = "Add" };
         var window = Show(button);
 
@@ -203,8 +197,7 @@ public class ToolbarTests
     [InlineData("Dark")]
     public void Inactive_window_flattens_the_glass(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var button = new Button { Classes = { "toolbar" }, Content = "Share" };
         var primary = new Button { Classes = { "toolbar", "accent" }, Content = "Add" };
         var disabledPrimary = new Button { Classes = { "toolbar", "accent" }, Content = "Add", IsEnabled = false };
@@ -280,7 +273,7 @@ public class ToolbarTests
             Assert.True(GlassLift.GetIsLifted(button));
             Assert.True(Scale(button) > 1.04);
 
-            Pump(window, 1200);
+            WaitUntil(window, () => Settled(button));
             Assert.False(GlassLift.GetIsLifted(button));
             Assert.Equal(1, Scale(button), 3);
             Assert.NotEqual(pressed, Describe(button.Background));
@@ -306,7 +299,7 @@ public class ToolbarTests
             Pump(window, 400);
             Assert.Equal(1.08, Scale(button), 2);
             // Still held: it settles back to its size (3 s on macOS), and stays pressed.
-            Pump(window, 700);
+            WaitUntil(window, () => Settled(button));
             Assert.True(button.IsPressed);
             Assert.False(GlassLift.GetIsLifted(button));
             Assert.Equal(1, Scale(button), 3);
@@ -339,7 +332,7 @@ public class ToolbarTests
 
         flyout.Hide();
         popUp.IsDropDownOpen = false;
-        Pump(window, 700);
+        WaitUntil(window, () => Settled(button) && Settled(popUp));
         Assert.Equal(1, Scale(button), 3);
         Assert.Equal(1, Scale(popUp), 3);
         window.Close();
@@ -372,7 +365,7 @@ public class ToolbarTests
             Assert.True(Scale(segmented) > 1.04);
             Assert.Equal(1, Scale(icons), 3);
 
-            Pump(window, 1200);
+            WaitUntil(window, () => Settled(group) && Settled(segmented));
             Assert.Equal(1, Scale(group), 3);
             Assert.Equal(1, Scale(segmented), 3);
             window.Close();
@@ -399,7 +392,7 @@ public class ToolbarTests
         Assert.Equal(Describe(Resource("ToolbarItemSelectedBrush", ThemeVariant.Light)), Describe(more.Background));
 
         flyout.Hide();
-        Pump(window, 700);
+        WaitUntil(window, () => Settled(group));
         Assert.Equal(1, Scale(group), 3);
         window.Close();
     }
@@ -420,44 +413,8 @@ public class ToolbarTests
 
     private static double Scale(Visual visual) => visual.RenderTransform?.Value.M11 ?? 1;
 
-    private static Point Center(Control control) =>
-        control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), TopLevel.GetTopLevel(control)!)!.Value;
+    // Back to its size, as the asserts that follow round it.
+    private static bool Settled(Visual visual) => Math.Round(Scale(visual), 3) == 1;
 
-    // Transitions and timers run on the real clock.
-    private static void Pump(Window window, int milliseconds)
-    {
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < milliseconds)
-        {
-            Thread.Sleep(5);
-            Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
-    }
-
-    private static Window Show(params Control[] items)
-    {
-        var stack = new StackPanel { Spacing = 8 };
-        stack.Children.AddRange(items);
-        var window = new Window { Width = 800, Height = 400, Content = stack };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        return window;
-    }
-
-    // Solid brushes by color, the others (the glass gradients) by identity.
-    private static string Describe(IBrush? brush) => brush switch
-    {
-        ISolidColorBrush solid => $"{solid.Color} × {solid.Opacity:0.00}",
-        null => "null",
-        _ => $"{brush.GetType().Name} #{System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(brush)}",
-    };
-
-    private static IBrush? Resource(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? value as IBrush : null;
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().Single(c => c.Name == name);
+    private static Window Show(params Control[] items) => TestUi.Show(new Window { Width = 800, Height = 400, Content = Stack(items) });
 }

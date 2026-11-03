@@ -1,12 +1,9 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
-using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using CupertinoAvalonia.Controls;
 using CupertinoAvalonia.Styling;
 using Xunit;
@@ -20,8 +17,7 @@ public class WindowActivityTests
     [InlineData("Dark")]
     public void Inactive_window_draws_controls_without_the_accent(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var plain = new Button { Content = "Cancel" };
         var accent = new Button { Content = "OK", Classes = { "accent" } };
         var tinted = new Button { Content = "Tinted", Classes = { "tinted" } };
@@ -71,8 +67,7 @@ public class WindowActivityTests
     [InlineData("Dark")]
     public void Inactive_window_grays_sidebar_symbols_and_labels(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var icon = new CupertinoAvalonia.Controls.CASymbolIcon { Symbol = "folder" };
         var label = new TextBlock { Text = "Notes" };
         var item = new ListBoxItem { Content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Children = { icon, label } } };
@@ -134,13 +129,4 @@ public class WindowActivityTests
         Assert.NotEqual(active, Describe(accent.Background));
         window.Close();
     }
-
-    private static string Describe(IBrush? brush) =>
-        brush is ISolidColorBrush solid ? $"{solid.Color} × {solid.Opacity:0.00}" : brush?.ToString() ?? "null";
-
-    private static IBrush? Resource(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? value as IBrush : null;
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().Single(c => c.Name == name);
 }

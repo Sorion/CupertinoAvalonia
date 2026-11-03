@@ -1,7 +1,5 @@
-using Avalonia;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
-using Avalonia.Styling;
 using Avalonia.Threading;
 using CupertinoAvalonia.Gallery.ViewModels;
 using CupertinoAvalonia.Gallery.Views;
@@ -29,7 +27,7 @@ public class GalleryScreenshotTests
         var pageFilter = Environment.GetEnvironmentVariable("GALLERY_PAGE");
         Directory.CreateDirectory(outDir!);
 
-        Application.Current!.RequestedThemeVariant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        UseTheme(theme);
         var vm = new MainWindowViewModel();
         var window = new MainWindow { DataContext = vm, Width = 1100, Height = 760 };
         window.Show();
@@ -37,13 +35,7 @@ public class GalleryScreenshotTests
         Dispatcher.UIThread.RunJobs();
         WindowActivity.SetIsInactive(window, inactive);
         // Let transitions end (the toolbar band fades in).
-        var settle = System.Diagnostics.Stopwatch.StartNew();
-        while (settle.ElapsedMilliseconds < 300)
-        {
-            Thread.Sleep(5);
-            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
+        Pump(window, 300);
 
         foreach (var page in vm.Pages.Where(p => string.IsNullOrEmpty(pageFilter) || p.Title.Contains(pageFilter, StringComparison.OrdinalIgnoreCase)))
         {

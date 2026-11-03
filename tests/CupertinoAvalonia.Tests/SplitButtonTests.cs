@@ -7,7 +7,6 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using CupertinoAvalonia.Controls;
 using CupertinoAvalonia.Styling;
 using Xunit;
@@ -31,7 +30,7 @@ public class SplitButtonTests
             (glyph.Symbol, glyph.FontSize, glyph.FontWeight, glyph.SymbolScale));
         Assert.Equal(pullDown.Bounds.Width - 13, Origin(glyph, pullDown).X + glyph.Bounds.Width / 2, tolerance: 0.5);
         Assert.Equal(new Thickness(12, 0, 0, 0), pullDown.Padding);
-        Assert.Equal(Color(Resource("ButtonBackgroundBrush")), Color(pullDown.Background));
+        Assert.Equal(ColorOf(Resource("ButtonBackgroundBrush")), ColorOf(pullDown.Background));
         // 8.75 pt when small.
         Assert.Equal(8.75, Part<CASymbolIcon>(small, "DropDownGlyph").FontSize);
         Assert.Equal(20, small.Bounds.Height);
@@ -77,10 +76,10 @@ public class SplitButtonTests
 
         Click(window, pullDown);
         Assert.True(pullDown.Flyout!.IsOpen);
-        Assert.Equal(Color(Resource("ButtonBackgroundPressedBrush")), Color(pullDown.Background));
+        Assert.Equal(ColorOf(Resource("ButtonBackgroundPressedBrush")), ColorOf(pullDown.Background));
         pullDown.Flyout.Hide();
         Dispatcher.UIThread.RunJobs();
-        Assert.Equal(Color(Resource("ButtonBackgroundBrush")), Color(pullDown.Background));
+        Assert.Equal(ColorOf(Resource("ButtonBackgroundBrush")), ColorOf(pullDown.Background));
         window.Close();
     }
 
@@ -120,7 +119,7 @@ public class SplitButtonTests
 
         var separator = Part<Border>(split, "Separator");
         Assert.Equal(new Rect(0, 5, 1, 14), new Rect(Origin(separator, secondary), separator.Bounds.Size));
-        Assert.Equal(Color(Resource("LabelTertiaryBrush")), Color(separator.Background));
+        Assert.Equal(ColorOf(Resource("LabelTertiaryBrush")), ColorOf(separator.Background));
         var glyph = Part<CASymbolIcon>(split, "DropDownGlyph");
         Assert.Equal(("chevron.down", 10.5, FontWeight.Regular), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         Assert.Equal(12, Origin(glyph, secondary).X + glyph.Bounds.Width / 2, tolerance: 0.5);
@@ -137,8 +136,8 @@ public class SplitButtonTests
         // Measured on macOS 27: only the label and the chevron fade.
         foreach (var part in new[] { Part<Button>(split, "PART_PrimaryButton"), Part<Button>(split, "PART_SecondaryButton") })
         {
-            Assert.Equal(Color(Resource("ButtonBackgroundBrush")), Color(part.Background));
-            Assert.Equal(Color(Resource("LabelTertiaryBrush")), Color(part.Foreground));
+            Assert.Equal(ColorOf(Resource("ButtonBackgroundBrush")), ColorOf(part.Background));
+            Assert.Equal(ColorOf(Resource("LabelTertiaryBrush")), ColorOf(part.Foreground));
         }
         window.Close();
     }
@@ -151,16 +150,16 @@ public class SplitButtonTests
         var window = Show(split);
         var primary = Part<Button>(split, "PART_PrimaryButton");
         var secondary = Part<Button>(split, "PART_SecondaryButton");
-        var pressed = Color(Resource("ButtonBackgroundPressedBrush"));
-        var idle = Color(Resource("ButtonBackgroundBrush"));
+        var pressed = ColorOf(Resource("ButtonBackgroundPressedBrush"));
+        var idle = ColorOf(Resource("ButtonBackgroundBrush"));
 
-        window.MouseDown(Center(primary, window), MouseButton.Left);
-        Assert.Equal((pressed, idle), (Color(primary.Background), Color(secondary.Background)));
-        window.MouseUp(Center(primary, window), MouseButton.Left);
+        window.MouseDown(Center(primary), MouseButton.Left);
+        Assert.Equal((pressed, idle), (ColorOf(primary.Background), ColorOf(secondary.Background)));
+        window.MouseUp(Center(primary), MouseButton.Left);
 
         Click(window, secondary);
         Assert.True(split.Flyout!.IsOpen);
-        Assert.Equal((idle, pressed), (Color(primary.Background), Color(secondary.Background)));
+        Assert.Equal((idle, pressed), (ColorOf(primary.Background), ColorOf(secondary.Background)));
         split.Flyout.Hide();
         window.Close();
     }
@@ -174,14 +173,14 @@ public class SplitButtonTests
 
         foreach (var part in new[] { Part<Button>(toggle, "PART_PrimaryButton"), Part<Button>(toggle, "PART_SecondaryButton") })
         {
-            Assert.Equal(Color(Resource("AccentButtonBackgroundBrush")), Color(part.Background));
+            Assert.Equal(ColorOf(Resource("AccentButtonBackgroundBrush")), ColorOf(part.Background));
             Assert.Equal(1, part.Background!.Opacity);
-            Assert.Equal(Color(Resource("AccentForegroundBrush")), Color(part.Foreground));
+            Assert.Equal(ColorOf(Resource("AccentForegroundBrush")), ColorOf(part.Foreground));
         }
 
         // Active=False: "on" looks like "off".
         WindowActivity.SetIsInactive(window, true);
-        Assert.Equal(Color(Resource("ButtonBackgroundBrush")), Color(Part<Button>(toggle, "PART_PrimaryButton").Background));
+        Assert.Equal(ColorOf(Resource("ButtonBackgroundBrush")), ColorOf(Part<Button>(toggle, "PART_PrimaryButton").Background));
         window.Close();
     }
 
@@ -200,35 +199,4 @@ public class SplitButtonTests
         Assert.Equal(8.75, Part<CASymbolIcon>(split, "DropDownGlyph").FontSize);
         window.Close();
     }
-
-    private static Window Show(params Control[] controls)
-    {
-        var stack = new StackPanel { Spacing = 8, Margin = new Thickness(10) };
-        stack.Children.AddRange(controls);
-        var window = new Window { Width = 400, Height = 300, Content = stack };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        return window;
-    }
-
-    private static void Click(Window window, Control control)
-    {
-        window.MouseDown(Center(control, window), MouseButton.Left);
-        window.MouseUp(Center(control, window), MouseButton.Left);
-        Dispatcher.UIThread.RunJobs();
-    }
-
-    private static Point Center(Control control, Window window) =>
-        control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), window)!.Value;
-
-    private static Point Origin(Visual visual, Visual relativeTo) => visual.TranslatePoint(default, relativeTo)!.Value;
-
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
-
-    private static Color? Color(IBrush? brush) => (brush as ISolidColorBrush)?.Color;
-
-    private static IBrush Resource(string key) =>
-        Application.Current!.TryGetResource(key, ThemeVariant.Light, out var value) ? (IBrush)value! : throw new KeyNotFoundException(key);
 }

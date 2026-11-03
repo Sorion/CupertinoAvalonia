@@ -21,14 +21,7 @@ public class GalleryWindowTests
         window.Show();
         Dispatcher.UIThread.RunJobs();
         // Let the pane's width transition end.
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < 600)
-        {
-            Thread.Sleep(10);
-            Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
+        Pump(window, 600);
 
         // The sidebar button starts past the room the window controls take.
         var toggle = window.GetVisualDescendants().OfType<Button>().First(b => b.Name == "PART_SidebarToggle");
@@ -56,18 +49,5 @@ public class GalleryWindowTests
             Assert.True(left >= window.WindowControlsInset.Left, $"sidebar button at {left} after {stopwatch.ElapsedMilliseconds} ms");
         }
         window.Close();
-    }
-
-    // Animations and transitions run on the real clock.
-    private static void Pump(Window window, int milliseconds)
-    {
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        while (stopwatch.ElapsedMilliseconds < milliseconds)
-        {
-            Thread.Sleep(5);
-            Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
-            Dispatcher.UIThread.RunJobs();
-        }
-        window.UpdateLayout();
     }
 }

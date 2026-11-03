@@ -5,10 +5,8 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
 using Avalonia.Styling;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using CupertinoAvalonia.Styling;
 using Xunit;
 
@@ -41,8 +39,7 @@ public class CircularProgressTests
     [InlineData("Dark")]
     public void A_determinate_one_is_a_ring_in_the_accent(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         var progress = new ProgressBar { Classes = { "circular" }, Value = 30 };
         var window = Show(progress);
 
@@ -50,9 +47,9 @@ public class CircularProgressTests
         Assert.False(Part<ProgressSpinner>(progress, "Spinner").IsVisible);
         var fill = Part<Arc>(progress, "RingFill");
         Assert.Equal((-90, 108), (fill.StartAngle, fill.SweepAngle));
-        Assert.Equal(Color(Resource<IBrush>("AccentBrush", variant)), Color(fill.Stroke));
+        Assert.Equal(ColorOf(Resource<IBrush>("AccentBrush", variant)), ColorOf(fill.Stroke));
         // Measured on macOS 27: a 5 % track in light, 10 % in dark.
-        Assert.Equal(Color(Resource<IBrush>("ProgressRingTrackBrush", variant)), Color(progress.Background));
+        Assert.Equal(ColorOf(Resource<IBrush>("ProgressRingTrackBrush", variant)), ColorOf(progress.Background));
 
         progress.Value = 75;
         Dispatcher.UIThread.RunJobs();
@@ -70,7 +67,7 @@ public class CircularProgressTests
         using var frame = window.CaptureRenderedFrame()!;
         var center = progress.TranslatePoint(new Point(16, 16), window)!.Value;
         Color At(double degrees) => Pixel(frame, (int)(center.X + Math.Sin(degrees * Math.PI / 180) * 13.5), (int)(center.Y - Math.Cos(degrees * Math.PI / 180) * 13.5));
-        var accent = Color(Resource<IBrush>("AccentBrush", ThemeVariant.Light))!.Value;
+        var accent = ColorOf(Resource<IBrush>("AccentBrush", ThemeVariant.Light))!.Value;
         // The first quarter, from 12 to 3 o'clock, in the accent; the rest is the track.
         Assert.True(Distance(At(45), accent) < 60, $"{At(45)} at 45°");
         Assert.True(Distance(At(225), accent) > 200, $"{At(225)} at 225°");
@@ -88,8 +85,8 @@ public class CircularProgressTests
         var spinner = Part<ProgressSpinner>(progress, "Spinner");
         Assert.True(spinner.IsVisible);
         // Measured on macOS 27: the leading spoke at 55 %.
-        Assert.Equal(Color(Resource<IBrush>("ProgressSpinnerBrush", ThemeVariant.Light)), Color(spinner.Foreground));
-        Assert.Equal(0.55, Color(spinner.Foreground)!.Value.A / 255.0 * spinner.Foreground!.Opacity, 2);
+        Assert.Equal(ColorOf(Resource<IBrush>("ProgressSpinnerBrush", ThemeVariant.Light)), ColorOf(spinner.Foreground));
+        Assert.Equal(0.55, ColorOf(spinner.Foreground)!.Value.A / 255.0 * spinner.Foreground!.Opacity, 2);
 
         using var frame = window.CaptureRenderedFrame()!;
         var center = progress.TranslatePoint(new Point(16, 16), window)!.Value;
@@ -142,32 +139,10 @@ public class CircularProgressTests
         return window;
     }
 
-    private static T Part<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
-
-    private static Color? Color(IBrush? brush) => (brush as ISolidColorBrush)?.Color;
-
-    private static string? Describe(IBrush? brush) => brush is ISolidColorBrush solid ? $"{solid.Color} {solid.Opacity}" : null;
-
-    private static T Resource<T>(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? (T)value! : throw new KeyNotFoundException(key);
-
     private sealed class Tolerance : IEqualityComparer<double>
     {
         public bool Equals(double a, double b) => Math.Abs(a - b) < 0.001;
 
         public int GetHashCode(double value) => 0;
-    }
-
-    private static int Distance(Color a, Color b) => Math.Abs(a.R - b.R) + Math.Abs(a.G - b.G) + Math.Abs(a.B - b.B);
-
-    private static Color Pixel(WriteableBitmap frame, int x, int y)
-    {
-        using var buffer = frame.Lock();
-        var bytes = new byte[4];
-        System.Runtime.InteropServices.Marshal.Copy(buffer.Address + y * buffer.RowBytes + x * 4, bytes, 0, 4);
-        return frame.Format == Avalonia.Platform.PixelFormats.Rgba8888
-            ? Avalonia.Media.Color.FromRgb(bytes[0], bytes[1], bytes[2])
-            : Avalonia.Media.Color.FromRgb(bytes[2], bytes[1], bytes[0]);
     }
 }

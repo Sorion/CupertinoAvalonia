@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
-using Avalonia.Styling;
 using CupertinoAvalonia.Controls;
 using Xunit;
 
@@ -15,13 +14,12 @@ public class CAWindowTests
     [InlineData("Dark")]
     public void Has_its_own_theme_even_when_derived(string theme)
     {
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        Application.Current!.RequestedThemeVariant = variant;
+        var variant = UseTheme(theme);
         // Apps derive their main window from it, as the gallery does.
         var window = new DerivedWindow();
         window.Show();
-        Assert.Equal(Color("WindowBackgroundBrush", variant), Assert.IsAssignableFrom<ISolidColorBrush>(window.Background).Color);
-        Assert.Equal(Color("LabelPrimaryBrush", variant), Assert.IsAssignableFrom<ISolidColorBrush>(window.Foreground).Color);
+        Assert.Equal(ColorOf(Resource("WindowBackgroundBrush", variant)), Assert.IsAssignableFrom<ISolidColorBrush>(window.Background).Color);
+        Assert.Equal(ColorOf(Resource("LabelPrimaryBrush", variant)), Assert.IsAssignableFrom<ISolidColorBrush>(window.Foreground).Color);
         // Only its theme clears the background for the material (Window's theme has the same colors).
         ((IPseudoClasses)window.Classes).Set(":material", true);
         Assert.Equal(Colors.Transparent, Assert.IsAssignableFrom<ISolidColorBrush>(window.Background).Color);
@@ -29,9 +27,6 @@ public class CAWindowTests
     }
 
     private sealed class DerivedWindow : CAWindow;
-
-    private static Color Color(string key, ThemeVariant variant) =>
-        Application.Current!.TryGetResource(key, variant, out var value) ? ((ISolidColorBrush)value!).Color : default;
 
     [AvaloniaFact]
     public void Extends_the_content_into_a_toolbar_high_title_bar_on_macOS_only()
