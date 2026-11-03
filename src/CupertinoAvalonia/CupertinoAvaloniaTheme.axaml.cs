@@ -119,12 +119,15 @@ public class CupertinoAvaloniaTheme : Styles
     }
 
     // Fitted on AppKit's shades of the eight macOS 27 accents (within ΔE 4): the selection darker and a little less
-    // saturated; the focus ring at 50 %, darker in light mode, lighter in dark mode.
+    // saturated; the focus ring at 50 %, darker in light mode, lighter in dark mode. Selected text: the accent at 30 % over
+    // white, or over #5A5A5A in dark mode, opaque (within one level for all eight accents).
     private static MacOSAccentColors.Shades Derive(Color accent, bool isDark)
     {
         var selection = isDark ? AccentColorMapper.Shade(accent, -0.118, 0.92) : AccentColorMapper.Shade(accent, -0.078, 0.96);
         var ring = isDark ? AccentColorMapper.Shade(accent, 0.162, 1.16) : AccentColorMapper.Shade(accent, -0.05, 1.06);
-        return new(accent, selection, Color.FromArgb(0x7F, ring.R, ring.G, ring.B));
+        var backdrop = isDark ? (byte)0x5A : (byte)0xFF;
+        byte Mix(byte c) => (byte)Math.Round(c * 0.3 + backdrop * 0.7);
+        return new(accent, selection, Color.FromArgb(0x7F, ring.R, ring.G, ring.B), Color.FromRgb(Mix(accent.R), Mix(accent.G), Mix(accent.B)));
     }
 
     private void SetAccentResources(ThemeVariant variant, MacOSAccentColors.Shades shades)
@@ -142,6 +145,7 @@ public class CupertinoAvaloniaTheme : Styles
         Set(d, "AccentButtonBackgroundColor", accent);
         Set(d, "AccentButtonBackgroundPressedColor", buttonPressed);
         Set(d, "AccentSelectionColor", shades.Selection);
+        Set(d, "TextSelectionColor", shades.TextSelection);
         d["SystemAccentColor"] = accent;
 
         // A spread shadow follows the control's corner radius.

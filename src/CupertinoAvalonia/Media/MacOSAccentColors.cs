@@ -11,12 +11,12 @@ internal static class MacOSAccentColors
 {
     private const string ObjC = "/usr/lib/libobjc.A.dylib";
 
-    public readonly record struct Shades(Color Accent, Color Selection, Color FocusRing);
+    public readonly record struct Shades(Color Accent, Color Selection, Color FocusRing, Color TextSelection);
 
     // AppKit's blue accent, read on macOS 27: the default where the system accent isn't followed.
     public static (Shades Light, Shades Dark) Blue { get; } = (
-        new(Color.Parse("#007AFF"), Color.Parse("#0064E1"), Color.Parse("#7F0067F4")),
-        new(Color.Parse("#007AFF"), Color.Parse("#0059D1"), Color.Parse("#7F1AA9FF")));
+        new(Color.Parse("#007AFF"), Color.Parse("#0064E1"), Color.Parse("#7F0067F4"), Color.Parse("#B3D7FF")),
+        new(Color.Parse("#007AFF"), Color.Parse("#0059D1"), Color.Parse("#7F1AA9FF"), Color.Parse("#3F638B")));
 
     /// <summary>The colors of the user's accent, or null off macOS.</summary>
     public static (Shades Light, Shades Dark)? Read()
@@ -53,7 +53,9 @@ internal static class MacOSAccentColors
         return new(
             ToColor(Send(colors, Sel("controlAccentColor"))),
             ToColor(Send(colors, Sel("selectedContentBackgroundColor"))),
-            ToColor(Send(colors, Sel("keyboardFocusIndicatorColor"))));
+            ToColor(Send(colors, Sel("keyboardFocusIndicatorColor"))),
+            // The highlight color, which System Settings can set apart from the accent.
+            ToColor(Send(colors, Sel("selectedTextBackgroundColor"))));
     }
 
     private static Color ToColor(IntPtr color)

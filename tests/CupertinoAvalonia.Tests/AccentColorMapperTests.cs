@@ -77,6 +77,34 @@ public class AccentColorMapperTests
         Assert.Equal(expected.Accent, Resource<Color>("AccentColor", variant));
         Assert.Equal(expected.Selection, Resource<Color>("AccentSelectionColor", variant));
         Assert.Equal(expected.FocusRing, Resource<BoxShadows>("FocusRingShadow", variant)[0].Color);
+        Assert.Equal(expected.TextSelection, Resource<Color>("TextSelectionColor", variant));
+        Assert.Equal(expected.TextSelection, Resource<ISolidColorBrush>("TextSelectionBrush", variant).Color);
+    }
+
+    // AppKit's selectedTextBackgroundColor on macOS 27, the highlight color following the accent: opaque, the accent at
+    // 30 % over white, over #5A5A5A in dark mode. The theme drew the accent at 30 % over the field, too dark in dark mode.
+    [AvaloniaTheory]
+    [InlineData("Light", "#007AFF", "#B3D7FF")] // blue
+    [InlineData("Dark", "#007AFF", "#3F638B")]
+    [InlineData("Light", "#62BA46", "#D0EAC8")] // green
+    [InlineData("Dark", "#62BA46", "#5C7654")]
+    [InlineData("Light", "#FFC726", "#FFEEBE")] // yellow
+    [InlineData("Dark", "#FFC600", "#8B7A3F")]
+    [InlineData("Light", "#989898", "#E0E0E0")] // graphite
+    [InlineData("Dark", "#8C8C8C", "#696969")]
+    public void A_custom_accent_derives_AppKit_s_text_selection(string theme, string accent, string expected)
+    {
+        var cupertino = Application.Current!.Styles.OfType<CupertinoAvaloniaTheme>().Single();
+        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        cupertino.CustomAccentColor = Color.Parse(accent);
+        try
+        {
+            AssertClose(Color.Parse(expected), Resource<ISolidColorBrush>("TextSelectionBrush", variant).Color, tolerance: 1);
+        }
+        finally
+        {
+            cupertino.CustomAccentColor = null;
+        }
     }
 
     [AvaloniaTheory]
