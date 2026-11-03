@@ -121,27 +121,28 @@ public class CASymbolIcon : Control
     {
         base.OnPropertyChanged(change);
         if (change.Property == ForegroundProperty)
-            ObserveForeground();
+            ObserveForeground(VisualRoot is not null);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        ObserveForeground();
+        ObserveForeground(attached: true);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        ObserveForeground();
+        // VisualRoot is still set here.
+        ObserveForeground(attached: false);
     }
 
     // A brush whose color changes in place, as the theme's accent brushes when the system accent changes: the
     // compositor doesn't redraw what an opacity mask covers, so the symbol redraws itself. Only while it shows, so a
     // shared brush doesn't keep it alive.
-    private void ObserveForeground()
+    private void ObserveForeground(bool attached)
     {
-        var brush = VisualRoot is not null ? Foreground as AvaloniaObject : null;
+        var brush = attached ? Foreground as AvaloniaObject : null;
         if (ReferenceEquals(brush, _observedForeground))
             return;
         if (_observedForeground is not null)

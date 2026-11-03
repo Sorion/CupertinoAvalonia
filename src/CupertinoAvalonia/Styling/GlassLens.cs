@@ -287,7 +287,7 @@ public class GlassLens : Control
 
             // Local units per device pixel: the edge is anti-aliased over one pixel.
             var deviceScale = MathF.Sqrt(MathF.Abs(localToDevice.ScaleX * localToDevice.ScaleY - localToDevice.SkewX * localToDevice.SkewY));
-            var uniforms = new SKRuntimeEffectUniforms(effect)
+            using var uniforms = new SKRuntimeEffectUniforms(effect)
             {
                 ["size"] = new[] { width, height },
                 ["radius"] = radius,
@@ -309,7 +309,7 @@ public class GlassLens : Control
                 ["rimFringe"] = Math.Max(0f, parameters.RimFringe),
                 ["iridescence"] = Math.Clamp(parameters.Iridescence, 0f, 1f),
             };
-            var children = new SKRuntimeEffectChildren(effect) { ["backdrop"] = backdropShader };
+            using var children = new SKRuntimeEffectChildren(effect) { ["backdrop"] = backdropShader };
             using var shader = effect.ToShader(uniforms, children);
             using var paint = new SKPaint { Shader = shader, IsAntialias = true };
             canvas.DrawRect(new SKRect(0, 0, width, height), paint);

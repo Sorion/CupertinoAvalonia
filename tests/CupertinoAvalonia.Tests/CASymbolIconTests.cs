@@ -46,6 +46,40 @@ public class CASymbolIconTests
         static bool IsRed(Color c) => c.R > 200 && c.G < 60 && c.B < 60;
     }
 
+    // The theme's brushes live as long as the app: a removed symbol must not stay subscribed to them.
+    [AvaloniaFact]
+    public void A_removed_symbol_lets_go_of_its_brush()
+    {
+        var brush = new SolidColorBrush(Colors.Red);
+        var panel = new StackPanel();
+        var window = new Window { Content = panel };
+        window.Show();
+        var symbol = AddAndRemove(panel, brush);
+        // The renderer lets go of it after a few frames.
+        for (var i = 0; i < 3; i++)
+        {
+            Dispatcher.UIThread.RunJobs();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+        }
+
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+        Assert.False(symbol.IsAlive);
+        GC.KeepAlive(brush);
+        window.Close();
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    private static WeakReference AddAndRemove(Panel panel, IBrush brush)
+    {
+        var icon = new CASymbolIcon { Symbol = "folder", Foreground = brush };
+        panel.Children.Add(icon);
+        Dispatcher.UIThread.RunJobs();
+        panel.Children.Remove(icon);
+        return new WeakReference(icon);
+    }
+
     [AvaloniaFact]
     public void Follows_the_font_size()
     {

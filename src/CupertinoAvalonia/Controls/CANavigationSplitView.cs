@@ -161,7 +161,7 @@ public class CANavigationSplitView : ContentControl
     // A drag on a column's edge: its grip, the pointer's distance from the edge, and the transitions it suspends.
     private Control? _draggedGrip;
     private double _gripOffset;
-    private Transitions? _suspendedTransitions;
+    private IDisposable? _suspendedTransitions;
 
     /// <summary>The sidebar's content, usually a <c>ListBox</c> with the <c>sidebar</c> class.</summary>
     public object? Sidebar
@@ -454,9 +454,9 @@ public class CANavigationSplitView : ContentControl
             return;
         _draggedGrip = grip;
         _gripOffset = DistanceFromSide(grip, e) - (grip == _sidebarGrip ? VisibleSidebarWidth : VisibleInspectorWidth);
-        // The column follows the pointer, without the open and close animation.
-        _suspendedTransitions = Transitions;
-        Transitions = null;
+        // The column follows the pointer, without the open and close animation. Above the theme's and the app's values,
+        // which come back on release.
+        _suspendedTransitions = SetValue(TransitionsProperty, null, BindingPriority.Animation);
         e.Pointer.Capture(grip);
         e.Handled = true;
     }
@@ -503,7 +503,7 @@ public class CANavigationSplitView : ContentControl
         if (_draggedGrip is null)
             return;
         _draggedGrip = null;
-        Transitions = _suspendedTransitions;
+        _suspendedTransitions?.Dispose();
         _suspendedTransitions = null;
         UpdatePositions();
     }

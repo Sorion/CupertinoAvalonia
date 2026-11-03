@@ -6,6 +6,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Animation;
 using Avalonia.Layout;
 using Avalonia.Styling;
 using Avalonia.LogicalTree;
@@ -220,6 +221,11 @@ public class CANavigationSplitViewTests
         Assert.True(split.IsSidebarOpen);
         window.MouseUp(new Point(140, 300), MouseButton.Left);
         Assert.NotNull(split.Transitions);
+        // The drag leaves no local value behind: an app's style still sets the animation.
+        var transitions = new Transitions();
+        window.Styles.Add(new Style(x => x.OfType<CANavigationSplitView>()) { Setters = { new Setter(Animatable.TransitionsProperty, transitions) } });
+        Dispatcher.UIThread.RunJobs();
+        Assert.Same(transitions, split.Transitions);
         window.Close();
     }
 
