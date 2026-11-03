@@ -32,7 +32,7 @@
     <Setter Property="FontWeight" Value="Medium" />
   </Style>
   <!-- "accent": while the list has the focus, the selection takes the accent and its label and symbol turn white, as in
-       SwiftUI's sidebars (TestNav on macOS 27); gray otherwise, as without the class. Before the inactive styles, which
+       SwiftUI's sidebars (SwiftGallery on macOS 27); gray otherwise, as without the class. Before the inactive styles, which
        win. -->
   <Style Selector="ListBox.sidebar.accent ListBoxItem:selected:focus-within">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionAccentBrush}" />

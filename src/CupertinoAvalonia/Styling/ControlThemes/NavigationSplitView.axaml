@@ -1,5 +1,5 @@
 <!--
-  NavigationSplitView, after SwiftUI's on macOS 27 (measured in TestNav): the sidebar slides out over the window's full
+  NavigationSplitView, after SwiftUI's on macOS 27 (measured in SwiftGallery): the sidebar slides out over the window's full
   height and the content follows its edge, in SplitView's 0.25 s; the sidebar button sits over the sidebar. The
   inspector, after SwiftUI's: the sidebar's material, no divider, the content's toolbar over it.
 -->

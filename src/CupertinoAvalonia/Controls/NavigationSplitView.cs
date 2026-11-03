@@ -69,7 +69,7 @@ public class NavigationSplitView : ContentControl
     private const double ButtonInset = 8;
     private const double ToolbarGap = 21;
     internal const double EdgeMargin = 8;
-    // Dragging the sidebar's edge, measured on macOS 27 (SwiftUI, TestNav): the edge can be grabbed from 5 pt inside to
+    // Dragging the sidebar's edge, measured on macOS 27 (SwiftUI, SwiftGallery): the edge can be grabbed from 5 pt inside to
     // 1 pt outside; past half the minimum width the sidebar folds away, and comes back at its minimum width past about
     // five eighths of it, in the same drag. The inspector's edge does the same, mirrored.
     private const double GripInside = 5;

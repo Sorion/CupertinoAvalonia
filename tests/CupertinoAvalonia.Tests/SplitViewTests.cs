@@ -28,7 +28,7 @@ public class SplitViewTests
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
-        // Measured on macOS 27 (TestNav, Shortcuts): both panes in the sidebar's color, without a divider.
+        // Measured on macOS 27 (SwiftGallery, Shortcuts): both panes in the sidebar's color, without a divider.
         var paneColor = theme == "Dark" ? Avalonia.Media.Color.Parse("#252525") : Avalonia.Media.Color.Parse("#EDEDED");
         Assert.Equal(240, sidebar.OpenPaneLength);
         Assert.Equal(paneColor, Color(sidebar.PaneBackground));

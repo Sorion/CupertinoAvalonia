@@ -31,7 +31,7 @@
           <NativeMenuItemSeparator />
           <!-- To compare the gallery with a native app side by side, as only one window is active at a time. -->
           <NativeMenuItem Header="Always Look Active" ToggleType="CheckBox" Click="OnAlwaysLookActiveClick" />
-          <!-- The sidebar's two selections: the accent while it has the focus (as TestNav), or always gray. -->
+          <!-- The sidebar's two selections: the accent while it has the focus (as SwiftGallery), or always gray. -->
           <NativeMenuItem Header="Accent Sidebar Selection" ToggleType="CheckBox" IsChecked="True" Click="OnAccentSidebarSelectionClick" />
         </NativeMenu>
       </NativeMenuItem>
@@ -45,7 +45,7 @@
     </Style>
   </cac:CupertinoWindow.Styles>
 
-  <!-- TestNav's sidebar and inspector widths, to compare them. -->
+  <!-- SwiftGallery's sidebar and inspector widths, to compare them. -->
   <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" MinSidebarWidth="180"
                            IsInspectorOpen="{Binding IsInspectorOpen}"
                            InspectorWidth="280" MinInspectorWidth="220" MaxInspectorWidth="400">
@@ -87,7 +87,7 @@
       </Grid>
     </cac:NavigationSplitView.ContentToolbar>
 
-    <!-- As in TestNav: the inspector's title in its section of the toolbar. -->
+    <!-- As in SwiftGallery: the inspector's title in its section of the toolbar. -->
     <cac:NavigationSplitView.InspectorToolbar>
       <StackPanel Spacing="2" IsHitTestVisible="False">
         <TextBlock Classes="headline" Text="Channel options" />

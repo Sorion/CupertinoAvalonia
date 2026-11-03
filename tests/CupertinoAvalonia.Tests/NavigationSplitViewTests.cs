@@ -16,7 +16,7 @@ using Xunit;
 
 namespace CupertinoAvalonia.Tests;
 
-/// <summary>Measured on macOS 27: SwiftUI's NavigationSplitView in TestNav, a 220 pt sidebar.</summary>
+/// <summary>Measured on macOS 27: SwiftUI's NavigationSplitView in SwiftGallery, a 220 pt sidebar.</summary>
 public class NavigationSplitViewTests
 {
     [AvaloniaFact]
@@ -439,7 +439,7 @@ public class NavigationSplitViewTests
         window.Close();
     }
 
-    // TestNav's inspector: 220 to 400 pt, 280 at first. Its edge is the sidebar's, mirrored.
+    // SwiftGallery's inspector: 220 to 400 pt, 280 at first. Its edge is the sidebar's, mirrored.
     [AvaloniaFact]
     public void Dragging_the_inspector_edge_resizes_it_folds_it_and_brings_it_back()
     {

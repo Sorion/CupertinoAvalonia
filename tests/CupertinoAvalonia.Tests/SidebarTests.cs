@@ -55,7 +55,7 @@ public class SidebarTests
         window.Close();
     }
 
-    // Measured in TestNav on macOS 27, with the purple accent: while the sidebar has the focus, its selection is the
+    // Measured in SwiftGallery on macOS 27, with the purple accent: while the sidebar has the focus, its selection is the
     // accent, as a prominent button, its label and symbol white; gray once the focus is elsewhere or the window inactive.
     [AvaloniaFact]
     public void Accent_sidebar_selection_takes_the_accent_while_the_list_has_the_focus()
