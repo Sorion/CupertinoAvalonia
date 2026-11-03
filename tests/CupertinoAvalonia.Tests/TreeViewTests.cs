@@ -36,7 +36,7 @@ public class TreeViewTests
         // The selection spans the row whatever the level.
         Assert.Equal(Part<Border>(applications, "PART_LayoutRoot").Bounds.Width, Part<Border>(steam, "PART_LayoutRoot").Bounds.Width);
         // _Disclosure: SF Symbol "chevron.right", Bold 9.
-        var chevron = Part<SymbolIcon>(games, "Chevron");
+        var chevron = Part<CASymbolIcon>(games, "Chevron");
         Assert.Equal(("chevron.right", 9, FontWeight.Bold), (chevron.Symbol, chevron.FontSize, chevron.FontWeight));
         Assert.Equal(OperatingSystem.IsMacOSVersionAtLeast(11), chevron.IsNative);
         window.Close();
@@ -47,7 +47,7 @@ public class TreeViewTests
     {
         var row = new TreeViewItem { Header = "Devices", Items = { new TreeViewItem { Header = "Speakers" } } };
         var window = Show(new TreeView { Items = { row } });
-        var chevron = Part<SymbolIcon>(row, "Chevron");
+        var chevron = Part<CASymbolIcon>(row, "Chevron");
         Assert.Equal(0, Angle(chevron), 0);
 
         var toggle = Part<ToggleButton>(row, "PART_ExpandCollapseChevron");
@@ -80,7 +80,7 @@ public class TreeViewTests
         Assert.Equal(Describe(Resource("AccentSelectionBrush", variant)), Describe(Part<Border>(row, "PART_LayoutRoot").Background));
         var white = Describe(Resource("WhiteBrush", variant));
         Assert.Equal(white, Describe(Part<ContentPresenter>(row, "PART_HeaderPresenter").Foreground));
-        Assert.Equal(white, Describe(Part<SymbolIcon>(row, "Chevron").Foreground));
+        Assert.Equal(white, Describe(Part<CASymbolIcon>(row, "Chevron").Foreground));
         // The rows nested under it keep their color.
         Assert.Equal(Describe(Resource("LabelPrimaryBrush", variant)), Describe(Part<ContentPresenter>(child, "PART_HeaderPresenter").Foreground));
 
@@ -102,8 +102,8 @@ public class TreeViewTests
         // Sidebars / Item, Size=Medium: 32 pt, each level 12 pt further in.
         Assert.Equal(32, Part<Border>(mixer, "PART_LayoutRoot").Bounds.Height);
         Assert.Equal(HeaderX(mixer) + 12, HeaderX(channels));
-        Assert.Equal(11, Part<SymbolIcon>(mixer, "Chevron").FontSize);
-        Assert.Equal(Describe(Resource("LabelTertiaryBrush", ThemeVariant.Light)), Describe(Part<SymbolIcon>(mixer, "Chevron").Foreground));
+        Assert.Equal(11, Part<CASymbolIcon>(mixer, "Chevron").FontSize);
+        Assert.Equal(Describe(Resource("LabelTertiaryBrush", ThemeVariant.Light)), Describe(Part<CASymbolIcon>(mixer, "Chevron").Foreground));
         // A neutral selection, focused or not.
         tree.SelectedItem = channels;
         channels.Focus();

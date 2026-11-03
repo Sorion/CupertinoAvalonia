@@ -4,14 +4,14 @@ using Avalonia.Controls;
 namespace CupertinoAvalonia.Controls;
 
 /// <summary>
-/// The content's and the inspector's sections of a <see cref="NavigationSplitView"/>'s toolbar, as NSToolbar lays out
+/// The content's and the inspector's sections of a <see cref="CANavigationSplitView"/>'s toolbar, as NSToolbar lays out
 /// SwiftUI's (measured on macOS 27): the inspector's items start at its edge but never run past the window's, so they
 /// stay at the window's trailing edge once the inspector is closed; the content's items end before them.
 /// </summary>
 /// <remarks>Its first child is the content's section, its second the inspector's.</remarks>
 internal sealed class ToolbarSections : Panel
 {
-    private const double EdgeMargin = NavigationSplitView.EdgeMargin;
+    private const double EdgeMargin = CANavigationSplitView.EdgeMargin;
 
     private double _contentStart;
     private double _inspectorEdge;

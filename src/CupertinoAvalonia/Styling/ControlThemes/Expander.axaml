@@ -27,18 +27,18 @@
           <Grid ColumnDefinitions="Auto,*">
             <Panel Name="PART_Glyph" Width="{DynamicResource ControlHeight}" Height="{DynamicResource ControlHeight}">
               <Border Name="PART_GlyphBackground" CornerRadius="{DynamicResource DisclosureRadius}" />
-              <cac:SymbolIcon Name="PART_Chevron"
+              <cac:CASymbolIcon Name="PART_Chevron"
                               Symbol="chevron.right" FontSize="13" FontWeight="Bold"
                               FallbackData="{StaticResource DisclosureChevron}" FallbackStrokeThickness="1.75"
                               Foreground="{TemplateBinding Foreground}"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center">
-                <cac:SymbolIcon.Transitions>
+                <cac:CASymbolIcon.Transitions>
                   <Transitions>
                     <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
                   </Transitions>
-                </cac:SymbolIcon.Transitions>
-              </cac:SymbolIcon>
+                </cac:CASymbolIcon.Transitions>
+              </cac:CASymbolIcon>
             </Panel>
             <ContentPresenter Name="PART_ContentPresenter"
                               Grid.Column="1"
@@ -53,10 +53,10 @@
       </ControlTemplate>
     </Setter>
     <!-- In styles: a value in the template would block them. -->
-    <Style Selector="^ /template/ cac|SymbolIcon#PART_Chevron">
+    <Style Selector="^ /template/ cac|CASymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(0deg)" />
     </Style>
-    <Style Selector="^:checked /template/ cac|SymbolIcon#PART_Chevron">
+    <Style Selector="^:checked /template/ cac|CASymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(90deg)" />
     </Style>
     <Style Selector="^:focus-visible /template/ Border#PART_GlyphBackground">
@@ -68,7 +68,7 @@
         </Template>
       </Setter>
     </Style>
-    <Style Selector="^:pressed /template/ cac|SymbolIcon#PART_Chevron">
+    <Style Selector="^:pressed /template/ cac|CASymbolIcon#PART_Chevron">
       <Setter Property="Opacity" Value="0.6" />
     </Style>
     <Style Selector="^:disabled">
@@ -82,16 +82,16 @@
     <Style Selector="^ /template/ Border#PART_GlyphBackground">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     </Style>
-    <Style Selector="^ /template/ cac|SymbolIcon#PART_Chevron">
+    <Style Selector="^ /template/ cac|CASymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(90deg)" />
     </Style>
-    <Style Selector="^:checked /template/ cac|SymbolIcon#PART_Chevron">
+    <Style Selector="^:checked /template/ cac|CASymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(-90deg)" />
     </Style>
     <Style Selector="^:pressed /template/ Border#PART_GlyphBackground">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
     </Style>
-    <Style Selector="^:pressed /template/ cac|SymbolIcon#PART_Chevron">
+    <Style Selector="^:pressed /template/ cac|CASymbolIcon#PART_Chevron">
       <Setter Property="Opacity" Value="1" />
     </Style>
     <Style Selector="^:disabled /template/ Border#PART_GlyphBackground">

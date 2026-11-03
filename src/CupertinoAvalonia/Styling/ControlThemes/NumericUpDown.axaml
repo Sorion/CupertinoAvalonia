@@ -30,7 +30,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}" CornerRadius="{TemplateBinding CornerRadius}">
-          <cac:SymbolIcon Name="Chevron"
+          <cac:CASymbolIcon Name="Chevron"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
                           FontSize="{DynamicResource StepperFontSize}"
@@ -40,11 +40,11 @@
         </Border>
       </ControlTemplate>
     </Setter>
-    <Style Selector="^#PART_IncreaseButton /template/ cac|SymbolIcon#Chevron">
+    <Style Selector="^#PART_IncreaseButton /template/ cac|CASymbolIcon#Chevron">
       <Setter Property="Symbol" Value="chevron.up" />
       <Setter Property="FallbackData" Value="{StaticResource StepperUpGlyph}" />
     </Style>
-    <Style Selector="^#PART_DecreaseButton /template/ cac|SymbolIcon#Chevron">
+    <Style Selector="^#PART_DecreaseButton /template/ cac|CASymbolIcon#Chevron">
       <Setter Property="Symbol" Value="chevron.down" />
       <Setter Property="FallbackData" Value="{StaticResource StepperDownGlyph}" />
     </Style>
@@ -55,10 +55,10 @@
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
-    <Style Selector="^[(cas|Stepper.Size)=Mini] /template/ cac|SymbolIcon#Chevron">
+    <Style Selector="^[(cas|Stepper.Size)=Mini] /template/ cac|CASymbolIcon#Chevron">
       <Setter Property="FontSize" Value="{DynamicResource StepperFontSizeMini}" />
     </Style>
-    <Style Selector="^[(cas|Stepper.Size)=Small] /template/ cac|SymbolIcon#Chevron">
+    <Style Selector="^[(cas|Stepper.Size)=Small] /template/ cac|CASymbolIcon#Chevron">
       <Setter Property="FontSize" Value="{DynamicResource StepperFontSizeSmall}" />
     </Style>
   </ControlTheme>

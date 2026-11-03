@@ -114,7 +114,7 @@ public class TabControlTests
         Assert.Equal(new Thickness(0, 0, 0, 0.5), band.BorderThickness);
         // A 13 pt symbol at the large scale over an 11 pt label.
         var icon = Icon(general);
-        Assert.Equal((13, SymbolScale.Large), (icon.FontSize, icon.SymbolScale));
+        Assert.Equal((13, CASymbolScale.Large), (icon.FontSize, icon.SymbolScale));
         Assert.Equal(11, Label(general).FontSize);
         Assert.True(Origin(icon, general).Y < Origin(Label(general), general).Y);
         Assert.True(general.Bounds.Height >= 48);
@@ -172,8 +172,8 @@ public class TabControlTests
 
     private static Point Origin(Visual visual, Visual relativeTo) => visual.TranslatePoint(default, relativeTo)!.Value;
 
-    private static SymbolIcon Icon(TabItem item) =>
-        Part<ContentPresenter>(item, "PART_IconPresenter").GetVisualDescendants().OfType<SymbolIcon>().Single();
+    private static CASymbolIcon Icon(TabItem item) =>
+        Part<ContentPresenter>(item, "PART_IconPresenter").GetVisualDescendants().OfType<CASymbolIcon>().Single();
 
     // The text a string header is shown with.
     private static TextBlock Label(TabItem item) =>

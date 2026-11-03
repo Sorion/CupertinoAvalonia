@@ -143,7 +143,7 @@
                 <ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemChevron" />
               </Grid.ColumnDefinitions>
               <Panel Name="PART_ToggleIconPresenter" Width="{DynamicResource MenuWidthSymbol}" Margin="0,0,8,0" IsVisible="False">
-                <cac:SymbolIcon Name="PART_CheckGlyph" IsVisible="False"
+                <cac:CASymbolIcon Name="PART_CheckGlyph" IsVisible="False"
                                 Symbol="checkmark" FontSize="10" FontWeight="Bold"
                                 FallbackData="{StaticResource MenuItemCheckGlyph}" FallbackStrokeThickness="1.6"
                                 Foreground="{TemplateBinding Foreground}" />
@@ -167,7 +167,7 @@
                          Text="{TemplateBinding InputGesture, Converter={StaticResource CupertinoKeyGestureConverter}}"
                          Foreground="{DynamicResource LabelTertiaryBrush}"
                          VerticalAlignment="Center" />
-              <cac:SymbolIcon Name="PART_ChevronPath"
+              <cac:CASymbolIcon Name="PART_ChevronPath"
                               Grid.Column="4"
                               Margin="12,0,0,0"
                               VerticalAlignment="Center"
@@ -211,13 +211,13 @@
     <Style Selector="^:disabled">
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
-    <Style Selector="^:empty /template/ cac|SymbolIcon#PART_ChevronPath">
+    <Style Selector="^:empty /template/ cac|CASymbolIcon#PART_ChevronPath">
       <Setter Property="IsVisible" Value="False" />
     </Style>
     <Style Selector="^:toggle /template/ Panel#PART_ToggleIconPresenter, ^:radio /template/ Panel#PART_ToggleIconPresenter">
       <Setter Property="IsVisible" Value="True" />
     </Style>
-    <Style Selector="^:checked:toggle /template/ cac|SymbolIcon#PART_CheckGlyph">
+    <Style Selector="^:checked:toggle /template/ cac|CASymbolIcon#PART_CheckGlyph">
       <Setter Property="IsVisible" Value="True" />
     </Style>
     <Style Selector="^:checked:radio /template/ Ellipse#PART_RadioGlyph">

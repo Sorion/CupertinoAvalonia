@@ -25,7 +25,7 @@
   <!-- The symbol at the label's size, in the large scale, as in Apple's apps and SwiftUI (AppKit's default and the kit
        use the medium scale); Medium as in the kit, whether the label is emphasized or not. A column as wide for all
        symbols lines the labels up. -->
-  <Style Selector="ListBox.sidebar ListBoxItem cac|SymbolIcon">
+  <Style Selector="ListBox.sidebar ListBoxItem cac|CASymbolIcon">
     <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
     <Setter Property="Width" Value="{DynamicResource SidebarIconWidth}" />
     <Setter Property="SymbolScale" Value="Large" />
@@ -38,17 +38,17 @@
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionAccentBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
   </Style>
-  <Style Selector="ListBox.sidebar.accent ListBoxItem:selected:focus-within cac|SymbolIcon">
+  <Style Selector="ListBox.sidebar.accent ListBoxItem:selected:focus-within cac|CASymbolIcon">
     <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
   </Style>
   <!-- Active=False: "Sidebar/Label - Inactive" (linear burn #878787, dodge #666666) is the secondary label. -->
   <Style Selector="ListBox.sidebar ListBoxItem:selected[(cas|WindowActivity.IsInactive)=True]">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionInactiveBrush}" />
   </Style>
-  <Style Selector="ListBox.sidebar ListBoxItem[(cas|WindowActivity.IsInactive)=True], ListBox.sidebar ListBoxItem[(cas|WindowActivity.IsInactive)=True] cac|SymbolIcon">
+  <Style Selector="ListBox.sidebar ListBoxItem[(cas|WindowActivity.IsInactive)=True], ListBox.sidebar ListBoxItem[(cas|WindowActivity.IsInactive)=True] cac|CASymbolIcon">
     <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
   </Style>
-  <Style Selector="ListBox.sidebar ListBoxItem:disabled, ListBox.sidebar ListBoxItem:disabled cac|SymbolIcon">
+  <Style Selector="ListBox.sidebar ListBoxItem:disabled, ListBox.sidebar ListBoxItem:disabled cac|CASymbolIcon">
     <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
 
@@ -72,7 +72,7 @@
   <Style Selector="TreeView.sidebar ToggleButton#PART_ExpandCollapseChevron">
     <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
-  <Style Selector="TreeView.sidebar ToggleButton#PART_ExpandCollapseChevron /template/ cac|SymbolIcon#Chevron">
+  <Style Selector="TreeView.sidebar ToggleButton#PART_ExpandCollapseChevron /template/ cac|CASymbolIcon#Chevron">
     <Setter Property="FontSize" Value="11" />
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ Border#PART_LayoutRoot">
@@ -87,7 +87,7 @@
   <Style Selector="TreeView.sidebar TreeViewItem:selected /template/ ToggleButton#PART_ExpandCollapseChevron">
     <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
-  <Style Selector="TreeView.sidebar TreeViewItem cac|SymbolIcon:not(#Chevron)">
+  <Style Selector="TreeView.sidebar TreeViewItem cac|CASymbolIcon:not(#Chevron)">
     <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
     <Setter Property="Width" Value="{DynamicResource SidebarIconWidth}" />
     <Setter Property="SymbolScale" Value="Large" />
@@ -102,17 +102,17 @@
       <Setter Property="TextElement.Foreground" Value="{DynamicResource WhiteBrush}" />
     </Style>
     <!-- Its symbol, not those of the rows nested under it. -->
-    <Style Selector="^ cac|SymbolIcon:not(#Chevron)">
+    <Style Selector="^ cac|CASymbolIcon:not(#Chevron)">
       <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
     </Style>
-    <Style Selector="^ TreeViewItem cac|SymbolIcon:not(#Chevron)">
+    <Style Selector="^ TreeViewItem cac|CASymbolIcon:not(#Chevron)">
       <Setter Property="Foreground" Value="{DynamicResource AccentVibrantBrush}" />
     </Style>
   </Style>
   <Style Selector="TreeView.sidebar TreeViewItem:selected[(cas|WindowActivity.IsInactive)=True] /template/ Border#PART_LayoutRoot">
     <Setter Property="Background" Value="{DynamicResource SidebarSelectionInactiveBrush}" />
   </Style>
-  <Style Selector="TreeView.sidebar TreeViewItem[(cas|WindowActivity.IsInactive)=True] /template/ ContentPresenter#PART_HeaderPresenter, TreeView.sidebar TreeViewItem[(cas|WindowActivity.IsInactive)=True] cac|SymbolIcon:not(#Chevron)">
+  <Style Selector="TreeView.sidebar TreeViewItem[(cas|WindowActivity.IsInactive)=True] /template/ ContentPresenter#PART_HeaderPresenter, TreeView.sidebar TreeViewItem[(cas|WindowActivity.IsInactive)=True] cac|CASymbolIcon:not(#Chevron)">
     <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
   </Style>
 

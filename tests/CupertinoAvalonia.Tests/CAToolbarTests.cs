@@ -16,7 +16,7 @@ using Xunit;
 
 namespace CupertinoAvalonia.Tests;
 
-public class CupertinoToolbarTests
+public class CAToolbarTests
 {
     [AvaloniaFact]
     public void Background_appears_when_content_scrolls_under_the_toolbar()
@@ -59,7 +59,7 @@ public class CupertinoToolbarTests
         window.UpdateLayout();
         Assert.Equal(300, content.TranslatePoint(new Point(0, content.Bounds.Height), window)!.Value.Y, tolerance: 0.5);
         // Content that doesn't scroll finds the toolbar's room.
-        Assert.Equal(new Thickness(0, 52, 0, 0), CupertinoToolbar.GetContentInset(content));
+        Assert.Equal(new Thickness(0, 52, 0, 0), CAToolbar.GetContentInset(content));
         window.Close();
     }
 
@@ -68,7 +68,7 @@ public class CupertinoToolbarTests
     {
         var (window, toolbar, scrollViewer) = Show();
 
-        CupertinoToolbar.SetScrollsUnder(scrollViewer, false);
+        CAToolbar.SetScrollsUnder(scrollViewer, false);
         window.UpdateLayout();
         Assert.Equal(0, ((Control)scrollViewer.Content!).TranslatePoint(default, window)!.Value.Y);
         Assert.True(scrollViewer.Presenter!.ClipToBounds);
@@ -97,11 +97,11 @@ public class CupertinoToolbarTests
     {
         var (window, toolbar, scrollViewer) = Show();
 
-        toolbar.BackgroundVisibility = ToolbarBackgroundVisibility.Visible;
+        toolbar.BackgroundVisibility = CAToolbarBackgroundVisibility.Visible;
         Pump(window, 300);
         Assert.Equal(1, Background(toolbar).Opacity);
 
-        toolbar.BackgroundVisibility = ToolbarBackgroundVisibility.Hidden;
+        toolbar.BackgroundVisibility = CAToolbarBackgroundVisibility.Hidden;
         scrollViewer.Offset = new Vector(0, 40);
         Pump(window, 300);
         Assert.Equal(0, Background(toolbar).Opacity);
@@ -147,11 +147,11 @@ public class CupertinoToolbarTests
         Assert.Equal(Color(Resource("ToolbarBandBrush", ThemeVariant.Dark)), Color(background.Background));
         Assert.Equal(Color(Resource("LabelTertiaryBrush", ThemeVariant.Dark)), Color(((TextBlock)toolbar.Content!).Foreground));
 
-        toolbar.BackgroundVisibility = ToolbarBackgroundVisibility.Hidden;
+        toolbar.BackgroundVisibility = CAToolbarBackgroundVisibility.Hidden;
         Pump(window, 300);
         Assert.Equal(0, background.Opacity);
 
-        toolbar.BackgroundVisibility = ToolbarBackgroundVisibility.Automatic;
+        toolbar.BackgroundVisibility = CAToolbarBackgroundVisibility.Automatic;
         WindowActivity.SetIsInactive(window, false);
         Pump(window, 300);
         Assert.Equal(0, background.Opacity);
@@ -235,11 +235,11 @@ public class CupertinoToolbarTests
         window.Close();
     }
 
-    private static (Window, CupertinoToolbar, ScrollViewer) Show(Control? content = null)
+    private static (Window, CAToolbar, ScrollViewer) Show(Control? content = null)
     {
         var scrollViewer = new ScrollViewer { Content = new Border { Height = 2000 } };
-        CupertinoToolbar.SetScrollsUnder(scrollViewer, true);
-        var toolbar = new CupertinoToolbar { Content = content ?? new TextBlock { Text = "Title" } };
+        CAToolbar.SetScrollsUnder(scrollViewer, true);
+        var toolbar = new CAToolbar { Content = content ?? new TextBlock { Text = "Title" } };
         var window = new Window { Width = 400, Height = 300, Content = new Panel { Children = { scrollViewer, toolbar } } };
         window.Show();
         Dispatcher.UIThread.RunJobs();
@@ -247,7 +247,7 @@ public class CupertinoToolbarTests
         return (window, toolbar, scrollViewer);
     }
 
-    private static Border Background(CupertinoToolbar toolbar) =>
+    private static Border Background(CAToolbar toolbar) =>
         toolbar.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "PART_Background");
 
     // The brush's color over the given backdrop.

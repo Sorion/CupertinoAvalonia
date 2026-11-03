@@ -7,7 +7,7 @@ using Avalonia.Media;
 namespace CupertinoAvalonia.Controls;
 
 /// <summary>A symbol's scale next to text of its font size, as AppKit's NSImage.SymbolScale.</summary>
-public enum SymbolScale
+public enum CASymbolScale
 {
     Small,
     Medium,
@@ -22,38 +22,38 @@ public enum SymbolScale
 /// macOS 11+ draws its own symbols. Elsewhere, common symbols map to Fluent glyphs (Segoe Fluent Icons on Windows, else
 /// the embedded font); <see cref="FallbackGlyph"/> or <see cref="FallbackData"/> cover the others.
 /// </remarks>
-public class SymbolIcon : Control
+public class CASymbolIcon : Control
 {
     public static readonly StyledProperty<string?> SymbolProperty =
-        AvaloniaProperty.Register<SymbolIcon, string?>(nameof(Symbol));
+        AvaloniaProperty.Register<CASymbolIcon, string?>(nameof(Symbol));
 
     public static readonly StyledProperty<string?> FallbackGlyphProperty =
-        AvaloniaProperty.Register<SymbolIcon, string?>(nameof(FallbackGlyph));
+        AvaloniaProperty.Register<CASymbolIcon, string?>(nameof(FallbackGlyph));
 
     public static readonly StyledProperty<Geometry?> FallbackDataProperty =
-        AvaloniaProperty.Register<SymbolIcon, Geometry?>(nameof(FallbackData));
+        AvaloniaProperty.Register<CASymbolIcon, Geometry?>(nameof(FallbackData));
 
     public static readonly StyledProperty<double> FallbackStrokeThicknessProperty =
-        AvaloniaProperty.Register<SymbolIcon, double>(nameof(FallbackStrokeThickness), 1.5);
+        AvaloniaProperty.Register<CASymbolIcon, double>(nameof(FallbackStrokeThickness), 1.5);
 
-    public static readonly StyledProperty<SymbolScale> SymbolScaleProperty =
-        AvaloniaProperty.Register<SymbolIcon, SymbolScale>(nameof(SymbolScale), SymbolScale.Medium);
+    public static readonly StyledProperty<CASymbolScale> SymbolScaleProperty =
+        AvaloniaProperty.Register<CASymbolIcon, CASymbolScale>(nameof(SymbolScale), CASymbolScale.Medium);
 
-    public static readonly StyledProperty<IBrush?> ForegroundProperty = TextElement.ForegroundProperty.AddOwner<SymbolIcon>();
+    public static readonly StyledProperty<IBrush?> ForegroundProperty = TextElement.ForegroundProperty.AddOwner<CASymbolIcon>();
 
-    public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<SymbolIcon>();
+    public static readonly StyledProperty<double> FontSizeProperty = TextElement.FontSizeProperty.AddOwner<CASymbolIcon>();
 
-    public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<SymbolIcon>();
+    public static readonly StyledProperty<FontWeight> FontWeightProperty = TextElement.FontWeightProperty.AddOwner<CASymbolIcon>();
 
     private MacOSSymbols.Symbol? _maskSymbol;
     private ImageBrush? _mask;
     private AvaloniaObject? _observedForeground;
 
-    static SymbolIcon()
+    static CASymbolIcon()
     {
-        AffectsMeasure<SymbolIcon>(SymbolProperty, FallbackGlyphProperty, FallbackDataProperty, FallbackStrokeThicknessProperty,
+        AffectsMeasure<CASymbolIcon>(SymbolProperty, FallbackGlyphProperty, FallbackDataProperty, FallbackStrokeThicknessProperty,
             FontSizeProperty, FontWeightProperty, SymbolScaleProperty);
-        AffectsRender<SymbolIcon>(ForegroundProperty);
+        AffectsRender<CASymbolIcon>(ForegroundProperty);
     }
 
     // Tests turn it off to check the fallbacks.
@@ -89,7 +89,7 @@ public class SymbolIcon : Control
         set => SetValue(FallbackStrokeThicknessProperty, value);
     }
 
-    public SymbolScale SymbolScale
+    public CASymbolScale SymbolScale
     {
         get => GetValue(SymbolScaleProperty);
         set => SetValue(SymbolScaleProperty, value);
@@ -215,7 +215,7 @@ public class SymbolIcon : Control
     // Approximates SF Symbols' scales: small and large are about 0.8 and 1.3 times medium.
     private FormattedText? Format((string Text, FontFamily Family) glyph, IBrush? foreground) =>
         new(glyph.Text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface(glyph.Family),
-            FontSize * SymbolScale switch { SymbolScale.Small => 0.8, SymbolScale.Large => 1.3, _ => 1 }, foreground);
+            FontSize * SymbolScale switch { CASymbolScale.Small => 0.8, CASymbolScale.Large => 1.3, _ => 1 }, foreground);
 
     private Pen FallbackPen(IBrush? foreground) =>
         new(foreground ?? Brushes.Black, FallbackStrokeThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);

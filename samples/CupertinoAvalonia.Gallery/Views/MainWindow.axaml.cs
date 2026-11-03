@@ -4,7 +4,7 @@ using CupertinoAvalonia.Gallery.ViewModels;
 
 namespace CupertinoAvalonia.Gallery.Views;
 
-public partial class MainWindow : CupertinoWindow
+public partial class MainWindow : CAWindow
 {
     public MainWindow()
     {

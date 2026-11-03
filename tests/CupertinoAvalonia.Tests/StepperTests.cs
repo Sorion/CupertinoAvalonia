@@ -55,8 +55,8 @@ public class StepperTests
         window.MouseUp(Center(up), MouseButton.Left);
         Assert.Equal(100, numberBox.Value);
         Assert.False(up.IsEnabled);
-        Assert.Equal(Describe(Resource("LabelTertiaryBrush", ThemeVariant.Light)), Describe(Part<SymbolIcon>(up, "Chevron").Foreground));
-        Assert.Equal(Describe(Resource("LabelPrimaryBrush", ThemeVariant.Light)), Describe(Part<SymbolIcon>(down, "Chevron").Foreground));
+        Assert.Equal(Describe(Resource("LabelTertiaryBrush", ThemeVariant.Light)), Describe(Part<CASymbolIcon>(up, "Chevron").Foreground));
+        Assert.Equal(Describe(Resource("LabelPrimaryBrush", ThemeVariant.Light)), Describe(Part<CASymbolIcon>(down, "Chevron").Foreground));
         window.Close();
     }
 
@@ -128,7 +128,7 @@ public class StepperTests
         {
             var button = Part<RepeatButton>(numberBox, half);
             Assert.Equal(Describe(Resource("ButtonBackgroundDisabledBrush", variant)), Describe(button.Background));
-            Assert.Equal(Describe(Resource("LabelTertiaryBrush", variant)), Describe(Part<SymbolIcon>(button, "Chevron").Foreground));
+            Assert.Equal(Describe(Resource("LabelTertiaryBrush", variant)), Describe(Part<CASymbolIcon>(button, "Chevron").Foreground));
         }
         Assert.Equal(Describe(Resource("StepperSeparatorDisabledBrush", variant)), Describe(Part<Rectangle>(numberBox, "StepperSeparator").Fill));
         window.Close();

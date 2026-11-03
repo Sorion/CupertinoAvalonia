@@ -17,7 +17,7 @@ using Xunit;
 namespace CupertinoAvalonia.Tests;
 
 /// <summary>Measured on macOS 27: SwiftUI's NavigationSplitView in SwiftGallery, a 220 pt sidebar.</summary>
-public class NavigationSplitViewTests
+public class CANavigationSplitViewTests
 {
     [AvaloniaFact]
     public void The_open_sidebar_holds_the_button_and_pushes_the_content()
@@ -59,7 +59,7 @@ public class NavigationSplitViewTests
     {
         var (window, split) = Show(isSidebarOpen: true);
 
-        split.SetValue(NavigationSplitView.VisibleSidebarWidthProperty, edge, BindingPriority.Animation);
+        split.SetValue(CANavigationSplitView.VisibleSidebarWidthProperty, edge, BindingPriority.Animation);
         window.UpdateLayout();
 
         Assert.Equal(buttonX, Origin(Part<Button>(split, "PART_SidebarToggle"), window).X);
@@ -107,7 +107,7 @@ public class NavigationSplitViewTests
         split.IsSidebarOpen = false;
         Assert.Equal(("Show Sidebar", "Show Sidebar"), (ToolTip.GetTip(toggle), AutomationProperties.GetName(toggle)));
 
-        window.Resources["NavigationSplitViewShowSidebarText"] = "Afficher la barre latérale";
+        window.Resources["CANavigationSplitViewShowSidebarText"] = "Afficher la barre latérale";
         Assert.Equal(("Afficher la barre latérale", "Afficher la barre latérale"), (ToolTip.GetTip(toggle), AutomationProperties.GetName(toggle)));
         window.Close();
     }
@@ -121,9 +121,9 @@ public class NavigationSplitViewTests
         var (window, split) = Show(isSidebarOpen: true, configure: s =>
         {
             s.Content = host;
-            s.Styles.Add(new Style(x => x.OfType<ScrollViewer>().Class("page")) { Setters = { new Setter(CupertinoToolbar.ScrollsUnderProperty, true) } });
+            s.Styles.Add(new Style(x => x.OfType<ScrollViewer>().Class("page")) { Setters = { new Setter(CAToolbar.ScrollsUnderProperty, true) } });
         });
-        var toolbar = Part<CupertinoToolbar>(split, "PART_Toolbar");
+        var toolbar = Part<CAToolbar>(split, "PART_Toolbar");
 
         Assert.Equal(52, Origin((Control)first.Content!, window).Y);
         first.Offset = new Vector(0, 40);
@@ -139,11 +139,11 @@ public class NavigationSplitViewTests
         Assert.Equal(default, first.Presenter?.Margin ?? default);
 
         // Content that doesn't scroll finds the toolbar's room, smaller in a compact toolbar.
-        Assert.Equal(new Thickness(0, 52, 0, 0), CupertinoToolbar.GetContentInset(host));
-        window.ToolbarStyle = CupertinoToolbarStyle.UnifiedCompact;
+        Assert.Equal(new Thickness(0, 52, 0, 0), CAToolbar.GetContentInset(host));
+        window.ToolbarStyle = CAToolbarStyle.UnifiedCompact;
         Dispatcher.UIThread.RunJobs();
         window.UpdateLayout();
-        Assert.Equal(new Thickness(0, 40, 0, 0), CupertinoToolbar.GetContentInset(host));
+        Assert.Equal(new Thickness(0, 40, 0, 0), CAToolbar.GetContentInset(host));
         Assert.Equal(40, Origin((Control)next.Content!, window).Y);
         window.Close();
 
@@ -267,7 +267,7 @@ public class NavigationSplitViewTests
     [AvaloniaFact]
     public void The_toolbar_content_is_toolbar_items_and_a_logical_child()
     {
-        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" } };
+        var share = new Button { Content = new CASymbolIcon { Symbol = "square.and.arrow.up" } };
         var sidebar = new ListBox { Classes = { "sidebar" } };
         var (window, split) = Show(isSidebarOpen: true, toolbar: share, sidebar: sidebar);
 
@@ -282,7 +282,7 @@ public class NavigationSplitViewTests
     [AvaloniaFact]
     public void Outside_a_CupertinoWindow_the_button_stops_near_the_edge()
     {
-        var split = new NavigationSplitView { IsSidebarOpen = false, ContentToolbar = new TextBlock { Text = "Title" } };
+        var split = new CANavigationSplitView { IsSidebarOpen = false, ContentToolbar = new TextBlock { Text = "Title" } };
         var window = new Window { Width = 900, Height = 600, Content = split };
         window.Show();
         Dispatcher.UIThread.RunJobs();
@@ -298,17 +298,17 @@ public class NavigationSplitViewTests
     [AvaloniaFact]
     public void The_open_inspector_pushes_the_content_and_leaves_the_toolbar_items_in_place()
     {
-        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
+        var share = new Button { Content = new CASymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
         var (window, split) = Show(isSidebarOpen: true, toolbar: share, configure: s => s.IsInspectorOpen = true);
         var inspector = Part<Control>(split, "PART_InspectorRoot");
         var content = split.Presenter!;
-        var toolbar = Part<CupertinoToolbar>(split, "PART_Toolbar");
+        var toolbar = Part<CAToolbar>(split, "PART_Toolbar");
 
         Assert.Equal(new Point(630, 0), Origin(inspector, window));
         Assert.Equal((270, 600), (inspector.Bounds.Width, inspector.Bounds.Height));
         Assert.Equal((220, 410), (Origin(content, window).X, content.Bounds.Width));
         Assert.Equal(410, Part<Control>(toolbar, "PART_Background").Bounds.Width);
-        Assert.Equal(ToolbarBackgroundVisibility.Visible, toolbar.BackgroundVisibility);
+        Assert.Equal(CAToolbarBackgroundVisibility.Visible, toolbar.BackgroundVisibility);
         Assert.Equal(892, Origin(share, window).X + share.Bounds.Width);
         // Its content starts below the toolbar, and is a logical child.
         var inspectorContent = (Control)split.Inspector!;
@@ -331,8 +331,8 @@ public class NavigationSplitViewTests
     [AvaloniaFact]
     public void The_inspector_s_toolbar_sits_over_it_and_the_content_s_ends_at_its_edge()
     {
-        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
-        var edit = new Button { Content = new SymbolIcon { Symbol = "pencil" } };
+        var share = new Button { Content = new CASymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
+        var edit = new Button { Content = new CASymbolIcon { Symbol = "pencil" } };
         var header = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { new TextBlock { Text = "Channel options" }, edit } };
         var (window, split) = Show(isSidebarOpen: true, toolbar: share, configure: s =>
         {
@@ -347,11 +347,11 @@ public class NavigationSplitViewTests
         Assert.Same(split, header.GetLogicalParent());
 
         // On its way out, the section follows the inspector's edge until it meets the window's.
-        split.SetValue(NavigationSplitView.VisibleInspectorWidthProperty, 230.0, BindingPriority.Animation);
+        split.SetValue(CANavigationSplitView.VisibleInspectorWidthProperty, 230.0, BindingPriority.Animation);
         window.UpdateLayout();
         Assert.Equal(678, Origin(header, window).X);
         Assert.Equal(662, Origin(share, window).X + share.Bounds.Width);
-        split.SetValue(NavigationSplitView.VisibleInspectorWidthProperty, 0.0, BindingPriority.Animation);
+        split.SetValue(CANavigationSplitView.VisibleInspectorWidthProperty, 0.0, BindingPriority.Animation);
         window.UpdateLayout();
         var closedX = 892 - header.Bounds.Width;
         Assert.True(header.IsEffectivelyVisible);
@@ -385,13 +385,13 @@ public class NavigationSplitViewTests
     [AvaloniaFact]
     public void The_inspector_is_closed_by_default()
     {
-        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
+        var share = new Button { Content = new CASymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
         var (window, split) = Show(isSidebarOpen: true, toolbar: share);
 
         Assert.False(split.IsInspectorOpen);
         Assert.Equal(900, Origin(Part<Control>(split, "PART_InspectorRoot"), window).X);
         Assert.Equal(680, split.Presenter!.Bounds.Width);
-        Assert.Equal(ToolbarBackgroundVisibility.Automatic, Part<CupertinoToolbar>(split, "PART_Toolbar").BackgroundVisibility);
+        Assert.Equal(CAToolbarBackgroundVisibility.Automatic, Part<CAToolbar>(split, "PART_Toolbar").BackgroundVisibility);
         Assert.Equal(892, Origin(share, window).X + share.Bounds.Width);
         window.Close();
     }
@@ -402,10 +402,10 @@ public class NavigationSplitViewTests
     [InlineData(60)]
     public void The_content_follows_the_inspector_edge(double edge)
     {
-        var share = new Button { Content = new SymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
+        var share = new Button { Content = new CASymbolIcon { Symbol = "square.and.arrow.up" }, HorizontalAlignment = HorizontalAlignment.Right };
         var (window, split) = Show(isSidebarOpen: true, toolbar: share, configure: s => s.IsInspectorOpen = true);
 
-        split.SetValue(NavigationSplitView.VisibleInspectorWidthProperty, edge, BindingPriority.Animation);
+        split.SetValue(CANavigationSplitView.VisibleInspectorWidthProperty, edge, BindingPriority.Animation);
         window.UpdateLayout();
 
         Assert.Equal(900 - edge, Origin(Part<Control>(split, "PART_InspectorRoot"), window).X);
@@ -502,10 +502,10 @@ public class NavigationSplitViewTests
     }
 
     // Set before the window shows, so that nothing animates.
-    private static (CupertinoWindow, NavigationSplitView) Show(bool isSidebarOpen, Control? toolbar = null, Control? sidebar = null,
-        Action<NavigationSplitView>? configure = null)
+    private static (CAWindow, CANavigationSplitView) Show(bool isSidebarOpen, Control? toolbar = null, Control? sidebar = null,
+        Action<CANavigationSplitView>? configure = null)
     {
-        var split = new NavigationSplitView
+        var split = new CANavigationSplitView
         {
             IsSidebarOpen = isSidebarOpen,
             Sidebar = sidebar ?? new TextBlock { Text = "Sidebar" },
@@ -514,9 +514,9 @@ public class NavigationSplitViewTests
             Content = new TextBlock { Text = "Content" },
         };
         configure?.Invoke(split);
-        var window = new CupertinoWindow
+        var window = new CAWindow
         {
-            Width = 900, Height = 600, ExtendsContentIntoTitleBar = true, ToolbarStyle = CupertinoToolbarStyle.Unified,
+            Width = 900, Height = 600, ExtendsContentIntoTitleBar = true, ToolbarStyle = CAToolbarStyle.Unified,
             Content = split,
         };
         window.Show();

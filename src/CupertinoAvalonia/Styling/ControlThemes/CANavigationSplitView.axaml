@@ -1,5 +1,5 @@
 <!--
-  NavigationSplitView, after SwiftUI's on macOS 27 (measured in SwiftGallery): the sidebar slides out over the window's full
+  CANavigationSplitView, after SwiftUI's on macOS 27 (measured in SwiftGallery): the sidebar slides out over the window's full
   height and the content follows its edge, in SplitView's 0.25 s; the sidebar button sits over the sidebar. The
   inspector, after SwiftUI's: the sidebar's material, no divider, the content's toolbar over it.
 -->
@@ -8,17 +8,17 @@
                     xmlns:cac="using:CupertinoAvalonia.Controls">
 
   <!-- SwiftUI's ideal sidebar width. -->
-  <x:Double x:Key="NavigationSplitViewSidebarWidth">220</x:Double>
+  <x:Double x:Key="CANavigationSplitViewSidebarWidth">220</x:Double>
 
   <!-- The sidebar button's label, as its tooltip and accessibility name, by the sidebar's state: AppKit's (macOS 27). An
        app redefines them in its own resources, in its language. -->
-  <x:String x:Key="NavigationSplitViewHideSidebarText">Hide Sidebar</x:String>
-  <x:String x:Key="NavigationSplitViewShowSidebarText">Show Sidebar</x:String>
+  <x:String x:Key="CANavigationSplitViewHideSidebarText">Hide Sidebar</x:String>
+  <x:String x:Key="CANavigationSplitViewShowSidebarText">Show Sidebar</x:String>
 
-  <ControlTheme x:Key="{x:Type cac:NavigationSplitView}" TargetType="cac:NavigationSplitView">
+  <ControlTheme x:Key="{x:Type cac:CANavigationSplitView}" TargetType="cac:CANavigationSplitView">
     <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
     <Setter Property="SidebarBackground" Value="{DynamicResource SplitViewSidebarBackgroundBrush}" />
-    <Setter Property="SidebarWidth" Value="{DynamicResource NavigationSplitViewSidebarWidth}" />
+    <Setter Property="SidebarWidth" Value="{DynamicResource CANavigationSplitViewSidebarWidth}" />
     <Setter Property="InspectorBackground" Value="{DynamicResource SplitViewInspectorBackgroundBrush}" />
     <Setter Property="Transitions">
       <Transitions>
@@ -52,7 +52,7 @@
             <!-- The inspector's edge, which a drag moves: under the toolbar's items. -->
             <Border Name="PART_InspectorGrip" HorizontalAlignment="Right" Background="Transparent" Cursor="SizeWestEast" />
             <!-- The content's section, then the inspector's, which follows the inspector's edge. -->
-            <cac:CupertinoToolbar Name="PART_Toolbar">
+            <cac:CAToolbar Name="PART_Toolbar">
               <cac:ToolbarSections>
                 <ContentPresenter Name="PART_ContentToolbarPresenter"
                                   VerticalAlignment="Center"
@@ -61,7 +61,7 @@
                                   VerticalAlignment="Center"
                                   Content="{TemplateBinding InspectorToolbar}" />
               </cac:ToolbarSections>
-            </cac:CupertinoToolbar>
+            </cac:CAToolbar>
           </Panel>
 
           <!-- The sidebar, the window's full height: it slides out. Its top drags the window. -->
@@ -83,7 +83,7 @@
                     Classes="toolbar"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center">
-              <cac:SymbolIcon Symbol="sidebar.left" />
+              <cac:CASymbolIcon Symbol="sidebar.left" />
             </Button>
           </Panel>
         </Panel>
@@ -92,12 +92,12 @@
 
     <!-- Set by styles: a value in the template would block them. -->
     <Style Selector="^ /template/ Button#PART_SidebarToggle">
-      <Setter Property="ToolTip.Tip" Value="{DynamicResource NavigationSplitViewHideSidebarText}" />
-      <Setter Property="AutomationProperties.Name" Value="{DynamicResource NavigationSplitViewHideSidebarText}" />
+      <Setter Property="ToolTip.Tip" Value="{DynamicResource CANavigationSplitViewHideSidebarText}" />
+      <Setter Property="AutomationProperties.Name" Value="{DynamicResource CANavigationSplitViewHideSidebarText}" />
     </Style>
     <Style Selector="^[IsSidebarOpen=False] /template/ Button#PART_SidebarToggle">
-      <Setter Property="ToolTip.Tip" Value="{DynamicResource NavigationSplitViewShowSidebarText}" />
-      <Setter Property="AutomationProperties.Name" Value="{DynamicResource NavigationSplitViewShowSidebarText}" />
+      <Setter Property="ToolTip.Tip" Value="{DynamicResource CANavigationSplitViewShowSidebarText}" />
+      <Setter Property="AutomationProperties.Name" Value="{DynamicResource CANavigationSplitViewShowSidebarText}" />
     </Style>
   </ControlTheme>
 </ResourceDictionary>

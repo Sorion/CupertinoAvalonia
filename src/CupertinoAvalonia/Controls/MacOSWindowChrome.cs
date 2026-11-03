@@ -20,9 +20,9 @@ internal static class MacOSWindowChrome
     private const nint StateActive = 1;
 
     // An empty NSToolbar sets the title bar's height and centers the window controls in it; the app draws the rest.
-    public static void SetToolbar(IntPtr nsWindow, CupertinoToolbarStyle style, bool extended)
+    public static void SetToolbar(IntPtr nsWindow, CAToolbarStyle style, bool extended)
     {
-        if (style == CupertinoToolbarStyle.None)
+        if (style == CAToolbarStyle.None)
         {
             Send(nsWindow, Sel("setToolbar:"), IntPtr.Zero);
         }
@@ -38,14 +38,14 @@ internal static class MacOSWindowChrome
             }
 
             SendInt(nsWindow, Sel("setToolbarStyle:"),
-                style == CupertinoToolbarStyle.UnifiedCompact ? ToolbarStyleUnifiedCompact : ToolbarStyleUnified);
+                style == CAToolbarStyle.UnifiedCompact ? ToolbarStyleUnifiedCompact : ToolbarStyleUnified);
         }
 
         SendInt(nsWindow, Sel("setTitlebarSeparatorStyle:"), extended ? TitlebarSeparatorNone : TitlebarSeparatorAutomatic);
     }
 
     // Avalonia's AcrylicBlur uses NSVisualEffectMaterialLight, which stays light in dark mode.
-    public static bool SetBehindWindowMaterial(IntPtr nsWindow, CupertinoWindowMaterial material, bool alwaysActive)
+    public static bool SetBehindWindowMaterial(IntPtr nsWindow, CAWindowMaterial material, bool alwaysActive)
     {
         var subviews = Send(Send(nsWindow, Sel("contentView")), Sel("subviews"));
         var effectView = Class("NSVisualEffectView");
@@ -63,11 +63,11 @@ internal static class MacOSWindowChrome
         return false;
     }
 
-    private static nint ToNSVisualEffectMaterial(CupertinoWindowMaterial material) => material switch
+    private static nint ToNSVisualEffectMaterial(CAWindowMaterial material) => material switch
     {
-        CupertinoWindowMaterial.WindowBackground => 12,
-        CupertinoWindowMaterial.UnderWindowBackground => 21,
-        CupertinoWindowMaterial.HudWindow => 13,
+        CAWindowMaterial.WindowBackground => 12,
+        CAWindowMaterial.UnderWindowBackground => 21,
+        CAWindowMaterial.HudWindow => 13,
         _ => 7, // Sidebar
     };
 

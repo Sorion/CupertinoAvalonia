@@ -276,7 +276,7 @@
                               RecognizesAccessKey="True"
                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-            <cac:SymbolIcon Name="DropDownGlyph"
+            <cac:CASymbolIcon Name="DropDownGlyph"
                             Grid.Column="1"
                             Width="10"
                             Margin="17.75,0,8,0"
@@ -307,28 +307,28 @@
 
     <Style Selector="^.mini">
       <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingMini}" />
-      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+      <Style Selector="^ /template/ cac|CASymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="9.75,0,4,0" />
         <Setter Property="FontSize" Value="8.75" />
       </Style>
     </Style>
     <Style Selector="^.small">
       <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingSmall}" />
-      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+      <Style Selector="^ /template/ cac|CASymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="13.75,0,6,0" />
         <Setter Property="FontSize" Value="8.75" />
       </Style>
     </Style>
     <Style Selector="^.large">
       <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingLarge}" />
-      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+      <Style Selector="^ /template/ cac|CASymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="21.75,0,10,0" />
         <Setter Property="FontSize" Value="13" />
       </Style>
     </Style>
     <Style Selector="^.xlarge">
       <Setter Property="Padding" Value="{DynamicResource PopUpButtonPaddingXLarge}" />
-      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+      <Style Selector="^ /template/ cac|CASymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="28.75,0,13,0" />
         <Setter Property="FontSize" Value="13" />
       </Style>
@@ -402,7 +402,7 @@
                         CornerRadius="0.5"
                         Background="{DynamicResource LabelTertiaryBrush}" />
                 <!-- 0.5 pt up: the symbol's ink sits that much below its image's center. -->
-                <cac:SymbolIcon Name="DropDownGlyph"
+                <cac:CASymbolIcon Name="DropDownGlyph"
                                 Margin="0,0,0,1"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -464,7 +464,7 @@
       <Style Selector="^ /template/ Border#Separator">
         <Setter Property="Height" Value="{DynamicResource SegmentedControlHeightSeparatorMini}" />
       </Style>
-      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+      <Style Selector="^ /template/ cac|CASymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="0" />
         <Setter Property="FontSize" Value="8.75" />
       </Style>
@@ -481,7 +481,7 @@
       <Style Selector="^ /template/ Border#Separator">
         <Setter Property="Height" Value="{DynamicResource SegmentedControlHeightSeparatorSmall}" />
       </Style>
-      <Style Selector="^ /template/ cac|SymbolIcon#DropDownGlyph">
+      <Style Selector="^ /template/ cac|CASymbolIcon#DropDownGlyph">
         <Setter Property="Margin" Value="0" />
         <Setter Property="FontSize" Value="8.75" />
       </Style>

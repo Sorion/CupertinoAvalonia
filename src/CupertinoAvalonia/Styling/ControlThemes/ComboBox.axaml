@@ -91,7 +91,7 @@
                 <SolidColorBrush x:Key="TextFieldBorderBrush" Color="Transparent" />
               </TextBox.Resources>
             </TextBox>
-            <cac:SymbolIcon Name="DropDownGlyph"
+            <cac:CASymbolIcon Name="DropDownGlyph"
                             Grid.Column="1"
                             Width="10"
                             Margin="17.25,0,8.5,0"
@@ -115,7 +115,7 @@
                     CornerRadius="{DynamicResource ComboBoxRadiusButton}"
                     Background="{DynamicResource ButtonBackgroundBrush}"
                     IsVisible="{TemplateBinding IsEditable}">
-              <cac:SymbolIcon Name="ArrowGlyph"
+              <cac:CASymbolIcon Name="ArrowGlyph"
                               Margin="0.5,0,0,1"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
@@ -176,7 +176,7 @@
     </Style>
 
     <!-- Mini and small: the ink 0.5 pt below the center, which the bottom margin offsets. -->
-    <Style Selector="^.mini /template/ cac|SymbolIcon#DropDownGlyph">
+    <Style Selector="^.mini /template/ cac|CASymbolIcon#DropDownGlyph">
       <Setter Property="Margin" Value="9.75,0,4,1" />
       <Setter Property="FontSize" Value="9.25" />
     </Style>
@@ -187,7 +187,7 @@
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
     </Style>
-    <Style Selector="^.small /template/ cac|SymbolIcon#DropDownGlyph">
+    <Style Selector="^.small /template/ cac|CASymbolIcon#DropDownGlyph">
       <Setter Property="Margin" Value="13.75,0,6,1" />
       <Setter Property="FontSize" Value="9.25" />
     </Style>
@@ -198,7 +198,7 @@
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
       <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
     </Style>
-    <Style Selector="^.large /template/ cac|SymbolIcon#DropDownGlyph">
+    <Style Selector="^.large /template/ cac|CASymbolIcon#DropDownGlyph">
       <Setter Property="Margin" Value="21.75,0,10,0" />
       <Setter Property="FontSize" Value="13.5" />
     </Style>
@@ -208,7 +208,7 @@
       <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
     </Style>
-    <Style Selector="^.xlarge /template/ cac|SymbolIcon#DropDownGlyph">
+    <Style Selector="^.xlarge /template/ cac|CASymbolIcon#DropDownGlyph">
       <Setter Property="Margin" Value="28.75,0,13,0" />
       <Setter Property="FontSize" Value="13.5" />
     </Style>
@@ -251,7 +251,7 @@
         <Setter Property="Margin" Value="0,0,3.5,0" />
         <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxRadiusButtonMini}" />
       </Style>
-      <Style Selector="^.mini /template/ cac|SymbolIcon#ArrowGlyph">
+      <Style Selector="^.mini /template/ cac|CASymbolIcon#ArrowGlyph">
         <Setter Property="Margin" Value="0.5,0,0,0" />
         <Setter Property="FontSize" Value="7.25" />
       </Style>
@@ -275,7 +275,7 @@
         <Setter Property="Margin" Value="0,0,4.5,0" />
         <Setter Property="CornerRadius" Value="{DynamicResource ComboBoxRadiusButtonLarge}" />
       </Style>
-      <Style Selector="^.large /template/ cac|SymbolIcon#ArrowGlyph">
+      <Style Selector="^.large /template/ cac|CASymbolIcon#ArrowGlyph">
         <Setter Property="Margin" Value="0,0,0,1" />
         <Setter Property="FontSize" Value="9.75" />
       </Style>
@@ -301,7 +301,7 @@
                 Padding="{TemplateBinding Padding}"
                 MinHeight="{TemplateBinding MinHeight}">
           <Grid ColumnDefinitions="Auto,*">
-            <cac:SymbolIcon Name="PART_CheckGlyph" Width="9" Margin="1.5,0,9.5,0" Opacity="0"
+            <cac:CASymbolIcon Name="PART_CheckGlyph" Width="9" Margin="1.5,0,9.5,0" Opacity="0"
                             VerticalAlignment="Center"
                             Symbol="checkmark" FontSize="10" FontWeight="Bold"
                             FallbackData="{StaticResource ComboBoxItemCheckGlyph}" FallbackStrokeThickness="1.6"
@@ -321,7 +321,7 @@
     <Style Selector="^:pointerover, ^:focus">
       <Setter Property="Background" Value="{DynamicResource MenuItemHighlightBrush}" />
     </Style>
-    <Style Selector="^:selected /template/ cac|SymbolIcon#PART_CheckGlyph">
+    <Style Selector="^:selected /template/ cac|CASymbolIcon#PART_CheckGlyph">
       <Setter Property="Opacity" Value="1" />
     </Style>
     <Style Selector="^:disabled">

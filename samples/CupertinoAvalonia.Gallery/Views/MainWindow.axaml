@@ -1,5 +1,5 @@
 <!-- The kit's "Unified Toolbar + Title + Sidebar" window (page Windows). -->
-<cac:CupertinoWindow xmlns="https://github.com/avaloniaui"
+<cac:CAWindow xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cac="using:CupertinoAvalonia.Controls"
         xmlns:vm="using:CupertinoAvalonia.Gallery.ViewModels"
@@ -25,7 +25,7 @@
     <NativeMenu>
       <NativeMenuItem Header="View">
         <NativeMenu Opening="OnViewMenuOpening">
-          <!-- SwiftUI's SidebarCommands and InspectorCommands: NavigationSplitView has no shortcut of its own. -->
+          <!-- SwiftUI's SidebarCommands and InspectorCommands: CANavigationSplitView has no shortcut of its own. -->
           <NativeMenuItem Header="Hide Sidebar" Gesture="Ctrl+Cmd+S" Click="OnToggleSidebarClick" />
           <NativeMenuItem Header="Show Inspector" Gesture="Ctrl+Cmd+I" Click="OnToggleInspectorClick" />
           <NativeMenuItemSeparator />
@@ -38,18 +38,18 @@
     </NativeMenu>
   </NativeMenu.Menu>
 
-  <cac:CupertinoWindow.Styles>
+  <cac:CAWindow.Styles>
     <!-- Wide content runs to the column's edge, as in SwiftUI: only the scroll viewer clips it, not the page's margin. -->
     <Style Selector="ContentControl#PageHost, ContentControl#PageHost > :is(UserControl)">
       <Setter Property="ClipToBounds" Value="False" />
     </Style>
-  </cac:CupertinoWindow.Styles>
+  </cac:CAWindow.Styles>
 
   <!-- SwiftGallery's sidebar and inspector widths, to compare them. -->
-  <cac:NavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" MinSidebarWidth="180"
+  <cac:CANavigationSplitView IsSidebarOpen="{Binding IsSidebarOpen}" MinSidebarWidth="180"
                            IsInspectorOpen="{Binding IsInspectorOpen}"
                            InspectorWidth="280" MinInspectorWidth="220" MaxInspectorWidth="400">
-    <cac:NavigationSplitView.Sidebar>
+    <cac:CANavigationSplitView.Sidebar>
       <DockPanel>
         <TextBlock DockPanel.Dock="Top" Classes="caption1 emphasized secondary" Margin="18,0,0,6" Text="Controls" />
         <ListBox Name="Sidebar"
@@ -60,16 +60,16 @@
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="vm:GalleryPage">
               <StackPanel Orientation="Horizontal" Spacing="4">
-                <cac:SymbolIcon Symbol="{Binding Icon}" />
+                <cac:CASymbolIcon Symbol="{Binding Icon}" />
                 <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
               </StackPanel>
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
       </DockPanel>
-    </cac:NavigationSplitView.Sidebar>
+    </cac:CANavigationSplitView.Sidebar>
 
-    <cac:NavigationSplitView.ContentToolbar>
+    <cac:CANavigationSplitView.ContentToolbar>
       <Grid ColumnDefinitions="*,Auto,Auto">
         <StackPanel VerticalAlignment="Center" Spacing="2" IsHitTestVisible="False">
           <TextBlock Classes="headline" Text="{Binding SelectedPage.Title}" TextTrimming="CharacterEllipsis" />
@@ -82,26 +82,26 @@
                 Command="{Binding ToggleInspectorCommand}"
                 ToolTip.Tip="Show or hide the inspector"
                 AutomationProperties.Name="Inspector">
-          <cac:SymbolIcon Symbol="sidebar.right" />
+          <cac:CASymbolIcon Symbol="sidebar.right" />
         </Button>
       </Grid>
-    </cac:NavigationSplitView.ContentToolbar>
+    </cac:CANavigationSplitView.ContentToolbar>
 
     <!-- As in SwiftGallery: the inspector's title in its section of the toolbar. -->
-    <cac:NavigationSplitView.InspectorToolbar>
+    <cac:CANavigationSplitView.InspectorToolbar>
       <StackPanel Spacing="2" IsHitTestVisible="False">
         <TextBlock Classes="headline" Text="Channel options" />
         <TextBlock Classes="subheadline secondary" Text="Games" />
       </StackPanel>
-    </cac:NavigationSplitView.InspectorToolbar>
+    </cac:CANavigationSplitView.InspectorToolbar>
 
-    <cac:NavigationSplitView.Inspector>
+    <cac:CANavigationSplitView.Inspector>
       <views:ChannelInspector ShowsHeader="False" />
-    </cac:NavigationSplitView.Inspector>
+    </cac:CANavigationSplitView.Inspector>
 
     <!-- The page starts below the toolbar and scrolls under it. -->
-    <ScrollViewer Name="PageScroll" cac:CupertinoToolbar.ScrollsUnder="True">
+    <ScrollViewer Name="PageScroll" cac:CAToolbar.ScrollsUnder="True">
       <ContentControl Name="PageHost" Margin="20" Content="{Binding SelectedPage.Content}" />
     </ScrollViewer>
-  </cac:NavigationSplitView>
-</cac:CupertinoWindow>
+  </cac:CANavigationSplitView>
+</cac:CAWindow>

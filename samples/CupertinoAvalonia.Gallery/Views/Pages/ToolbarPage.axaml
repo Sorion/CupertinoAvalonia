@@ -12,7 +12,7 @@
               BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
         <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
           <Button Classes="toolbar" ToolTip.Tip="More">
-            <cac:SymbolIcon Symbol="ellipsis" />
+            <cac:CASymbolIcon Symbol="ellipsis" />
             <Button.Flyout>
               <MenuFlyout Placement="BottomEdgeAlignedLeft">
                 <MenuItem Header="View as Gallery" />
@@ -25,23 +25,23 @@
           <Border Grid.Column="1" Classes="toolbar-group">
             <StackPanel>
               <Button ToolTip.Tip="Back">
-                <cac:SymbolIcon Symbol="chevron.left" />
+                <cac:CASymbolIcon Symbol="chevron.left" />
               </Button>
               <Button ToolTip.Tip="Forward" IsEnabled="False">
-                <cac:SymbolIcon Symbol="chevron.right" />
+                <cac:CASymbolIcon Symbol="chevron.right" />
               </Button>
             </StackPanel>
           </Border>
           <ListBox Grid.Column="2" Classes="segmented toolbar" SelectedIndex="0">
             <ListBoxItem ToolTip.Tip="As a list">
-              <cac:SymbolIcon Symbol="list.bullet" />
+              <cac:CASymbolIcon Symbol="list.bullet" />
             </ListBoxItem>
             <ListBoxItem ToolTip.Tip="As icons">
-              <cac:SymbolIcon Symbol="square.grid.2x2" />
+              <cac:CASymbolIcon Symbol="square.grid.2x2" />
             </ListBoxItem>
           </ListBox>
           <DropDownButton Grid.Column="3" Classes="toolbar" ToolTip.Tip="Share">
-            <cac:SymbolIcon Symbol="square.and.arrow.up" />
+            <cac:CASymbolIcon Symbol="square.and.arrow.up" />
             <DropDownButton.Flyout>
               <MenuFlyout Placement="BottomEdgeAlignedLeft">
                 <MenuItem Header="Copy Link" />
@@ -50,7 +50,7 @@
             </DropDownButton.Flyout>
           </DropDownButton>
           <ToggleButton Grid.Column="5" Classes="toolbar" IsChecked="True" ToolTip.Tip="Favorites">
-            <cac:SymbolIcon Symbol="star" />
+            <cac:CASymbolIcon Symbol="star" />
           </ToggleButton>
           <ComboBox Grid.Column="6" Classes="toolbar" SelectedIndex="0">
             <ComboBoxItem Content="Default" />
@@ -59,7 +59,7 @@
           </ComboBox>
           <Button Grid.Column="7" Classes="toolbar accent">
             <StackPanel Orientation="Horizontal" Spacing="6">
-              <cac:SymbolIcon Symbol="plus" />
+              <cac:CASymbolIcon Symbol="plus" />
               <TextBlock Text="Add Channel" />
             </StackPanel>
           </Button>
@@ -78,23 +78,23 @@
           <Border Classes="toolbar-group compact">
             <StackPanel>
               <Button>
-                <cac:SymbolIcon Symbol="chevron.left" />
+                <cac:CASymbolIcon Symbol="chevron.left" />
               </Button>
               <Button>
-                <cac:SymbolIcon Symbol="chevron.right" />
+                <cac:CASymbolIcon Symbol="chevron.right" />
               </Button>
             </StackPanel>
           </Border>
           <ListBox Grid.Column="1" Classes="segmented toolbar compact" SelectedIndex="1">
             <ListBoxItem>
-              <cac:SymbolIcon Symbol="list.bullet" />
+              <cac:CASymbolIcon Symbol="list.bullet" />
             </ListBoxItem>
             <ListBoxItem>
-              <cac:SymbolIcon Symbol="square.grid.2x2" />
+              <cac:CASymbolIcon Symbol="square.grid.2x2" />
             </ListBoxItem>
           </ListBox>
           <Button Grid.Column="3" Classes="toolbar compact">
-            <cac:SymbolIcon Symbol="square.and.arrow.up" />
+            <cac:CASymbolIcon Symbol="square.and.arrow.up" />
           </Button>
           <ComboBox Grid.Column="4" Classes="toolbar compact" SelectedIndex="0">
             <ComboBoxItem Content="Default" />
@@ -109,7 +109,7 @@
       <TextBlock Classes="headline" Text="Disabled toolbar items" />
       <StackPanel Orientation="Horizontal" Spacing="8">
         <Button Classes="toolbar" IsEnabled="False">
-          <cac:SymbolIcon Symbol="square.and.arrow.up" />
+          <cac:CASymbolIcon Symbol="square.and.arrow.up" />
         </Button>
         <Button Classes="toolbar accent" Content="Add Channel" IsEnabled="False" />
         <ComboBox Classes="toolbar" SelectedIndex="0" IsEnabled="False">

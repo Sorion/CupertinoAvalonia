@@ -111,7 +111,7 @@
     <!-- Icon="gearshape": an SF Symbol by its name; any other icon is shown as is. -->
     <Setter Property="IconTemplate">
       <DataTemplate x:DataType="x:String">
-        <cac:SymbolIcon Symbol="{Binding}" />
+        <cac:CASymbolIcon Symbol="{Binding}" />
       </DataTemplate>
     </Setter>
     <Setter Property="Template">

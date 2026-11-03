@@ -8,7 +8,7 @@ using Xunit;
 
 namespace CupertinoAvalonia.Tests;
 
-public class CupertinoWindowTests
+public class CAWindowTests
 {
     [AvaloniaTheory]
     [InlineData("Light")]
@@ -28,7 +28,7 @@ public class CupertinoWindowTests
         window.Close();
     }
 
-    private sealed class DerivedWindow : CupertinoWindow;
+    private sealed class DerivedWindow : CAWindow;
 
     private static Color Color(string key, ThemeVariant variant) =>
         Application.Current!.TryGetResource(key, variant, out var value) ? ((ISolidColorBrush)value!).Color : default;
@@ -36,11 +36,11 @@ public class CupertinoWindowTests
     [AvaloniaFact]
     public void Extends_the_content_into_a_toolbar_high_title_bar_on_macOS_only()
     {
-        var window = new CupertinoWindow
+        var window = new CAWindow
         {
             ExtendsContentIntoTitleBar = true,
-            ToolbarStyle = CupertinoToolbarStyle.Unified,
-            Material = CupertinoWindowMaterial.Sidebar,
+            ToolbarStyle = CAToolbarStyle.Unified,
+            Material = CAWindowMaterial.Sidebar,
         };
         window.Show();
 
@@ -54,10 +54,10 @@ public class CupertinoWindowTests
             // Headless windows have no NSWindow to show the material in.
             Assert.DoesNotContain(":material", window.Classes);
 
-            window.ToolbarStyle = CupertinoToolbarStyle.UnifiedCompact;
+            window.ToolbarStyle = CAToolbarStyle.UnifiedCompact;
             Assert.Equal(40, window.ExtendClientAreaTitleBarHeightHint);
             window.ExtendsContentIntoTitleBar = false;
-            window.Material = CupertinoWindowMaterial.None;
+            window.Material = CAWindowMaterial.None;
             Assert.False(window.ExtendClientAreaToDecorationsHint);
             Assert.Equal(-1, window.ExtendClientAreaTitleBarHeightHint);
             Assert.Empty(window.TransparencyLevelHint);
@@ -76,7 +76,7 @@ public class CupertinoWindowTests
     [AvaloniaFact]
     public void Window_controls_inset_follows_the_title_bar()
     {
-        var window = new CupertinoWindow { ExtendsContentIntoTitleBar = true, ToolbarStyle = CupertinoToolbarStyle.Unified };
+        var window = new CAWindow { ExtendsContentIntoTitleBar = true, ToolbarStyle = CAToolbarStyle.Unified };
         window.Show();
 
         if (OperatingSystem.IsMacOS())
@@ -84,7 +84,7 @@ public class CupertinoWindowTests
             // A toolbar's first item starts 96 points in (measured on macOS 27); the kit's controls end at 76 points in a
             // standard title bar, then a gap.
             Assert.Equal(new Thickness(96, 0, 0, 0), window.WindowControlsInset);
-            window.ToolbarStyle = CupertinoToolbarStyle.None;
+            window.ToolbarStyle = CAToolbarStyle.None;
             Assert.Equal(new Thickness(84, 0, 0, 0), window.WindowControlsInset);
             window.WindowState = WindowState.FullScreen;
             Assert.Equal(default, window.WindowControlsInset);

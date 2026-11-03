@@ -26,14 +26,14 @@ public class SplitButtonTests
 
         // Measured on macOS 27: the label 12 pt in, a chevron.down (Semibold, small scale), its 10 pt box centered 13 pt
         // from the end (the ink, 13.25 pt).
-        var glyph = Part<SymbolIcon>(pullDown, "DropDownGlyph");
-        Assert.Equal(("chevron.down", 10.75, FontWeight.SemiBold, SymbolScale.Small),
+        var glyph = Part<CASymbolIcon>(pullDown, "DropDownGlyph");
+        Assert.Equal(("chevron.down", 10.75, FontWeight.SemiBold, CASymbolScale.Small),
             (glyph.Symbol, glyph.FontSize, glyph.FontWeight, glyph.SymbolScale));
         Assert.Equal(pullDown.Bounds.Width - 13, Origin(glyph, pullDown).X + glyph.Bounds.Width / 2, tolerance: 0.5);
         Assert.Equal(new Thickness(12, 0, 0, 0), pullDown.Padding);
         Assert.Equal(Color(Resource("ButtonBackgroundBrush")), Color(pullDown.Background));
         // 8.75 pt when small.
-        Assert.Equal(8.75, Part<SymbolIcon>(small, "DropDownGlyph").FontSize);
+        Assert.Equal(8.75, Part<CASymbolIcon>(small, "DropDownGlyph").FontSize);
         Assert.Equal(20, small.Bounds.Height);
         window.Close();
     }
@@ -87,13 +87,13 @@ public class SplitButtonTests
     [AvaloniaFact]
     public void Toolbar_pull_down_button_is_glass_with_a_chevron_after_its_symbol()
     {
-        var pullDown = new DropDownButton { Classes = { "toolbar" }, Content = new SymbolIcon { Symbol = "square.and.arrow.up" } };
+        var pullDown = new DropDownButton { Classes = { "toolbar" }, Content = new CASymbolIcon { Symbol = "square.and.arrow.up" } };
         var window = Show(pullDown);
 
         // Window/Pull Down Button (XL): 36 pt, the chevron (Semibold 13) 2 pt after the symbol, 8 pt from the edge.
         Assert.Equal(36, pullDown.Bounds.Height);
         Assert.Equal(new Thickness(0.5), pullDown.BorderThickness);
-        var glyph = Part<SymbolIcon>(pullDown, "DropDownGlyph");
+        var glyph = Part<CASymbolIcon>(pullDown, "DropDownGlyph");
         Assert.Equal((13, FontWeight.SemiBold), (glyph.FontSize, glyph.FontWeight));
         Assert.Equal(new Thickness(2, 0, 8, 0), glyph.Margin);
         Assert.Equal(new Thickness(8, 0, 0, 0), pullDown.Padding);
@@ -104,7 +104,7 @@ public class SplitButtonTests
     public void Split_button_has_a_separator_before_its_menu()
     {
         Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
-        var split = new SplitButton { Content = new SymbolIcon { Symbol = "plus" } };
+        var split = new SplitButton { Content = new CASymbolIcon { Symbol = "plus" } };
         var window = Show(split);
 
         // Measured on macOS 27: 48 x 24 pt with a plus, both parts square, the segmented control's separator starting
@@ -121,7 +121,7 @@ public class SplitButtonTests
         var separator = Part<Border>(split, "Separator");
         Assert.Equal(new Rect(0, 5, 1, 14), new Rect(Origin(separator, secondary), separator.Bounds.Size));
         Assert.Equal(Color(Resource("LabelTertiaryBrush")), Color(separator.Background));
-        var glyph = Part<SymbolIcon>(split, "DropDownGlyph");
+        var glyph = Part<CASymbolIcon>(split, "DropDownGlyph");
         Assert.Equal(("chevron.down", 10.5, FontWeight.Regular), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         Assert.Equal(12, Origin(glyph, secondary).X + glyph.Bounds.Width / 2, tolerance: 0.5);
         window.Close();
@@ -196,7 +196,7 @@ public class SplitButtonTests
         Assert.Equal(new Thickness(10, 0), primary.Padding);
         Assert.Equal(21.5, Part<Button>(split, "PART_SecondaryButton").Width);
         Assert.Equal(12, Part<Border>(split, "Separator").Height);
-        Assert.Equal(8.75, Part<SymbolIcon>(split, "DropDownGlyph").FontSize);
+        Assert.Equal(8.75, Part<CASymbolIcon>(split, "DropDownGlyph").FontSize);
         window.Close();
     }
 

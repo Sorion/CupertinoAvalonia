@@ -27,7 +27,7 @@ public class ComboBoxTests
 
         Assert.Equal(24, combo.Bounds.Height);
         Assert.Equal(Color(Resource<IBrush>("TextFieldBackgroundBrush", variant)), Color(Part<Border>(combo, "Background").Background));
-        Assert.False(Part<SymbolIcon>(combo, "DropDownGlyph").IsVisible);
+        Assert.False(Part<CASymbolIcon>(combo, "DropDownGlyph").IsVisible);
         // Measured on macOS 27 (NSComboBox): a 23.5 × 17.5 button, 4 pt from the right, vertically centered.
         var arrow = Part<Border>(combo, "ArrowButton");
         Assert.True(arrow.IsVisible);
@@ -36,7 +36,7 @@ public class ComboBoxTests
         Assert.Equal(combo.Bounds.Width - 4, Right(arrow, combo), tolerance: 1);
         Assert.Equal(12, arrow.TranslatePoint(new Point(0, arrow.Bounds.Height / 2), combo)!.Value.Y, tolerance: 1);
         Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundBrush", variant)), Color(arrow.Background));
-        var glyph = Part<SymbolIcon>(combo, "ArrowGlyph");
+        var glyph = Part<CASymbolIcon>(combo, "ArrowGlyph");
         Assert.Equal(("chevron.down", 8.25, FontWeight.Bold), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         // The text stops before the button (the kit's "Text - Inset - Right").
         Assert.Equal(new Thickness(8, 0, 28, 0), Part<TextBox>(combo, "PART_EditableTextBox").Padding);
@@ -84,7 +84,7 @@ public class ComboBoxTests
         var arrow = Part<Border>(combo, "ArrowButton");
         Assert.Equal((width, arrowHeight), (arrow.Width, arrow.Height));
         Assert.Equal(combo.Bounds.Width - right, Right(arrow, combo), tolerance: 1);
-        Assert.Equal(glyphSize, Part<SymbolIcon>(combo, "ArrowGlyph").FontSize);
+        Assert.Equal(glyphSize, Part<CASymbolIcon>(combo, "ArrowGlyph").FontSize);
         Assert.Equal(new Thickness(textLeft, 0, textRight, 0), Part<TextBox>(combo, "PART_EditableTextBox").Padding);
         window.Close();
     }
@@ -97,7 +97,7 @@ public class ComboBoxTests
 
         Assert.Equal(Color(Resource<IBrush>("TextFieldBackgroundDisabledBrush", ThemeVariant.Light)), Color(Part<Border>(combo, "Background").Background));
         Assert.Equal(Color(Resource<IBrush>("ButtonBackgroundDisabledBrush", ThemeVariant.Light)), Color(Part<Border>(combo, "ArrowButton").Background));
-        Assert.Equal(Color(Resource<IBrush>("LabelTertiaryBrush", ThemeVariant.Light)), Color(Part<SymbolIcon>(combo, "ArrowGlyph").Foreground));
+        Assert.Equal(Color(Resource<IBrush>("LabelTertiaryBrush", ThemeVariant.Light)), Color(Part<CASymbolIcon>(combo, "ArrowGlyph").Foreground));
         window.Close();
     }
 
@@ -137,7 +137,7 @@ public class ComboBoxTests
         window.UpdateLayout();
 
         Assert.Equal(width, combo.Bounds.Width, tolerance: 0.5);
-        var glyph = Part<SymbolIcon>(combo, "DropDownGlyph");
+        var glyph = Part<CASymbolIcon>(combo, "DropDownGlyph");
         Assert.Equal(("chevron.up.chevron.down", glyphSize, FontWeight.Medium), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         Assert.Equal(combo.Bounds.Width - glyphCenter, glyph.TranslatePoint(new Point(5, 0), combo)!.Value.X, tolerance: 0.01);
         window.Close();
@@ -148,7 +148,7 @@ public class ComboBoxTests
     {
         var (window, combo) = Show(new ComboBox { ItemsSource = Rates, SelectedIndex = 0 });
 
-        Assert.True(Part<SymbolIcon>(combo, "DropDownGlyph").IsVisible);
+        Assert.True(Part<CASymbolIcon>(combo, "DropDownGlyph").IsVisible);
         Assert.False(Part<Border>(combo, "ArrowButton").IsVisible);
         window.Close();
     }

@@ -27,19 +27,19 @@ namespace CupertinoAvalonia.Controls;
 /// the window's edge, over the inspector, and shows its background over the content only.
 /// </para>
 /// <para>
-/// Give the content's scroll viewer <see cref="CupertinoToolbar.ScrollsUnderProperty"/>, directly or with a style: its
+/// Give the content's scroll viewer <see cref="CAToolbar.ScrollsUnderProperty"/>, directly or with a style: its
 /// content starts below the toolbar and scrolls under it. Other content finds the toolbar's room in
-/// <see cref="CupertinoToolbar.ContentInsetProperty"/>.
+/// <see cref="CAToolbar.ContentInsetProperty"/>.
 /// </para>
 /// <para>
-/// Fill a <see cref="CupertinoWindow"/> that extends its content into the title bar: the sidebar and the inspector show
+/// Fill a <see cref="CAWindow"/> that extends its content into the title bar: the sidebar and the inspector show
 /// the window's material and the button stops past the window controls. Elsewhere it stops near the edge.
 /// </para>
 /// </remarks>
 [TemplatePart(PartSidebarRoot, typeof(Control))]
 [TemplatePart(PartContentRoot, typeof(Control))]
 [TemplatePart(PartInspectorRoot, typeof(Control))]
-[TemplatePart(PartToolbar, typeof(CupertinoToolbar))]
+[TemplatePart(PartToolbar, typeof(CAToolbar))]
 [TemplatePart(PartContentToolbarPresenter, typeof(ContentPresenter))]
 [TemplatePart(PartSidebarPresenter, typeof(ContentPresenter))]
 [TemplatePart(PartInspectorPresenter, typeof(ContentPresenter))]
@@ -48,7 +48,7 @@ namespace CupertinoAvalonia.Controls;
 [TemplatePart(PartInspectorGrip, typeof(Control))]
 [TemplatePart(PartToggleBand, typeof(Control))]
 [TemplatePart(PartSidebarToggle, typeof(Button))]
-public class NavigationSplitView : ContentControl
+public class CANavigationSplitView : ContentControl
 {
     private const string PartSidebarRoot = "PART_SidebarRoot";
     private const string PartContentRoot = "PART_ContentRoot";
@@ -82,71 +82,71 @@ public class NavigationSplitView : ContentControl
     private const double CompactToolbarHeight = 40;
 
     public static readonly StyledProperty<object?> SidebarProperty =
-        AvaloniaProperty.Register<NavigationSplitView, object?>(nameof(Sidebar));
+        AvaloniaProperty.Register<CANavigationSplitView, object?>(nameof(Sidebar));
 
     public static readonly StyledProperty<object?> ContentToolbarProperty =
-        AvaloniaProperty.Register<NavigationSplitView, object?>(nameof(ContentToolbar));
+        AvaloniaProperty.Register<CANavigationSplitView, object?>(nameof(ContentToolbar));
 
     public static readonly StyledProperty<object?> InspectorProperty =
-        AvaloniaProperty.Register<NavigationSplitView, object?>(nameof(Inspector));
+        AvaloniaProperty.Register<CANavigationSplitView, object?>(nameof(Inspector));
 
     public static readonly StyledProperty<bool> IsSidebarOpenProperty =
-        AvaloniaProperty.Register<NavigationSplitView, bool>(nameof(IsSidebarOpen), true, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<CANavigationSplitView, bool>(nameof(IsSidebarOpen), true, defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<double> SidebarWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(SidebarWidth), 220, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<CANavigationSplitView, double>(nameof(SidebarWidth), 220, defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<double> MinSidebarWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(MinSidebarWidth), 140);
+        AvaloniaProperty.Register<CANavigationSplitView, double>(nameof(MinSidebarWidth), 140);
 
     public static readonly StyledProperty<double> MaxSidebarWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(MaxSidebarWidth), double.PositiveInfinity);
+        AvaloniaProperty.Register<CANavigationSplitView, double>(nameof(MaxSidebarWidth), double.PositiveInfinity);
 
     public static readonly StyledProperty<IBrush?> SidebarBackgroundProperty =
-        AvaloniaProperty.Register<NavigationSplitView, IBrush?>(nameof(SidebarBackground));
+        AvaloniaProperty.Register<CANavigationSplitView, IBrush?>(nameof(SidebarBackground));
 
     public static readonly StyledProperty<object?> InspectorToolbarProperty =
-        AvaloniaProperty.Register<NavigationSplitView, object?>(nameof(InspectorToolbar));
+        AvaloniaProperty.Register<CANavigationSplitView, object?>(nameof(InspectorToolbar));
 
     public static readonly StyledProperty<bool> CanCollapseInspectorProperty =
-        AvaloniaProperty.Register<NavigationSplitView, bool>(nameof(CanCollapseInspector), true);
+        AvaloniaProperty.Register<CANavigationSplitView, bool>(nameof(CanCollapseInspector), true);
 
     public static readonly StyledProperty<bool> IsInspectorOpenProperty =
-        AvaloniaProperty.Register<NavigationSplitView, bool>(nameof(IsInspectorOpen), defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<CANavigationSplitView, bool>(nameof(IsInspectorOpen), defaultBindingMode: BindingMode.TwoWay);
 
     // SwiftUI's inspector, measured on macOS 27: 270 pt, neither narrower nor wider.
     public static readonly StyledProperty<double> InspectorWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(InspectorWidth), 270, defaultBindingMode: BindingMode.TwoWay);
+        AvaloniaProperty.Register<CANavigationSplitView, double>(nameof(InspectorWidth), 270, defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<double> MinInspectorWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(MinInspectorWidth), 270);
+        AvaloniaProperty.Register<CANavigationSplitView, double>(nameof(MinInspectorWidth), 270);
 
     public static readonly StyledProperty<double> MaxInspectorWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(MaxInspectorWidth), 270);
+        AvaloniaProperty.Register<CANavigationSplitView, double>(nameof(MaxInspectorWidth), 270);
 
     public static readonly StyledProperty<IBrush?> InspectorBackgroundProperty =
-        AvaloniaProperty.Register<NavigationSplitView, IBrush?>(nameof(InspectorBackground));
+        AvaloniaProperty.Register<CANavigationSplitView, IBrush?>(nameof(InspectorBackground));
 
     // The columns' animation state, for the theme's transitions: not part of the API.
     internal static readonly StyledProperty<double> VisibleSidebarWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(VisibleSidebarWidth), 220);
+        AvaloniaProperty.Register<CANavigationSplitView, double>(nameof(VisibleSidebarWidth), 220);
 
     internal static readonly StyledProperty<double> VisibleInspectorWidthProperty =
-        AvaloniaProperty.Register<NavigationSplitView, double>(nameof(VisibleInspectorWidth));
+        AvaloniaProperty.Register<CANavigationSplitView, double>(nameof(VisibleInspectorWidth));
 
     // None by default, as in SwiftUI, where an app adds SidebarCommands and InspectorCommands (measured on macOS 27).
     public static readonly StyledProperty<KeyGesture?> ToggleSidebarGestureProperty =
-        AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleSidebarGesture));
+        AvaloniaProperty.Register<CANavigationSplitView, KeyGesture?>(nameof(ToggleSidebarGesture));
 
     public static readonly StyledProperty<KeyGesture?> ToggleInspectorGestureProperty =
-        AvaloniaProperty.Register<NavigationSplitView, KeyGesture?>(nameof(ToggleInspectorGesture));
+        AvaloniaProperty.Register<CANavigationSplitView, KeyGesture?>(nameof(ToggleInspectorGesture));
 
     private readonly TranslateTransform _sidebarOffset = new();
     private readonly TranslateTransform _inspectorOffset = new();
     private Control? _sidebarRoot;
     private Control? _contentRoot;
     private Control? _inspectorRoot;
-    private CupertinoToolbar? _toolbar;
+    private CAToolbar? _toolbar;
     private ContentPresenter? _contentToolbarPresenter;
     private ContentPresenter? _sidebarPresenter;
     private ContentPresenter? _inspectorPresenter;
@@ -156,7 +156,7 @@ public class NavigationSplitView : ContentControl
     private Control? _inspectorGrip;
     private Control? _toggleBand;
     private Button? _sidebarToggle;
-    private CupertinoWindow? _window;
+    private CAWindow? _window;
     private TopLevel? _topLevel;
     // A drag on a column's edge: its grip, the pointer's distance from the edge, and the transitions it suspends.
     private Control? _draggedGrip;
@@ -335,7 +335,7 @@ public class NavigationSplitView : ContentControl
         _sidebarRoot = e.NameScope.Find<Control>(PartSidebarRoot);
         _contentRoot = e.NameScope.Find<Control>(PartContentRoot);
         _inspectorRoot = e.NameScope.Find<Control>(PartInspectorRoot);
-        _toolbar = e.NameScope.Find<CupertinoToolbar>(PartToolbar);
+        _toolbar = e.NameScope.Find<CAToolbar>(PartToolbar);
         _contentToolbarPresenter = e.NameScope.Find<ContentPresenter>(PartContentToolbarPresenter);
         _sidebarPresenter = e.NameScope.Find<ContentPresenter>(PartSidebarPresenter);
         _inspectorPresenter = e.NameScope.Find<ContentPresenter>(PartInspectorPresenter);
@@ -380,7 +380,7 @@ public class NavigationSplitView : ContentControl
         base.OnAttachedToVisualTree(e);
         _topLevel = TopLevel.GetTopLevel(this);
         _topLevel?.AddHandler(KeyDownEvent, OnTopLevelKeyDown, RoutingStrategies.Tunnel);
-        _window = _topLevel as CupertinoWindow;
+        _window = _topLevel as CAWindow;
         if (_window is not null)
             _window.PropertyChanged += OnWindowPropertyChanged;
         UpdateChrome();
@@ -417,7 +417,7 @@ public class NavigationSplitView : ContentControl
 
     private void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
-        if (e.Property == CupertinoWindow.WindowControlsInsetProperty || e.Property == CupertinoWindow.ToolbarStyleProperty)
+        if (e.Property == CAWindow.WindowControlsInsetProperty || e.Property == CAWindow.ToolbarStyleProperty)
             UpdateChrome();
     }
 
@@ -508,7 +508,7 @@ public class NavigationSplitView : ContentControl
         UpdatePositions();
     }
 
-    private bool IsCompact => _window is { ToolbarStyle: CupertinoToolbarStyle.UnifiedCompact };
+    private bool IsCompact => _window is { ToolbarStyle: CAToolbarStyle.UnifiedCompact };
 
     // The toolbar's height: the band the button is centered in, and the room the columns leave at their top. Its
     // background shows while the inspector does, as on macOS 27.
@@ -519,7 +519,7 @@ public class NavigationSplitView : ContentControl
         if (_toolbar is not null)
         {
             _toolbar.Classes.Set("compact", compact);
-            _toolbar.BackgroundVisibility = IsInspectorOpen ? ToolbarBackgroundVisibility.Visible : ToolbarBackgroundVisibility.Automatic;
+            _toolbar.BackgroundVisibility = IsInspectorOpen ? CAToolbarBackgroundVisibility.Visible : CAToolbarBackgroundVisibility.Automatic;
         }
         _sidebarToggle?.Classes.Set("compact", compact);
         if (_toggleBand is not null)

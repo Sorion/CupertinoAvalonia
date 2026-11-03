@@ -47,7 +47,7 @@
         <TreeViewItem IsExpanded="True">
           <TreeViewItem.Header>
             <StackPanel Orientation="Horizontal" Spacing="4">
-              <cac:SymbolIcon Symbol="folder" Foreground="{DynamicResource AccentBrush}" />
+              <cac:CASymbolIcon Symbol="folder" Foreground="{DynamicResource AccentBrush}" />
               <TextBlock Text="Applications" />
             </StackPanel>
           </TreeViewItem.Header>

@@ -1,7 +1,7 @@
 namespace CupertinoAvalonia.Controls;
 
-/// <summary>The toolbar a <see cref="CupertinoWindow"/>'s title bar makes room for.</summary>
-public enum CupertinoToolbarStyle
+/// <summary>The toolbar a <see cref="CAWindow"/>'s title bar makes room for.</summary>
+public enum CAToolbarStyle
 {
     /// <summary>A standard title bar.</summary>
     None,
@@ -13,8 +13,8 @@ public enum CupertinoToolbarStyle
     UnifiedCompact,
 }
 
-/// <summary>The system material behind a <see cref="CupertinoWindow"/>'s transparent areas (NSVisualEffectView's).</summary>
-public enum CupertinoWindowMaterial
+/// <summary>The system material behind a <see cref="CAWindow"/>'s transparent areas (NSVisualEffectView's).</summary>
+public enum CAWindowMaterial
 {
     /// <summary>An opaque window.</summary>
     None,

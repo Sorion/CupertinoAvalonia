@@ -30,7 +30,7 @@ public class SearchFieldTests
         Assert.Equal(new CornerRadius(12), field.CornerRadius);
         var secondary = Color(Resource<IBrush>("LabelSecondaryBrush", variant));
         Assert.Equal(secondary, Color(field.PlaceholderForeground));
-        var glyph = Find<SymbolIcon>(field, "SearchGlyph");
+        var glyph = Find<CASymbolIcon>(field, "SearchGlyph");
         Assert.Equal(("magnifyingglass", 13, FontWeight.Medium), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         Assert.Equal(secondary, Color(glyph.Foreground));
         Assert.False(Find<Button>(field, "SearchClearButton").IsVisible);
@@ -47,7 +47,7 @@ public class SearchFieldTests
         field.Text = "Value";
         Dispatcher.UIThread.RunJobs();
         Assert.True(clear.IsVisible);
-        var glyph = Find<SymbolIcon>(field, "SearchClearGlyph");
+        var glyph = Find<CASymbolIcon>(field, "SearchClearGlyph");
         Assert.Equal(("xmark.circle.fill", 13), (glyph.Symbol, glyph.FontSize));
         Assert.Equal(Color(Resource<IBrush>("LabelSecondaryBrush", ThemeVariant.Light)), Color(glyph.Foreground));
 

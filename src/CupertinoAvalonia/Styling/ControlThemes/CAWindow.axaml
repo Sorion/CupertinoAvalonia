@@ -1,8 +1,8 @@
-<!-- CupertinoWindow: the kit's "Window BG" (page Windows), transparent while a system material shows. -->
+<!-- CAWindow: the kit's "Window BG" (page Windows), transparent while a system material shows. -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cac="using:CupertinoAvalonia.Controls">
-  <ControlTheme x:Key="{x:Type cac:CupertinoWindow}" TargetType="cac:CupertinoWindow">
+  <ControlTheme x:Key="{x:Type cac:CAWindow}" TargetType="cac:CAWindow">
     <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
     <Setter Property="TransparencyBackgroundFallback" Value="{DynamicResource WindowBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />

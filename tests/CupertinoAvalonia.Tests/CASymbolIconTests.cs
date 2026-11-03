@@ -11,13 +11,13 @@ using Xunit;
 
 namespace CupertinoAvalonia.Tests;
 
-public class SymbolIconTests
+public class CASymbolIconTests
 {
     [AvaloniaFact]
     public void Draws_the_system_symbol_on_macOS_in_the_foreground_color()
     {
         Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
-        var icon = new SymbolIcon { Symbol = "square.and.arrow.up", FontSize = 26, Foreground = Brushes.Red };
+        var icon = new CASymbolIcon { Symbol = "square.and.arrow.up", FontSize = 26, Foreground = Brushes.Red };
         var window = Show(icon);
 
         Assert.True(icon.IsNative);
@@ -32,7 +32,7 @@ public class SymbolIconTests
     {
         Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
         var brush = new SolidColorBrush(Colors.Red);
-        var icon = new SymbolIcon { Symbol = "folder", FontSize = 26, Foreground = brush };
+        var icon = new CASymbolIcon { Symbol = "folder", FontSize = 26, Foreground = brush };
         var window = Show(icon);
         Assert.True(CountPixels(window, icon, IsRed) > 30, "No red pixels where the symbol is.");
 
@@ -50,8 +50,8 @@ public class SymbolIconTests
     public void Follows_the_font_size()
     {
         Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
-        var small = new SymbolIcon { Symbol = "gearshape", FontSize = 13 };
-        var large = new SymbolIcon { Symbol = "gearshape", FontSize = 26 };
+        var small = new CASymbolIcon { Symbol = "gearshape", FontSize = 13 };
+        var large = new CASymbolIcon { Symbol = "gearshape", FontSize = 26 };
         var window = Show(small, large);
 
         // Twice the size, to the pixel each is rounded up to.
@@ -63,12 +63,12 @@ public class SymbolIconTests
     public void Toolbar_items_use_the_large_scale()
     {
         Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
-        var inToolbar = new SymbolIcon { Symbol = "ellipsis", Foreground = Brushes.Black };
-        var inText = new SymbolIcon { Symbol = "ellipsis", Foreground = Brushes.Black };
+        var inToolbar = new CASymbolIcon { Symbol = "ellipsis", Foreground = Brushes.Black };
+        var inText = new CASymbolIcon { Symbol = "ellipsis", Foreground = Brushes.Black };
         var window = Show(new Button { Classes = { "toolbar" }, Content = inToolbar }, new Button { Content = inText });
 
-        Assert.Equal(SymbolScale.Large, inToolbar.SymbolScale);
-        Assert.Equal(SymbolScale.Medium, inText.SymbolScale);
+        Assert.Equal(CASymbolScale.Large, inToolbar.SymbolScale);
+        Assert.Equal(CASymbolScale.Medium, inText.SymbolScale);
         // As AppKit's toolbars: on Notes's toolbar, the dots of "ellipsis" span 15 pt.
         Assert.InRange(InkWidth(window, inToolbar), 14, 16);
         Assert.True(InkWidth(window, inToolbar) > InkWidth(window, inText));
@@ -80,7 +80,7 @@ public class SymbolIconTests
     public void Small_symbols_are_drawn_whole_at_2x()
     {
         Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
-        var icon = new SymbolIcon
+        var icon = new CASymbolIcon
         {
             Symbol = "chevron.up.chevron.down", FontSize = 8, FontWeight = FontWeight.Bold, Width = 24, Height = 20,
             Foreground = Brushes.Black,
@@ -118,7 +118,7 @@ public class SymbolIconTests
     [AvaloniaFact]
     public void Unknown_symbol_uses_its_fallback_glyph()
     {
-        var icon = new SymbolIcon { Symbol = "no.such.symbol", FallbackGlyph = "", FontSize = 20 };
+        var icon = new CASymbolIcon { Symbol = "no.such.symbol", FallbackGlyph = "", FontSize = 20 };
         var window = Show(icon);
 
         Assert.False(icon.IsNative);
@@ -130,11 +130,11 @@ public class SymbolIconTests
     [AvaloniaFact]
     public void Fluent_glyph_stands_in_where_SF_Symbols_are_missing()
     {
-        SymbolIcon.UseNativeSymbols = false;
+        CASymbolIcon.UseNativeSymbols = false;
         try
         {
-            var icon = new SymbolIcon { Symbol = "plus", FontSize = 26, Foreground = Brushes.Red };
-            var unmapped = new SymbolIcon { Symbol = "atom", FontSize = 26 };
+            var icon = new CASymbolIcon { Symbol = "plus", FontSize = 26, Foreground = Brushes.Red };
+            var unmapped = new CASymbolIcon { Symbol = "atom", FontSize = 26 };
             var window = Show(icon, unmapped);
 
             // WinUI's Symbol.Add, from Segoe Fluent Icons on Windows, else the embedded font.
@@ -148,7 +148,7 @@ public class SymbolIconTests
         }
         finally
         {
-            SymbolIcon.UseNativeSymbols = OperatingSystem.IsMacOSVersionAtLeast(11);
+            CASymbolIcon.UseNativeSymbols = OperatingSystem.IsMacOSVersionAtLeast(11);
         }
     }
 
@@ -163,7 +163,7 @@ public class SymbolIconTests
         var window = Show(popUp, numberBox, expander, search);
 
         var glyphs = new Control[] { popUp, numberBox, expander, search }
-            .SelectMany(c => c.GetVisualDescendants().OfType<SymbolIcon>())
+            .SelectMany(c => c.GetVisualDescendants().OfType<CASymbolIcon>())
             .Where(icon => icon.IsEffectivelyVisible)
             .ToDictionary(icon => icon.Symbol!, icon => icon);
         Assert.Equal(["chevron.up.chevron.down", "chevron.up", "chevron.down", "chevron.right", "magnifyingglass"], glyphs.Keys);
@@ -177,13 +177,13 @@ public class SymbolIconTests
     [AvaloniaFact]
     public void Theme_glyphs_keep_their_drawings_elsewhere()
     {
-        SymbolIcon.UseNativeSymbols = false;
+        CASymbolIcon.UseNativeSymbols = false;
         try
         {
             var popUp = new ComboBox { ItemsSource = new[] { "One" }, SelectedIndex = 0 };
             var window = Show(popUp);
 
-            var chevron = popUp.GetVisualDescendants().OfType<SymbolIcon>().Single(i => i.Name == "DropDownGlyph");
+            var chevron = popUp.GetVisualDescendants().OfType<CASymbolIcon>().Single(i => i.Name == "DropDownGlyph");
             Assert.False(chevron.IsNative);
             // The drawing, not the Fluent glyph.
             Assert.Null(chevron.Glyph);
@@ -193,7 +193,7 @@ public class SymbolIconTests
         }
         finally
         {
-            SymbolIcon.UseNativeSymbols = OperatingSystem.IsMacOSVersionAtLeast(11);
+            CASymbolIcon.UseNativeSymbols = OperatingSystem.IsMacOSVersionAtLeast(11);
         }
     }
 

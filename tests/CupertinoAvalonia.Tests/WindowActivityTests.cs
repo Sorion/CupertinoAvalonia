@@ -73,11 +73,11 @@ public class WindowActivityTests
     {
         var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
         Application.Current!.RequestedThemeVariant = variant;
-        var icon = new CupertinoAvalonia.Controls.SymbolIcon { Symbol = "folder" };
+        var icon = new CupertinoAvalonia.Controls.CASymbolIcon { Symbol = "folder" };
         var label = new TextBlock { Text = "Notes" };
         var item = new ListBoxItem { Content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Children = { icon, label } } };
         var list = new ListBox { Classes = { "sidebar" }, Items = { item }, SelectedIndex = 0 };
-        var treeIcon = new CupertinoAvalonia.Controls.SymbolIcon { Symbol = "folder" };
+        var treeIcon = new CupertinoAvalonia.Controls.CASymbolIcon { Symbol = "folder" };
         var treeItem = new TreeViewItem { Header = treeIcon };
         var tree = new TreeView { Classes = { "sidebar" }, Items = { treeItem } };
         var window = new Window { Content = new StackPanel { Children = { list, tree } } };
@@ -119,7 +119,7 @@ public class WindowActivityTests
     public void Window_that_always_looks_active_keeps_the_accent()
     {
         var accent = new Button { Content = "OK", Classes = { "accent" } };
-        var window = new CupertinoWindow { AlwaysLooksActive = true, Content = accent };
+        var window = new CAWindow { AlwaysLooksActive = true, Content = accent };
         window.Show();
         Dispatcher.UIThread.RunJobs();
         var active = Describe(accent.Background);

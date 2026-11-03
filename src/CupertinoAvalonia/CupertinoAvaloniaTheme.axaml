@@ -28,13 +28,13 @@
   <StyleInclude Source="/Styling/ToolbarStyles.axaml" />
 
   <!-- A sidebar shows the window's material; the content stays opaque. -->
-  <Style Selector="cac|CupertinoWindow:material SplitView:not(.plain):left:inline, cac|CupertinoWindow:material SplitView:not(.plain):left:compactinline">
+  <Style Selector="cac|CAWindow:material SplitView:not(.plain):left:inline, cac|CAWindow:material SplitView:not(.plain):left:compactinline">
     <Setter Property="PaneBackground" Value="Transparent" />
   </Style>
-  <Style Selector="cac|CupertinoWindow:material SplitView:left /template/ Panel#ContentRoot">
+  <Style Selector="cac|CAWindow:material SplitView:left /template/ Panel#ContentRoot">
     <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
   </Style>
-  <Style Selector="cac|CupertinoWindow:material cac|NavigationSplitView">
+  <Style Selector="cac|CAWindow:material cac|CANavigationSplitView">
     <Setter Property="SidebarBackground" Value="Transparent" />
     <Setter Property="InspectorBackground" Value="Transparent" />
   </Style>

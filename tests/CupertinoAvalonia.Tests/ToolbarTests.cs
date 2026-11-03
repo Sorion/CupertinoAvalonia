@@ -66,9 +66,9 @@ public class ToolbarTests
         var wide = new Button { Classes = { "toolbar" }, Content = new Border { Width = 20, Height = 16 } };
         var toggle = new ToggleButton { Classes = { "toolbar" }, Content = new Border { Width = 18, Height = 14 } };
         // SF Symbols at the toolbar's large scale are up to 24 pt wide: "sidebar.left", "folder".
-        var sidebar = new Button { Classes = { "toolbar" }, Content = new SymbolIcon { Symbol = "sidebar.left" } };
-        var folder = new Button { Classes = { "toolbar" }, Content = new SymbolIcon { Symbol = "folder" } };
-        var segmented = new ListBox { Classes = { "segmented", "toolbar" }, ItemsSource = new[] { new SymbolIcon { Symbol = "sidebar.left" } } };
+        var sidebar = new Button { Classes = { "toolbar" }, Content = new CASymbolIcon { Symbol = "sidebar.left" } };
+        var folder = new Button { Classes = { "toolbar" }, Content = new CASymbolIcon { Symbol = "folder" } };
+        var segmented = new ListBox { Classes = { "segmented", "toolbar" }, ItemsSource = new[] { new CASymbolIcon { Symbol = "sidebar.left" } } };
         var window = Show(narrow, wide, toggle, sidebar, folder, segmented);
 
         foreach (var button in new Control[] { narrow, wide, toggle, sidebar, folder })
@@ -235,7 +235,7 @@ public class ToolbarTests
         var window = Show(search, compact);
 
         // 10 pt from the edge, the text 6 pt after the 16 pt glyph (6 and 4 pt when compact).
-        var glyph = Assert.IsType<SymbolIcon>(search.InnerLeftContent);
+        var glyph = Assert.IsType<CASymbolIcon>(search.InnerLeftContent);
         Assert.Equal("magnifyingglass", glyph.Symbol);
         Assert.Equal(10, glyph.TranslatePoint(default, search)!.Value.X);
         Assert.Equal(32, Part<DockPanel>(search, "PART_InnerDockPanel").TranslatePoint(default, search)!.Value.X);
@@ -251,7 +251,7 @@ public class ToolbarTests
         var window = Show(popUp);
 
         // Label 8 pt from the edge, chevron 2 pt after it, 8 pt before the other edge.
-        var chevron = Part<SymbolIcon>(popUp, "DropDownGlyph");
+        var chevron = Part<CASymbolIcon>(popUp, "DropDownGlyph");
         Assert.Equal(new Thickness(2, 0, 8, 0), chevron.Margin);
         Assert.Equal(10, chevron.Bounds.Width);
         Assert.Equal(popUp.Bounds.Width - 8, chevron.Bounds.Right);

@@ -16,6 +16,6 @@ public sealed class SplitButtonPaddingConverter : IMultiValueConverter
 
     public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture) =>
         values is [Thickness padding, var content]
-            ? content is SymbolIcon or Image or PathIcon ? new Thickness(0, padding.Top, 0, padding.Bottom) : padding
+            ? content is CASymbolIcon or Image or PathIcon ? new Thickness(0, padding.Top, 0, padding.Bottom) : padding
             : AvaloniaProperty.UnsetValue;
 }

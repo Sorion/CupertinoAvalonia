@@ -26,7 +26,7 @@
     <Setter Property="Template">
       <ControlTemplate>
         <Border Background="{TemplateBinding Background}">
-          <cac:SymbolIcon Name="Chevron"
+          <cac:CASymbolIcon Name="Chevron"
                           Symbol="chevron.right"
                           FontSize="9"
                           FontWeight="Bold"
@@ -34,19 +34,19 @@
                           Foreground="{TemplateBinding Foreground}"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center">
-            <cac:SymbolIcon.Transitions>
+            <cac:CASymbolIcon.Transitions>
               <Transitions>
                 <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
               </Transitions>
-            </cac:SymbolIcon.Transitions>
-          </cac:SymbolIcon>
+            </cac:CASymbolIcon.Transitions>
+          </cac:CASymbolIcon>
         </Border>
       </ControlTemplate>
     </Setter>
-    <Style Selector="^ /template/ cac|SymbolIcon#Chevron">
+    <Style Selector="^ /template/ cac|CASymbolIcon#Chevron">
       <Setter Property="RenderTransform" Value="rotate(0deg)" />
     </Style>
-    <Style Selector="^:checked /template/ cac|SymbolIcon#Chevron">
+    <Style Selector="^:checked /template/ cac|CASymbolIcon#Chevron">
       <Setter Property="RenderTransform" Value="rotate(90deg)" />
     </Style>
   </ControlTheme>

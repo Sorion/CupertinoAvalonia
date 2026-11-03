@@ -23,7 +23,7 @@ internal static class MacOSSymbols
     public static bool IsSupported { get; } = OperatingSystem.IsMacOSVersionAtLeast(11) && LoadAppKit();
 
     // An opacity mask at the screen's scale, null for an unknown name.
-    public static Symbol? Get(string name, double pointSize, FontWeight weight, SymbolScale symbolScale, double scale)
+    public static Symbol? Get(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale)
     {
         var key = new Key(name, pointSize, weight, symbolScale, scale);
         if (!Cache.TryGetValue(key, out var symbol))
@@ -31,7 +31,7 @@ internal static class MacOSSymbols
         return symbol;
     }
 
-    private static Symbol? Draw(string name, double pointSize, FontWeight weight, SymbolScale symbolScale, double scale)
+    private static Symbol? Draw(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale)
     {
         var pool = objc_autoreleasePoolPush();
         var nameUtf8 = Marshal.StringToCoTaskMemUTF8(name);
@@ -109,7 +109,7 @@ internal static class MacOSSymbols
 
     public sealed record Symbol(WriteableBitmap Mask, Size Size);
 
-    private readonly record struct Key(string Name, double PointSize, FontWeight Weight, SymbolScale SymbolScale, double Scale);
+    private readonly record struct Key(string Name, double PointSize, FontWeight Weight, CASymbolScale SymbolScale, double Scale);
 
     [StructLayout(LayoutKind.Sequential)]
     private readonly record struct CGSize(double Width, double Height);

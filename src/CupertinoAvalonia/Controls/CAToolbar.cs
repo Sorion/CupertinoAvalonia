@@ -9,8 +9,8 @@ using Avalonia.VisualTree;
 
 namespace CupertinoAvalonia.Controls;
 
-/// <summary>When a <see cref="CupertinoToolbar"/> shows its background.</summary>
-public enum ToolbarBackgroundVisibility
+/// <summary>When a <see cref="CAToolbar"/> shows its background.</summary>
+public enum CAToolbarBackgroundVisibility
 {
     /// <summary>When content scrolls under the toolbar, while the pointer is over it, or in an inactive window.</summary>
     Automatic,
@@ -30,7 +30,7 @@ public enum ToolbarBackgroundVisibility
 /// </remarks>
 [TemplatePart(PartBackground, typeof(Control))]
 [PseudoClasses(PcScrolled)]
-public class CupertinoToolbar : ContentControl
+public class CAToolbar : ContentControl
 {
     private const string PartBackground = "PART_Background";
     private const string PcScrolled = ":scrolled";
@@ -39,37 +39,37 @@ public class CupertinoToolbar : ContentControl
 
     /// <summary>
     /// On a scroll viewer: its content scrolls under the toolbar laid over it, the content's toolbar in a
-    /// <see cref="NavigationSplitView"/>, elsewhere a toolbar beside it in a Panel. The content starts below the toolbar,
+    /// <see cref="CANavigationSplitView"/>, elsewhere a toolbar beside it in a Panel. The content starts below the toolbar,
     /// as the scroll bar does, and the toolbar shows its background once the content scrolls under it. A style can set
     /// it, for pages a view locator shows.
     /// </summary>
     public static readonly AttachedProperty<bool> ScrollsUnderProperty =
-        AvaloniaProperty.RegisterAttached<CupertinoToolbar, ScrollViewer, bool>("ScrollsUnder");
+        AvaloniaProperty.RegisterAttached<CAToolbar, ScrollViewer, bool>("ScrollsUnder");
 
     /// <summary>
     /// The room the toolbar takes at the top of the content beside it, inherited by that content: a padding for content
     /// that doesn't scroll under it. (0, 52, 0, 0) under a Unified toolbar. Set by the toolbar.
     /// </summary>
     public static readonly AttachedProperty<Thickness> ContentInsetProperty =
-        AvaloniaProperty.RegisterAttached<CupertinoToolbar, Control, Thickness>("ContentInset", inherits: true);
+        AvaloniaProperty.RegisterAttached<CAToolbar, Control, Thickness>("ContentInset", inherits: true);
 
-    public static readonly StyledProperty<ToolbarBackgroundVisibility> BackgroundVisibilityProperty =
-        AvaloniaProperty.Register<CupertinoToolbar, ToolbarBackgroundVisibility>(nameof(BackgroundVisibility));
+    public static readonly StyledProperty<CAToolbarBackgroundVisibility> BackgroundVisibilityProperty =
+        AvaloniaProperty.Register<CAToolbar, CAToolbarBackgroundVisibility>(nameof(BackgroundVisibility));
 
     // The classes the toolbar gave a control, removed when it leaves: not those its XAML has.
     private static readonly AttachedProperty<string[]?> AddedClassesProperty =
-        AvaloniaProperty.RegisterAttached<CupertinoToolbar, Control, string[]?>("AddedClasses");
+        AvaloniaProperty.RegisterAttached<CAToolbar, Control, string[]?>("AddedClasses");
 
     // The toolbar a scroll viewer scrolls under.
-    private static readonly AttachedProperty<CupertinoToolbar?> OwnerProperty =
-        AvaloniaProperty.RegisterAttached<CupertinoToolbar, ScrollViewer, CupertinoToolbar?>("Owner");
+    private static readonly AttachedProperty<CAToolbar?> OwnerProperty =
+        AvaloniaProperty.RegisterAttached<CAToolbar, ScrollViewer, CAToolbar?>("Owner");
 
     private Control? _background;
     private Thickness _backgroundMargin;
     private ScrollViewer? _scrollViewer;
     private Control? _contentInsetHost;
 
-    static CupertinoToolbar()
+    static CAToolbar()
     {
         LoadedEvent.AddClassHandler<Control>((control, _) => AddItemClasses(control), handledEventsToo: true);
         UnloadedEvent.AddClassHandler<Control>((control, _) => RemoveItemClasses(control), handledEventsToo: true);
@@ -78,7 +78,7 @@ public class CupertinoToolbar : ContentControl
         UnloadedEvent.AddClassHandler<ScrollViewer>((scrollViewer, _) => FindOwner(scrollViewer, false), handledEventsToo: true);
     }
 
-    public CupertinoToolbar()
+    public CAToolbar()
     {
         ((INotifyCollectionChanged)Classes).CollectionChanged += OnClassesChanged;
     }
@@ -91,13 +91,13 @@ public class CupertinoToolbar : ContentControl
 
     public static void SetContentInset(Control control, Thickness value) => control.SetValue(ContentInsetProperty, value);
 
-    public ToolbarBackgroundVisibility BackgroundVisibility
+    public CAToolbarBackgroundVisibility BackgroundVisibility
     {
         get => GetValue(BackgroundVisibilityProperty);
         set => SetValue(BackgroundVisibilityProperty, value);
     }
 
-    // Where the band stops short of the items: NavigationSplitView ends it at the inspector's edge, while the items run
+    // Where the band stops short of the items: CANavigationSplitView ends it at the inspector's edge, while the items run
     // to the window's.
     internal Thickness BackgroundMargin
     {
@@ -121,7 +121,7 @@ public class CupertinoToolbar : ContentControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        // A NavigationSplitView's toolbar tells its content; elsewhere, the toolbar tells the panel it's laid out in.
+        // A CANavigationSplitView's toolbar tells its content; elsewhere, the toolbar tells the panel it's laid out in.
         _contentInsetHost = TemplatedParent as Control ?? this.GetVisualParent() as Control;
         UpdateContentInset();
     }
@@ -144,15 +144,15 @@ public class CupertinoToolbar : ContentControl
     // The nearest toolbar laid over a loaded scroll viewer: the first beside one of its ancestors, as in a Panel.
     private static void FindOwner(ScrollViewer scrollViewer, bool isLoaded)
     {
-        CupertinoToolbar? owner = null;
+        CAToolbar? owner = null;
         if (isLoaded && GetScrollsUnder(scrollViewer))
         {
             Visual child = scrollViewer;
             foreach (var ancestor in scrollViewer.GetVisualAncestors())
             {
-                if (ancestor is CupertinoToolbar)
+                if (ancestor is CAToolbar)
                     break;
-                owner = ancestor.GetVisualChildren().OfType<CupertinoToolbar>().FirstOrDefault(t => t != child);
+                owner = ancestor.GetVisualChildren().OfType<CAToolbar>().FirstOrDefault(t => t != child);
                 if (owner is not null)
                     break;
                 child = ancestor;
@@ -263,7 +263,7 @@ public class CupertinoToolbar : ContentControl
         {
             if (((StyledElement)ancestor).Classes.Contains("toolbar-group"))
                 return;
-            if (ancestor is CupertinoToolbar toolbar)
+            if (ancestor is CAToolbar toolbar)
             {
                 string[] added = toolbar.Classes.Contains(CompactClass) && !control.Classes.Contains(CompactClass)
                     ? [ItemClass, CompactClass]

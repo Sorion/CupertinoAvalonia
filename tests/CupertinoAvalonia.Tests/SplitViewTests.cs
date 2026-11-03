@@ -48,7 +48,7 @@ public class SplitViewTests
         Application.Current!.RequestedThemeVariant = variant;
         var sidebar = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true };
         var inspector = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
-        var window = new CupertinoWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
+        var window = new CAWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
         window.Show();
         Dispatcher.UIThread.RunJobs();
         // Even where the window shows its material.
@@ -74,7 +74,7 @@ public class SplitViewTests
             DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right,
             PaneBackground = Brushes.Red,
         };
-        var window = new CupertinoWindow { Width = 600, Height = 300, Content = Sized(inspector) };
+        var window = new CAWindow { Width = 600, Height = 300, Content = Sized(inspector) };
         window.Show();
         Dispatcher.UIThread.RunJobs();
         ((IPseudoClasses)window.Classes).Set(":material", true);
@@ -89,11 +89,11 @@ public class SplitViewTests
         Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         var sidebar = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true };
         var inspector = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
-        var window = new CupertinoWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
+        var window = new CAWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
-        // Headless windows have no native material: show it as CupertinoWindow does on macOS.
+        // Headless windows have no native material: show it as CAWindow does on macOS.
         ((IPseudoClasses)window.Classes).Set(":material", true);
         Assert.Equal(Colors.Transparent, Color(sidebar.PaneBackground));
         Assert.Equal(Color("WindowBackgroundBrush", ThemeVariant.Light), Color(Part<Panel>(sidebar, "ContentRoot").Background));

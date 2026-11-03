@@ -21,22 +21,22 @@ namespace CupertinoAvalonia.Controls;
 /// show the material, such as the content next to a sidebar.
 /// </para>
 /// </remarks>
-public class CupertinoWindow : Window
+public class CAWindow : Window
 {
     public static readonly StyledProperty<bool> ExtendsContentIntoTitleBarProperty =
-        AvaloniaProperty.Register<CupertinoWindow, bool>(nameof(ExtendsContentIntoTitleBar));
+        AvaloniaProperty.Register<CAWindow, bool>(nameof(ExtendsContentIntoTitleBar));
 
-    public static readonly StyledProperty<CupertinoToolbarStyle> ToolbarStyleProperty =
-        AvaloniaProperty.Register<CupertinoWindow, CupertinoToolbarStyle>(nameof(ToolbarStyle));
+    public static readonly StyledProperty<CAToolbarStyle> ToolbarStyleProperty =
+        AvaloniaProperty.Register<CAWindow, CAToolbarStyle>(nameof(ToolbarStyle));
 
-    public static readonly StyledProperty<CupertinoWindowMaterial> MaterialProperty =
-        AvaloniaProperty.Register<CupertinoWindow, CupertinoWindowMaterial>(nameof(Material));
+    public static readonly StyledProperty<CAWindowMaterial> MaterialProperty =
+        AvaloniaProperty.Register<CAWindow, CAWindowMaterial>(nameof(Material));
 
     public static readonly StyledProperty<bool> AlwaysLooksActiveProperty =
-        AvaloniaProperty.Register<CupertinoWindow, bool>(nameof(AlwaysLooksActive));
+        AvaloniaProperty.Register<CAWindow, bool>(nameof(AlwaysLooksActive));
 
-    public static readonly DirectProperty<CupertinoWindow, Thickness> WindowControlsInsetProperty =
-        AvaloniaProperty.RegisterDirect<CupertinoWindow, Thickness>(nameof(WindowControlsInset), o => o.WindowControlsInset);
+    public static readonly DirectProperty<CAWindow, Thickness> WindowControlsInsetProperty =
+        AvaloniaProperty.RegisterDirect<CAWindow, Thickness>(nameof(WindowControlsInset), o => o.WindowControlsInset);
 
     private const double UnifiedToolbarHeight = 52;
     private const double UnifiedCompactToolbarHeight = 40;
@@ -53,13 +53,13 @@ public class CupertinoWindow : Window
     private Thickness _windowControlsInset;
     private IDisposable? _activeLook;
 
-    public CupertinoWindow()
+    public CAWindow()
     {
         PseudoClasses.Set(":macos", _isMacOS);
     }
 
     // Window subclasses would otherwise take Window's theme.
-    protected override Type StyleKeyOverride => typeof(CupertinoWindow);
+    protected override Type StyleKeyOverride => typeof(CAWindow);
 
     /// <summary>Runs the content under the title bar (macOS only).</summary>
     public bool ExtendsContentIntoTitleBar
@@ -69,14 +69,14 @@ public class CupertinoWindow : Window
     }
 
     /// <summary>The title bar's height when <see cref="ExtendsContentIntoTitleBar"/> is set (macOS only).</summary>
-    public CupertinoToolbarStyle ToolbarStyle
+    public CAToolbarStyle ToolbarStyle
     {
         get => GetValue(ToolbarStyleProperty);
         set => SetValue(ToolbarStyleProperty, value);
     }
 
     /// <summary>The system material shown behind the window's transparent areas (macOS only).</summary>
-    public CupertinoWindowMaterial Material
+    public CAWindowMaterial Material
     {
         get => GetValue(MaterialProperty);
         set => SetValue(MaterialProperty, value);
@@ -143,15 +143,15 @@ public class CupertinoWindow : Window
         ExtendClientAreaToDecorationsHint = extended;
         ExtendClientAreaTitleBarHeightHint = !extended ? -1 : ToolbarStyle switch
         {
-            CupertinoToolbarStyle.Unified => UnifiedToolbarHeight,
-            CupertinoToolbarStyle.UnifiedCompact => UnifiedCompactToolbarHeight,
+            CAToolbarStyle.Unified => UnifiedToolbarHeight,
+            CAToolbarStyle.UnifiedCompact => UnifiedCompactToolbarHeight,
             _ => -1,
         };
         PseudoClasses.Set(":extended", extended);
         UpdateWindowControlsInset();
 
         // Only on change: setting the same level again turns transparency off on macOS.
-        if (Material != CupertinoWindowMaterial.None)
+        if (Material != CAWindowMaterial.None)
         {
             if (!_materialSetTransparency)
             {
@@ -171,8 +171,8 @@ public class CupertinoWindow : Window
             try
             {
                 // Avalonia removes any toolbar when it extends the content: set it after.
-                MacOSWindowChrome.SetToolbar(nsWindow, extended ? ToolbarStyle : CupertinoToolbarStyle.None, extended);
-                _materialApplied = Material != CupertinoWindowMaterial.None
+                MacOSWindowChrome.SetToolbar(nsWindow, extended ? ToolbarStyle : CAToolbarStyle.None, extended);
+                _materialApplied = Material != CAWindowMaterial.None
                     && MacOSWindowChrome.SetBehindWindowMaterial(nsWindow, Material, AlwaysLooksActive);
             }
             catch (Exception e) when (e is DllNotFoundException or EntryPointNotFoundException)
@@ -186,7 +186,7 @@ public class CupertinoWindow : Window
     private void UpdateWindowControlsInset()
     {
         var covered = _isMacOS && ExtendsContentIntoTitleBar && WindowState != WindowState.FullScreen;
-        var end = ToolbarStyle == CupertinoToolbarStyle.None ? 8 + WindowControlsEnd + WindowControlsGap : ToolbarItemsStart;
+        var end = ToolbarStyle == CAToolbarStyle.None ? 8 + WindowControlsEnd + WindowControlsGap : ToolbarItemsStart;
         WindowControlsInset = covered ? new Thickness(end, 0, 0, 0) : default;
     }
 

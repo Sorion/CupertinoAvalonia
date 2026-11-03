@@ -39,13 +39,13 @@ written directly in the control themes, each naming the kit component it comes f
 distributed with this project.
 
 Apple's fonts (SF Pro) and symbols (SF Symbols) are not distributed either: the theme uses the system font
-installed with macOS, and `SymbolIcon` asks macOS for its own symbols at run time (AppKit's
-`NSImage(systemSymbolName:)`). Outside macOS, the theme draws its glyphs as vector paths, and `SymbolIcon` uses
+installed with macOS, and `CASymbolIcon` asks macOS for its own symbols at run time (AppKit's
+`NSImage(systemSymbolName:)`). Outside macOS, the theme draws its glyphs as vector paths, and `CASymbolIcon` uses
 Fluent glyphs (below).
 
 ## FluentAvalonia and Fluent UI System Icons
 
-`Assets/Fonts/CupertinoAvaloniaSymbols.ttf`, the font `SymbolIcon` falls back to outside macOS when Windows's
+`Assets/Fonts/CupertinoAvaloniaSymbols.ttf`, the font `CASymbolIcon` falls back to outside macOS when Windows's
 Segoe Fluent Icons isn't there, is a copy of FluentAvalonia's symbol font (`FluentAvalonia.ttf`), renamed. Its glyphs
 come from Microsoft's Fluent UI System Icons.
 
