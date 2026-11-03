@@ -60,6 +60,10 @@
       <SolidColorBrush x:Key="ButtonCheckedBackgroundBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.06" />
       <SolidColorBrush x:Key="ButtonCheckedBackgroundPressedBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.16" />
       <SolidColorBrush x:Key="ButtonCheckedBackgroundDisabledBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.02" />
+      <!-- A borderless button's label, measured on macOS 27 (SwiftUI): gray, not the accent (the kit's), whatever its role;
+           as SwiftUI's secondary text, 146 over white, 203 disabled. -->
+      <SolidColorBrush x:Key="ButtonBorderlessForegroundBrush" Color="#6D000000" />
+      <SolidColorBrush x:Key="ButtonBorderlessForegroundDisabledBrush" Color="#34000000" />
       <!-- _Control BG/Bordered - Tinted -->
       <SolidColorBrush x:Key="ButtonTintedBackgroundBrush" Color="{DynamicResource AccentColor}" Opacity="0.2" />
       <SolidColorBrush x:Key="ButtonTintedBackgroundPressedBrush" Color="{DynamicResource AccentColor}" Opacity="0.28" />
@@ -97,6 +101,9 @@
       <SolidColorBrush x:Key="ButtonCheckedBackgroundBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.09" />
       <SolidColorBrush x:Key="ButtonCheckedBackgroundPressedBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.19" />
       <SolidColorBrush x:Key="ButtonCheckedBackgroundDisabledBrush" Color="{DynamicResource AccentVibrantColor}" Opacity="0.05" />
+      <!-- 170 over the dark window, 105 disabled. -->
+      <SolidColorBrush x:Key="ButtonBorderlessForegroundBrush" Color="#9AFFFFFF" />
+      <SolidColorBrush x:Key="ButtonBorderlessForegroundDisabledBrush" Color="#4DFFFFFF" />
       <SolidColorBrush x:Key="ButtonTintedBackgroundBrush" Color="{DynamicResource AccentColor}" Opacity="0.22" />
       <SolidColorBrush x:Key="ButtonTintedBackgroundPressedBrush" Color="{DynamicResource AccentColor}" Opacity="0.28" />
       <SolidColorBrush x:Key="ButtonTintedBackgroundDisabledBrush" Color="{DynamicResource AccentColor}" Opacity="0.1" />

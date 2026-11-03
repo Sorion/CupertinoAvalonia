@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -191,6 +192,30 @@ public class AccentColorMapperTests
             window.Close();
             cupertino.CustomAccentColor = null;
         }
+    }
+
+    // SwiftUI on macOS 27, purple accent: a toggle button "on" is filled as a prominent button, a borderless button's
+    // label is gray (146 over white), whatever its role.
+    [AvaloniaFact]
+    public void Toggle_buttons_on_are_filled_and_borderless_buttons_are_gray()
+    {
+        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        var toggle = new ToggleButton { IsChecked = true, Content = "On" };
+        var borderless = new Button { Classes = { "borderless" }, Content = "Button" };
+        var destructive = new Button { Classes = { "borderless", "destructive" }, Content = "Delete" };
+        var window = new Window { Content = new StackPanel { Children = { toggle, borderless, destructive } } };
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(Resource<Color>("AccentColor", ThemeVariant.Light), ((ISolidColorBrush)toggle.Background!).Color);
+        Assert.Equal(1, toggle.Background!.Opacity);
+        Assert.Equal(Colors.White, ((ISolidColorBrush)toggle.Foreground!).Color);
+        foreach (var button in new[] { borderless, destructive })
+        {
+            var label = (ISolidColorBrush)button.Foreground!;
+            Assert.Equal(146, (int)Math.Round(255 - label.Color.A / 255.0 * 255));
+        }
+        window.Close();
     }
 
     private static T Resource<T>(string key, ThemeVariant variant) =>

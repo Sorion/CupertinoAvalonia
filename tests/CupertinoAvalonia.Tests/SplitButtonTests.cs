@@ -166,7 +166,7 @@ public class SplitButtonTests
     }
 
     [AvaloniaFact]
-    public void Toggle_split_button_on_takes_the_accent_tint()
+    public void Toggle_split_button_on_is_filled_with_the_accent()
     {
         Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         var toggle = new ToggleSplitButton { Content = "Monitor", IsChecked = true };
@@ -174,8 +174,9 @@ public class SplitButtonTests
 
         foreach (var part in new[] { Part<Button>(toggle, "PART_PrimaryButton"), Part<Button>(toggle, "PART_SecondaryButton") })
         {
-            Assert.Equal(Color(Resource("ButtonCheckedBackgroundBrush")), Color(part.Background));
-            Assert.Equal(Color(Resource("AccentBrush")), Color(part.Foreground));
+            Assert.Equal(Color(Resource("AccentButtonBackgroundBrush")), Color(part.Background));
+            Assert.Equal(1, part.Background!.Opacity);
+            Assert.Equal(Color(Resource("AccentForegroundBrush")), Color(part.Foreground));
         }
 
         // Active=False: "on" looks like "off".

@@ -147,20 +147,18 @@
       </Style>
     </Style>
 
-    <!-- Borderless -->
+    <!-- Borderless: gray, as SwiftUI's on macOS 27 (the kit draws it in the accent). Pressed, the primary label (not
+         measured). -->
     <Style Selector="^.borderless">
       <Setter Property="Background" Value="Transparent" />
-      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource ButtonBorderlessForegroundBrush}" />
       <Style Selector="^:pressed">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
       </Style>
       <Style Selector="^:disabled">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
-        <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-          <Setter Property="Opacity" Value="0.5" />
-        </Style>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonBorderlessForegroundDisabledBrush}" />
       </Style>
     </Style>
 
@@ -214,24 +212,23 @@
 
   <!-- Buttons - Toggle -->
   <ControlTheme x:Key="{x:Type ToggleButton}" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type Button}}">
+    <!-- "On" as SwiftUI's toggle button on macOS 27: filled with the accent, as a prominent button (the kit tints it). -->
     <Style Selector="^:checked">
-      <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundBrush}" />
-      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+      <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
       <Style Selector="^:pressed">
-        <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundPressedBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
       </Style>
       <Style Selector="^:disabled">
-        <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundDisabledBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
+        <Style Selector="^ /template/ Border#PART_Background">
+          <Setter Property="Opacity" Value="0.4" />
+        </Style>
         <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-          <Setter Property="Opacity" Value="0.3" />
+          <Setter Property="Opacity" Value="0.5" />
         </Style>
       </Style>
-    </Style>
-    <!-- Pressing "off" previews "on". -->
-    <Style Selector="^:unchecked:pressed">
-      <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundPressedBrush}" />
-      <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
     </Style>
     <!-- Active=False: "on" looks like "off". -->
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]:checked">
@@ -303,7 +300,7 @@
     </Style>
     <Style Selector="^.borderless:flyout-open">
       <Setter Property="Background" Value="Transparent" />
-      <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
     </Style>
 
     <Style Selector="^.mini">
@@ -439,11 +436,11 @@
     <!-- ToggleSplitButton, "on": as an "on" toggle button. -->
     <Style Selector="^:checked">
       <Style Selector="^ /template/ Button">
-        <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
       </Style>
-      <Style Selector="^:flyout-open /template/ Button#PART_SecondaryButton">
-        <Setter Property="Background" Value="{DynamicResource ButtonCheckedBackgroundPressedBrush}" />
+      <Style Selector="^ /template/ Button:pressed, ^:flyout-open /template/ Button#PART_SecondaryButton">
+        <Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
       </Style>
     </Style>
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]:checked">
