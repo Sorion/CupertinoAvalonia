@@ -118,30 +118,29 @@ internal static class GlassLift
             {
                 if (control is Button { Flyout: { IsOpen: true } flyout })
                 {
-                    EventHandler? closed = null;
-                    closed = (_, _) =>
-                    {
-                        flyout.Closed -= closed;
-                        if (generation == _generation)
-                            Settle();
-                    };
-                    flyout.Closed += closed;
+                    SettleOnce(h => flyout.Closed += h, h => flyout.Closed -= h, generation);
                     return;
                 }
                 if (control is ComboBox { IsDropDownOpen: true } comboBox)
                 {
-                    EventHandler? closed = null;
-                    closed = (_, _) =>
-                    {
-                        comboBox.DropDownClosed -= closed;
-                        if (generation == _generation)
-                            Settle();
-                    };
-                    comboBox.DropDownClosed += closed;
+                    SettleOnce(h => comboBox.DropDownClosed += h, h => comboBox.DropDownClosed -= h, generation);
                     return;
                 }
             }
             Settle();
+        }
+
+        // Settles when the event first fires, unless the item was lifted again meanwhile.
+        private void SettleOnce(Action<EventHandler> subscribe, Action<EventHandler> unsubscribe, int generation)
+        {
+            EventHandler? closed = null;
+            closed = (_, _) =>
+            {
+                unsubscribe(closed!);
+                if (generation == _generation)
+                    Settle();
+            };
+            subscribe(closed);
         }
 
         private void Settle()

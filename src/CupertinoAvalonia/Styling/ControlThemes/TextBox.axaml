@@ -119,13 +119,7 @@
 
     <!-- As in AppKit, on any focus, not only from the keyboard. "embedded" text boxes leave it to their host. -->
     <Style Selector="^:focus:not(.embedded) /template/ Border#PART_BorderElement">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
-            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
-          </Panel>
-        </Template>
-      </Setter>
+      <Setter Property="AdornerLayer.Adorner" Value="{StaticResource FocusRingAdorner}" />
     </Style>
 
     <Style Selector="^[(cas|WindowActivity.IsInactive)=True]">

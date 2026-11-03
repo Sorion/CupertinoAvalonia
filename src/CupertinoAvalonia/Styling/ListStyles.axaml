@@ -167,13 +167,7 @@
     <Setter Property="HorizontalContentAlignment" Value="Center" />
   </Style>
   <Style Selector="ListBox.segmented ListBoxItem:focus-visible">
-    <Setter Property="AdornerLayer.Adorner">
-      <Template>
-        <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
-          <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
-        </Panel>
-      </Template>
-    </Setter>
+    <Setter Property="AdornerLayer.Adorner" Value="{StaticResource FocusRingAdorner}" />
   </Style>
   <Style Selector="ListBox.segmented ListBoxItem:pressed">
     <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />

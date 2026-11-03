@@ -3,7 +3,8 @@
   blend modes.
 -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cas="using:CupertinoAvalonia.Styling">
 
   <!-- macOS's system font, on every Mac. No ", $Default": with a fallback list, Avalonia picks Helvetica on macOS. -->
   <FontFamily x:Key="ContentControlThemeFontFamily">.AppleSystemUIFont</FontFamily>
@@ -119,6 +120,13 @@
       <SolidColorBrush x:Key="TextFieldBorderDisabledBrush" Color="{DynamicResource ControlDisabledColor}" />
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
+
+  <!-- The focus ring, an adorner of the focused part so that it isn't clipped: the setter builds one per control. -->
+  <Template x:Key="FocusRingAdorner">
+    <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
+      <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
+    </Panel>
+  </Template>
 
   <!-- System Settings' multicolor accent swatch, measured on macOS 27 every 15° (the same in both modes). -->
   <ConicGradientBrush x:Key="AccentMulticolorBrush">

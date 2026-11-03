@@ -77,10 +77,6 @@ public class CANavigationSplitView : ContentControl
     private const double CollapseFraction = 0.5;
     private const double ReopenFraction = 0.625;
 
-    // The window's toolbar, Unified or UnifiedCompact.
-    private const double ToolbarHeight = 52;
-    private const double CompactToolbarHeight = 40;
-
     public static readonly StyledProperty<object?> SidebarProperty =
         AvaloniaProperty.Register<CANavigationSplitView, object?>(nameof(Sidebar));
 
@@ -515,7 +511,7 @@ public class CANavigationSplitView : ContentControl
     private void UpdateChrome()
     {
         var compact = IsCompact;
-        var bandHeight = compact ? CompactToolbarHeight : ToolbarHeight;
+        var bandHeight = compact ? CAWindow.UnifiedCompactToolbarHeight : CAWindow.UnifiedToolbarHeight;
         if (_toolbar is not null)
         {
             _toolbar.Classes.Set("compact", compact);

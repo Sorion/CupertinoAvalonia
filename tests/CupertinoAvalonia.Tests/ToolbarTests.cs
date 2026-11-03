@@ -29,7 +29,7 @@ public class ToolbarTests
         var window = Show(button, popUp, search, segmented);
 
         var glass = Describe(Resource("ToolbarGlassBrush", variant));
-        var shadow = Application.Current.TryGetResource("ToolbarGlassShadow", variant, out var s) ? (BoxShadows)s! : default;
+        var shadow = Resource<BoxShadows>("ToolbarGlassShadow", variant);
         Assert.NotEqual(0, shadow.Count);
         foreach (var (item, part) in new (TemplatedControl, string)[]
                  {
@@ -129,7 +129,7 @@ public class ToolbarTests
         Assert.Equal(1000, button.CornerRadius.TopLeft);
         // No rim, but the glass's bright edge lines over the accent.
         Assert.Equal(Colors.Transparent, (button.BorderBrush as ISolidColorBrush)?.Color);
-        Assert.Equal(Application.Current.TryGetResource("ToolbarGlassPrimaryShadow", variant, out var primary) ? (BoxShadows)primary! : default,
+        Assert.Equal(Resource<BoxShadows>("ToolbarGlassPrimaryShadow", variant),
             Part<Border>(button, "PART_Background").BoxShadow);
         window.Close();
     }
@@ -209,7 +209,7 @@ public class ToolbarTests
         Assert.Equal(flat, Describe(button.Background));
         Assert.Equal(flat, Describe(group.Background));
         Assert.Equal(Describe(Resource("ToolbarGlassInactiveRimBrush", variant)), Describe(button.BorderBrush));
-        Assert.Equal(Application.Current.TryGetResource("ToolbarNoShadow", variant, out var s) ? (BoxShadows)s! : default,
+        Assert.Equal(Resource<BoxShadows>("ToolbarNoShadow", variant),
             Part<Border>(button, "PART_Background").BoxShadow);
         // Labels dim to the tertiary label (macOS 27: 25 to 33 %).
         Assert.Equal(flat, Describe(primary.Background));

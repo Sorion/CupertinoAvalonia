@@ -188,8 +188,7 @@ public class CupertinoAvaloniaTheme : Styles
     }
 
     private Color Token(string key, ThemeVariant variant) =>
-        TryToken(key, variant) ?? throw new KeyNotFoundException($"CupertinoAvalonia token '{key}' is missing.");
-
-    private Color? TryToken(string key, ThemeVariant variant) =>
-        Resources.TryGetResource(key, variant, out var value) && value is Color color ? color : null;
+        Resources.TryGetResource(key, variant, out var value) && value is Color color
+            ? color
+            : throw new KeyNotFoundException($"CupertinoAvalonia token '{key}' is missing.");
 }

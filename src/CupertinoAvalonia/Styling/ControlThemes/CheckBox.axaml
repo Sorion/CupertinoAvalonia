@@ -84,13 +84,7 @@
       <Setter Property="Margin" Value="0" />
     </Style>
     <Style Selector="^:focus-visible /template/ Border#PART_Background">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
-            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
-          </Panel>
-        </Template>
-      </Setter>
+      <Setter Property="AdornerLayer.Adorner" Value="{StaticResource FocusRingAdorner}" />
     </Style>
 
     <Style Selector="^:pressed /template/ Border#PART_Background">
@@ -223,13 +217,7 @@
       <Setter Property="Margin" Value="0" />
     </Style>
     <Style Selector="^:focus-visible /template/ Border#PART_Background">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
-            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
-          </Panel>
-        </Template>
-      </Setter>
+      <Setter Property="AdornerLayer.Adorner" Value="{StaticResource FocusRingAdorner}" />
     </Style>
     <Style Selector="^:pressed /template/ Border#PART_Background">
       <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundPressedBrush}" />

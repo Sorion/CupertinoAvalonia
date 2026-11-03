@@ -78,13 +78,8 @@
                  IsLightDismissEnabled="True"
                  InheritsTransform="True">
             <Border Name="PART_SuggestionsContainer"
-                    Margin="{DynamicResource PopupShadowMargin}"
-                    MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                    Background="{DynamicResource MenuBackgroundBrush}"
-                    BorderBrush="{DynamicResource MenuBorderBrush}"
-                    BorderThickness="0.5"
-                    CornerRadius="{DynamicResource MenuCornerRadius}"
-                    BoxShadow="{DynamicResource PopupShadow}">
+                    Theme="{StaticResource MenuPanelTheme}"
+                    MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}">
               <ListBox Name="PART_SelectingItemsControl"
                        Margin="5"
                        Padding="0"

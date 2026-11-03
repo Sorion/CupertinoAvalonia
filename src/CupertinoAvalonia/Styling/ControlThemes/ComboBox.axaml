@@ -137,13 +137,8 @@
                    IsLightDismissEnabled="True"
                    InheritsTransform="True">
               <Border Name="PopupBorder"
-                      Margin="{DynamicResource PopupShadowMargin}"
-                      MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                      Background="{DynamicResource MenuBackgroundBrush}"
-                      BorderBrush="{DynamicResource MenuBorderBrush}"
-                      BorderThickness="0.5"
-                      CornerRadius="{DynamicResource MenuCornerRadius}"
-                      BoxShadow="{DynamicResource PopupShadow}">
+                      Theme="{StaticResource MenuPanelTheme}"
+                      MinWidth="{Binding Bounds.Width, RelativeSource={RelativeSource TemplatedParent}}">
                 <ScrollViewer HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
                               VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
                               IsScrollChainingEnabled="False">
@@ -159,13 +154,7 @@
     </Setter>
 
     <Style Selector="^:focus-visible /template/ Border#Background, ^[IsEditable=True]:focus-within /template/ Border#Background">
-      <Setter Property="AdornerLayer.Adorner">
-        <Template>
-          <Panel AdornerLayer.IsClipEnabled="False" IsHitTestVisible="False">
-            <Border Classes="focus-ring" cas:OverflowAdorner.FollowAdorned="True" BoxShadow="{DynamicResource FocusRingShadow}" />
-          </Panel>
-        </Template>
-      </Setter>
+      <Setter Property="AdornerLayer.Adorner" Value="{StaticResource FocusRingAdorner}" />
     </Style>
     <Style Selector="^:pressed, ^:dropdownopen">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />

@@ -259,13 +259,10 @@
   </Style>
 
   <!-- Active=False, measured on macOS 27. -->
-  <Style Selector=":is(Button).toolbar[(cas|WindowActivity.IsInactive)=True], ComboBox.toolbar[(cas|WindowActivity.IsInactive)=True], TextBox.toolbar[(cas|WindowActivity.IsInactive)=True], ListBox.segmented.toolbar[(cas|WindowActivity.IsInactive)=True]">
-    <Setter Property="TemplatedControl.Background" Value="{DynamicResource ToolbarGlassInactiveBrush}" />
-    <Setter Property="TemplatedControl.BorderBrush" Value="{DynamicResource ToolbarGlassInactiveRimBrush}" />
-  </Style>
-  <Style Selector="Border.toolbar-group[(cas|WindowActivity.IsInactive)=True]">
-    <Setter Property="Background" Value="{DynamicResource ToolbarGlassInactiveBrush}" />
-    <Setter Property="BorderBrush" Value="{DynamicResource ToolbarGlassInactiveRimBrush}" />
+  <!-- Border's own properties, which TemplatedControl's are. -->
+  <Style Selector=":is(Button).toolbar[(cas|WindowActivity.IsInactive)=True], ComboBox.toolbar[(cas|WindowActivity.IsInactive)=True], TextBox.toolbar[(cas|WindowActivity.IsInactive)=True], ListBox.segmented.toolbar[(cas|WindowActivity.IsInactive)=True], Border.toolbar-group[(cas|WindowActivity.IsInactive)=True]">
+    <Setter Property="Border.Background" Value="{DynamicResource ToolbarGlassInactiveBrush}" />
+    <Setter Property="Border.BorderBrush" Value="{DynamicResource ToolbarGlassInactiveRimBrush}" />
   </Style>
   <Style Selector=":is(Button).toolbar[(cas|WindowActivity.IsInactive)=True] /template/ Border#PART_Background, Border.toolbar-group[(cas|WindowActivity.IsInactive)=True], ComboBox.toolbar[(cas|WindowActivity.IsInactive)=True] /template/ Border#Background, TextBox.toolbar[(cas|WindowActivity.IsInactive)=True] /template/ Border#PART_BorderElement, ListBox.segmented.toolbar[(cas|WindowActivity.IsInactive)=True] /template/ Border#border">
     <Setter Property="BoxShadow" Value="{StaticResource ToolbarNoShadow}" />
@@ -287,26 +284,18 @@
   <Style Selector=":is(Button).toolbar.compact">
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
     <Setter Property="MinWidth" Value="36" />
-    <Setter Property="Padding" Value="8,0" />
   </Style>
-  <Style Selector="Border.toolbar-group.compact">
-    <Setter Property="Padding" Value="1.5" />
+  <!-- Decorator's padding, which TemplatedControl's is. -->
+  <Style Selector="Border.toolbar-group.compact, ListBox.segmented.toolbar.compact">
+    <Setter Property="Decorator.Padding" Value="1.5" />
   </Style>
-  <Style Selector="Border.toolbar-group.compact :is(Button)">
+  <Style Selector="Border.toolbar-group.compact :is(Button), ListBox.segmented.toolbar.compact ListBoxItem">
     <Setter Property="MinHeight" Value="20" />
     <Setter Property="MinWidth" Value="24" />
-    <Setter Property="Padding" Value="6,0" />
-  </Style>
-  <Style Selector="ListBox.segmented.toolbar.compact">
-    <Setter Property="Padding" Value="1.5" />
+    <Setter Property="TemplatedControl.Padding" Value="6,0" />
   </Style>
   <Style Selector="ListBox.segmented.toolbar.compact cas|SegmentedPanel">
     <Setter Property="SeparatorHeight" Value="16" />
-  </Style>
-  <Style Selector="ListBox.segmented.toolbar.compact ListBoxItem">
-    <Setter Property="MinHeight" Value="20" />
-    <Setter Property="MinWidth" Value="24" />
-    <Setter Property="Padding" Value="6,0" />
   </Style>
   <Style Selector="ComboBox.toolbar.compact">
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
