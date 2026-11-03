@@ -90,6 +90,7 @@ public class SearchFieldTests
     [InlineData("large", 28, 9.5, 28, 7.5)]
     public void Glyphs_and_text_sit_as_on_macOS(string? size, double height, double magnifier, double text, double clear)
     {
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "The glyphs are SF Symbols and the text the system font.");
         Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
         var field = new TextBox { Classes = { "search" }, Text = "Value" };
         if (size is not null)

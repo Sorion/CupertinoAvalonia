@@ -11,7 +11,12 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # macOS is the target; Windows and Linux check what the theme does elsewhere, macOS-only tests skipped.
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
 
@@ -20,11 +25,12 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Build
-        run: dotnet build CupertinoAvalonia.slnx -c Release
+        run: dotnet build CupertinoAvalonia.slnx -c Release -warnaserror
 
       - name: Test
         run: dotnet test tests/CupertinoAvalonia.Tests -c Release --no-build
 
       # Checks that the package builds; nothing is uploaded.
       - name: Pack
+        if: matrix.os == 'macos-latest'
         run: dotnet pack src/CupertinoAvalonia -c Release --no-build -o artifacts

@@ -37,6 +37,7 @@ public class CANavigationSplitViewTests
     [AvaloniaFact]
     public void The_closed_sidebar_leaves_the_button_past_the_window_controls()
     {
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "Only macOS draws the window controls over the content.");
         var (window, split) = Show(isSidebarOpen: false);
 
         var buttonX = Origin(Part<Button>(split, "PART_SidebarToggle"), window).X;
@@ -56,6 +57,7 @@ public class CANavigationSplitViewTests
     [InlineData(40, 96, 153)]
     public void Everything_follows_the_sidebar_edge(double edge, double buttonX, double toolbarX)
     {
+        Assert.SkipWhen(buttonX == 96 && !OperatingSystem.IsMacOS(), "Only macOS draws the window controls over the content.");
         var (window, split) = Show(isSidebarOpen: true);
 
         split.SetValue(CANavigationSplitView.VisibleSidebarWidthProperty, edge, BindingPriority.Animation);
