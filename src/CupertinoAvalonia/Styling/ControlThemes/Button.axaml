@@ -93,7 +93,8 @@
       </Style>
     </Style>
 
-    <!-- Bordered - Destructive -->
+    <!-- Bordered - Destructive: an alert's destructive button, as NSAlert's on macOS 27. In a window, AppKit and SwiftUI
+         draw a destructive button as any other; with accent, it takes the accent, as SwiftUI's prominent one. -->
     <Style Selector="^.destructive">
       <Setter Property="Background" Value="{DynamicResource ButtonDestructiveBackgroundBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource AccentRedBrush}" />
@@ -126,18 +127,6 @@
         <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
           <Setter Property="Opacity" Value="0.5" />
         </Style>
-      </Style>
-    </Style>
-
-    <!-- Bordered - Prominent Destructive -->
-    <Style Selector="^.accent.destructive">
-      <Setter Property="Background" Value="{DynamicResource AccentRedBrush}" />
-      <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
-      <Style Selector="^:pressed">
-        <Setter Property="Background" Value="{DynamicResource ButtonProminentDestructiveBackgroundPressedBrush}" />
-      </Style>
-      <Style Selector="^:disabled">
-        <Setter Property="Background" Value="{DynamicResource AccentRedBrush}" />
       </Style>
     </Style>
 

@@ -72,9 +72,6 @@
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundBrush" Color="{StaticResource AccentRedColor}" Opacity="0.2" />
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundPressedBrush" Color="{StaticResource AccentRedColor}" Opacity="0.28" />
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundDisabledBrush" Color="{StaticResource AccentRedColor}" Opacity="0.1" />
-      <!-- _Control BG/Bordered - Prominent - Destructive (Clicked: linear burn #E6E6E6) -->
-      <Color x:Key="ButtonProminentDestructiveBackgroundPressedColor">#E61F23</Color>
-      <SolidColorBrush x:Key="ButtonProminentDestructiveBackgroundPressedBrush" Color="{DynamicResource ButtonProminentDestructiveBackgroundPressedColor}" />
       <!-- "_Tracks - Unfilled": the label color at 10 %, 19 % clicked, 6 % disabled or Active=False. -->
       <SolidColorBrush x:Key="ControlTrackBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="ControlTrackPressedBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.19" />
@@ -110,9 +107,6 @@
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundBrush" Color="{StaticResource AccentRedColor}" Opacity="0.22" />
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundPressedBrush" Color="{StaticResource AccentRedColor}" Opacity="0.28" />
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundDisabledBrush" Color="{StaticResource AccentRedColor}" Opacity="0.12" />
-      <!-- Clicked: linear dodge #090909 -->
-      <Color x:Key="ButtonProminentDestructiveBackgroundPressedColor">#FF4B4E</Color>
-      <SolidColorBrush x:Key="ButtonProminentDestructiveBackgroundPressedBrush" Color="{DynamicResource ButtonProminentDestructiveBackgroundPressedColor}" />
       <SolidColorBrush x:Key="ControlTrackBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.1" />
       <SolidColorBrush x:Key="ControlTrackPressedBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.19" />
       <SolidColorBrush x:Key="ControlTrackDisabledBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.06" />

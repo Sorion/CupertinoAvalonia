@@ -208,6 +208,28 @@ public class AccentColorMapperTests
         window.Close();
     }
 
+    // macOS 27: a destructive button is red only in an alert (NSAlert: a red label on pale red); SwiftUI fills a prominent
+    // one with the accent, as any prominent button, in every state.
+    [AvaloniaFact]
+    public void Destructive_buttons_are_an_alerts_and_prominent_ones_take_the_accent()
+    {
+        var destructive = new Button { Classes = { "destructive" }, Content = "Delete" };
+        var prominent = new Button { Classes = { "accent" }, Content = "Save" };
+        var prominentDestructive = new Button { Classes = { "accent", "destructive" }, Content = "Delete" };
+        var window = Show(destructive, prominent, prominentDestructive);
+
+        Assert.Equal(Describe(Resource("AccentRedBrush")), Describe(destructive.Foreground));
+        Assert.Equal(Describe(Resource("ButtonDestructiveBackgroundBrush")), Describe(destructive.Background));
+        string Look() => $"{Describe(prominentDestructive.Background)} {Describe(prominentDestructive.Foreground)}";
+        Assert.Equal($"{Describe(prominent.Background)} {Describe(prominent.Foreground)}", Look());
+        window.MouseDown(Center(prominentDestructive), Avalonia.Input.MouseButton.Left);
+        Assert.Equal(Describe(Resource("AccentButtonBackgroundPressedBrush")), Describe(prominentDestructive.Background));
+        window.MouseUp(Center(prominentDestructive), Avalonia.Input.MouseButton.Left);
+        prominent.IsEnabled = prominentDestructive.IsEnabled = false;
+        Assert.Equal($"{Describe(prominent.Background)} {Describe(prominent.Foreground)}", Look());
+        window.Close();
+    }
+
     // The focus ring AppKit draws around a text field on macOS 27, 2 pt out, from its keyboardFocusIndicatorColor (graphite's
     // is opaque in light mode), over white or the dark window (#282828).
     [Theory]

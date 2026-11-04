@@ -12,7 +12,7 @@
     </Border>
     <Border DockPanel.Dock="Bottom" Padding="16,10" BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="0,1,0,0">
       <Grid ColumnDefinitions="*,Auto,Auto">
-        <Button Classes="borderless destructive" Content="Delete" />
+        <Button Classes="borderless" Content="Delete" />
         <Button Grid.Column="1" Margin="0,0,8,0" Content="Cancel" />
         <Button Grid.Column="2" Classes="accent" Content="Save" />
       </Grid>
