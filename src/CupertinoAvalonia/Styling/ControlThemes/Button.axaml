@@ -285,7 +285,6 @@
       </ControlTemplate>
     </Setter>
 
-    <!-- Pressed while its menu is open. -->
     <Style Selector="^:flyout-open">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPressedBrush}" />
     </Style>

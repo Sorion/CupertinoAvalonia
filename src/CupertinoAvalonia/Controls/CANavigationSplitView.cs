@@ -303,10 +303,9 @@ public class CANavigationSplitView : ContentControl
         set => SetValue(ToggleInspectorGestureProperty, value);
     }
 
-    // How much of the sidebar shows: animated between 0 and SidebarWidth.
+    // How much of each column shows: animated between 0 and SidebarWidth or InspectorWidth.
     internal double VisibleSidebarWidth => GetValue(VisibleSidebarWidthProperty);
 
-    // How much of the inspector shows: animated between 0 and InspectorWidth.
     internal double VisibleInspectorWidth => GetValue(VisibleInspectorWidthProperty);
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

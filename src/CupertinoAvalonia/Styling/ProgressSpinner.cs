@@ -50,7 +50,7 @@ internal sealed class ProgressSpinner : Control
         set => SetValue(ForegroundProperty, value);
     }
 
-    /// <summary>A spoke's opacity (spoke 0 at the top, then clockwise) at a frame of the cycle.</summary>
+    // Spoke 0 is at the top, then clockwise.
     internal static double SpokeOpacity(int spoke, int frame)
     {
         // How far the spoke is behind the leading position, in spokes.

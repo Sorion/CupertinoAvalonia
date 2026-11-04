@@ -38,7 +38,7 @@ public class CAWindow : Window
     public static readonly DirectProperty<CAWindow, Thickness> WindowControlsInsetProperty =
         AvaloniaProperty.RegisterDirect<CAWindow, Thickness>(nameof(WindowControlsInset), o => o.WindowControlsInset);
 
-    // The toolbar's height, Unified or UnifiedCompact: CAToolbar's (52 and 40 in its theme) and CANavigationSplitView's.
+    // CAToolbar's theme repeats them (52 and 40); CANavigationSplitView reads them.
     internal const double UnifiedToolbarHeight = 52;
     internal const double UnifiedCompactToolbarHeight = 40;
 

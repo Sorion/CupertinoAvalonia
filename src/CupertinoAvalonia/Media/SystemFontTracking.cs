@@ -62,7 +62,7 @@ internal static class SystemFontTracking
     public static double For(IResourceDictionary resources, double fontSize, string fontWeightKey) =>
         IsSystemFont ? Lookup(fontSize, Get<FontWeight>(resources, fontWeightKey)) : 0d;
 
-    /// <summary>The spacing at a size and weight, interpolated between the measured ones.</summary>
+    // Interpolated between the measured sizes and weights.
     internal static double Lookup(double fontSize, FontWeight fontWeight)
     {
         var weight = Math.Clamp(((int)fontWeight - 100) / 100d, 0, 8);

@@ -16,7 +16,7 @@ internal sealed class ToolbarSections : Panel
     private double _contentStart;
     private double _inspectorEdge;
 
-    /// <summary>Where the content's items start, past the sidebar button.</summary>
+    // Where the content's items start, past the sidebar button.
     public double ContentStart
     {
         get => _contentStart;
@@ -27,7 +27,7 @@ internal sealed class ToolbarSections : Panel
         }
     }
 
-    /// <summary>How much of the inspector shows, from the right.</summary>
+    // How much of the inspector shows, from the right.
     public double InspectorEdge
     {
         get => _inspectorEdge;

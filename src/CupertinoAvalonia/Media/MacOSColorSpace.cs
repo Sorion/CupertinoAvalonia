@@ -25,7 +25,7 @@ internal static class MacOSColorSpace
     {
     }
 
-    /// <summary>Sets the layer's color space to sRGB, if it has one (a Metal layer).</summary>
+    // Only a Metal layer has a color space.
     internal static bool TrySetSrgb(IntPtr layer)
     {
         if (layer == IntPtr.Zero || !SendBool(layer, Sel("respondsToSelector:"), Sel("setColorspace:")))

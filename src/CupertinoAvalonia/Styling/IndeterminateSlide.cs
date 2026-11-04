@@ -4,9 +4,9 @@ using Avalonia.Media;
 namespace CupertinoAvalonia.Styling;
 
 /// <summary>
-/// Where an indeterminate progress bar's segment has slid, which its animation moves. Animated on the segment, a visual,
-/// the animation pauses while the bar isn't shown, as Avalonia pauses style animations; animated on its
-/// TranslateTransform, it kept the render loop awake behind a hidden bar (about 5 % CPU on macOS).
+/// Where an indeterminate progress bar's segment has slid. Animated on the segment, a visual, the animation pauses while
+/// the bar isn't shown, as Avalonia pauses style animations; on its TranslateTransform, it would keep the render loop
+/// awake behind a hidden bar (about 5 % CPU on macOS).
 /// </summary>
 internal static class IndeterminateSlide
 {
