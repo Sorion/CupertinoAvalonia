@@ -65,7 +65,7 @@ public class AccentColorMapperTests
         var expected = theme == "Dark" ? colors.Dark : colors.Light;
         Assert.Equal(expected.Accent, Resource<Color>("AccentColor", variant));
         Assert.Equal(expected.Selection, Resource<Color>("AccentSelectionColor", variant));
-        Assert.Equal(expected.FocusRing, Resource<BoxShadows>("FocusRingShadow", variant)[0].Color);
+        Assert.Equal(AccentColorMapper.FocusRing(expected.FocusRing, theme == "Dark"), Resource<BoxShadows>("FocusRingShadow", variant)[0].Color);
         Assert.Equal(expected.TextSelection, Resource<Color>("TextSelectionColor", variant));
         Assert.Equal(expected.TextSelection, Resource<ISolidColorBrush>("TextSelectionBrush", variant).Color);
     }
@@ -123,10 +123,13 @@ public class AccentColorMapperTests
         {
             Assert.Equal(Color.Parse(accent), Resource<Color>("AccentColor", variant));
             AssertSimilar(Color.Parse(selection), Resource<Color>("AccentSelectionColor", variant));
+            // AppKit's ring color, at half opacity, as the theme draws it.
             var focusRing = Resource<BoxShadows>("FocusRingShadow", variant)[0].Color;
-            Assert.Equal(0x7F, focusRing.A);
+            Assert.Equal(AccentColorMapper.FocusRing(Color.FromArgb(0x7F, 0, 0, 0), theme == "Dark").A, focusRing.A);
+            // Over the window, as it shows.
+            var window = theme == "Dark" ? Color.Parse("#282828") : Colors.White;
             if (ring is not null)
-                AssertSimilar(Color.Parse(ring), focusRing);
+                AssertSimilar(Over(window, AccentColorMapper.FocusRing(Color.Parse(ring.Insert(1, "7F")), theme == "Dark")), Over(window, focusRing));
         }
         finally
         {
@@ -205,6 +208,42 @@ public class AccentColorMapperTests
         window.Close();
     }
 
+    // The focus ring AppKit draws around a text field on macOS 27, 2 pt out, from its keyboardFocusIndicatorColor (graphite's
+    // is opaque in light mode), over white or the dark window (#282828).
+    [Theory]
+    [InlineData("Light", "#FF99999E", "#A9A9AD")] // graphite
+    [InlineData("Light", "#7F842685", "#C9AACB")] // purple
+    [InlineData("Light", "#7F0067F4", "#A5C2F8")] // blue
+    [InlineData("Light", "#7FF4B90E", "#F7E3B0")] // yellow
+    [InlineData("Dark", "#7FC3C3C3", "#848484")] // graphite
+    [InlineData("Dark", "#7FDC78DE", "#8A628E")] // purple
+    [InlineData("Dark", "#7F1AA9FF", "#46779D")] // blue
+    [InlineData("Dark", "#7FFFFF1A", "#9F9D4B")] // yellow
+    public void The_focus_ring_is_drawn_as_AppKit_draws_it(string theme, string indicator, string drawn)
+    {
+        var isDark = theme == "Dark";
+        var ring = AccentColorMapper.FocusRing(Color.Parse(indicator), isDark);
+        AssertClose(Color.Parse(drawn), Over(isDark ? Color.Parse("#282828") : Colors.White, ring), tolerance: 14);
+    }
+
+    // SwiftUI on macOS 27, a borderless button held down: its label 50 over white, 228 over the dark window (#282828).
+    [AvaloniaTheory]
+    [InlineData("Light", 255, 50)]
+    [InlineData("Dark", 40, 228)]
+    public void Held_borderless_buttons_darken_their_label(string theme, int backdrop, int expected)
+    {
+        UseTheme(theme);
+        var button = new Button { Classes = { "borderless" }, Content = "Button" };
+        var window = Show(button);
+
+        window.MouseDown(Center(button), Avalonia.Input.MouseButton.Left);
+        var label = Assert.IsAssignableFrom<ISolidColorBrush>(button.Foreground).Color;
+        var white = theme == "Dark";
+        Assert.Equal(expected, (int)Math.Round(backdrop + ((white ? 255 : 0) - backdrop) * label.A / 255.0), tolerance: 1);
+        window.MouseUp(Center(button), Avalonia.Input.MouseButton.Left);
+        window.Close();
+    }
+
     [Fact]
     public void Pressed_shades_of_the_prominent_button()
     {
@@ -217,6 +256,12 @@ public class AccentColorMapperTests
     {
         Assert.True(Math.Abs(expected.R - actual.R) <= tolerance && Math.Abs(expected.G - actual.G) <= tolerance
                     && Math.Abs(expected.B - actual.B) <= tolerance, $"Expected {expected}, got {actual}");
+    }
+
+    private static Color Over(Color backdrop, Color color)
+    {
+        byte Mix(byte b, byte c) => (byte)Math.Round(b + (c - b) * color.A / 255.0);
+        return Color.FromRgb(Mix(backdrop.R, color.R), Mix(backdrop.G, color.G), Mix(backdrop.B, color.B));
     }
 
     // CIE76 ΔE: 2 is barely noticeable side by side.

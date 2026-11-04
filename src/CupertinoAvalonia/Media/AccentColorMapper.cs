@@ -58,6 +58,17 @@ internal static class AccentColorMapper
         return FromEncoded(color.A, srgb);
     }
 
+    // The ring AppKit draws from keyboardFocusIndicatorColor, measured on macOS 27 for the eight accents: the color at 77 %
+    // of its opacity, over a 24 % white veil in dark mode (within 14 levels; AppKit blends in P3). Both layers as one color.
+    public static Color FocusRing(Color indicator, bool isDark)
+    {
+        var opacity = indicator.A / 255.0 * 0.77;
+        var veil = isDark ? 0.24 : 0;
+        var alpha = 1 - (1 - veil) * (1 - opacity);
+        byte Channel(byte c) => (byte)Math.Round((c * opacity + 255 * veil * (1 - opacity)) / alpha);
+        return Color.FromArgb((byte)Math.Round(alpha * 255), Channel(indicator.R), Channel(indicator.G), Channel(indicator.B));
+    }
+
     // WCAG's relative luminance, 0 for black to 1 for white.
     public static double RelativeLuminance(Color color)
     {

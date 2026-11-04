@@ -61,10 +61,13 @@
            as SwiftUI's secondary text, 146 over white, 203 disabled. -->
       <SolidColorBrush x:Key="ButtonBorderlessForegroundBrush" Color="#6D000000" />
       <SolidColorBrush x:Key="ButtonBorderlessForegroundDisabledBrush" Color="#34000000" />
-      <!-- _Control BG/Bordered - Tinted -->
-      <SolidColorBrush x:Key="ButtonTintedBackgroundBrush" Color="{DynamicResource AccentColor}" Opacity="0.2" />
-      <SolidColorBrush x:Key="ButtonTintedBackgroundPressedBrush" Color="{DynamicResource AccentColor}" Opacity="0.28" />
-      <SolidColorBrush x:Key="ButtonTintedBackgroundDisabledBrush" Color="{DynamicResource AccentColor}" Opacity="0.12" />
+      <!-- Held down: 50 over white (SwiftUI on macOS 27). -->
+      <SolidColorBrush x:Key="ButtonBorderlessForegroundPressedBrush" Color="#CD000000" />
+      <!-- _Control BG/Bordered - Tinted. Measured on macOS 27 for the eight accents (SwiftUI's tinted bordered button), far
+           fainter than the kit's: the accent at 3.5 %, 10.5 % held down, 1.8 % disabled. -->
+      <SolidColorBrush x:Key="ButtonTintedBackgroundBrush" Color="{DynamicResource AccentColor}" Opacity="0.035" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundPressedBrush" Color="{DynamicResource AccentColor}" Opacity="0.105" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundDisabledBrush" Color="{DynamicResource AccentColor}" Opacity="0.018" />
       <!-- _Control BG/Bordered - Destructive -->
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundBrush" Color="{StaticResource AccentRedColor}" Opacity="0.2" />
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundPressedBrush" Color="{StaticResource AccentRedColor}" Opacity="0.28" />
@@ -98,9 +101,12 @@
       <!-- 170 over the dark window, 105 disabled. -->
       <SolidColorBrush x:Key="ButtonBorderlessForegroundBrush" Color="#9AFFFFFF" />
       <SolidColorBrush x:Key="ButtonBorderlessForegroundDisabledBrush" Color="#4DFFFFFF" />
-      <SolidColorBrush x:Key="ButtonTintedBackgroundBrush" Color="{DynamicResource AccentColor}" Opacity="0.22" />
-      <SolidColorBrush x:Key="ButtonTintedBackgroundPressedBrush" Color="{DynamicResource AccentColor}" Opacity="0.28" />
-      <SolidColorBrush x:Key="ButtonTintedBackgroundDisabledBrush" Color="{DynamicResource AccentColor}" Opacity="0.1" />
+      <!-- Held down: 228. -->
+      <SolidColorBrush x:Key="ButtonBorderlessForegroundPressedBrush" Color="#DFFFFFFF" />
+      <!-- 6.7 %, 18.5 % held down, 3.5 % disabled. -->
+      <SolidColorBrush x:Key="ButtonTintedBackgroundBrush" Color="{DynamicResource AccentColor}" Opacity="0.067" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundPressedBrush" Color="{DynamicResource AccentColor}" Opacity="0.185" />
+      <SolidColorBrush x:Key="ButtonTintedBackgroundDisabledBrush" Color="{DynamicResource AccentColor}" Opacity="0.035" />
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundBrush" Color="{StaticResource AccentRedColor}" Opacity="0.22" />
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundPressedBrush" Color="{StaticResource AccentRedColor}" Opacity="0.28" />
       <SolidColorBrush x:Key="ButtonDestructiveBackgroundDisabledBrush" Color="{StaticResource AccentRedColor}" Opacity="0.12" />

@@ -152,9 +152,10 @@ public class CupertinoAvaloniaTheme : Styles
         d["SystemAccentColor"] = accent;
 
         // A spread shadow follows the control's corner radius.
+        var ring = AccentColorMapper.FocusRing(shades.FocusRing, isDark);
         d["FocusRingShadow"] = new BoxShadows(
-            new BoxShadow { Spread = 3.5, Color = shades.FocusRing },
-            [new BoxShadow { Spread = 1, Color = shades.FocusRing, IsInset = true }]);
+            new BoxShadow { Spread = 3.5, Color = ring },
+            [new BoxShadow { Spread = 1, Color = ring, IsInset = true }]);
     }
 
     private static void Set(ResourceDictionary d, string colorKey, Color color)

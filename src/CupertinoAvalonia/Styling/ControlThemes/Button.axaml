@@ -141,14 +141,13 @@
       </Style>
     </Style>
 
-    <!-- Borderless: gray, as SwiftUI's on macOS 27 (the kit draws it in the accent). Pressed, the primary label (not
-         measured). -->
+    <!-- Borderless: gray, as SwiftUI's on macOS 27 (the kit draws it in the accent); darker while held down. -->
     <Style Selector="^.borderless">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Foreground" Value="{DynamicResource ButtonBorderlessForegroundBrush}" />
       <Style Selector="^:pressed">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonBorderlessForegroundPressedBrush}" />
       </Style>
       <Style Selector="^:disabled">
         <Setter Property="Background" Value="Transparent" />
@@ -293,7 +292,7 @@
     </Style>
     <Style Selector="^.borderless:flyout-open">
       <Setter Property="Background" Value="Transparent" />
-      <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource ButtonBorderlessForegroundPressedBrush}" />
     </Style>
 
     <Style Selector="^.mini">
