@@ -260,6 +260,8 @@
             <TextBox Name="PART_TextBox"
                      Classes="embedded"
                      Padding="{TemplateBinding Padding}"
+                     FontSize="{TemplateBinding FontSize}"
+                     LetterSpacing="{TemplateBinding LetterSpacing}"
                      MinWidth="0"
                      MinHeight="0"
                      VerticalAlignment="Stretch"
@@ -303,6 +305,7 @@
       <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingMini}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusMini}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
       <Setter Property="cas:Stepper.Size" Value="Mini" />
     </Style>
     <Style Selector="^.small">
@@ -310,6 +313,7 @@
       <Setter Property="Padding" Value="{DynamicResource TextFieldPaddingSmall}" />
       <Setter Property="CornerRadius" Value="{DynamicResource ControlRadiusSmall}" />
       <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
+      <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
       <Setter Property="cas:Stepper.Size" Value="Small" />
     </Style>
     <Style Selector="^.large">

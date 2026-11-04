@@ -141,7 +141,12 @@ public class StepperTests
     {
         var numberBox = new NumericUpDown { Classes = { size }, Value = 1, Width = 120 };
         var alone = new ButtonSpinner { Classes = { size } };
-        var window = Show(numberBox, alone);
+        var field = new TextBox { Classes = { size } };
+        var window = Show(numberBox, alone, field);
+
+        // The number's text is a text field's of the same size: at 13 pt, a mini one grew to 18 pt with Segoe UI.
+        var text = Part<TextBox>(numberBox, "PART_TextBox");
+        Assert.Equal((field.FontSize, field.LetterSpacing), (text.FontSize, text.LetterSpacing));
 
         foreach (var control in new Control[] { numberBox, alone })
         {
