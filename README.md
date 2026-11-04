@@ -46,7 +46,7 @@ own colors in both modes; elsewhere, and for a custom accent, their shades are d
 
 | Control | Classes |
 |---|---|
-| `Button`, `RepeatButton`, `ToggleButton` | `accent` (or `IsDefault`), `tinted`, `destructive`, `borderless` |
+| `Button`, `RepeatButton`, `ToggleButton` | `accent` (or `IsDefault`), `tinted`, `destructive` (an alert's destructive button: macOS draws one in a window as any other), `borderless` |
 | `DropDownButton`, `SplitButton`, `ToggleSplitButton` | A pull-down button, with a button's classes (`toolbar` included); an action and, apart, its menu, as AppKit's split combo button |
 | `CheckBox`, `RadioButton`, `ToggleSwitch` | |
 | `TextBox`, `ComboBox`, `AutoCompleteBox` | `search`: a search field, a capsule with a magnifying glass and a button that clears it (the toolbar's search field has the button too). A `ComboBox` is a pop-up button; `IsEditable="True"` makes it a combo box, a text field with an arrow button. The autocomplete box's suggestions open in a menu |
