@@ -23,14 +23,18 @@
       Measured on macOS 27 (NSProgressIndicator, spinning style): the spinner's leading spoke at 55 % (the label color at 65 %), half in an
       inactive window; the ring's track at 5 % in light, 10 % in dark; its fill in an inactive window at 27.5 %, 32 %
       in dark.
+      The bar's track as NSProgressIndicator's (ProgressBarTests): black or white at 6 % and 8 %, lighter than a
+      slider's.
     -->
     <ResourceDictionary x:Key="Default">
+      <SolidColorBrush x:Key="ProgressTrackBrush" Color="Black" Opacity="0.06" />
       <SolidColorBrush x:Key="ProgressSpinnerBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.65" />
       <SolidColorBrush x:Key="ProgressSpinnerInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
       <SolidColorBrush x:Key="ProgressRingTrackBrush" Color="{DynamicResource FillTertiaryColor}" />
       <SolidColorBrush x:Key="ProgressRingFillInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="ProgressTrackBrush" Color="White" Opacity="0.08" />
       <SolidColorBrush x:Key="ProgressSpinnerBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.65" />
       <SolidColorBrush x:Key="ProgressSpinnerInactiveBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.325" />
       <SolidColorBrush x:Key="ProgressRingTrackBrush" Color="{DynamicResource FillPrimaryColor}" />
@@ -40,12 +44,13 @@
 
   <ControlTheme x:Key="{x:Type ProgressBar}" TargetType="ProgressBar">
     <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
-    <Setter Property="Background" Value="{DynamicResource ControlTrackBrush}" />
+    <Setter Property="Background" Value="{DynamicResource ProgressTrackBrush}" />
     <Setter Property="BorderBrush" Value="{DynamicResource ProgressTrackStrokeBrush}" />
     <Setter Property="BorderThickness" Value="0.5" />
     <Setter Property="CornerRadius" Value="100" />
-    <Setter Property="MinHeight" Value="10" />
-    <Setter Property="MinWidth" Value="10" />
+    <!-- NSProgressIndicator's regular bar on macOS 27, 6 pt small; the kit draws 10. -->
+    <Setter Property="MinHeight" Value="8" />
+    <Setter Property="MinWidth" Value="8" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Template">
       <ControlTemplate TargetType="ProgressBar">
@@ -83,7 +88,7 @@
       <Setter Property="VerticalAlignment" Value="Stretch" />
     </Style>
     <Style Selector="^:vertical">
-      <Setter Property="MinWidth" Value="10" />
+      <Setter Property="MinWidth" Value="8" />
       <Style Selector="^ /template/ Border#PART_Indicator">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Bottom" />

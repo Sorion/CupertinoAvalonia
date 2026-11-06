@@ -123,6 +123,36 @@ public class ControlRenderTests
         window.Close();
     }
 
+    /// <summary>
+    /// A radio button's dot and a checkbox's mixed dash sit at the box's center, at every size: layout rounding would
+    /// move them a pixel when the box and the glyph don't differ by an even number of pixels.
+    /// </summary>
+    [AvaloniaTheory]
+    [InlineData(typeof(RadioButton), "PART_Dot", "mini")]
+    [InlineData(typeof(RadioButton), "PART_Dot", "small")]
+    [InlineData(typeof(RadioButton), "PART_Dot", "")]
+    [InlineData(typeof(RadioButton), "PART_Dot", "large")]
+    [InlineData(typeof(CheckBox), "PART_MixedGlyph", "mini")]
+    [InlineData(typeof(CheckBox), "PART_MixedGlyph", "small")]
+    [InlineData(typeof(CheckBox), "PART_MixedGlyph", "")]
+    [InlineData(typeof(CheckBox), "PART_MixedGlyph", "large")]
+    public void Glyphs_are_centered_in_their_box(Type controlType, string glyphName, string size)
+    {
+        var control = (ToggleButton)Activator.CreateInstance(controlType)!;
+        control.IsThreeState = control is CheckBox;
+        control.IsChecked = control is CheckBox ? null : true;
+        if (size.Length > 0)
+            control.Classes.Add(size);
+        var window = Show(control);
+
+        var box = Part<Panel>(control, "PART_Box");
+        var glyph = Part<Control>(control, glyphName);
+        Assert.Equal(box.Bounds.Width / 2, glyph.Bounds.Center.X, 3);
+        Assert.Equal(box.Bounds.Height / 2, glyph.Bounds.Center.Y, 3);
+
+        window.Close();
+    }
+
     private sealed class CollectingLogSink : ILogSink
     {
         public List<string> Errors { get; } = [];

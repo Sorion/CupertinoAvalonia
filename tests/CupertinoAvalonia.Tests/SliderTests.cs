@@ -81,6 +81,61 @@ public class SliderTests
         window.Close();
     }
 
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Track_is_as_NSSlider(string theme)
+    {
+        var variant = UseTheme(theme);
+        var slider = new Slider { Value = 40, Width = 200 };
+        var disabled = new Slider { Value = 40, Width = 200, IsEnabled = false };
+        var window = Show(slider, disabled);
+
+        // Measured on macOS 27 at 2x: a 6 pt track, black or white at 10 % (E6E6E6 on white, 343434 on 1E1E1E), the
+        // same when disabled, the fill then at 14 % (DADADA, 3E3E3E).
+        var rest = Part<RepeatButton>(slider, "PART_IncreaseButton");
+        var track = rest.GetVisualDescendants().OfType<Border>().Single(b => b.VerticalAlignment == VerticalAlignment.Center);
+        Assert.Equal(6, track.Bounds.Height);
+        Assert.Equal(Describe(Resource("SliderTrackBrush", variant)), Describe(slider.Background));
+        Assert.Equal(Describe(Resource("SliderTrackBrush", variant)), Describe(disabled.Background));
+        Assert.Equal(Describe(Resource("SliderFillDisabledBrush", variant)), Describe(disabled.Foreground));
+
+        // Pressed, the track keeps its shade: only the knob becomes the lens.
+        var thumb = Part<Thumb>(slider, "thumb");
+        var center = thumb.TranslatePoint(new Point(thumb.Bounds.Width / 2, thumb.Bounds.Height / 2), window)!.Value;
+        window.MouseDown(center, MouseButton.Left);
+        Assert.Contains(":pressed", slider.Classes);
+        Assert.Equal(Describe(Resource("SliderTrackBrush", variant)), Describe(slider.Background));
+        window.MouseUp(center, MouseButton.Left);
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void Ticks_are_dots_under_the_track()
+    {
+        var slider = new Slider { Width = 200, Value = 60, TickFrequency = 10, TickPlacement = TickPlacement.BottomRight };
+        var window = Show(slider);
+
+        // As NSSlider's on macOS 27 (2x captures): 2 pt dots, 3 pt under the 6 pt track, in the tertiary label color,
+        // from the knob's center at one end to its center at the other.
+        var dots = slider.GetVisualDescendants().OfType<CupertinoAvalonia.Styling.SliderTickDots>().Single(d => d.IsVisible);
+        var rest = Part<RepeatButton>(slider, "PART_IncreaseButton");
+        var track = rest.GetVisualDescendants().OfType<Border>().Single(b => b.VerticalAlignment == VerticalAlignment.Center);
+        var trackBottom = track.TranslatePoint(new Point(0, track.Bounds.Height), slider)!.Value.Y;
+        Assert.Equal(2, dots.Bounds.Height);
+        Assert.Equal(trackBottom + 3, dots.TranslatePoint(default, slider)!.Value.Y);
+        Assert.Equal(Describe(Resource("LabelTertiaryBrush")), Describe(dots.Fill));
+        Assert.Equal(Part<Thumb>(slider, "thumb").Bounds.Width, dots.ReservedSpace.Width);
+
+        // The knob hides the tick under it: at 60, the one at its center.
+        var thumb = Part<Thumb>(slider, "thumb");
+        var under = thumb.TranslatePoint(new Point(thumb.Bounds.Width / 2, 0), window)!.Value.X;
+        var dotRow = dots.TranslatePoint(new Point(0, 1), window)!.Value.Y;
+        using var frame = window.CaptureRenderedFrame()!;
+        Assert.Equal(Colors.White, Pixel(frame, (int)under, (int)dotRow));
+        window.Close();
+    }
+
     private static Rect ScreenRect(Visual visual, Visual root) =>
         new Rect(visual.Bounds.Size).TransformToAABB(visual.TransformToVisual(root)!.Value);
 }

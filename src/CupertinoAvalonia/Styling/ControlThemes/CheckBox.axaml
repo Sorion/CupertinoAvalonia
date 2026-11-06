@@ -61,7 +61,9 @@
                     StrokeLineCap="Round"
                     StrokeJoin="Round" />
             </Viewbox>
+            <!-- Not rounded to pixels: rounding would move it half a pixel off the box's center. -->
             <Border Name="PART_MixedGlyph"
+                    UseLayoutRounding="False"
                     Width="{DynamicResource RadioButtonWidthDash}"
                     Height="{DynamicResource RadioButtonHeightDash}"
                     CornerRadius="1"
@@ -195,7 +197,9 @@
                  VerticalAlignment="Center">
             <Border Name="PART_Background" CornerRadius="100"
                     Background="{DynamicResource FillPrimaryBrush}" />
+            <!-- Not rounded to pixels: rounding would move it half a pixel off the box's center. -->
             <Ellipse Name="PART_Dot"
+                     UseLayoutRounding="False"
                      Width="{DynamicResource RadioButtonWidthDot}"
                      Height="{DynamicResource RadioButtonWidthDot}"
                      Fill="{DynamicResource AccentForegroundBrush}"

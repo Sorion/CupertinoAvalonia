@@ -30,7 +30,7 @@ public class SearchFieldTests
         var secondary = ColorOf(Resource<IBrush>("LabelSecondaryBrush", variant));
         Assert.Equal(secondary, ColorOf(field.PlaceholderForeground));
         var glyph = Find<CASymbolIcon>(field, "SearchGlyph");
-        Assert.Equal(("magnifyingglass", 13, FontWeight.Medium), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
+        Assert.Equal(("magnifyingglass", 13, FontWeight.Normal), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         Assert.Equal(secondary, ColorOf(glyph.Foreground));
         Assert.False(Find<Button>(field, "SearchClearButton").IsVisible);
         window.Close();
@@ -82,13 +82,13 @@ public class SearchFieldTests
     }
 
     [AvaloniaTheory]
-    // Measured on macOS 27 (NSSearchField), in points: the magnifier's ink from the left edge, the text's, the clear
-    // button's ink from the right edge.
-    [InlineData("mini", 16, 5, 16, 3.5)]
-    [InlineData("small", 20, 5.5, 18, 4.5)]
-    [InlineData(null, 24, 7.5, 24, 5.5)]
-    [InlineData("large", 28, 9.5, 28, 7.5)]
-    public void Glyphs_and_text_sit_as_on_macOS(string? size, double height, double magnifier, double text, double clear)
+    // Measured on macOS 27 (NSSearchField rendered at 1x, 2026-11-06), in points: the magnifier's ink from the left
+    // edge, the text's, the clear button's ink from the right edge; the magnifier's size, to find the text after it.
+    [InlineData("mini", 16, 5, 16, 3, 9)]
+    [InlineData("small", 20, 5, 18, 4, 11)]
+    [InlineData(null, 24, 7, 25, 5, 13)]
+    [InlineData("large", 28, 9, 29, 7, 13)]
+    public void Glyphs_and_text_sit_as_on_macOS(string? size, double height, double magnifier, double text, double clear, double glyph)
     {
         Assert.SkipUnless(OperatingSystem.IsMacOS(), "The glyphs are SF Symbols and the text the system font.");
         Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
@@ -101,7 +101,9 @@ public class SearchFieldTests
         using var frame = window.CaptureRenderedFrame()!;
         var origin = field.TranslatePoint(default, window)!.Value;
         var inks = Clusters(frame, (int)origin.X + 3, (int)(origin.X + field.Bounds.Width) - 3, (int)(origin.Y + height / 4), (int)(origin.Y + height * 3 / 4));
-        var measured = (magnifier: inks[0].Left - origin.X, text: inks[1].Left - origin.X, clear: origin.X + field.Bounds.Width - inks[^1].Right - 1);
+        // A regular-weight ring is lighter at its top and bottom than the ink threshold: its two sides are two clusters.
+        var textInk = inks.First(ink => ink.Left > inks[0].Left + glyph);
+        var measured = (magnifier: inks[0].Left - origin.X, text: textInk.Left - origin.X, clear: origin.X + field.Bounds.Width - inks[^1].Right - 1);
         Assert.True(Math.Abs(measured.magnifier - magnifier) <= 1 && Math.Abs(measured.text - text) <= 1 && Math.Abs(measured.clear - clear) <= 1,
             $"magnifier {measured.magnifier}, text {measured.text}, clear {measured.clear}");
         window.Close();

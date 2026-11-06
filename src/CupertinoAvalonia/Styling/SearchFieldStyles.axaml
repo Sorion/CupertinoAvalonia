@@ -56,7 +56,6 @@
                         VerticalAlignment="Center"
                         IsHitTestVisible="False"
                         Symbol="magnifyingglass"
-                        FontWeight="Medium"
                         FallbackData="{StaticResource SearchFieldGlyph}"
                         Foreground="{Binding $parent[TextBox].PlaceholderForeground}" />
       </Template>
@@ -89,8 +88,13 @@
   <Style Selector="TextBox.search:disabled">
     <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
+  <!-- The magnifier's weight and margins, as NSSearchField's on macOS 27 at each size (SearchFieldTests): regular, its ink
+       7 from the edge and the text at 25 in a regular field. -->
   <Style Selector="TextBox.search cac|CASymbolIcon#SearchGlyph">
-    <Setter Property="Margin" Value="6,0,1,0" />
+    <Setter Property="Margin" Value="6,0,3,0" />
+  </Style>
+  <Style Selector="TextBox.toolbar cac|CASymbolIcon#SearchGlyph">
+    <Setter Property="FontWeight" Value="Medium" />
   </Style>
   <Style Selector="TextBox.search Button#SearchClearButton">
     <Setter Property="Margin" Value="2,0,4,0" />
@@ -101,7 +105,7 @@
   </Style>
   <Style Selector="TextBox.search.mini cac|CASymbolIcon#SearchGlyph">
     <Setter Property="FontSize" Value="9" />
-    <Setter Property="Margin" Value="3.5,0,1.5,0" />
+    <Setter Property="Margin" Value="4,0,1,0" />
   </Style>
   <Style Selector="TextBox.search.mini cac|CASymbolIcon#SearchClearGlyph">
     <Setter Property="FontSize" Value="9" />
@@ -128,7 +132,7 @@
     <Setter Property="CornerRadius" Value="14" />
   </Style>
   <Style Selector="TextBox.search.large cac|CASymbolIcon#SearchGlyph">
-    <Setter Property="Margin" Value="8,0,3,0" />
+    <Setter Property="Margin" Value="8,0,5,0" />
   </Style>
   <Style Selector="TextBox.search.large Button#SearchClearButton">
     <Setter Property="Margin" Value="2,0,6,0" />

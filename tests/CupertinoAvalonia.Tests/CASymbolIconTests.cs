@@ -4,6 +4,8 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+using System.Runtime.InteropServices;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CupertinoAvalonia.Controls;
@@ -206,6 +208,26 @@ public class CASymbolIconTests
         Assert.Equal((10.75, FontWeight.Medium), (glyphs["chevron.up.chevron.down"].FontSize, glyphs["chevron.up.chevron.down"].FontWeight));
         Assert.Equal((12, FontWeight.Medium), (glyphs["chevron.up"].FontSize, glyphs["chevron.up"].FontWeight));
         window.Close();
+    }
+
+    [AvaloniaFact]
+    public void A_turned_symbol_is_drawn_turned()
+    {
+        Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
+        // The compositor would turn the bitmap and resample it, jagged at 1x: AppKit draws the vector turned instead.
+        var upright = MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1)!;
+        var turned = MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1, -90)!;
+        Assert.Equal(new Size(upright.Size.Height, upright.Size.Width), turned.Size);
+        Assert.Same(turned, MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1, 270));
+
+        // Its ink is the upright one's, a quarter turn counterclockwise.
+        using var a = upright.Mask.Lock();
+        using var b = turned.Mask.Lock();
+        int Alpha(ILockedFramebuffer buffer, int x, int y) => Marshal.ReadByte(buffer.Address, y * buffer.RowBytes + x * 4 + 3);
+        var (w, h) = (a.Size.Width, a.Size.Height);
+        for (var y = 0; y < h; y++)
+            for (var x = 0; x < w; x++)
+                Assert.InRange(Alpha(b, y, w - 1 - x) - Alpha(a, x, y), -8, 8);
     }
 
     [AvaloniaFact]

@@ -25,12 +25,11 @@
       <ControlTemplate>
         <Border Name="PART_Root" Background="{TemplateBinding Background}" CornerRadius="5" MinHeight="{DynamicResource ControlHeight}">
           <Grid ColumnDefinitions="Auto,*">
-            <Panel Name="PART_Glyph" Width="{DynamicResource ControlHeight}" Height="{DynamicResource ControlHeight}">
+            <Panel Name="PART_Glyph" Height="{DynamicResource ControlHeight}">
               <Border Name="PART_GlyphBackground" CornerRadius="{DynamicResource DisclosureRadius}" />
               <cac:CASymbolIcon Name="PART_Chevron"
-                              Symbol="chevron.right" FontSize="13" FontWeight="Bold"
-                              FallbackData="{StaticResource DisclosureChevron}" FallbackStrokeThickness="1.75"
-                              Foreground="{TemplateBinding Foreground}"
+                              Symbol="chevron.right"
+                              FallbackData="{StaticResource DisclosureChevron}"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center">
                 <cac:CASymbolIcon.Transitions>
@@ -42,7 +41,6 @@
             </Panel>
             <ContentPresenter Name="PART_ContentPresenter"
                               Grid.Column="1"
-                              Margin="2,0,0,0"
                               VerticalAlignment="Center"
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                               Content="{TemplateBinding Content}"
@@ -52,14 +50,26 @@
         </Border>
       </ControlTemplate>
     </Setter>
-    <!-- In styles: a value in the template would block them. -->
+    <!-- In styles: a value in the template would block them, and the disclosure button replaces them.
+         As a SwiftUI DisclosureGroup on macOS 27: a 9 pt Regular chevron in the tertiary label color at the leading
+         edge, the label 12 pt from it. -->
+    <Style Selector="^ /template/ Panel#PART_Glyph">
+      <Setter Property="Width" Value="7" />
+    </Style>
+    <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Margin" Value="5,0,0,0" />
+    </Style>
     <Style Selector="^ /template/ cac|CASymbolIcon#PART_Chevron">
+      <Setter Property="FontSize" Value="9" />
+      <Setter Property="FontWeight" Value="Normal" />
+      <Setter Property="FallbackStrokeThickness" Value="1" />
+      <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
       <Setter Property="RenderTransform" Value="rotate(0deg)" />
     </Style>
     <Style Selector="^:checked /template/ cac|CASymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(90deg)" />
     </Style>
-    <Style Selector="^:focus-visible /template/ Border#PART_GlyphBackground">
+    <Style Selector="^:focus-visible /template/ Border#PART_Root">
       <Setter Property="AdornerLayer.Adorner" Value="{StaticResource FocusRingAdorner}" />
     </Style>
     <Style Selector="^:pressed /template/ cac|CASymbolIcon#PART_Chevron">
@@ -73,11 +83,24 @@
   <!-- Disclosure Button -->
   <ControlTheme x:Key="CupertinoExpanderDisclosureButton" TargetType="ToggleButton"
                 BasedOn="{StaticResource CupertinoExpanderToggleButton}">
+    <Style Selector="^ /template/ Panel#PART_Glyph">
+      <Setter Property="Width" Value="{DynamicResource ControlHeight}" />
+    </Style>
     <Style Selector="^ /template/ Border#PART_GlyphBackground">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     </Style>
     <Style Selector="^ /template/ cac|CASymbolIcon#PART_Chevron">
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="FallbackStrokeThickness" Value="1.75" />
+      <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
       <Setter Property="RenderTransform" Value="rotate(90deg)" />
+    </Style>
+    <Style Selector="^:focus-visible /template/ Border#PART_Root">
+      <Setter Property="AdornerLayer.Adorner" Value="{x:Null}" />
+    </Style>
+    <Style Selector="^:focus-visible /template/ Border#PART_GlyphBackground">
+      <Setter Property="AdornerLayer.Adorner" Value="{StaticResource FocusRingAdorner}" />
     </Style>
     <Style Selector="^:checked /template/ cac|CASymbolIcon#PART_Chevron">
       <Setter Property="RenderTransform" Value="rotate(-90deg)" />
@@ -101,7 +124,8 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />
-    <Setter Property="Padding" Value="26,6,0,6" />
+    <!-- The content under the header, at its leading edge, as a DisclosureGroup's. -->
+    <Setter Property="Padding" Value="0" />
     <Setter Property="HorizontalAlignment" Value="Stretch" />
     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     <Setter Property="VerticalContentAlignment" Value="Stretch" />

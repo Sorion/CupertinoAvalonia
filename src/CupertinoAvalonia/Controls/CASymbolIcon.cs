@@ -53,7 +53,8 @@ public class CASymbolIcon : Control
     {
         AffectsMeasure<CASymbolIcon>(SymbolProperty, FallbackGlyphProperty, FallbackDataProperty, FallbackStrokeThicknessProperty,
             FontSizeProperty, FontWeightProperty, SymbolScaleProperty);
-        AffectsRender<CASymbolIcon>(ForegroundProperty);
+        // A turned symbol is drawn turned (Render).
+        AffectsRender<CASymbolIcon>(ForegroundProperty, RenderTransformProperty, RenderTransformOriginProperty);
     }
 
     // Tests turn it off to check the fallbacks.
@@ -168,7 +169,29 @@ public class CASymbolIcon : Control
     public override void Render(DrawingContext context)
     {
         var scale = TopLevel.GetTopLevel(this)?.RenderScaling ?? 1;
-        if (NativeSymbol(scale) is { } symbol)
+        // A render transform that only turns the symbol: AppKit draws it turned, and the turn is undone here, as a
+        // bitmap turned by the compositor is resampled and looks jagged at 1x.
+        var turn = Turn();
+        if (turn is { } t && NativeSymbol(scale, t.Angle) is { } turned)
+        {
+            if (!ReferenceEquals(turned, _maskSymbol))
+            {
+                _maskSymbol = turned;
+                _mask = new ImageBrush(turned.Mask);
+            }
+
+            // Where the turn puts the symbol's center, around the transform's origin.
+            var origin = RenderTransformOrigin.ToPixels(Bounds.Size);
+            var center = new Point(Bounds.Width / 2, Bounds.Height / 2) - origin;
+            center = new Point(center.X * t.Cos - center.Y * t.Sin, center.X * t.Sin + center.Y * t.Cos) + origin;
+            var topLeft = new Point(Snap(center.X - turned.Size.Width / 2, scale), Snap(center.Y - turned.Size.Height / 2, scale));
+            var rect = new Rect(turned.Size);
+            var undo = Matrix.CreateTranslation(-origin.X, -origin.Y) * t.Inverse * Matrix.CreateTranslation(origin.X, origin.Y);
+            using (context.PushTransform(Matrix.CreateTranslation(topLeft.X, topLeft.Y) * undo))
+            using (context.PushOpacityMask(_mask!, rect))
+                context.FillRectangle(Foreground ?? Brushes.Black, rect);
+        }
+        else if (turn is null && NativeSymbol(scale) is { } symbol)
         {
             if (!ReferenceEquals(symbol, _maskSymbol))
             {
@@ -198,10 +221,26 @@ public class CASymbolIcon : Control
         }
     }
 
-    private MacOSSymbols.Symbol? NativeSymbol(double? scale = null) =>
+    private MacOSSymbols.Symbol? NativeSymbol(double? scale = null, double angle = 0) =>
         UseNativeSymbols && !string.IsNullOrEmpty(Symbol)
-            ? MacOSSymbols.Get(Symbol, FontSize, FontWeight, SymbolScale, scale ?? TopLevel.GetTopLevel(this)?.RenderScaling ?? 1)
+            ? MacOSSymbols.Get(Symbol, FontSize, FontWeight, SymbolScale, scale ?? TopLevel.GetTopLevel(this)?.RenderScaling ?? 1, angle)
             : null;
+
+    // The render transform as a turn, clockwise in degrees, when it is only a turn, and not a null one.
+    private (double Angle, double Cos, double Sin, Matrix Inverse)? Turn()
+    {
+        if (RenderTransform is not { } transform)
+            return null;
+        var m = transform.Value;
+        const double tolerance = 1e-6;
+        if (Math.Abs(m.M11 - m.M22) > tolerance || Math.Abs(m.M12 + m.M21) > tolerance
+            || Math.Abs(m.M11 * m.M11 + m.M12 * m.M12 - 1) > tolerance || Math.Abs(m.M31) > tolerance || Math.Abs(m.M32) > tolerance)
+            return null;
+        var angle = Math.Atan2(m.M12, m.M11) * 180 / Math.PI;
+        if (Math.Abs(angle) < 1e-4)
+            return null;
+        return (angle, m.M11, m.M12, m.Invert());
+    }
 
     private (string Text, FontFamily Family)? FallbackText()
     {

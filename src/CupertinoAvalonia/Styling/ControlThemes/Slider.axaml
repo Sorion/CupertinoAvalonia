@@ -12,16 +12,22 @@
   </Design.PreviewWith>
 
   <ResourceDictionary.ThemeDictionaries>
-    <!-- _Ticks: the label color at 25 %. The lens is measured on macOS 27 in dark mode; light mode follows the switch's. -->
+    <!-- As NSSlider's on macOS 27 (SliderTests): the track, and the fill when disabled, black or white at 10 % and
+         14 %; the track keeps its shade when the slider is disabled or pressed. The ticks are the tertiary label
+         color. The lens is measured in dark mode; light mode follows the switch's. -->
     <ResourceDictionary x:Key="Default">
-      <SolidColorBrush x:Key="SliderTickBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.25" />
+      <SolidColorBrush x:Key="SliderTrackBrush" Color="Black" Opacity="0.1" />
+      <SolidColorBrush x:Key="SliderFillDisabledBrush" Color="Black" Opacity="0.145" />
+      <SolidColorBrush x:Key="SliderTickBrush" Color="{DynamicResource LabelTertiaryColor}" />
       <Color x:Key="SliderLensTint">#0B000000</Color>
       <Color x:Key="SliderLensHighlightColor">#6BFFFFFF</Color>
       <Color x:Key="SliderLensGlowColor">#33FFFFFF</Color>
       <BoxShadows x:Key="SliderLensShadow">0 6 10 2 #1F000000, 0 0.8 0.3 0 #26000000</BoxShadows>
     </ResourceDictionary>
     <ResourceDictionary x:Key="Dark">
-      <SolidColorBrush x:Key="SliderTickBrush" Color="{DynamicResource LabelPrimaryColor}" Opacity="0.25" />
+      <SolidColorBrush x:Key="SliderTrackBrush" Color="White" Opacity="0.1" />
+      <SolidColorBrush x:Key="SliderFillDisabledBrush" Color="White" Opacity="0.14" />
+      <SolidColorBrush x:Key="SliderTickBrush" Color="{DynamicResource LabelTertiaryColor}" />
       <Color x:Key="SliderLensTint">#3D2A2B2F</Color>
       <Color x:Key="SliderLensHighlightColor">#1AFFFFFF</Color>
       <Color x:Key="SliderLensGlowColor">#27FFFFFF</Color>
@@ -29,7 +35,8 @@
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
-  <x:Double x:Key="SliderTrackThickness">4</x:Double>
+  <!-- NSSlider's regular and large track on macOS 27; the kit draws 4. -->
+  <x:Double x:Key="SliderTrackThickness">6</x:Double>
 
   <ControlTheme x:Key="CupertinoSliderHorizontalRepeatButton" TargetType="RepeatButton">
     <Setter Property="Template">
@@ -145,7 +152,7 @@
   <ControlTheme x:Key="{x:Type Slider}" TargetType="Slider">
     <!-- Would clip the knob's shadow at the track's ends. -->
     <Setter Property="ClipToBounds" Value="False" />
-    <Setter Property="Background" Value="{DynamicResource ControlTrackBrush}" />
+    <Setter Property="Background" Value="{DynamicResource SliderTrackBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
@@ -158,21 +165,22 @@
           <DataValidationErrors ClipToBounds="False">
             <Grid Name="SliderContainer" Margin="{TemplateBinding Padding}" Background="Transparent" RowDefinitions="*,Auto,*">
               <Grid.Styles>
-                <Style Selector="TickBar">
+                <Style Selector="cas|SliderTickDots">
                   <Setter Property="ReservedSpace" Value="{Binding #PART_Track.Thumb.Bounds}" />
                 </Style>
               </Grid.Styles>
-              <TickBar Name="TopTickBar"
+              <cas:SliderTickDots Name="TopTickBar"
                        Ticks="{TemplateBinding Ticks}"
                        TickFrequency="{TemplateBinding Slider.TickFrequency}"
-                       Orientation="{TemplateBinding Slider.Orientation}"
                        Minimum="{TemplateBinding Slider.Minimum}"
                        Maximum="{TemplateBinding Slider.Maximum}"
                        IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
-                       Height="4" Margin="0,0,0,3" VerticalAlignment="Bottom" Placement="Top"
+                       Height="2" Margin="0,0,0,-2" VerticalAlignment="Bottom" Placement="Top"
                        Fill="{DynamicResource SliderTickBrush}" IsVisible="False" />
+              <!-- Over the ticks: the knob hides the ones it covers, as NSSlider's. -->
               <Track Name="PART_Track"
                      Grid.Row="1"
+                     ZIndex="1"
                      Minimum="{TemplateBinding Minimum}"
                      Maximum="{TemplateBinding Maximum}"
                      Value="{TemplateBinding Value, Mode=TwoWay}"
@@ -198,15 +206,14 @@
                        Theme="{StaticResource CupertinoSliderThumb}"
                        DataContext="{TemplateBinding Value}" />
               </Track>
-              <TickBar Name="BottomTickBar"
+              <cas:SliderTickDots Name="BottomTickBar"
                        Grid.Row="2"
                        Ticks="{TemplateBinding Ticks}"
                        TickFrequency="{TemplateBinding Slider.TickFrequency}"
-                       Orientation="{TemplateBinding Slider.Orientation}"
                        Minimum="{TemplateBinding Slider.Minimum}"
                        Maximum="{TemplateBinding Slider.Maximum}"
                        IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
-                       Height="4" Margin="0,3,0,0" VerticalAlignment="Top" Placement="Bottom"
+                       Height="2" Margin="0,-2,0,0" VerticalAlignment="Top" Placement="Bottom"
                        Fill="{DynamicResource SliderTickBrush}" IsVisible="False" />
             </Grid>
           </DataValidationErrors>
@@ -221,21 +228,21 @@
           <DataValidationErrors ClipToBounds="False">
             <Grid Name="SliderContainer" Margin="{TemplateBinding Padding}" Background="Transparent" ColumnDefinitions="*,Auto,*">
               <Grid.Styles>
-                <Style Selector="TickBar">
+                <Style Selector="cas|SliderTickDots">
                   <Setter Property="ReservedSpace" Value="{Binding #PART_Track.Thumb.Bounds}" />
                 </Style>
               </Grid.Styles>
-              <TickBar Name="LeftTickBar"
+              <cas:SliderTickDots Name="LeftTickBar"
                        Ticks="{TemplateBinding Ticks}"
                        TickFrequency="{TemplateBinding Slider.TickFrequency}"
-                       Orientation="{TemplateBinding Slider.Orientation}"
                        Minimum="{TemplateBinding Slider.Minimum}"
                        Maximum="{TemplateBinding Slider.Maximum}"
                        IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
-                       Width="4" Margin="0,0,3,0" HorizontalAlignment="Right" Placement="Left"
+                       Width="2" Margin="0,0,-2,0" HorizontalAlignment="Right" Placement="Left"
                        Fill="{DynamicResource SliderTickBrush}" IsVisible="False" />
               <Track Name="PART_Track"
                      Grid.Column="1"
+                     ZIndex="1"
                      Minimum="{TemplateBinding Minimum}"
                      Maximum="{TemplateBinding Maximum}"
                      Value="{TemplateBinding Value, Mode=TwoWay}"
@@ -261,15 +268,14 @@
                        Theme="{StaticResource CupertinoSliderThumb}"
                        DataContext="{TemplateBinding Value}" />
               </Track>
-              <TickBar Name="RightTickBar"
+              <cas:SliderTickDots Name="RightTickBar"
                        Grid.Column="2"
                        Ticks="{TemplateBinding Ticks}"
                        TickFrequency="{TemplateBinding Slider.TickFrequency}"
-                       Orientation="{TemplateBinding Slider.Orientation}"
                        Minimum="{TemplateBinding Slider.Minimum}"
                        Maximum="{TemplateBinding Slider.Maximum}"
                        IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
-                       Width="4" Margin="3,0,0,0" HorizontalAlignment="Left" Placement="Right"
+                       Width="2" Margin="-2,0,0,0" HorizontalAlignment="Left" Placement="Right"
                        Fill="{DynamicResource SliderTickBrush}" IsVisible="False" />
             </Grid>
           </DataValidationErrors>
@@ -277,16 +283,16 @@
       </Setter>
     </Style>
 
-    <Style Selector="^[TickPlacement=TopLeft] /template/ TickBar#TopTickBar, ^[TickPlacement=Outside] /template/ TickBar#TopTickBar">
+    <Style Selector="^[TickPlacement=TopLeft] /template/ cas|SliderTickDots#TopTickBar, ^[TickPlacement=Outside] /template/ cas|SliderTickDots#TopTickBar">
       <Setter Property="IsVisible" Value="True" />
     </Style>
-    <Style Selector="^[TickPlacement=BottomRight] /template/ TickBar#BottomTickBar, ^[TickPlacement=Outside] /template/ TickBar#BottomTickBar">
+    <Style Selector="^[TickPlacement=BottomRight] /template/ cas|SliderTickDots#BottomTickBar, ^[TickPlacement=Outside] /template/ cas|SliderTickDots#BottomTickBar">
       <Setter Property="IsVisible" Value="True" />
     </Style>
-    <Style Selector="^[TickPlacement=TopLeft] /template/ TickBar#LeftTickBar, ^[TickPlacement=Outside] /template/ TickBar#LeftTickBar">
+    <Style Selector="^[TickPlacement=TopLeft] /template/ cas|SliderTickDots#LeftTickBar, ^[TickPlacement=Outside] /template/ cas|SliderTickDots#LeftTickBar">
       <Setter Property="IsVisible" Value="True" />
     </Style>
-    <Style Selector="^[TickPlacement=BottomRight] /template/ TickBar#RightTickBar, ^[TickPlacement=Outside] /template/ TickBar#RightTickBar">
+    <Style Selector="^[TickPlacement=BottomRight] /template/ cas|SliderTickDots#RightTickBar, ^[TickPlacement=Outside] /template/ cas|SliderTickDots#RightTickBar">
       <Setter Property="IsVisible" Value="True" />
     </Style>
 
@@ -327,7 +333,6 @@
     </Style>
 
     <Style Selector="^:pressed">
-      <Setter Property="Background" Value="{DynamicResource ControlTrackPressedBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource AccentButtonBackgroundPressedBrush}" />
       <Style Selector="^ /template/ Thumb">
         <Setter Property="Opacity" Value="0" />
@@ -353,9 +358,7 @@
     </Style>
 
     <Style Selector="^:disabled">
-      <!-- The kit grays the fill too. -->
-      <Setter Property="Background" Value="{DynamicResource ControlTrackDisabledBrush}" />
-      <Setter Property="Foreground" Value="{DynamicResource ControlTrackDisabledBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource SliderFillDisabledBrush}" />
     </Style>
 
     <Style Selector="^:error /template/ Thumb">

@@ -23,16 +23,23 @@ internal static partial class MacOSSymbols
 
     public static bool IsSupported { get; } = OperatingSystem.IsMacOSVersionAtLeast(11) && LoadAppKit("NSImage");
 
-    // An opacity mask at the screen's scale, null for an unknown name.
-    public static Symbol? Get(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale)
+    // An opacity mask at the screen's scale, null for an unknown name. Turned clockwise by the angle, in degrees: drawn
+    // from the vector, so it stays sharp where a turned bitmap would be resampled. Only quarter turns are cached, the
+    // angles in between pass during an animation.
+    public static Symbol? Get(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale,
+        double angle = 0)
     {
-        var key = new Key(name, pointSize, weight, symbolScale, scale);
+        angle = Math.Round(((angle % 360) + 360) % 360, 2) % 360;
+        if (angle % 90 != 0)
+            return Draw(name, pointSize, weight, symbolScale, scale, angle);
+        var key = new Key(name, pointSize, weight, symbolScale, scale, angle);
         if (!Cache.TryGetValue(key, out var symbol))
-            Cache[key] = symbol = Draw(name, pointSize, weight, symbolScale, scale);
+            Cache[key] = symbol = Draw(name, pointSize, weight, symbolScale, scale, angle);
         return symbol;
     }
 
-    private static Symbol? Draw(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale)
+    private static Symbol? Draw(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale,
+        double angle)
     {
         using var pool = AutoreleasePool();
         var nsName = AutoreleasedString(name);
@@ -47,8 +54,15 @@ internal static partial class MacOSSymbols
             return null;
 
         var size = SendSize(image, Sel("size"));
-        var pixelWidth = (int)Math.Ceiling(size.Width * scale);
-        var pixelHeight = (int)Math.Ceiling(size.Height * scale);
+        // Core Graphics' y axis points up: a clockwise turn on screen is a negative angle there. The turned image's
+        // bounds start at the bitmap's origin.
+        var radians = -angle * Math.PI / 180;
+        var (cos, sin) = (Math.Cos(radians), Math.Sin(radians));
+        var xs = new[] { 0, size.Width * cos, -size.Height * sin, size.Width * cos - size.Height * sin };
+        var ys = new[] { 0, size.Width * sin, size.Height * cos, size.Width * sin + size.Height * cos };
+        var (minX, minY) = (Math.Round(xs.Min(), 9), Math.Round(ys.Min(), 9));
+        var pixelWidth = (int)Math.Ceiling(Math.Round((xs.Max() - minX) * scale, 6));
+        var pixelHeight = (int)Math.Ceiling(Math.Round((ys.Max() - minY) * scale, 6));
         if (pixelWidth <= 0 || pixelHeight <= 0)
             return null;
 
@@ -61,6 +75,11 @@ internal static partial class MacOSSymbols
             CGColorSpaceRelease(colorSpace);
             CGContextClearRect(context, new CGRect(0, 0, pixelWidth, pixelHeight));
             CGContextScaleCTM(context, scale, scale);
+            if (angle != 0)
+            {
+                CGContextTranslateCTM(context, -minX, -minY);
+                CGContextRotateCTM(context, radians);
+            }
 
             // Outside a view, AppKit draws a symbol (a template image) in black.
             var graphicsContext = Class("NSGraphicsContext");
@@ -97,7 +116,8 @@ internal static partial class MacOSSymbols
 
     public sealed record Symbol(WriteableBitmap Mask, Size Size);
 
-    private readonly record struct Key(string Name, double PointSize, FontWeight Weight, CASymbolScale SymbolScale, double Scale);
+    private readonly record struct Key(string Name, double PointSize, FontWeight Weight, CASymbolScale SymbolScale, double Scale,
+        double Angle);
 
     [StructLayout(LayoutKind.Sequential)]
     private readonly record struct CGSize(double Width, double Height);
@@ -135,4 +155,10 @@ internal static partial class MacOSSymbols
 
     [LibraryImport(CoreGraphics)]
     private static partial void CGContextScaleCTM(IntPtr context, double sx, double sy);
+
+    [LibraryImport(CoreGraphics)]
+    private static partial void CGContextTranslateCTM(IntPtr context, double tx, double ty);
+
+    [LibraryImport(CoreGraphics)]
+    private static partial void CGContextRotateCTM(IntPtr context, double angle);
 }
