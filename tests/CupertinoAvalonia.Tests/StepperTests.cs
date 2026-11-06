@@ -41,6 +41,35 @@ public class StepperTests
         window.Close();
     }
 
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Outside_the_stepper_follows_the_field(string theme)
+    {
+        var variant = UseTheme(theme);
+        var numberBox = new NumericUpDown { Classes = { "outside" }, Value = 12, Width = 120 };
+        var window = Show(numberBox);
+
+        // Stepper/Outside Field: the field, 4 pt, then the 20 x 24 stepper, on its own.
+        Assert.Equal(Colors.Transparent, (Part<Border>(numberBox, "PART_Field").Background as ISolidColorBrush)?.Color);
+        Assert.Equal(default, Part<Border>(numberBox, "PART_Field").BorderThickness);
+        var field = Part<Border>(numberBox, "OutsideField");
+        Assert.Equal(Describe(Resource("TextFieldBackgroundBrush", variant)), Describe(field.Background));
+        Assert.Equal(new Thickness(1), field.BorderThickness);
+        var stepper = Part<Panel>(numberBox, "PART_SpinnerPanel");
+        Assert.Equal(new Size(20, 24), stepper.Bounds.Size);
+        Assert.Equal(numberBox.Bounds.Width, stepper.TranslatePoint(new Point(stepper.Bounds.Width, 0), numberBox)!.Value.X);
+        Assert.Equal(96, field.Bounds.Width);
+
+        // The ring goes around the field, not the stepper.
+        var textBox = Part<TextBox>(numberBox, "PART_TextBox");
+        textBox.Focus(NavigationMethod.Tab);
+        Dispatcher.UIThread.RunJobs();
+        Assert.Null(AdornerLayer.GetAdorner(Part<ButtonSpinner>(numberBox, "PART_Spinner")));
+        Assert.NotNull(AdornerLayer.GetAdorner(field));
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void Stepper_steps_the_value_and_dims_at_its_limits()
     {
