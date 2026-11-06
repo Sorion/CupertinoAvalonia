@@ -1,88 +1,239 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:cac="using:CupertinoAvalonia.Controls"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.ListsPage">
-  <WrapPanel ItemSpacing="32" LineSpacing="28">
-    <StackPanel Spacing="10" Width="260">
-      <TextBlock Classes="headline" Text="Default" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="Click a row: the selection takes the accent while the list has the focus." />
-      <ListBox SelectedIndex="1">
-        <ListBoxItem Content="Spotify" />
-        <ListBoxItem Content="Discord" />
-        <ListBoxItem Content="Safari" />
-        <ListBoxItem Content="Disabled" IsEnabled="False" />
-      </ListBox>
-    </StackPanel>
+  <UserControl.Styles>
+    <!-- A sidebar's material behind the sidebar lists, as in a window's sidebar. -->
+    <Style Selector="Border.sidebar">
+      <Setter Property="Background" Value="{DynamicResource MaterialSidebarBrush}" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Padding" Value="0,6" />
+      <Setter Property="Width" Value="220" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+  </UserControl.Styles>
 
-    <StackPanel Spacing="10" Width="260">
-      <TextBlock Classes="headline" Text="alternating" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap" Text="Alternate row backgrounds, as in tables." />
-      <ListBox Classes="alternating" SelectedIndex="2">
-        <ListBoxItem Content="Music" />
-        <ListBoxItem Content="Games" />
-        <ListBoxItem Content="Voice chat" />
-        <ListBoxItem Content="Browser" />
-        <ListBoxItem Content="System" />
-      </ListBox>
-    </StackPanel>
+  <gc:SectionStack>
 
-    <StackPanel Spacing="10" Width="260">
-      <TextBlock Classes="headline" Text="sidebar" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap" Text="Neutral selection, on the sidebar material." />
-      <Border Background="{DynamicResource MaterialSidebarBrush}" CornerRadius="12" Padding="0,8">
-        <ListBox Classes="sidebar" SelectedIndex="0">
-          <ListBoxItem Content="Mixer" />
-          <ListBoxItem Content="Profiles" />
-          <ListBoxItem Content="Settings" />
-        </ListBox>
-      </Border>
-    </StackPanel>
+    <gc:GallerySection Title="ListBox"
+                       Description="Rows to choose from, as a table's. The alternating class stripes them; sidebar puts them in a window's sidebar, where accent colors the selection while the list has the focus."
+                       StyleClasses="alternating sidebar accent" Properties="ItemsSource SelectedItem SelectionMode">
+      <gc:GalleryBlock Title="States" HintSymbol="cursorarrow"
+                       Hint="Click a row: in a list that has the focus, the selection takes the accent. Up and Down move it.">
+        <Grid ColumnDefinitions="134,244,244" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="16">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Normal" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Disabled" />
 
-    <StackPanel Spacing="10" Width="260">
-      <TextBlock Classes="headline" Text="TreeView" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="An outline: 15 points further in at each level; the chevron turns down when a row expands. Left and Right arrow keys collapse and expand." />
-      <TreeView>
-        <TreeViewItem IsExpanded="True">
-          <TreeViewItem.Header>
-            <StackPanel Orientation="Horizontal" Spacing="4">
-              <cac:CASymbolIcon Symbol="folder" Foreground="{DynamicResource AccentBrush}" />
-              <TextBlock Text="Applications" />
-            </StackPanel>
-          </TreeViewItem.Header>
-          <TreeViewItem Header="Games" IsExpanded="True" IsSelected="True">
-            <TreeViewItem Header="Steam" />
-            <TreeViewItem Header="Epic Games" />
-          </TreeViewItem>
-          <TreeViewItem Header="Music">
-            <TreeViewItem Header="Spotify" />
-          </TreeViewItem>
-          <TreeViewItem Header="Browser" />
-        </TreeViewItem>
-        <TreeViewItem Header="Devices">
-          <TreeViewItem Header="Speakers" />
-          <TreeViewItem Header="Headphones" />
-        </TreeViewItem>
-        <TreeViewItem Header="Disabled" IsEnabled="False" />
-      </TreeView>
-    </StackPanel>
+          <gc:RowLabel Grid.Row="1" Text="Table rows" Note="No class" />
+          <ListBox Grid.Row="1" Grid.Column="1" Width="220" HorizontalAlignment="Left" SelectedIndex="1">
+            <ListBoxItem Content="Spotify" />
+            <ListBoxItem Content="Discord" />
+            <ListBoxItem Content="Safari" />
+            <ListBoxItem Content="A disabled row" IsEnabled="False" />
+          </ListBox>
+          <ListBox Grid.Row="1" Grid.Column="2" Width="220" HorizontalAlignment="Left" SelectedIndex="1" IsEnabled="False">
+            <ListBoxItem Content="Spotify" />
+            <ListBoxItem Content="Discord" />
+            <ListBoxItem Content="Safari" />
+          </ListBox>
 
-    <StackPanel Spacing="10" Width="260">
-      <TextBlock Classes="headline" Text="TreeView sidebar" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap" Text="Nested sidebar items: 12 points further in at each level." />
-      <Border Background="{DynamicResource MaterialSidebarBrush}" CornerRadius="12" Padding="0,8">
-        <TreeView Classes="sidebar">
-          <TreeViewItem Header="Mixer" IsExpanded="True">
-            <TreeViewItem Header="Channels" IsSelected="True" />
-            <TreeViewItem Header="Applications" />
+          <gc:RowLabel Grid.Row="2" Text="Alternating" Code="alternating" />
+          <ListBox Grid.Row="2" Grid.Column="1" Classes="alternating" Width="220" HorizontalAlignment="Left" SelectedIndex="2">
+            <ListBoxItem Content="Music" />
+            <ListBoxItem Content="Games" />
+            <ListBoxItem Content="Voice chat" />
+            <ListBoxItem Content="Browser" />
+          </ListBox>
+          <ListBox Grid.Row="2" Grid.Column="2" Classes="alternating" Width="220" HorizontalAlignment="Left" SelectedIndex="2"
+                   IsEnabled="False">
+            <ListBoxItem Content="Music" />
+            <ListBoxItem Content="Games" />
+            <ListBoxItem Content="Voice chat" />
+            <ListBoxItem Content="Browser" />
+          </ListBox>
+
+          <gc:RowLabel Grid.Row="3" Text="Sidebar" Code="sidebar,accent" />
+          <Border Grid.Row="3" Grid.Column="1" Classes="sidebar">
+            <ListBox Classes="sidebar accent" SelectedIndex="0">
+              <ListBoxItem>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <cac:CASymbolIcon Symbol="slider.vertical.3" />
+                  <TextBlock Text="Mixer" VerticalAlignment="Center" />
+                </StackPanel>
+              </ListBoxItem>
+              <ListBoxItem>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <cac:CASymbolIcon Symbol="person.2" />
+                  <TextBlock Text="Profiles" VerticalAlignment="Center" />
+                </StackPanel>
+              </ListBoxItem>
+              <ListBoxItem>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <cac:CASymbolIcon Symbol="gearshape" />
+                  <TextBlock Text="Settings" VerticalAlignment="Center" />
+                </StackPanel>
+              </ListBoxItem>
+            </ListBox>
+          </Border>
+          <Border Grid.Row="3" Grid.Column="2" Classes="sidebar">
+            <ListBox Classes="sidebar accent" SelectedIndex="0" IsEnabled="False">
+              <ListBoxItem>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <cac:CASymbolIcon Symbol="slider.vertical.3" />
+                  <TextBlock Text="Mixer" VerticalAlignment="Center" />
+                </StackPanel>
+              </ListBoxItem>
+              <ListBoxItem>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <cac:CASymbolIcon Symbol="person.2" />
+                  <TextBlock Text="Profiles" VerticalAlignment="Center" />
+                </StackPanel>
+              </ListBoxItem>
+              <ListBoxItem>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                  <cac:CASymbolIcon Symbol="gearshape" />
+                  <TextBlock Text="Settings" VerticalAlignment="Center" />
+                </StackPanel>
+              </ListBoxItem>
+            </ListBox>
+          </Border>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context">
+        <StackPanel Width="420" HorizontalAlignment="Left" Spacing="6">
+          <TextBlock Classes="subheadline secondary" Text="Channels" />
+          <ListBox Classes="alternating" SelectedIndex="0">
+            <ListBox.Styles>
+              <Style Selector="TextBlock.output">
+                <Setter Property="Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
+              </Style>
+              <Style Selector="ListBoxItem:selected:focus-within TextBlock.output">
+                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
+              </Style>
+            </ListBox.Styles>
+            <ListBoxItem>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Games" />
+                <TextBlock Grid.Column="1" Classes="output" Text="Headphones" />
+              </Grid>
+            </ListBoxItem>
+            <ListBoxItem>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Game Chat" />
+                <TextBlock Grid.Column="1" Classes="output" Text="Headphones" />
+              </Grid>
+            </ListBoxItem>
+            <ListBoxItem>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Music" />
+                <TextBlock Grid.Column="1" Classes="output" Text="Speakers" />
+              </Grid>
+            </ListBoxItem>
+            <ListBoxItem>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Browser" />
+                <TextBlock Grid.Column="1" Classes="output" Text="Speakers" />
+              </Grid>
+            </ListBoxItem>
+            <ListBoxItem>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="System" />
+                <TextBlock Grid.Column="1" Classes="output" Text="Follows the system" />
+              </Grid>
+            </ListBoxItem>
+          </ListBox>
+        </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="TreeView"
+                       Description="An outline: rows with rows under them, 15 pt further in at each level, 12 pt in a sidebar. The chevron turns down when a row expands."
+                       StyleClasses="sidebar accent" Properties="ItemsSource SelectedItem IsExpanded">
+      <gc:GalleryBlock Title="States" HintSymbol="cursorarrow" Hint="Click a chevron to expand or collapse its row.">
+        <Grid ColumnDefinitions="134,244,244" RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Collapsed" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Expanded" />
+
+          <gc:RowLabel Grid.Row="1" Text="Outline" Note="No class" />
+          <TreeView Grid.Row="1" Grid.Column="1" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TreeViewItem Header="Applications">
+              <TreeViewItem Header="Games" />
+              <TreeViewItem Header="Music" />
+            </TreeViewItem>
+            <TreeViewItem Header="Devices">
+              <TreeViewItem Header="Speakers" />
+            </TreeViewItem>
+          </TreeView>
+          <TreeView Grid.Row="1" Grid.Column="2" Width="220" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TreeViewItem Header="Applications" IsExpanded="True">
+              <TreeViewItem Header="Games" IsSelected="True" />
+              <TreeViewItem Header="Music" />
+            </TreeViewItem>
+            <TreeViewItem Header="Devices">
+              <TreeViewItem Header="Speakers" />
+            </TreeViewItem>
+          </TreeView>
+
+          <gc:RowLabel Grid.Row="2" Text="Sidebar" Code="sidebar,accent" />
+          <Border Grid.Row="2" Grid.Column="1" Classes="sidebar" VerticalAlignment="Top">
+            <TreeView Classes="sidebar accent">
+              <TreeViewItem Header="Mixer">
+                <TreeViewItem Header="Channels" />
+                <TreeViewItem Header="Applications" />
+              </TreeViewItem>
+              <TreeViewItem Header="Profiles">
+                <TreeViewItem Header="Default" />
+              </TreeViewItem>
+            </TreeView>
+          </Border>
+          <Border Grid.Row="2" Grid.Column="2" Classes="sidebar" VerticalAlignment="Top">
+            <TreeView Classes="sidebar accent">
+              <TreeViewItem Header="Mixer" IsExpanded="True">
+                <TreeViewItem Header="Channels" IsSelected="True" />
+                <TreeViewItem Header="Applications" />
+              </TreeViewItem>
+              <TreeViewItem Header="Profiles">
+                <TreeViewItem Header="Default" />
+              </TreeViewItem>
+            </TreeView>
+          </Border>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" Hint="Left and Right collapse and expand the selected row; Up and Down move the selection.">
+        <TreeView Width="320" HorizontalAlignment="Left">
+          <TreeViewItem IsExpanded="True">
+            <TreeViewItem.Header>
+              <StackPanel Orientation="Horizontal" Spacing="4">
+                <cac:CASymbolIcon Symbol="folder" Foreground="{DynamicResource AccentBrush}" />
+                <TextBlock Text="Applications" />
+              </StackPanel>
+            </TreeViewItem.Header>
+            <TreeViewItem Header="Games" IsExpanded="True" IsSelected="True">
+              <TreeViewItem Header="Steam" />
+              <TreeViewItem Header="Epic Games" />
+            </TreeViewItem>
+            <TreeViewItem Header="Music">
+              <TreeViewItem Header="Spotify" />
+            </TreeViewItem>
+            <TreeViewItem Header="Browser" />
           </TreeViewItem>
-          <TreeViewItem Header="Profiles">
-            <TreeViewItem Header="Default" />
+          <TreeViewItem>
+            <TreeViewItem.Header>
+              <StackPanel Orientation="Horizontal" Spacing="4">
+                <cac:CASymbolIcon Symbol="folder" Foreground="{DynamicResource AccentBrush}" />
+                <TextBlock Text="Devices" />
+              </StackPanel>
+            </TreeViewItem.Header>
+            <TreeViewItem Header="Speakers" />
+            <TreeViewItem Header="Headphones" />
           </TreeViewItem>
-          <TreeViewItem Header="Settings" />
+          <TreeViewItem Header="A disabled row" IsEnabled="False" />
         </TreeView>
-      </Border>
-    </StackPanel>
-  </WrapPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+  </gc:SectionStack>
 </UserControl>

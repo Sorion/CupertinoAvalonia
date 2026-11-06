@@ -1,84 +1,174 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.MenusPage">
-  <StackPanel Spacing="28">
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="ComboBox (pop-up button)" />
-      <StackPanel Orientation="Horizontal" Spacing="12">
-        <ComboBox SelectedIndex="0" MinWidth="140">
-          <ComboBoxItem Content="Automatic" />
-          <ComboBoxItem Content="Light" />
-          <ComboBoxItem Content="Dark" />
-        </ComboBox>
-        <ComboBox PlaceholderText="Choose a device…" MinWidth="160">
-          <ComboBoxItem Content="MacBook Pro Speakers" />
-          <ComboBoxItem Content="AirPods Pro" />
-        </ComboBox>
-        <ComboBox SelectedIndex="0" IsEnabled="False">
-          <ComboBoxItem Content="Disabled" />
-        </ComboBox>
-      </StackPanel>
-      <StackPanel Orientation="Horizontal" Spacing="12">
-        <ComboBox Classes="mini" SelectedIndex="0"><ComboBoxItem Content="Mini" /></ComboBox>
-        <ComboBox Classes="small" SelectedIndex="0"><ComboBoxItem Content="Small" /></ComboBox>
-        <ComboBox SelectedIndex="0"><ComboBoxItem Content="Regular" /></ComboBox>
-        <ComboBox Classes="large" SelectedIndex="0"><ComboBoxItem Content="Large" /></ComboBox>
-      </StackPanel>
-    </StackPanel>
+  <gc:SectionStack>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="ComboBox (combo box)" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="IsEditable=&quot;True&quot;: a text field with an arrow button inside. Typing edits the text; the arrow opens the list." />
-      <StackPanel Orientation="Horizontal" Spacing="12">
-        <ComboBox IsEditable="True" Text="48 000 Hz" Width="160">
-          <x:String>48 000 Hz</x:String>
-          <x:String>44 100 Hz</x:String>
-          <x:String>96 000 Hz</x:String>
-        </ComboBox>
-        <ComboBox IsEditable="True" PlaceholderText="Buffer size" Width="160">
-          <x:String>128 samples</x:String>
-          <x:String>256 samples</x:String>
-          <x:String>512 samples</x:String>
-        </ComboBox>
-        <ComboBox IsEditable="True" Text="Disabled" IsEnabled="False" Width="160" />
-      </StackPanel>
-      <StackPanel Orientation="Horizontal" Spacing="12">
-        <ComboBox Classes="mini" IsEditable="True" Text="Mini" Width="120"><x:String>Mini</x:String></ComboBox>
-        <ComboBox Classes="small" IsEditable="True" Text="Small" Width="120"><x:String>Small</x:String></ComboBox>
-        <ComboBox IsEditable="True" Text="Regular" Width="120"><x:String>Regular</x:String></ComboBox>
-        <ComboBox Classes="large" IsEditable="True" Text="Large" Width="120"><x:String>Large</x:String></ComboBox>
-      </StackPanel>
-    </StackPanel>
+    <gc:GallerySection Title="ComboBox"
+                       Description="A pop-up button: its menu opens on the current choice. With IsEditable, a combo box: a text field with an arrow button that opens the list."
+                       SizeClasses="mini small large xlarge" Properties="SelectedIndex PlaceholderText IsEditable">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="134,184,184,184" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Normal" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Placeholder" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Disabled" />
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Menus, popover and tooltip" />
-      <StackPanel Orientation="Horizontal" Spacing="12">
-        <Button Content="MenuFlyout">
-          <Button.Flyout>
-            <MenuFlyout>
-              <MenuItem Header="Rename…" InputGesture="Cmd+R" />
-              <MenuItem Header="Duplicate" InputGesture="Cmd+D" />
-              <MenuItem Header="Show in Mixer" ToggleType="CheckBox" IsChecked="True" />
-              <MenuItem Header="Move to">
-                <MenuItem Header="Music" />
-                <MenuItem Header="Games" />
-              </MenuItem>
-              <Separator />
-              <MenuItem Header="Delete" />
-            </MenuFlyout>
-          </Button.Flyout>
-        </Button>
-        <Border Background="{DynamicResource FillTertiaryBrush}" CornerRadius="6" Padding="12,4">
-          <Border.ContextMenu>
-            <ContextMenu>
-              <MenuItem Header="Copy" InputGesture="Cmd+C" />
-              <MenuItem Header="Paste" InputGesture="Cmd+V" IsEnabled="False" />
-            </ContextMenu>
-          </Border.ContextMenu>
-          <TextBlock Text="Right-click for a ContextMenu" />
-        </Border>
-        <Button Content="Flyout (popover)">
+          <gc:RowLabel Grid.Row="1" Text="Pop-up button" Note="No property" />
+          <ComboBox Grid.Row="1" Grid.Column="1" SelectedIndex="0" VerticalAlignment="Center">
+            <ComboBoxItem Content="Automatic" />
+            <ComboBoxItem Content="Light" />
+            <ComboBoxItem Content="Dark" />
+          </ComboBox>
+          <ComboBox Grid.Row="1" Grid.Column="2" PlaceholderText="Choose a device…" VerticalAlignment="Center">
+            <ComboBoxItem Content="MacBook Pro Speakers" />
+            <ComboBoxItem Content="AirPods Pro" />
+          </ComboBox>
+          <ComboBox Grid.Row="1" Grid.Column="3" SelectedIndex="0" IsEnabled="False" VerticalAlignment="Center">
+            <ComboBoxItem Content="Automatic" />
+          </ComboBox>
+
+          <gc:RowLabel Grid.Row="2" Text="Combo box" Code="IsEditable" />
+          <ComboBox Grid.Row="2" Grid.Column="1" IsEditable="True" Text="48 000 Hz" Width="160" HorizontalAlignment="Left"
+                    VerticalAlignment="Center">
+            <x:String>44 100 Hz</x:String>
+            <x:String>48 000 Hz</x:String>
+            <x:String>96 000 Hz</x:String>
+          </ComboBox>
+          <ComboBox Grid.Row="2" Grid.Column="2" IsEditable="True" PlaceholderText="Buffer size" Width="160"
+                    HorizontalAlignment="Left" VerticalAlignment="Center">
+            <x:String>128 samples</x:String>
+            <x:String>256 samples</x:String>
+            <x:String>512 samples</x:String>
+          </ComboBox>
+          <ComboBox Grid.Row="2" Grid.Column="3" IsEditable="True" Text="48 000 Hz" Width="160" HorizontalAlignment="Left"
+                    VerticalAlignment="Center" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="134,124,124,124,124,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="5" Classes="subheadline secondary" Text="Extra Large" />
+
+          <gc:RowLabel Grid.Row="1" Text="Pop-up button" Note="No property" />
+          <ComboBox Grid.Row="1" Grid.Column="1" Classes="mini" SelectedIndex="0" VerticalAlignment="Center"><ComboBoxItem Content="Light" /></ComboBox>
+          <ComboBox Grid.Row="1" Grid.Column="2" Classes="small" SelectedIndex="0" VerticalAlignment="Center"><ComboBoxItem Content="Light" /></ComboBox>
+          <ComboBox Grid.Row="1" Grid.Column="3" SelectedIndex="0" VerticalAlignment="Center"><ComboBoxItem Content="Light" /></ComboBox>
+          <ComboBox Grid.Row="1" Grid.Column="4" Classes="large" SelectedIndex="0" VerticalAlignment="Center"><ComboBoxItem Content="Light" /></ComboBox>
+          <ComboBox Grid.Row="1" Grid.Column="5" Classes="xlarge" SelectedIndex="0" VerticalAlignment="Center"><ComboBoxItem Content="Light" /></ComboBox>
+
+          <gc:RowLabel Grid.Row="2" Text="Combo box" Code="IsEditable" />
+          <ComboBox Grid.Row="2" Grid.Column="1" Classes="mini" IsEditable="True" Text="48 kHz" Width="100" HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+          <ComboBox Grid.Row="2" Grid.Column="2" Classes="small" IsEditable="True" Text="48 kHz" Width="100" HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+          <ComboBox Grid.Row="2" Grid.Column="3" IsEditable="True" Text="48 kHz" Width="100" HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+          <ComboBox Grid.Row="2" Grid.Column="4" Classes="large" IsEditable="True" Text="48 kHz" Width="100" HorizontalAlignment="Left"
+                    VerticalAlignment="Center" />
+          <TextBlock Grid.Row="2" Grid.Column="5" Classes="tertiary" VerticalAlignment="Center" Text="—" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" HintSymbol="cursorarrow"
+                       Hint="Click a pop-up button to open its menu. Type in a combo box, or open its list with the arrow.">
+        <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="10">
+          <TextBlock VerticalAlignment="Center" TextAlignment="Right" Text="Output:" />
+          <ComboBox Grid.Column="1" SelectedIndex="0" MinWidth="200">
+            <ComboBoxItem Content="MacBook Pro Speakers" />
+            <ComboBoxItem Content="AirPods Pro" />
+            <ComboBoxItem Content="Studio Display" />
+          </ComboBox>
+          <TextBlock Grid.Row="1" VerticalAlignment="Center" TextAlignment="Right" Text="Sample rate:" />
+          <ComboBox Grid.Row="1" Grid.Column="1" IsEditable="True" Text="48 000 Hz" Width="140" HorizontalAlignment="Left">
+            <x:String>44 100 Hz</x:String>
+            <x:String>48 000 Hz</x:String>
+            <x:String>96 000 Hz</x:String>
+          </ComboBox>
+          <TextBlock Grid.Row="2" VerticalAlignment="Center" TextAlignment="Right" Text="Appearance:" />
+          <ComboBox Grid.Row="2" Grid.Column="1" SelectedIndex="0" HorizontalAlignment="Left">
+            <ComboBoxItem Content="Automatic" />
+            <ComboBoxItem Content="Light" />
+            <ComboBoxItem Content="Dark" />
+          </ComboBox>
+        </Grid>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="MenuFlyout and ContextMenu"
+                       Description="A menu: commands with their shortcuts, checkmarks, submenus and separators. A MenuFlyout opens from a control; a ContextMenu, on a right-click."
+                       Properties="Header InputGesture ToggleType IsChecked">
+      <gc:GalleryBlock Title="States" HintSymbol="cursorarrow" Hint="Hover a command to highlight it; a submenu opens beside its row.">
+        <Grid ColumnDefinitions="134,Auto" RowDefinitions="Auto">
+          <gc:RowLabel Text="Menu" Note="Its presenter, in the page" VerticalAlignment="Top" />
+          <MenuFlyoutPresenter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <MenuItem Header="Rename…" InputGesture="Cmd+R" />
+            <MenuItem Header="Duplicate" InputGesture="Cmd+D" />
+            <MenuItem Header="Show in Mixer" ToggleType="CheckBox" IsChecked="True" />
+            <MenuItem Header="Move to">
+              <MenuItem Header="Music" />
+              <MenuItem Header="Games" />
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="Paste" InputGesture="Cmd+V" IsEnabled="False" />
+            <MenuItem Header="Delete" />
+          </MenuFlyoutPresenter>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" HintSymbol="cursorarrow" Hint="Click the button for its menu; right-click the channel for its context menu.">
+        <StackPanel Orientation="Horizontal" Spacing="16">
+          <DropDownButton Content="Channel">
+            <DropDownButton.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="Rename…" InputGesture="Cmd+R" />
+                <MenuItem Header="Duplicate" InputGesture="Cmd+D" />
+                <MenuItem Header="Show in Mixer" ToggleType="CheckBox" IsChecked="True" />
+                <MenuItem Header="Move to">
+                  <MenuItem Header="Music" />
+                  <MenuItem Header="Games" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Delete" />
+              </MenuFlyout>
+            </DropDownButton.Flyout>
+          </DropDownButton>
+          <Border Background="{DynamicResource FillTertiaryBrush}" CornerRadius="6" Padding="12,4" VerticalAlignment="Center">
+            <Border.ContextMenu>
+              <ContextMenu>
+                <MenuItem Header="Copy" InputGesture="Cmd+C" />
+                <MenuItem Header="Paste" InputGesture="Cmd+V" IsEnabled="False" />
+                <Separator />
+                <MenuItem Header="Mute" ToggleType="CheckBox" />
+              </ContextMenu>
+            </Border.ContextMenu>
+            <TextBlock Text="Games" />
+          </Border>
+        </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="Flyout"
+                       Description="A popover: content of your own in a bubble, over the window, that closes when you click elsewhere."
+                       Properties="Content Placement">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="134,Auto">
+          <gc:RowLabel Text="Popover" Note="Its presenter, in the page" VerticalAlignment="Top" />
+          <FlyoutPresenter Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel Spacing="8" Width="220">
+              <TextBlock Classes="headline" Text="Output device" />
+              <TextBlock Classes="secondary" TextWrapping="Wrap" Text="Choose where this channel plays." />
+              <Button Classes="accent" Content="Done" HorizontalAlignment="Right" />
+            </StackPanel>
+          </FlyoutPresenter>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" HintSymbol="cursorarrow" Hint="Click the button: the popover opens under it; click elsewhere to close it.">
+        <Button Content="Output…">
           <Button.Flyout>
             <Flyout>
               <StackPanel Spacing="8" Width="220">
@@ -89,32 +179,23 @@
             </Flyout>
           </Button.Flyout>
         </Button>
-        <Button Content="Hover for a tooltip" ToolTip.Tip="Adjusts the channel volume" />
-      </StackPanel>
-    </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Static previews" />
-      <TextBlock Classes="secondary" Text="The same presenters, laid out in the page." />
-      <StackPanel Orientation="Horizontal" Spacing="24" VerticalAlignment="Top">
-        <MenuFlyoutPresenter VerticalAlignment="Top">
-          <MenuItem Header="Rename…" InputGesture="Cmd+R" />
-          <MenuItem Header="Duplicate" InputGesture="Cmd+D" />
-          <MenuItem Header="Show in Mixer" ToggleType="CheckBox" IsChecked="True" />
-          <MenuItem Header="Move to">
-            <MenuItem Header="Music" />
-          </MenuItem>
-          <Separator />
-          <MenuItem Header="Disabled" IsEnabled="False" />
-        </MenuFlyoutPresenter>
-        <FlyoutPresenter VerticalAlignment="Top">
-          <StackPanel Spacing="8" Width="200">
-            <TextBlock Classes="headline" Text="Popover" />
-            <TextBlock Classes="secondary" TextWrapping="Wrap" Text="A Flyout opens in this shape." />
-          </StackPanel>
-        </FlyoutPresenter>
-        <ToolTip VerticalAlignment="Top" Content="A tooltip" />
-      </StackPanel>
-    </StackPanel>
-  </StackPanel>
+    <gc:GallerySection Title="ToolTip"
+                       Description="A help tag: a short line on what a control does, shown when the pointer rests on it."
+                       Properties="ToolTip.Tip ToolTip.Placement">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="134,Auto">
+          <gc:RowLabel Text="Help tag" Note="Its presenter, in the page" VerticalAlignment="Top" />
+          <ToolTip Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Adjusts the channel's volume" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" HintSymbol="cursorarrow" Hint="Rest the pointer on the button: its help tag shows after a moment.">
+        <Button Content="Normalize" ToolTip.Tip="Evens out the loudness of every channel" />
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+  </gc:SectionStack>
 </UserControl>
