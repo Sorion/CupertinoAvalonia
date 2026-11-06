@@ -50,7 +50,7 @@ own colors in both modes; elsewhere, and for a custom accent, their shades are d
 | `DropDownButton`, `SplitButton`, `ToggleSplitButton` | A pull-down button, with a button's classes (`toolbar` included); an action and, apart, its menu, as AppKit's split combo button |
 | `CheckBox`, `RadioButton`, `ToggleSwitch` | |
 | `TextBox`, `ComboBox`, `AutoCompleteBox` | `search`: a search field, a capsule with a magnifying glass and a button that clears it (the toolbar's search field has the button too). A `ComboBox` is a pop-up button; `IsEditable="True"` makes it a combo box, a text field with an arrow button. The autocomplete box's suggestions open in a menu |
-| `NumericUpDown`, `ButtonSpinner` | A field with the stepper inside; the stepper alone |
+| `NumericUpDown`, `ButtonSpinner` | A field with the stepper inside; `outside`: the stepper after the field, as SwiftUI and AppKit place it. A `ButtonSpinner` is the stepper alone |
 | `ListBox` | `sidebar` (at System Settings' sidebar icon size on macOS, medium elsewhere; a gray selection, or with `accent` the accent while the list has the focus, as in SwiftUI), `alternating`, `segmented` (a segmented control; `SelectionMode="Multiple"` for several) |
 | `TreeView` | An outline view; `sidebar` for nested sidebar items, sized as the sidebar list, `accent` as the list's |
 | `MenuFlyout`, `ContextMenu`, `Flyout`, `ToolTip` | |
