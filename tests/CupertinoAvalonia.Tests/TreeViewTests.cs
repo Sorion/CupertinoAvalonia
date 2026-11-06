@@ -26,8 +26,8 @@ public class TreeViewTests
         var applications = new TreeViewItem { Header = "Applications", IsExpanded = true, Items = { games, music } };
         var window = Show(new TreeView { Items = { applications } });
 
-        // Table Rows: 20 pt.
-        Assert.Equal(20, Part<Border>(applications, "PART_LayoutRoot").Bounds.Height);
+        // Measured on macOS 27: 24 pt rows.
+        Assert.Equal(24, Part<Border>(applications, "PART_LayoutRoot").Bounds.Height);
         // Each level 15 pt further in; a row without children keeps the chevron's room.
         Assert.Equal(HeaderX(applications) + 15, HeaderX(games));
         Assert.Equal(HeaderX(games) + 15, HeaderX(steam));
@@ -109,6 +109,27 @@ public class TreeViewTests
         Dispatcher.UIThread.RunJobs();
         Assert.Equal(Describe(Resource("SidebarSelectionBrush", ThemeVariant.Light)), Describe(Part<Border>(channels, "PART_LayoutRoot").Background));
         Assert.Equal(Describe(Resource("LabelPrimaryBrush", ThemeVariant.Light)), Describe(Part<ContentPresenter>(channels, "PART_HeaderPresenter").Foreground));
+        window.Close();
+    }
+
+    [AvaloniaFact]
+    public void A_disabled_tree_keeps_its_rows_color()
+    {
+        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        var steam = new TreeViewItem { Header = "Steam" };
+        var games = new TreeViewItem { Header = "Games", IsExpanded = true, IsEnabled = false, Items = { steam } };
+        var music = new TreeViewItem { Header = "Music" };
+        var tree = new TreeView { Items = { games, music } };
+        var window = Show(tree);
+        var primary = Describe(Resource("LabelPrimaryBrush", ThemeVariant.Light));
+        var tertiary = Describe(Resource("LabelTertiaryBrush", ThemeVariant.Light));
+
+        // A row disabled on its own fades, with the rows under it.
+        Assert.Equal(tertiary, Describe(Part<ContentPresenter>(games, "PART_HeaderPresenter").Foreground));
+        Assert.Equal(tertiary, Describe(Part<ContentPresenter>(steam, "PART_HeaderPresenter").Foreground));
+        // As on macOS 27 (SwiftUI's List): the rows keep their color in a disabled tree.
+        tree.IsEnabled = false;
+        Assert.Equal(primary, Describe(Part<ContentPresenter>(music, "PART_HeaderPresenter").Foreground));
         window.Close();
     }
 

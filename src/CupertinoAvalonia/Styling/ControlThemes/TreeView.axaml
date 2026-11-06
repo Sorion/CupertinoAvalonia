@@ -86,7 +86,8 @@
   <ControlTheme x:Key="{x:Type TreeViewItem}" TargetType="TreeViewItem">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Padding" Value="0" />
-    <Setter Property="MinHeight" Value="20" />
+    <!-- Measured on macOS 27 (SwiftUI's List and NSOutlineView): 24 pt rows. -->
+    <Setter Property="MinHeight" Value="24" />
     <Setter Property="CornerRadius" Value="8" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
     <Setter Property="Template">
@@ -135,7 +136,8 @@
       <Setter Property="IsVisible" Value="False" />
     </Style>
 
-    <Style Selector="^:disabled /template/ ContentPresenter#PART_HeaderPresenter">
+    <!-- As in a list: a disabled tree keeps its rows' color, a row disabled on its own fades (its children, in ListStyles). -->
+    <Style Selector="^[IsEnabled=False] /template/ ContentPresenter#PART_HeaderPresenter">
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
 

@@ -28,7 +28,8 @@
   <ControlTheme x:Key="{x:Type ComboBox}" TargetType="ComboBox">
     <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
-    <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
+    <!-- Measured on macOS 27: a pop-up button's placeholder is a choice like the others, in the label color. -->
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelPrimaryBrush}" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
     <Setter Property="Padding" Value="{DynamicResource PopUpButtonPadding}" />
@@ -162,6 +163,7 @@
     <Style Selector="^:disabled">
       <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+      <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
 
     <!-- Mini and small: the ink 0.5 pt below the center, which the bottom margin offsets. -->
@@ -225,6 +227,13 @@
       <Style Selector="^:disabled">
         <Setter Property="Background" Value="{DynamicResource TextFieldBackgroundDisabledBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextFieldBorderDisabledBrush}" />
+      </Style>
+      <!-- Measured on macOS 27 (NSComboBox): the placeholder in the secondary label color, in light and dark. -->
+      <Style Selector="^ /template/ TextBox#PART_EditableTextBox">
+        <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelSecondaryBrush}" />
+      </Style>
+      <Style Selector="^:disabled /template/ TextBox#PART_EditableTextBox">
+        <Setter Property="PlaceholderForeground" Value="{DynamicResource LabelTertiaryBrush}" />
       </Style>
       <Style Selector="^:disabled /template/ Border#ArrowButton">
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundDisabledBrush}" />

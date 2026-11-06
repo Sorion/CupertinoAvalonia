@@ -74,8 +74,9 @@
   <ControlTheme x:Key="{x:Type ListBoxItem}" TargetType="ListBoxItem">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
-    <Setter Property="Padding" Value="8,2" />
-    <Setter Property="MinHeight" Value="20" />
+    <!-- Measured on macOS 27 (SwiftUI's List and NSTableView): 24 pt rows, the text 6 pt in from the selection. -->
+    <Setter Property="Padding" Value="6,2" />
+    <Setter Property="MinHeight" Value="24" />
     <Setter Property="CornerRadius" Value="8" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
     <Setter Property="FocusAdorner" Value="{x:Null}" />
@@ -95,7 +96,9 @@
       </ControlTemplate>
     </Setter>
 
-    <Style Selector="^:disabled">
+    <!-- A disabled list keeps its rows' color, as on macOS 27 (SwiftUI's List and NSTableView); a row disabled on its own
+         fades, so it reads as one that can't be chosen. -->
+    <Style Selector="^[IsEnabled=False]">
       <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
     </Style>
 

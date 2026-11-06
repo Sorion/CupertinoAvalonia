@@ -99,6 +99,26 @@ public class ComboBoxTests
         window.Close();
     }
 
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    public void Placeholders_are_as_in_AppKit(string theme)
+    {
+        var variant = UseTheme(theme);
+        var popUp = new ComboBox { ItemsSource = Rates, PlaceholderText = "Choose…" };
+        var combo = new ComboBox { IsEditable = true, ItemsSource = Rates, PlaceholderText = "Buffer size" };
+        var disabled = new ComboBox { IsEditable = true, ItemsSource = Rates, PlaceholderText = "Buffer size", IsEnabled = false };
+        var window = TestUi.Show(popUp, combo, disabled);
+
+        // Measured on macOS 27: a pop-up button's placeholder in the label color, a combo box's in the secondary one.
+        Assert.Equal(ColorOf(Resource("LabelPrimaryBrush", variant)), ColorOf(Part<TextBlock>(popUp, "PlaceholderTextBlock").Foreground));
+        Assert.Equal(ColorOf(Resource("LabelSecondaryBrush", variant)), ColorOf(Part<TextBox>(combo, "PART_EditableTextBox").PlaceholderForeground));
+        Assert.Equal(ColorOf(Resource("LabelTertiaryBrush", variant)), ColorOf(Part<TextBox>(disabled, "PART_EditableTextBox").PlaceholderForeground));
+        popUp.IsEnabled = false;
+        Assert.Equal(ColorOf(Resource("LabelTertiaryBrush", variant)), ColorOf(Part<TextBlock>(popUp, "PlaceholderTextBlock").Foreground));
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void An_editable_combo_box_sizes_its_text()
     {

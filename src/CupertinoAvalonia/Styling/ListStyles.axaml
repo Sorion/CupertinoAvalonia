@@ -48,8 +48,14 @@
   <Style Selector="ListBox.sidebar ListBoxItem[(cas|WindowActivity.IsInactive)=True], ListBox.sidebar ListBoxItem[(cas|WindowActivity.IsInactive)=True] cac|CASymbolIcon">
     <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
   </Style>
-  <Style Selector="ListBox.sidebar ListBoxItem:disabled, ListBox.sidebar ListBoxItem:disabled cac|CASymbolIcon">
+  <!-- A disabled sidebar keeps its rows' color, as on macOS 27 (SwiftUI's sidebar); a row disabled on its own fades. -->
+  <Style Selector="ListBox.sidebar ListBoxItem[IsEnabled=False], ListBox.sidebar ListBoxItem[IsEnabled=False] cac|CASymbolIcon">
     <Setter Property="TextElement.Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
+  </Style>
+
+  <!-- The rows under a row disabled on its own fade with it (TreeView.axaml). -->
+  <Style Selector="TreeViewItem[IsEnabled=False] TreeViewItem /template/ ContentPresenter#PART_HeaderPresenter">
+    <Setter Property="Foreground" Value="{DynamicResource LabelTertiaryBrush}" />
   </Style>
 
   <!-- Sidebars / Item, Level=0…3, at the system's sidebar icon size -->
