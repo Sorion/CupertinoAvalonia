@@ -11,7 +11,8 @@ namespace CupertinoAvalonia.Tests;
 /// <summary>
 /// Renders every gallery page in light and dark mode, in an active and an inactive window, for visual review
 /// against Apple's kit.
-/// Opt-in: set GALLERY_SCREENSHOTS to an output folder, and optionally GALLERY_PAGE to a page title.
+/// Opt-in: set GALLERY_SCREENSHOTS to an output folder, and optionally GALLERY_PAGE to a page title and
+/// GALLERY_HEIGHT to a taller window, to see a whole page.
 /// </summary>
 public class GalleryScreenshotTests
 {
@@ -29,7 +30,8 @@ public class GalleryScreenshotTests
 
         UseTheme(theme);
         var vm = new MainWindowViewModel();
-        var window = new MainWindow { DataContext = vm, Width = 1100, Height = 760 };
+        var height = double.TryParse(Environment.GetEnvironmentVariable("GALLERY_HEIGHT"), out var tall) ? tall : 760;
+        var window = new MainWindow { DataContext = vm, Width = 1100, Height = height };
         window.Show();
         // The window activates once its jobs run; only then can it be made to look inactive.
         Dispatcher.UIThread.RunJobs();

@@ -1,140 +1,248 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.ButtonsPage">
-  <StackPanel Spacing="28">
+  <gc:SectionStack>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Styles" />
-      <Grid ColumnDefinitions="140,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-            ColumnSpacing="16" RowSpacing="10">
-        <TextBlock Grid.Column="1" Classes="caption1 secondary" Text="Enabled" />
-        <TextBlock Grid.Column="2" Classes="caption1 secondary" Text="Disabled" />
-        <TextBlock Grid.Column="3" Classes="caption1 secondary" Text="Classes" />
+    <gc:GallerySection Title="Button"
+                       Description="A push button. A class sets its style; IsDefault=True also makes it prominent and presses it on Return."
+                       StyleClasses="accent tinted destructive borderless" SizeClasses="mini small large xlarge"
+                       Properties="IsDefault">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="180,124,124" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Normal" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Disabled" />
 
-        <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Bordered" />
-        <Button Grid.Row="1" Grid.Column="1" Content="Button" />
-        <Button Grid.Row="1" Grid.Column="2" Content="Button" IsEnabled="False" />
-        <TextBlock Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="(none)" />
+          <gc:RowLabel Grid.Row="1" Text="Bordered" Note="No class" />
+          <Button Grid.Row="1" Grid.Column="1" Content="Button" />
+          <Button Grid.Row="1" Grid.Column="2" Content="Button" IsEnabled="False" />
 
-        <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Prominent" />
-        <Button Grid.Row="2" Grid.Column="1" Classes="accent" Content="Button" />
-        <Button Grid.Row="2" Grid.Column="2" Classes="accent" Content="Button" IsEnabled="False" />
-        <TextBlock Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="accent, or IsDefault=True" />
+          <gc:RowLabel Grid.Row="2" Text="Prominent" Code="accent,IsDefault" />
+          <Button Grid.Row="2" Grid.Column="1" Classes="accent" Content="Button" />
+          <Button Grid.Row="2" Grid.Column="2" Classes="accent" Content="Button" IsEnabled="False" />
 
-        <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="Tinted" />
-        <Button Grid.Row="3" Grid.Column="1" Classes="tinted" Content="Button" />
-        <Button Grid.Row="3" Grid.Column="2" Classes="tinted" Content="Button" IsEnabled="False" />
-        <TextBlock Grid.Row="3" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="tinted" />
+          <gc:RowLabel Grid.Row="3" Text="Tinted" Code="tinted" />
+          <Button Grid.Row="3" Grid.Column="1" Classes="tinted" Content="Button" />
+          <Button Grid.Row="3" Grid.Column="2" Classes="tinted" Content="Button" IsEnabled="False" />
 
-        <TextBlock Grid.Row="4" VerticalAlignment="Center" Text="Destructive, in an alert" />
-        <Button Grid.Row="4" Grid.Column="1" Classes="destructive" Content="Button" />
-        <Button Grid.Row="4" Grid.Column="2" Classes="destructive" Content="Button" IsEnabled="False" />
-        <TextBlock Grid.Row="4" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="destructive" />
+          <gc:RowLabel Grid.Row="4" Text="Destructive, in an alert" Code="destructive" />
+          <Button Grid.Row="4" Grid.Column="1" Classes="destructive" Content="Button" />
+          <Button Grid.Row="4" Grid.Column="2" Classes="destructive" Content="Button" IsEnabled="False" />
 
-        <TextBlock Grid.Row="5" VerticalAlignment="Center" Text="Prominent destructive" />
-        <Button Grid.Row="5" Grid.Column="1" Classes="accent destructive" Content="Button" />
-        <Button Grid.Row="5" Grid.Column="2" Classes="accent destructive" Content="Button" IsEnabled="False" />
-        <TextBlock Grid.Row="5" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="accent destructive" />
+          <gc:RowLabel Grid.Row="5" Text="Prominent destructive" Code="accent destructive" />
+          <Button Grid.Row="5" Grid.Column="1" Classes="accent destructive" Content="Button" />
+          <Button Grid.Row="5" Grid.Column="2" Classes="accent destructive" Content="Button" IsEnabled="False" />
 
-        <TextBlock Grid.Row="6" VerticalAlignment="Center" Text="Borderless" />
-        <Button Grid.Row="6" Grid.Column="1" Classes="borderless" Content="Button" />
-        <Button Grid.Row="6" Grid.Column="2" Classes="borderless" Content="Button" IsEnabled="False" />
-        <TextBlock Grid.Row="6" Grid.Column="3" VerticalAlignment="Center" Classes="secondary" Text="borderless" />
-      </Grid>
-    </StackPanel>
+          <gc:RowLabel Grid.Row="6" Text="Borderless" Code="borderless" />
+          <Button Grid.Row="6" Grid.Column="1" Classes="borderless" Content="Button" />
+          <Button Grid.Row="6" Grid.Column="2" Classes="borderless" Content="Button" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Control sizes" />
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <Button Classes="mini" Content="Mini" />
-        <Button Classes="small" Content="Small" />
-        <Button Content="Regular" />
-        <Button Classes="large" Content="Large" />
-        <Button Classes="xlarge" Content="Extra Large" />
-      </StackPanel>
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <Button Classes="mini accent" Content="Mini" />
-        <Button Classes="small accent" Content="Small" />
-        <Button Classes="accent" Content="Regular" />
-        <Button Classes="large accent" Content="Large" />
-        <Button Classes="xlarge accent" Content="Extra Large" />
-      </StackPanel>
-    </StackPanel>
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="180,124,124,124,124,124" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="5" Classes="subheadline secondary" Text="Extra Large" />
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Toggle and repeat buttons" />
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <ToggleButton Content="Off" />
-        <ToggleButton Content="On" IsChecked="True" />
-        <ToggleButton Content="On, disabled" IsChecked="True" IsEnabled="False" />
-        <RepeatButton Content="Repeat" />
-      </StackPanel>
-    </StackPanel>
+          <gc:RowLabel Grid.Row="1" Text="Bordered" Note="No class" />
+          <Button Grid.Row="1" Grid.Column="1" Classes="mini" Content="Button" />
+          <Button Grid.Row="1" Grid.Column="2" Classes="small" Content="Button" />
+          <Button Grid.Row="1" Grid.Column="3" Content="Button" />
+          <Button Grid.Row="1" Grid.Column="4" Classes="large" Content="Button" />
+          <Button Grid.Row="1" Grid.Column="5" Classes="xlarge" Content="Button" />
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Pull-down and split buttons" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="DropDownButton: a pull-down button, which opens its menu. SplitButton and ToggleSplitButton: an action and, apart, its menu." />
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <DropDownButton Content="Export">
-          <DropDownButton.Flyout>
-            <MenuFlyout Placement="BottomEdgeAlignedLeft">
-              <MenuItem Header="PDF" />
-              <MenuItem Header="PNG" />
-              <MenuItem Header="SVG" />
-            </MenuFlyout>
-          </DropDownButton.Flyout>
-        </DropDownButton>
-        <DropDownButton Classes="accent" Content="New">
-          <DropDownButton.Flyout>
-            <MenuFlyout Placement="BottomEdgeAlignedLeft">
-              <MenuItem Header="Profile" />
-              <MenuItem Header="Channel" />
-            </MenuFlyout>
-          </DropDownButton.Flyout>
-        </DropDownButton>
-        <SplitButton Content="Reply">
-          <SplitButton.Flyout>
-            <MenuFlyout Placement="BottomEdgeAlignedLeft">
-              <MenuItem Header="Reply All" />
-              <MenuItem Header="Forward" />
-            </MenuFlyout>
-          </SplitButton.Flyout>
-        </SplitButton>
-        <ToggleSplitButton Content="Monitor" IsChecked="True">
-          <ToggleSplitButton.Flyout>
-            <MenuFlyout Placement="BottomEdgeAlignedLeft">
-              <MenuItem Header="Headphones" />
-              <MenuItem Header="Speakers" />
-            </MenuFlyout>
-          </ToggleSplitButton.Flyout>
-        </ToggleSplitButton>
-        <DropDownButton Content="Disabled" IsEnabled="False" />
-        <SplitButton Content="Disabled" IsEnabled="False" />
-      </StackPanel>
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <SplitButton Classes="mini" Content="Mini" />
-        <SplitButton Classes="small" Content="Small" />
-        <SplitButton Content="Regular" />
-        <SplitButton Classes="large" Content="Large" />
-        <SplitButton Classes="xlarge" Content="Extra Large" />
-      </StackPanel>
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <DropDownButton Classes="mini" Content="Mini" />
-        <DropDownButton Classes="small" Content="Small" />
-        <DropDownButton Content="Regular" />
-        <DropDownButton Classes="large" Content="Large" />
-        <DropDownButton Classes="xlarge" Content="Extra Large" />
-      </StackPanel>
-    </StackPanel>
+          <gc:RowLabel Grid.Row="2" Text="Prominent" Code="accent" />
+          <Button Grid.Row="2" Grid.Column="1" Classes="mini accent" Content="Button" />
+          <Button Grid.Row="2" Grid.Column="2" Classes="small accent" Content="Button" />
+          <Button Grid.Row="2" Grid.Column="3" Classes="accent" Content="Button" />
+          <Button Grid.Row="2" Grid.Column="4" Classes="large accent" Content="Button" />
+          <Button Grid.Row="2" Grid.Column="5" Classes="xlarge accent" Content="Button" />
+        </Grid>
+      </gc:GalleryBlock>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Keyboard focus" />
-      <TextBlock Classes="secondary" Text="Press Tab to move the focus ring between buttons." />
-      <StackPanel Orientation="Horizontal" Spacing="10">
-        <Button Content="Cancel" />
-        <Button Content="OK" IsDefault="True" />
-      </StackPanel>
-    </StackPanel>
-  </StackPanel>
+      <gc:GalleryBlock Title="In context"
+                       Hint="With Keyboard navigation on, Tab moves the focus ring between the buttons; Return presses the default button.">
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8">
+          <TextBlock Grid.ColumnSpan="4" Classes="body emphasized" Text="Do you want to save the changes made to the profile “Games”?" />
+          <TextBlock Grid.Row="1" Grid.ColumnSpan="4" Margin="0,4,0,0" Classes="subheadline secondary"
+                     Text="Your changes will be lost if you don't save them." />
+          <Button Grid.Row="2" Margin="0,16,0,0" Content="Don't Save" />
+          <Button Grid.Row="2" Grid.Column="2" Margin="0,16,0,0" Content="Cancel" IsCancel="True" />
+          <Button Grid.Row="2" Grid.Column="3" Margin="0,16,0,0" Content="Save" IsDefault="True" />
+        </Grid>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="ToggleButton"
+                       Description="A button that stays pressed while it's on. It takes Button's classes and sizes."
+                       BasedOn="Button" Properties="IsChecked">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="180,124,124" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Off" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="On" />
+
+          <gc:RowLabel Grid.Row="1" Text="Enabled" />
+          <ToggleButton Grid.Row="1" Grid.Column="1" Content="Toggle" />
+          <ToggleButton Grid.Row="1" Grid.Column="2" Content="Toggle" IsChecked="True" />
+
+          <gc:RowLabel Grid.Row="2" Text="Disabled" />
+          <ToggleButton Grid.Row="2" Grid.Column="1" Content="Toggle" IsEnabled="False" />
+          <ToggleButton Grid.Row="2" Grid.Column="2" Content="Toggle" IsChecked="True" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="124,124,124,124,124" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Extra Large" />
+
+          <ToggleButton Grid.Row="1" Classes="mini" Content="Toggle" IsChecked="True" />
+          <ToggleButton Grid.Row="1" Grid.Column="1" Classes="small" Content="Toggle" IsChecked="True" />
+          <ToggleButton Grid.Row="1" Grid.Column="2" Content="Toggle" IsChecked="True" />
+          <ToggleButton Grid.Row="1" Grid.Column="3" Classes="large" Content="Toggle" IsChecked="True" />
+          <ToggleButton Grid.Row="1" Grid.Column="4" Classes="xlarge" Content="Toggle" IsChecked="True" />
+        </Grid>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="RepeatButton"
+                       Description="A button that repeats its click while it's held. It takes Button's classes and sizes."
+                       BasedOn="Button" Properties="Delay Interval">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="124,124" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Normal" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Disabled" />
+
+          <RepeatButton Grid.Row="1" Content="Repeat" />
+          <RepeatButton Grid.Row="1" Grid.Column="1" Content="Repeat" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" HintSymbol="cursorarrow"
+                       Hint="Hold + or −: the click repeats until you release the button.">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Width="56" VerticalAlignment="Center" Text="Volume" />
+          <RepeatButton Content="−" Click="OnVolumeDownClick" />
+          <TextBlock Name="Volume" Width="44" VerticalAlignment="Center" TextAlignment="Center" Text="55 %" />
+          <RepeatButton Content="+" Click="OnVolumeUpClick" />
+        </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="DropDownButton"
+                       Description="A pull-down button: a click opens its menu."
+                       StyleClasses="accent" SizeClasses="mini small large xlarge" Properties="Flyout">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="180,124,124" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Normal" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Disabled" />
+
+          <gc:RowLabel Grid.Row="1" Text="Bordered" Note="No class" />
+          <DropDownButton Grid.Row="1" Grid.Column="1" Content="Export">
+            <DropDownButton.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                <MenuItem Header="PDF" />
+                <MenuItem Header="PNG" />
+                <MenuItem Header="SVG" />
+              </MenuFlyout>
+            </DropDownButton.Flyout>
+          </DropDownButton>
+          <DropDownButton Grid.Row="1" Grid.Column="2" Content="Export" IsEnabled="False" />
+
+          <gc:RowLabel Grid.Row="2" Text="Prominent" Code="accent" />
+          <DropDownButton Grid.Row="2" Grid.Column="1" Classes="accent" Content="New">
+            <DropDownButton.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                <MenuItem Header="Profile" />
+                <MenuItem Header="Channel" />
+              </MenuFlyout>
+            </DropDownButton.Flyout>
+          </DropDownButton>
+          <DropDownButton Grid.Row="2" Grid.Column="2" Classes="accent" Content="New" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="124,124,124,124,124" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Extra Large" />
+
+          <DropDownButton Grid.Row="1" Classes="mini" Content="Export" />
+          <DropDownButton Grid.Row="1" Grid.Column="1" Classes="small" Content="Export" />
+          <DropDownButton Grid.Row="1" Grid.Column="2" Content="Export" />
+          <DropDownButton Grid.Row="1" Grid.Column="3" Classes="large" Content="Export" />
+          <DropDownButton Grid.Row="1" Grid.Column="4" Classes="xlarge" Content="Export" />
+        </Grid>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="SplitButton"
+                       Description="An action and, apart, its menu. ToggleSplitButton's action also stays on, as a ToggleButton's does."
+                       SizeClasses="mini small large xlarge" Properties="Flyout IsChecked">
+      <gc:GalleryBlock Title="States" HintSymbol="cursorarrow"
+                       Hint="Two targets: the label runs the action, the chevron opens the menu.">
+        <Grid ColumnDefinitions="180,124,124,124" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Normal" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="On" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Disabled" />
+
+          <gc:RowLabel Grid.Row="1" Text="SplitButton" />
+          <SplitButton Grid.Row="1" Grid.Column="1" Content="Reply">
+            <SplitButton.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                <MenuItem Header="Reply All" />
+                <MenuItem Header="Forward" />
+              </MenuFlyout>
+            </SplitButton.Flyout>
+          </SplitButton>
+          <TextBlock Grid.Row="1" Grid.Column="2" Classes="tertiary" VerticalAlignment="Center" Text="—" />
+          <SplitButton Grid.Row="1" Grid.Column="3" Content="Reply" IsEnabled="False" />
+
+          <gc:RowLabel Grid.Row="2" Text="ToggleSplitButton" />
+          <ToggleSplitButton Grid.Row="2" Grid.Column="1" Content="Monitor">
+            <ToggleSplitButton.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                <MenuItem Header="Headphones" />
+                <MenuItem Header="Speakers" />
+              </MenuFlyout>
+            </ToggleSplitButton.Flyout>
+          </ToggleSplitButton>
+          <ToggleSplitButton Grid.Row="2" Grid.Column="2" Content="Monitor" IsChecked="True">
+            <ToggleSplitButton.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                <MenuItem Header="Headphones" />
+                <MenuItem Header="Speakers" />
+              </MenuFlyout>
+            </ToggleSplitButton.Flyout>
+          </ToggleSplitButton>
+          <ToggleSplitButton Grid.Row="2" Grid.Column="3" Content="Monitor" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="124,124,124,124,124" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Extra Large" />
+
+          <SplitButton Grid.Row="1" Classes="mini" Content="Reply" />
+          <SplitButton Grid.Row="1" Grid.Column="1" Classes="small" Content="Reply" />
+          <SplitButton Grid.Row="1" Grid.Column="2" Content="Reply" />
+          <SplitButton Grid.Row="1" Grid.Column="3" Classes="large" Content="Reply" />
+          <SplitButton Grid.Row="1" Grid.Column="4" Classes="xlarge" Content="Reply" />
+        </Grid>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+  </gc:SectionStack>
 </UserControl>

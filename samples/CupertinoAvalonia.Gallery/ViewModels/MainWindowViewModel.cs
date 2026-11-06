@@ -22,10 +22,10 @@ public partial class MainWindowViewModel : ObservableObject
 {
     public IReadOnlyList<GalleryPage> Pages { get; } =
     [
-        new("Buttons", "button.horizontal.top.press", "Button, ToggleButton and RepeatButton: styles, states and control sizes.", () => new ButtonsPage()),
+        new("Buttons", "button.horizontal.top.press", "Button, ToggleButton, RepeatButton, DropDownButton and SplitButton.", () => new ButtonsPage()),
         new("Toggles", "switch.2", "CheckBox, RadioButton and ToggleSwitch.", () => new TogglesPage()),
-        new("Text Fields", "text.menu", "TextBox: single and multi-line, placeholder, password. NumericUpDown and its stepper.", () => new TextFieldsPage()),
-        new("Sliders and Progress", "slider.horizontal.3", "Slider, ProgressBar, Expander and ScrollBar.", () => new SlidersPage()),
+        new("Text Fields", "text.menu", "TextBox, NumericUpDown and AutoCompleteBox.", () => new TextFieldsPage()),
+        new("Sliders and Progress", "slider.horizontal.3", "Slider, ProgressBar, Expander and ScrollViewer.", () => new SlidersPage()),
         new("Lists", "list.bullet.indent", "ListBox: table rows, sidebar and alternating rows. TreeView: an outline, in a table or a sidebar.", () => new ListsPage()),
         new("Split View", "rectangle.split.2x1", "SplitView: a sidebar on the window's material, an inspector on the right.", () => new SplitViewPage()),
         new("Tab View", "rectangle.topthird.inset.filled", "TabControl: a settings window's tabs, or a segmented control.", () => new TabViewPage()),

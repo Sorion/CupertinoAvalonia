@@ -39,6 +39,8 @@
   </NativeMenu.Menu>
 
   <cac:CAWindow.Styles>
+    <!-- The pages' template; in the window, so the screenshot tests, which only load the theme, get it too. -->
+    <StyleInclude Source="avares://CupertinoAvalonia.Gallery/Styles/GalleryStyles.axaml" />
     <!-- Wide content runs to the column's edge, as in SwiftUI: only the scroll viewer clips it, not the page's margin. -->
     <Style Selector="ContentControl#PageHost, ContentControl#PageHost > :is(UserControl)">
       <Setter Property="ClipToBounds" Value="False" />
@@ -101,7 +103,7 @@
 
     <!-- The page starts below the toolbar and scrolls under it. -->
     <ScrollViewer Name="PageScroll" cac:CAToolbar.ScrollsUnder="True">
-      <ContentControl Name="PageHost" Margin="20" Content="{Binding SelectedPage.Content}" />
+      <ContentControl Name="PageHost" Margin="28,24" Content="{Binding SelectedPage.Content}" />
     </ScrollViewer>
   </cac:CANavigationSplitView>
 </cac:CAWindow>

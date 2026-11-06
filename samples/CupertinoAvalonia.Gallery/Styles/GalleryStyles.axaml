@@ -1,0 +1,127 @@
+<!--
+  The gallery's page template, shared with SwiftGallery (PageKit.swift): sections of the same blocks in the same order.
+  Only the gallery's own layout: the controls keep the theme's look, and these use the theme's tokens.
+-->
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="using:System"
+        xmlns:cac="using:CupertinoAvalonia.Controls"
+        xmlns:gc="using:CupertinoAvalonia.Gallery.Controls">
+
+  <Styles.Resources>
+    <ControlTheme x:Key="{x:Type gc:GallerySection}" TargetType="gc:GallerySection">
+      <Setter Property="ItemsPanel">
+        <ItemsPanelTemplate>
+          <StackPanel Spacing="16" />
+        </ItemsPanelTemplate>
+      </Setter>
+      <Setter Property="Template">
+        <ControlTemplate>
+          <StackPanel>
+            <!-- Between sections: 32 above (the page's spacing) and 32 below. -->
+            <Border Name="PART_Rule" Height="1" Margin="0,0,0,32" IsVisible="False"
+                    Background="{DynamicResource TableColumnSeparatorBrush}" />
+            <TextBlock Classes="title3" Text="{TemplateBinding Title}" />
+            <TextBlock Classes="secondary" Margin="0,4,0,0" MaxWidth="600" HorizontalAlignment="Left"
+                       TextWrapping="Wrap" Text="{TemplateBinding Description}"
+                       IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <ItemsControl Margin="0,6,0,0" ItemsSource="{TemplateBinding Api}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="gc:ApiGroup">
+                  <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,16,4">
+                    <TextBlock Classes="subheadline secondary" VerticalAlignment="Center" Text="{Binding Label}" />
+                    <ItemsControl ItemsSource="{Binding Names}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <StackPanel Orientation="Horizontal" Spacing="6" />
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="sys:String">
+                          <Border Classes="code">
+                            <TextBlock Text="{Binding}" />
+                          </Border>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsPresenter Margin="0,12,0,0" ItemsPanel="{TemplateBinding ItemsPanel}" />
+          </StackPanel>
+        </ControlTemplate>
+      </Setter>
+      <Style Selector="^:nth-child(n+2) /template/ Border#PART_Rule">
+        <Setter Property="IsVisible" Value="True" />
+      </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type gc:GalleryBlock}" TargetType="gc:GalleryBlock">
+      <Setter Property="Padding" Value="20,16" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <StackPanel>
+            <TextBlock Classes="subheadline emphasized secondary" Margin="2,0,0,6" Text="{TemplateBinding Title}" />
+            <!-- The scene: a stroke on the window's background, as the Split View and Tab View pages' frames. -->
+            <Border CornerRadius="10" BorderThickness="1" ClipToBounds="True"
+                    BorderBrush="{DynamicResource TableColumnSeparatorBrush}" Padding="{TemplateBinding Padding}">
+              <ContentPresenter Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+            </Border>
+            <StackPanel Orientation="Horizontal" Spacing="6" Margin="2,6,0,0"
+                        IsVisible="{TemplateBinding Hint, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+              <cac:CASymbolIcon Symbol="{TemplateBinding HintSymbol}" FontSize="11" VerticalAlignment="Center"
+                                Foreground="{DynamicResource LabelSecondaryBrush}" />
+              <TextBlock Classes="subheadline secondary" VerticalAlignment="Center" Text="{TemplateBinding Hint}" />
+            </StackPanel>
+          </StackPanel>
+        </ControlTemplate>
+      </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type gc:RowLabel}" TargetType="gc:RowLabel">
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <StackPanel Spacing="2">
+            <TextBlock Text="{TemplateBinding Text}" />
+            <TextBlock Classes="subheadline secondary" Text="{TemplateBinding Note}"
+                       IsVisible="{TemplateBinding Note, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <ItemsControl ItemsSource="{TemplateBinding Codes}"
+                          IsVisible="{TemplateBinding Code, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="6" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="sys:String">
+                  <Border Classes="code">
+                    <TextBlock Text="{Binding}" />
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ControlTemplate>
+      </Setter>
+    </ControlTheme>
+  </Styles.Resources>
+
+  <!-- A class, property or type to type. Menlo as SwiftGallery's chips; Windows and Linux fall back. -->
+  <Style Selector="Border.code">
+    <Setter Property="Background" Value="{DynamicResource FillTertiaryBrush}" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Padding" Value="4,1" />
+  </Style>
+  <Style Selector="Border.code > TextBlock">
+    <Setter Property="FontFamily" Value="Menlo, Consolas, monospace" />
+    <Setter Property="FontSize" Value="{DynamicResource SubheadlineFontSize}" />
+    <Setter Property="LetterSpacing" Value="0" />
+  </Style>
+</Styles>

@@ -1,55 +1,157 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.TogglesPage">
-  <StackPanel Spacing="28">
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="CheckBox" />
-      <Grid ColumnDefinitions="Auto,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="28" RowSpacing="10">
-        <CheckBox Content="Off" />
-        <CheckBox Grid.Column="1" Content="On" IsChecked="True" />
-        <CheckBox Grid.Column="2" Content="Mixed" IsThreeState="True" IsChecked="{x:Null}" />
-        <CheckBox Grid.Row="1" Content="Off" IsEnabled="False" />
-        <CheckBox Grid.Row="1" Grid.Column="1" Content="On" IsChecked="True" IsEnabled="False" />
-        <CheckBox Grid.Row="1" Grid.Column="2" Content="Mixed" IsThreeState="True" IsChecked="{x:Null}" IsEnabled="False" />
-      </Grid>
-      <StackPanel Orientation="Horizontal" Spacing="20">
-        <CheckBox Classes="mini" Content="Mini" IsChecked="True" />
-        <CheckBox Classes="small" Content="Small" IsChecked="True" />
-        <CheckBox Content="Regular" IsChecked="True" />
-        <CheckBox Classes="large" Content="Large" IsChecked="True" />
-      </StackPanel>
-    </StackPanel>
+  <gc:SectionStack>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="RadioButton" />
-      <StackPanel Orientation="Horizontal" Spacing="28">
-        <StackPanel Spacing="8">
-          <RadioButton GroupName="a" Content="Automatic" IsChecked="True" />
-          <RadioButton GroupName="a" Content="Light" />
-          <RadioButton GroupName="a" Content="Dark" />
-        </StackPanel>
-        <StackPanel Spacing="8">
-          <RadioButton GroupName="b" Content="Disabled, selected" IsChecked="True" IsEnabled="False" />
-          <RadioButton GroupName="b" Content="Disabled" IsEnabled="False" />
-        </StackPanel>
-      </StackPanel>
-    </StackPanel>
+    <gc:GallerySection Title="CheckBox"
+                       Description="A box the user turns on and off. IsThreeState adds a mixed state, for a group whose items are only partly on."
+                       SizeClasses="mini small large" Properties="IsChecked IsThreeState">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="134,124,124,124" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Off" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="On" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Mixed" />
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="ToggleSwitch" />
-      <StackPanel Orientation="Horizontal" Spacing="20">
-        <ToggleSwitch IsChecked="True" />
-        <ToggleSwitch />
-        <ToggleSwitch IsChecked="True" IsEnabled="False" />
-        <ToggleSwitch IsEnabled="False" />
-      </StackPanel>
-      <StackPanel Orientation="Horizontal" Spacing="20">
-        <ToggleSwitch Classes="mini" IsChecked="True" />
-        <ToggleSwitch Classes="small" IsChecked="True" />
-        <ToggleSwitch IsChecked="True" />
-        <ToggleSwitch Classes="large" IsChecked="True" />
-      </StackPanel>
-      <ToggleSwitch Content="Launch MixerStudio at login" IsChecked="True" />
-    </StackPanel>
-  </StackPanel>
+          <gc:RowLabel Grid.Row="1" Text="Enabled" />
+          <CheckBox Grid.Row="1" Grid.Column="1" Content="Label" />
+          <CheckBox Grid.Row="1" Grid.Column="2" Content="Label" IsChecked="True" />
+          <CheckBox Grid.Row="1" Grid.Column="3" Content="Label" IsThreeState="True" IsChecked="{x:Null}" />
+
+          <gc:RowLabel Grid.Row="2" Text="Disabled" />
+          <CheckBox Grid.Row="2" Grid.Column="1" Content="Label" IsEnabled="False" />
+          <CheckBox Grid.Row="2" Grid.Column="2" Content="Label" IsChecked="True" IsEnabled="False" />
+          <CheckBox Grid.Row="2" Grid.Column="3" Content="Label" IsThreeState="True" IsChecked="{x:Null}" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="124,124,124,124,124" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Extra Large" />
+
+          <CheckBox Grid.Row="1" Classes="mini" Content="Label" IsChecked="True" />
+          <CheckBox Grid.Row="1" Grid.Column="1" Classes="small" Content="Label" IsChecked="True" />
+          <CheckBox Grid.Row="1" Grid.Column="2" Content="Label" IsChecked="True" />
+          <CheckBox Grid.Row="1" Grid.Column="3" Classes="large" Content="Label" IsChecked="True" />
+          <TextBlock Grid.Row="1" Grid.Column="4" Classes="tertiary" VerticalAlignment="Center" Text="—" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" Hint="Space toggles the checkbox that has the focus.">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="subheadline secondary" Text="Mute when the screen locks" />
+          <CheckBox Name="AllChannels" Content="All channels" IsThreeState="True" Click="OnAllChannelsClick" />
+          <StackPanel Name="Channels" Margin="20,0,0,0" Spacing="8">
+            <CheckBox Content="Music" IsChecked="True" IsCheckedChanged="OnChannelChanged" />
+            <CheckBox Content="Games" IsCheckedChanged="OnChannelChanged" />
+            <CheckBox Content="Voice chat" IsChecked="True" IsCheckedChanged="OnChannelChanged" />
+          </StackPanel>
+        </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="RadioButton"
+                       Description="One choice among several. Radio buttons with the same GroupName turn each other off."
+                       SizeClasses="mini small large" Properties="IsChecked GroupName">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="134,124,124" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Off" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="On" />
+
+          <gc:RowLabel Grid.Row="1" Text="Enabled" />
+          <RadioButton Grid.Row="1" Grid.Column="1" GroupName="EnabledOff" Content="Label" />
+          <RadioButton Grid.Row="1" Grid.Column="2" GroupName="EnabledOn" Content="Label" IsChecked="True" />
+
+          <gc:RowLabel Grid.Row="2" Text="Disabled" />
+          <RadioButton Grid.Row="2" Grid.Column="1" GroupName="DisabledOff" Content="Label" IsEnabled="False" />
+          <RadioButton Grid.Row="2" Grid.Column="2" GroupName="DisabledOn" Content="Label" IsChecked="True" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="124,124,124,124,124" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Extra Large" />
+
+          <RadioButton Grid.Row="1" GroupName="Mini" Classes="mini" Content="Label" IsChecked="True" />
+          <RadioButton Grid.Row="1" Grid.Column="1" GroupName="Small" Classes="small" Content="Label" IsChecked="True" />
+          <RadioButton Grid.Row="1" Grid.Column="2" GroupName="Regular" Content="Label" IsChecked="True" />
+          <RadioButton Grid.Row="1" Grid.Column="3" GroupName="Large" Classes="large" Content="Label" IsChecked="True" />
+          <TextBlock Grid.Row="1" Grid.Column="4" Classes="tertiary" VerticalAlignment="Center" Text="—" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="Appearance:" />
+          <StackPanel Spacing="8">
+            <RadioButton GroupName="Appearance" Content="Automatic" IsChecked="True" />
+            <RadioButton GroupName="Appearance" Content="Light" />
+            <RadioButton GroupName="Appearance" Content="Dark" />
+          </StackPanel>
+        </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+    <gc:GallerySection Title="ToggleSwitch"
+                       Description="A switch for a setting that applies at once, without a Save button."
+                       SizeClasses="mini small large" Properties="IsChecked Content">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="134,124,124" RowDefinitions="Auto,Auto,Auto" RowSpacing="12">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Off" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="On" />
+
+          <gc:RowLabel Grid.Row="1" Text="Enabled" />
+          <ToggleSwitch Grid.Row="1" Grid.Column="1" />
+          <ToggleSwitch Grid.Row="1" Grid.Column="2" IsChecked="True" />
+
+          <gc:RowLabel Grid.Row="2" Text="Disabled" />
+          <ToggleSwitch Grid.Row="2" Grid.Column="1" IsEnabled="False" />
+          <ToggleSwitch Grid.Row="2" Grid.Column="2" IsChecked="True" IsEnabled="False" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="124,124,124,124,124" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Extra Large" />
+
+          <ToggleSwitch Grid.Row="1" Classes="mini" IsChecked="True" />
+          <ToggleSwitch Grid.Row="1" Grid.Column="1" Classes="small" IsChecked="True" />
+          <ToggleSwitch Grid.Row="1" Grid.Column="2" IsChecked="True" />
+          <ToggleSwitch Grid.Row="1" Grid.Column="3" Classes="large" IsChecked="True" />
+          <TextBlock Grid.Row="1" Grid.Column="4" Classes="tertiary" VerticalAlignment="Center" Text="—" />
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" Padding="0" Hint="Click the switch, or press Space when it has the focus.">
+        <StackPanel>
+          <Grid ColumnDefinitions="*,Auto" Margin="16,10">
+            <TextBlock VerticalAlignment="Center" Text="Launch MixerStudio at login" />
+            <ToggleSwitch Grid.Column="1" IsChecked="True" />
+          </Grid>
+          <Border Height="1" Background="{DynamicResource TableColumnSeparatorBrush}" />
+          <Grid ColumnDefinitions="*,Auto" Margin="16,10">
+            <TextBlock VerticalAlignment="Center" Text="Show volume in the menu bar" />
+            <ToggleSwitch Grid.Column="1" />
+          </Grid>
+          <Border Height="1" Background="{DynamicResource TableColumnSeparatorBrush}" />
+          <Grid ColumnDefinitions="*,Auto" Margin="16,10">
+            <TextBlock VerticalAlignment="Center" Text="Mute when headphones are unplugged" />
+            <ToggleSwitch Grid.Column="1" IsChecked="True" />
+          </Grid>
+        </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+  </gc:SectionStack>
 </UserControl>
