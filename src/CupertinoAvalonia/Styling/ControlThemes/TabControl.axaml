@@ -22,7 +22,10 @@
     <Setter Property="Padding" Value="0,16,0,0" />
     <Setter Property="ItemsPanel">
       <ItemsPanelTemplate>
+        <!-- Measured on macOS 27 (NSTabViewController, as in Audio MIDI Setup): each tab as wide as its label, unlike
+             SwiftUI's segmented picker. -->
         <cas:SegmentedPanel Spacing="1"
+                            EqualWidths="False"
                             SeparatorBrush="{DynamicResource LabelTertiaryBrush}"
                             SeparatorHeight="{DynamicResource SegmentedControlHeightSeparator}" />
       </ItemsPanelTemplate>
@@ -100,7 +103,10 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
-    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPadding}" />
+    <!-- Measured on macOS 27 (NSTabViewController): 23 pt around the label, wider than the kit's segment
+         (SegmentedControlPadding, 10 pt each side); 11 and 12 rather than 11.5, which layout rounding makes 12 on a 1x
+         screen, and the label sits 0.5 pt left of the center, as measured. -->
+    <Setter Property="Padding" Value="11,0,12,0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="FontWeight" Value="{DynamicResource ControlFontWeight}" />

@@ -24,7 +24,8 @@ public class GroupBoxTests
         var content = Part<ContentPresenter>(box, "PART_ContentPresenter");
         Assert.Equal(ColorOf(Resource<IBrush>("FillQuaternaryBrush", variant)), ColorOf(content.Background));
         Assert.Equal(new CornerRadius(12), content.CornerRadius);
-        Assert.Equal(new Thickness(10), content.Padding);
+        // NSBox's content margins, as SwiftUI's GroupBox on macOS 27.
+        Assert.Equal(new Thickness(5), content.Padding);
         var title = Part<ContentPresenter>(box, "PART_HeaderPresenter").GetVisualDescendants().OfType<TextBlock>().Single();
         Assert.Equal(11, title.FontSize);
         Assert.Equal(ColorOf(Resource<IBrush>("LabelPrimaryBrush", variant)), ColorOf(title.Foreground));

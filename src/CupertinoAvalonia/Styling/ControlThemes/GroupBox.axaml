@@ -16,8 +16,8 @@
     <!-- At 100 %, as measured on macOS 27 (the kit's layer is at 50 %). -->
     <Setter Property="Background" Value="{DynamicResource FillQuaternaryBrush}" />
     <Setter Property="CornerRadius" Value="12" />
-    <!-- The kit's form insets its rows 10 pt; NSBox's content margins are 5 pt. -->
-    <Setter Property="Padding" Value="10" />
+    <!-- NSBox's content margins, 5 pt on every side; SwiftUI's GroupBox measures the same on macOS 27. -->
+    <Setter Property="Padding" Value="5" />
     <Setter Property="Template">
       <ControlTemplate>
         <DockPanel>

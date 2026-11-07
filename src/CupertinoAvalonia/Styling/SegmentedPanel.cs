@@ -8,7 +8,8 @@ using Avalonia.VisualTree;
 namespace CupertinoAvalonia.Styling;
 
 /// <summary>
-/// The items panel of a segmented ListBox: equal-width segments, with a separator between two unselected ones.
+/// The items panel of a segmented ListBox or TabControl: equal-width segments, or with <see cref="EqualWidths"/> off
+/// segments as wide as their content; a separator between two unselected ones.
 /// </summary>
 /// <remarks>
 /// A StackPanel, so arrow keys still move between segments. Panel.Render is sealed: a child visual draws the separators.
@@ -23,9 +24,13 @@ internal class SegmentedPanel : StackPanel
     public static readonly StyledProperty<double> SeparatorHeightProperty =
         AvaloniaProperty.Register<SegmentedPanel, double>(nameof(SeparatorHeight), 14);
 
+    public static readonly StyledProperty<bool> EqualWidthsProperty =
+        AvaloniaProperty.Register<SegmentedPanel, bool>(nameof(EqualWidths), true);
+
     static SegmentedPanel()
     {
         OrientationProperty.OverrideDefaultValue<SegmentedPanel>(Orientation.Horizontal);
+        AffectsMeasure<SegmentedPanel>(EqualWidthsProperty);
         SeparatorBrushProperty.Changed.AddClassHandler<SegmentedPanel>((panel, _) => panel._separatorLayer.InvalidateVisual());
         SeparatorHeightProperty.Changed.AddClassHandler<SegmentedPanel>((panel, _) => panel._separatorLayer.InvalidateVisual());
         SelectingItemsControl.IsSelectedProperty.Changed.AddClassHandler<Control>((segment, _) =>
@@ -51,6 +56,13 @@ internal class SegmentedPanel : StackPanel
         set => SetValue(SeparatorHeightProperty, value);
     }
 
+    /// <summary>Equal-width segments, as SwiftUI's segmented picker; off, each as wide as its content.</summary>
+    public bool EqualWidths
+    {
+        get => GetValue(EqualWidthsProperty);
+        set => SetValue(EqualWidthsProperty, value);
+    }
+
     protected override Size MeasureOverride(Size availableSize)
     {
         _separatorLayer.Measure(availableSize);
@@ -59,6 +71,18 @@ internal class SegmentedPanel : StackPanel
             return default;
 
         var spacing = Spacing * (segments.Count - 1);
+        if (!EqualWidths)
+        {
+            double total = 0, tallest = 0;
+            foreach (var segment in segments)
+            {
+                segment.Measure(new Size(double.PositiveInfinity, availableSize.Height));
+                total += segment.DesiredSize.Width;
+                tallest = Math.Max(tallest, segment.DesiredSize.Height);
+            }
+            return new Size(total + spacing, tallest);
+        }
+
         var each = double.IsInfinity(availableSize.Width)
             ? double.PositiveInfinity
             : Math.Max(0, availableSize.Width - spacing) / segments.Count;
@@ -79,8 +103,9 @@ internal class SegmentedPanel : StackPanel
         var x = 0.0;
         foreach (var segment in segments)
         {
-            segment.Arrange(new Rect(x, 0, width, finalSize.Height));
-            x += width + Spacing;
+            var each = EqualWidths ? width : segment.DesiredSize.Width;
+            segment.Arrange(new Rect(x, 0, each, finalSize.Height));
+            x += each + Spacing;
         }
         _separatorLayer.Arrange(new Rect(finalSize));
         _separatorLayer.InvalidateVisual();

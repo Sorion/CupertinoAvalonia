@@ -60,6 +60,21 @@ public class TabControlTests
     }
 
     [AvaloniaFact]
+    public void Tabs_are_as_wide_as_their_labels()
+    {
+        var input = new TabItem { Header = "Input" };
+        var disabled = new TabItem { Header = "Disabled" };
+        var (window, _) = Show(new TabControl(), input, disabled);
+
+        // Measured on macOS 27 (NSTabViewController): each tab its label and 23 pt around it.
+        Assert.Equal(new Thickness(11, 0, 12, 0), input.Padding);
+        Assert.True(disabled.Bounds.Width > input.Bounds.Width);
+        var label = Part<ContentPresenter>(input, "PART_ContentPresenter");
+        Assert.Equal(label.Bounds.Width + 23, input.Bounds.Width, tolerance: 0.5);
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void Separators_only_between_unselected_tabs()
     {
         var (window, tabs) = Show(new TabControl(), new TabItem { Header = "A" }, new TabItem { Header = "B" }, new TabItem { Header = "C" });
