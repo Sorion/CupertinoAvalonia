@@ -98,7 +98,7 @@ public class ToolbarTests
     [AvaloniaFact]
     public void Compact_items_are_24_points_tall()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var button = new Button { Classes = { "toolbar", "compact" }, Content = "Share" };
         var popUp = new ComboBox { Classes = { "toolbar", "compact" }, ItemsSource = new[] { "Default" }, SelectedIndex = 0 };
         var search = new TextBox { Classes = { "toolbar", "compact" } };
@@ -128,7 +128,7 @@ public class ToolbarTests
         Assert.Equal(Describe(Resource("WhiteBrush", variant)), Describe(button.Foreground));
         Assert.Equal(1000, button.CornerRadius.TopLeft);
         // No rim, but the glass's bright edge lines over the accent.
-        Assert.Equal(Colors.Transparent, (button.BorderBrush as ISolidColorBrush)?.Color);
+        Assert.Equal(Colors.Transparent, ColorOf(button.BorderBrush));
         Assert.Equal(Resource<BoxShadows>("ToolbarGlassPrimaryShadow", variant),
             Part<Border>(button, "PART_Background").BoxShadow);
         window.Close();
@@ -137,7 +137,7 @@ public class ToolbarTests
     [AvaloniaFact]
     public void Pressed_and_on_items_darken_the_glass()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var button = new Button { Classes = { "toolbar" }, Content = "Share" };
         var toggle = new ToggleButton { Classes = { "toolbar" }, Content = "Star", IsChecked = true };
         var window = Show(button, toggle);
@@ -154,7 +154,7 @@ public class ToolbarTests
     [AvaloniaFact]
     public void Grouped_buttons_share_one_capsule()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var back = new Button { Content = "<" };
         var forward = new Button { Content = ">" };
         var stack = new StackPanel { Children = { back, forward } };
@@ -167,7 +167,7 @@ public class ToolbarTests
         Assert.Equal(1, stack.Spacing);
         foreach (var button in new[] { back, forward })
         {
-            Assert.Equal(Colors.Transparent, (button.Background as ISolidColorBrush)?.Color);
+            Assert.Equal(Colors.Transparent, ColorOf(button.Background));
             foreach (var shadow in Part<Border>(button, "PART_Background").BoxShadow)
                 Assert.Equal(0, shadow.Color.A);
             Assert.Equal(28, button.Bounds.Height);
@@ -180,7 +180,7 @@ public class ToolbarTests
     [AvaloniaFact]
     public void Disabled_items_keep_the_glass_and_dim_their_label()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var button = new Button { Classes = { "toolbar" }, Content = "Share", IsEnabled = false };
         var search = new TextBox { Classes = { "toolbar" }, IsEnabled = false };
         var window = Show(button, search);
@@ -265,8 +265,7 @@ public class ToolbarTests
             var pressed = Describe(Resource("ToolbarGlassPressedBrush", ThemeVariant.Light));
 
             // A quick click: the item stays lifted for the minimum before it settles.
-            window.MouseDown(Center(button), MouseButton.Left);
-            window.MouseUp(Center(button), MouseButton.Left);
+            Click(window, button);
             Assert.True(GlassLift.GetIsLifted(button));
             Assert.Equal(pressed, Describe(button.Background));
             Pump(window, 350);
@@ -321,8 +320,7 @@ public class ToolbarTests
         var popUp = new ComboBox { Classes = { "toolbar" }, ItemsSource = new[] { "Default", "Games" }, SelectedIndex = 0 };
         var window = Show(button, popUp);
 
-        window.MouseDown(Center(button), MouseButton.Left);
-        window.MouseUp(Center(button), MouseButton.Left);
+        Click(window, button);
         Assert.True(flyout.IsOpen);
         popUp.IsDropDownOpen = true;
         Pump(window, 900);
@@ -353,10 +351,8 @@ public class ToolbarTests
             var window = Show(group, segmented);
             var icons = segmented.GetVisualDescendants().OfType<ListBoxItem>().Last();
 
-            window.MouseDown(Center(back), MouseButton.Left);
-            window.MouseUp(Center(back), MouseButton.Left);
-            window.MouseDown(Center(icons), MouseButton.Left);
-            window.MouseUp(Center(icons), MouseButton.Left);
+            Click(window, back);
+            Click(window, icons);
             Assert.Equal(1, segmented.SelectedIndex);
             Pump(window, 350);
             // The container swells, not the item clicked in it.
@@ -384,8 +380,7 @@ public class ToolbarTests
         var group = new Border { Classes = { "toolbar-group" }, Child = new StackPanel { Children = { new Button { Content = "Share" }, more } } };
         var window = Show(group);
 
-        window.MouseDown(Center(more), MouseButton.Left);
-        window.MouseUp(Center(more), MouseButton.Left);
+        Click(window, more);
         Assert.True(flyout.IsOpen);
         Pump(window, 900);
         Assert.Equal(1.08, Scale(group), 2);

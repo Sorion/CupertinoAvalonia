@@ -18,7 +18,7 @@ public class SplitButtonTests
     [AvaloniaFact]
     public void Pull_down_button_ends_with_a_chevron()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var pullDown = new DropDownButton { Content = "Export" };
         var small = new DropDownButton { Classes = { "small" }, Content = "Export" };
         var window = Show(pullDown, small);
@@ -31,7 +31,6 @@ public class SplitButtonTests
         Assert.Equal(pullDown.Bounds.Width - 13, Origin(glyph, pullDown).X + glyph.Bounds.Width / 2, tolerance: 0.5);
         Assert.Equal(new Thickness(12, 0, 0, 0), pullDown.Padding);
         Assert.Equal(ColorOf(Resource("ButtonBackgroundBrush")), ColorOf(pullDown.Background));
-        // 8.75 pt when small.
         Assert.Equal(8.75, Part<CASymbolIcon>(small, "DropDownGlyph").FontSize);
         Assert.Equal(20, small.Bounds.Height);
         window.Close();
@@ -70,7 +69,7 @@ public class SplitButtonTests
     [AvaloniaFact]
     public void Pull_down_button_stays_pressed_while_its_menu_is_open()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var pullDown = new DropDownButton { Content = "Export", Flyout = new MenuFlyout { Items = { new MenuItem { Header = "PDF" } } } };
         var window = Show(pullDown);
 
@@ -102,7 +101,7 @@ public class SplitButtonTests
     [AvaloniaFact]
     public void Split_button_has_a_separator_before_its_menu()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var split = new SplitButton { Content = new CASymbolIcon { Symbol = "plus" } };
         var window = Show(split);
 
@@ -129,7 +128,7 @@ public class SplitButtonTests
     [AvaloniaFact]
     public void Disabled_split_button_keeps_its_background()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var split = new SplitButton { Content = "Reply", IsEnabled = false };
         var window = Show(split);
 
@@ -145,7 +144,7 @@ public class SplitButtonTests
     [AvaloniaFact]
     public void Split_button_presses_its_parts_apart_and_keeps_the_menu_part_pressed_while_open()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var split = new SplitButton { Content = "Reply", Flyout = new MenuFlyout { Items = { new MenuItem { Header = "Forward" } } } };
         var window = Show(split);
         var primary = Part<Button>(split, "PART_PrimaryButton");
@@ -167,7 +166,7 @@ public class SplitButtonTests
     [AvaloniaFact]
     public void Toggle_split_button_on_is_filled_with_the_accent()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var toggle = new ToggleSplitButton { Content = "Monitor", IsChecked = true };
         var window = Show(toggle);
 

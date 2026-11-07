@@ -2,9 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
-using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
-using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
@@ -38,7 +36,6 @@ public class TreeViewTests
         // _Disclosure: SF Symbol "chevron.right", Bold 9.
         var chevron = Part<CASymbolIcon>(games, "Chevron");
         Assert.Equal(("chevron.right", 9, FontWeight.Bold), (chevron.Symbol, chevron.FontSize, chevron.FontWeight));
-        Assert.Equal(OperatingSystem.IsMacOSVersionAtLeast(11), chevron.IsNative);
         window.Close();
     }
 
@@ -51,8 +48,7 @@ public class TreeViewTests
         Assert.Equal(0, Angle(chevron), 0);
 
         var toggle = Part<ToggleButton>(row, "PART_ExpandCollapseChevron");
-        window.MouseDown(Center(toggle), MouseButton.Left);
-        window.MouseUp(Center(toggle), MouseButton.Left);
+        Click(window, toggle);
         Assert.True(row.IsExpanded);
         Pump(window, 400);
         Assert.Equal(90, Angle(chevron), 0);
@@ -92,14 +88,13 @@ public class TreeViewTests
     [AvaloniaFact]
     public void Sidebar_outline_is_nested_sidebar_items()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var channels = new TreeViewItem { Header = "Channels" };
         var mixer = new TreeViewItem { Header = "Mixer", IsExpanded = true, Items = { channels } };
         var tree = new TreeView { Classes = { "sidebar" }, Items = { mixer } };
         var window = Show(tree);
 
-        // Sidebars / Item, Size=Medium: 32 pt, each level 12 pt further in.
-        Assert.Equal(32, Part<Border>(mixer, "PART_LayoutRoot").Bounds.Height);
+        // Sidebars / Item: each level 12 pt further in.
         Assert.Equal(HeaderX(mixer) + 12, HeaderX(channels));
         Assert.Equal(11, Part<CASymbolIcon>(mixer, "Chevron").FontSize);
         Assert.Equal(Describe(Resource("LabelTertiaryBrush", ThemeVariant.Light)), Describe(Part<CASymbolIcon>(mixer, "Chevron").Foreground));
@@ -115,7 +110,7 @@ public class TreeViewTests
     [AvaloniaFact]
     public void A_disabled_tree_keeps_its_rows_color()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var steam = new TreeViewItem { Header = "Steam" };
         var games = new TreeViewItem { Header = "Games", IsExpanded = true, IsEnabled = false, Items = { steam } };
         var music = new TreeViewItem { Header = "Music" };

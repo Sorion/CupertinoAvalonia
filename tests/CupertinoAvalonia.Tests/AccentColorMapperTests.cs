@@ -19,11 +19,8 @@ public class AccentColorMapperTests
     [AvaloniaFact]
     public void Multicolor_swatch_turns_as_in_System_Settings()
     {
-        Assert.True(Application.Current!.TryGetResource("AccentMulticolorBrush", null, out var brush));
-        var swatch = new Ellipse { Width = 100, Height = 100, Fill = (IBrush)brush! };
-        var window = new Window { Width = 200, Height = 200, Content = swatch };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var swatch = new Ellipse { Width = 100, Height = 100, Fill = Resource("AccentMulticolorBrush") };
+        var window = Show(new Window { Width = 200, Height = 200, Content = swatch });
 
         // Measured on macOS 27: purple at the top, then clockwise red, yellow-green, blue.
         using var frame = window.CaptureRenderedFrame()!;
@@ -33,8 +30,7 @@ public class AccentColorMapperTests
             var angle = degrees * Math.PI / 180;
             var actual = Pixel(frame, (int)(center.X + Math.Sin(angle) * 35), (int)(center.Y - Math.Cos(angle) * 35));
             var target = Color.Parse(expected);
-            Assert.True(Math.Abs(actual.R - target.R) + Math.Abs(actual.G - target.G) + Math.Abs(actual.B - target.B) < 40,
-                $"{degrees}°: {actual} instead of {target}");
+            Assert.True(Distance(actual, target) < 40, $"{degrees}°: {actual} instead of {target}");
         }
         window.Close();
     }
@@ -108,51 +104,27 @@ public class AccentColorMapperTests
     [DllImport(CoreFoundation)]
     private static extern void CFNotificationCenterPostNotification(IntPtr center, IntPtr name, IntPtr obj, IntPtr userInfo, [MarshalAs(UnmanagedType.I1)] bool deliverImmediately);
 
-    // AppKit's selectedTextBackgroundColor on macOS 27, the highlight color following the accent: opaque, the accent at
-    // 30 % over white, over #5A5A5A in dark mode. The theme drew the accent at 30 % over the field, too dark in dark mode.
+    // AppKit's accent, selection, focus ring and selected text for each macOS 27 accent (graphite's ring is its own gray).
+    // Selected text, the highlight color following the accent: opaque, the accent at 30 % over white, over #5A5A5A in dark
+    // mode. The theme drew the accent at 30 % over the field, too dark in dark mode.
     [AvaloniaTheory]
-    [InlineData("Light", "#007AFF", "#B3D7FF")] // blue
-    [InlineData("Dark", "#007AFF", "#3F638B")]
-    [InlineData("Light", "#62BA46", "#D0EAC8")] // green
-    [InlineData("Dark", "#62BA46", "#5C7654")]
-    [InlineData("Light", "#FFC726", "#FFEEBE")] // yellow
-    [InlineData("Dark", "#FFC600", "#8B7A3F")]
-    [InlineData("Light", "#989898", "#E0E0E0")] // graphite
-    [InlineData("Dark", "#8C8C8C", "#696969")]
-    public void A_custom_accent_derives_AppKit_s_text_selection(string theme, string accent, string expected)
-    {
-        var cupertino = Application.Current!.Styles.OfType<CupertinoAvaloniaTheme>().Single();
-        var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-        cupertino.CustomAccentColor = Color.Parse(accent);
-        try
-        {
-            AssertClose(Color.Parse(expected), Resource<ISolidColorBrush>("TextSelectionBrush", variant).Color, tolerance: 1);
-        }
-        finally
-        {
-            cupertino.CustomAccentColor = null;
-        }
-    }
-
-    [AvaloniaTheory]
-    // AppKit's accent, selection and focus ring for each macOS 27 accent (graphite's ring is its own gray).
-    [InlineData("Light", "#E0383E", "#C4262B", "#D32127")] // red
-    [InlineData("Dark", "#FF5257", "#D13539", "#FF7A80")]
-    [InlineData("Light", "#F7821B", "#D96B0A", "#EC7002")] // orange
-    [InlineData("Dark", "#F7821B", "#C96003", "#FFB33A")]
-    [InlineData("Light", "#FFC726", "#E1AC15", "#F4B90E")] // yellow
-    [InlineData("Dark", "#FFC600", "#D19E00", "#FFFF1A")]
-    [InlineData("Light", "#62BA46", "#4DA033", "#4EAB30")] // green
-    [InlineData("Dark", "#62BA46", "#43932A", "#8DF56C")]
-    [InlineData("Light", "#007AFF", "#0064E1", "#0067F4")] // blue
-    [InlineData("Dark", "#007AFF", "#0059D1", "#1AA9FF")]
-    [InlineData("Light", "#953D96", "#7D2A7E", "#842685")] // purple
-    [InlineData("Dark", "#A550A7", "#803482", "#DC78DE")]
-    [InlineData("Light", "#F74F9E", "#D93B86", "#EC398D")] // pink
-    [InlineData("Dark", "#F74F9E", "#C93379", "#FF77D4")]
-    [InlineData("Light", "#989898", "#808080", null)] // graphite
-    [InlineData("Dark", "#8C8C8C", "#696969", null)]
-    public void A_custom_accent_derives_AppKit_shades(string theme, string accent, string selection, string? ring)
+    [InlineData("Light", "#E0383E", "#C4262B", "#D32127", null)] // red
+    [InlineData("Dark", "#FF5257", "#D13539", "#FF7A80", null)]
+    [InlineData("Light", "#F7821B", "#D96B0A", "#EC7002", null)] // orange
+    [InlineData("Dark", "#F7821B", "#C96003", "#FFB33A", null)]
+    [InlineData("Light", "#FFC726", "#E1AC15", "#F4B90E", "#FFEEBE")] // yellow
+    [InlineData("Dark", "#FFC600", "#D19E00", "#FFFF1A", "#8B7A3F")]
+    [InlineData("Light", "#62BA46", "#4DA033", "#4EAB30", "#D0EAC8")] // green
+    [InlineData("Dark", "#62BA46", "#43932A", "#8DF56C", "#5C7654")]
+    [InlineData("Light", "#007AFF", "#0064E1", "#0067F4", "#B3D7FF")] // blue
+    [InlineData("Dark", "#007AFF", "#0059D1", "#1AA9FF", "#3F638B")]
+    [InlineData("Light", "#953D96", "#7D2A7E", "#842685", null)] // purple
+    [InlineData("Dark", "#A550A7", "#803482", "#DC78DE", null)]
+    [InlineData("Light", "#F74F9E", "#D93B86", "#EC398D", null)] // pink
+    [InlineData("Dark", "#F74F9E", "#C93379", "#FF77D4", null)]
+    [InlineData("Light", "#989898", "#808080", null, "#E0E0E0")] // graphite
+    [InlineData("Dark", "#8C8C8C", "#696969", null, "#696969")]
+    public void A_custom_accent_derives_AppKit_shades(string theme, string accent, string selection, string? ring, string? textSelection)
     {
         var cupertino = Application.Current!.Styles.OfType<CupertinoAvaloniaTheme>().Single();
         var variant = theme == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
@@ -168,6 +140,8 @@ public class AccentColorMapperTests
             var window = theme == "Dark" ? Color.Parse("#282828") : Colors.White;
             if (ring is not null)
                 AssertSimilar(Over(window, AccentColorMapper.FocusRing(Color.Parse(ring.Insert(1, "7F")), theme == "Dark")), Over(window, focusRing));
+            if (textSelection is not null)
+                AssertClose(Color.Parse(textSelection), Resource<ISolidColorBrush>("TextSelectionBrush", variant).Color, tolerance: 1);
         }
         finally
         {
@@ -197,7 +171,7 @@ public class AccentColorMapperTests
     public void A_yellow_accent_darkens_what_it_fills_but_not_selected_rows()
     {
         var cupertino = Application.Current!.Styles.OfType<CupertinoAvaloniaTheme>().Single();
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         cupertino.CustomAccentColor = Color.Parse("#FFC726");
         var button = new Button { Classes = { "accent" }, Content = "OK" };
         var check = new CheckBox { IsChecked = true };
@@ -205,15 +179,14 @@ public class AccentColorMapperTests
         var window = new Window { Content = new StackPanel { Children = { button, check, list } } };
         try
         {
-            window.Show();
-            Dispatcher.UIThread.RunJobs();
-            Assert.Equal(Colors.Black, ((ISolidColorBrush)button.Foreground!).Color);
+            Show(window);
+            Assert.Equal(Colors.Black, ColorOf(button.Foreground));
             var glyph = check.GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Path>().Single();
-            Assert.Equal(Colors.Black, ((ISolidColorBrush)glyph!.Stroke!).Color);
+            Assert.Equal(Colors.Black, ColorOf(glyph.Stroke));
             var row = (ListBoxItem)list.ContainerFromIndex(0)!;
             row.Focus();
             Dispatcher.UIThread.RunJobs();
-            Assert.Equal(Colors.White, ((ISolidColorBrush)row.Foreground!).Color);
+            Assert.Equal(Colors.White, ColorOf(row.Foreground));
         }
         finally
         {
@@ -227,17 +200,15 @@ public class AccentColorMapperTests
     [AvaloniaFact]
     public void Toggle_buttons_on_are_filled_and_borderless_buttons_are_gray()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var toggle = new ToggleButton { IsChecked = true, Content = "On" };
         var borderless = new Button { Classes = { "borderless" }, Content = "Button" };
         var destructive = new Button { Classes = { "borderless", "destructive" }, Content = "Delete" };
-        var window = new Window { Content = new StackPanel { Children = { toggle, borderless, destructive } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new Window { Content = new StackPanel { Children = { toggle, borderless, destructive } } });
 
-        Assert.Equal(Resource<Color>("AccentColor", ThemeVariant.Light), ((ISolidColorBrush)toggle.Background!).Color);
+        Assert.Equal(Resource<Color>("AccentColor", ThemeVariant.Light), ColorOf(toggle.Background));
         Assert.Equal(1, toggle.Background!.Opacity);
-        Assert.Equal(Colors.White, ((ISolidColorBrush)toggle.Foreground!).Color);
+        Assert.Equal(Colors.White, ColorOf(toggle.Foreground));
         foreach (var button in new[] { borderless, destructive })
         {
             var label = (ISolidColorBrush)button.Foreground!;

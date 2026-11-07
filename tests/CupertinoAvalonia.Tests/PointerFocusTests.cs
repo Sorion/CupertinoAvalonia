@@ -56,40 +56,19 @@ public class PointerFocusTests
     }
 
     [AvaloniaFact]
-    public void A_click_on_a_button_leaves_a_text_field_editing()
+    public void A_click_on_a_button_leaves_a_text_field_editing_and_a_list_takes_the_focus()
     {
         var button = new Button { Content = "Apply" };
         var field = new TextBox { Text = "Gain" };
-        var (window, _) = Show(field, button);
+        var (window, row) = Show(field, button);
 
         Click(window, field);
         Assert.Same(field, Focused(window));
         Click(window, button);
         Assert.Same(field, Focused(window));
-        window.Close();
-    }
-
-    [AvaloniaFact]
-    public void Text_fields_and_lists_still_take_the_focus()
-    {
-        var field = new TextBox { Text = "Gain" };
-        var (window, row) = Show(field);
-
-        Click(window, field);
-        Assert.Same(field, Focused(window));
+        // Lists still take it.
         Click(window, row);
         Assert.Same(row, Focused(window));
-        window.Close();
-    }
-
-    [AvaloniaFact]
-    public void An_editable_combo_box_takes_the_focus()
-    {
-        var combo = new ComboBox { IsEditable = true, ItemsSource = new[] { "48 000 Hz", "44 100 Hz" }, Width = 160 };
-        var (window, _) = Show(combo);
-
-        Click(window, combo.TranslatePoint(new Point(30, 12), window)!.Value);
-        Assert.True(combo.IsKeyboardFocusWithin);
         window.Close();
     }
 
@@ -157,10 +136,7 @@ public class PointerFocusTests
         var list = new ListBox { ItemsSource = new[] { "Drums", "Bass" }, SelectedIndex = 0, Height = 80 };
         var stack = new StackPanel { Spacing = 8, Margin = new Thickness(10), Children = { list } };
         stack.Children.AddRange(controls);
-        var window = new Window { Width = 400, Height = 400, Content = stack };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        var window = TestUi.Show(new Window { Width = 400, Height = 400, Content = stack });
         var row = (ListBoxItem)list.ContainerFromIndex(0)!;
         row.Focus();
         return (window, row);

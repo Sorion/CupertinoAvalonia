@@ -6,7 +6,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CupertinoAvalonia.Controls;
 using CupertinoAvalonia.Styling;
@@ -40,7 +39,7 @@ public class TabControlTests
     [AvaloniaFact]
     public void Selected_tab_takes_the_accent_and_its_content_keeps_the_label_color()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var header = new TextBlock { Text = "General" };
         var content = new TextBlock { Text = "General settings" };
         var general = new TabItem { Header = header, Content = content };
@@ -148,11 +147,11 @@ public class TabControlTests
     [AvaloniaFact]
     public void A_toolbar_tab_is_selected_once_released_and_only_its_symbol_darkens_while_pressed()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var general = new TabItem { Header = "General", Icon = "gearshape" };
         var network = new TabItem { Header = "Network", Icon = "network" };
         var (window, tabs) = Show(new TabControl { Classes = { "toolbar" } }, general, network);
-        var center = network.TranslatePoint(new Point(network.Bounds.Width / 2, network.Bounds.Height / 2), window)!.Value;
+        var center = Center(network);
 
         // Measured on macOS 27 (printer settings): no glass until released.
         window.MouseDown(center, MouseButton.Left);
@@ -163,8 +162,7 @@ public class TabControlTests
         Assert.Same(network, tabs.SelectedItem);
 
         // Released elsewhere, the press doesn't select.
-        var generalCenter = general.TranslatePoint(new Point(general.Bounds.Width / 2, general.Bounds.Height / 2), window)!.Value;
-        window.MouseDown(generalCenter, MouseButton.Left);
+        window.MouseDown(Center(general), MouseButton.Left);
         window.MouseUp(new Point(5, 200), MouseButton.Left);
         Assert.Same(network, tabs.SelectedItem);
         window.Close();
@@ -176,10 +174,7 @@ public class TabControlTests
         tabs.Height = 220;
         foreach (var item in items)
             tabs.Items.Add(item);
-        var window = new Window { Width = 500, Height = 300, Content = tabs };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        var window = TestUi.Show(new Window { Width = 500, Height = 300, Content = tabs });
         return (window, tabs);
     }
 

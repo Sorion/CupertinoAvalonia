@@ -5,7 +5,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-using Avalonia.Threading;
 using CupertinoAvalonia.Controls;
 using Xunit;
 
@@ -18,12 +17,10 @@ public class SplitViewTests
     [InlineData("Dark")]
     public void Sidebar_on_the_left_inspector_on_the_right(string theme)
     {
-        var variant = UseTheme(theme);
+        UseTheme(theme);
         var sidebar = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true };
         var inspector = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
-        var window = new Window { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new Window { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } });
 
         // Measured on macOS 27 (SwiftGallery, Shortcuts): both panes in the sidebar's color, without a divider.
         var paneColor = theme == "Dark" ? Avalonia.Media.Color.Parse("#252525") : Avalonia.Media.Color.Parse("#EDEDED");
@@ -44,9 +41,7 @@ public class SplitViewTests
         var variant = UseTheme(theme);
         var sidebar = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true };
         var inspector = new SplitView { Classes = { "plain" }, DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
-        var window = new CAWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new CAWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } });
         // Even where the window shows its material.
         ((IPseudoClasses)window.Classes).Set(":material", true);
 
@@ -70,9 +65,7 @@ public class SplitViewTests
             DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right,
             PaneBackground = Brushes.Red,
         };
-        var window = new CAWindow { Width = 600, Height = 300, Content = Sized(inspector) };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new CAWindow { Width = 600, Height = 300, Content = Sized(inspector) });
         ((IPseudoClasses)window.Classes).Set(":material", true);
 
         Assert.Equal(Colors.Red, ColorOf(Part<Border>(inspector, "PaneBackground").Background));
@@ -82,12 +75,10 @@ public class SplitViewTests
     [AvaloniaFact]
     public void Sidebar_lets_the_window_material_through_and_keeps_the_content_opaque()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var sidebar = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true };
         var inspector = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, PanePlacement = SplitViewPanePlacement.Right };
-        var window = new CAWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new CAWindow { Width = 900, Height = 400, Content = new StackPanel { Children = { Sized(sidebar), Sized(inspector) } } });
 
         // Headless windows have no native material: show it as CAWindow does on macOS.
         ((IPseudoClasses)window.Classes).Set(":material", true);
@@ -105,8 +96,7 @@ public class SplitViewTests
         var window = new Window { Width = 600, Height = 400, Content = new StackPanel { Children = { Sized(inspector), Sized(plain) } } };
         window.Resources["SplitViewInspectorBackgroundBrush"] = new SolidColorBrush(Colors.Red);
         window.Resources["SplitViewDividerThickness"] = 2.0;
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        Show(window);
 
         Assert.Equal(Colors.Red, ColorOf(inspector.PaneBackground));
         Assert.Equal(2, Part<Rectangle>(plain, "PaneDivider").Bounds.Width);
@@ -117,9 +107,7 @@ public class SplitViewTests
     public void Pane_over_the_content_is_opaque_and_does_not_dim_it()
     {
         var overlay = new SplitView { DisplayMode = SplitViewDisplayMode.Overlay, IsPaneOpen = true };
-        var window = new Window { Width = 600, Height = 300, Content = overlay };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new Window { Width = 600, Height = 300, Content = overlay });
 
         Assert.True(Part<Border>(overlay, "PaneUnderlay").IsVisible);
         var dismiss = Part<Rectangle>(overlay, "LightDismissLayer");
@@ -132,8 +120,7 @@ public class SplitViewTests
     public void Pane_slides_closed_and_open_to_the_end()
     {
         var split = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = true, Pane = new Border(), Content = new Border() };
-        var window = new Window { Width = 800, Height = 300, Content = split };
-        window.Show();
+        var window = Show(new Window { Width = 800, Height = 300, Content = split });
         Pump(window, 200);
         var pane = Part<Panel>(split, "PART_PaneRoot");
         Assert.Equal(240, pane.Bounds.Width);
@@ -154,8 +141,7 @@ public class SplitViewTests
     public void Pane_that_starts_closed_is_hidden()
     {
         var split = new SplitView { DisplayMode = SplitViewDisplayMode.Inline, IsPaneOpen = false, Pane = new Border { Width = 160 }, Content = new Border() };
-        var window = new Window { Width = 800, Height = 300, Content = split };
-        window.Show();
+        var window = Show(new Window { Width = 800, Height = 300, Content = split });
         Pump(window, 400);
         // Not at its content's width: animating from the pane's first, automatic width kept it automatic.
         Assert.Equal(0, Part<Panel>(split, "PART_PaneRoot").Bounds.Width);

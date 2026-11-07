@@ -18,7 +18,7 @@ internal static class TestUi
     /// <summary>The controls stacked 8 pt apart in a 400 × 300 window, shown and laid out.</summary>
     public static Window Show(params Control[] controls) => Show(new Window { Width = 400, Height = 300, Content = Stack(controls) });
 
-    public static Window Show(Window window)
+    public static T Show<T>(T window) where T : Window
     {
         window.Show();
         Dispatcher.UIThread.RunJobs();
@@ -65,6 +65,10 @@ internal static class TestUi
     };
 
     public static Point Origin(Visual visual, Visual relativeTo) => visual.TranslatePoint(default, relativeTo)!.Value;
+
+    /// <summary>The visual's bounds in the root's coordinates, through any transform on the way.</summary>
+    public static Rect ScreenRect(Visual visual, Visual root) =>
+        new Rect(visual.Bounds.Size).TransformToAABB(visual.TransformToVisual(root)!.Value);
 
     /// <summary>The control's center, in its window's coordinates.</summary>
     public static Point Center(Control control) =>

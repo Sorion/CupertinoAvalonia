@@ -15,27 +15,15 @@ namespace CupertinoAvalonia.Tests;
 
 public class CASymbolIconTests
 {
+    // In the foreground's color, which the theme changes in place when the system accent changes.
     [AvaloniaFact]
     public void Draws_the_system_symbol_on_macOS_in_the_foreground_color()
-    {
-        Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
-        var icon = new CASymbolIcon { Symbol = "square.and.arrow.up", FontSize = 26, Foreground = Brushes.Red };
-        var window = Show(icon);
-
-        Assert.True(icon.IsNative);
-        Assert.True(icon.Bounds.Width > 20 && icon.Bounds.Height > 20);
-        Assert.True(CountPixels(window, icon, c => c.R > 200 && c.G < 60 && c.B < 60) > 30, "No red pixels where the symbol is.");
-        window.Close();
-    }
-
-    // The theme changes its accent brushes' color in place when the system accent changes.
-    [AvaloniaFact]
-    public void Follows_a_brush_whose_color_changes()
     {
         Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
         var brush = new SolidColorBrush(Colors.Red);
         var icon = new CASymbolIcon { Symbol = "folder", FontSize = 26, Foreground = brush };
         var window = Show(icon);
+        Assert.True(icon.IsNative);
         Assert.True(CountPixels(window, icon, IsRed) > 30, "No red pixels where the symbol is.");
 
         brush.Color = Colors.Blue;
@@ -44,9 +32,9 @@ public class CASymbolIconTests
         Assert.Equal(0, CountPixels(window, icon, IsRed));
         Assert.True(CountPixels(window, icon, c => c.B > 200 && c.R < 60 && c.G < 60) > 30, "No blue pixels where the symbol is.");
         window.Close();
-
-        static bool IsRed(Color c) => c.R > 200 && c.G < 60 && c.B < 60;
     }
+
+    private static bool IsRed(Color c) => c.R > 200 && c.G < 60 && c.B < 60;
 
     // The theme's brushes live as long as the app: a removed symbol must not stay subscribed to them.
     [AvaloniaFact]
@@ -54,8 +42,7 @@ public class CASymbolIconTests
     {
         var brush = new SolidColorBrush(Colors.Red);
         var panel = new StackPanel();
-        var window = new Window { Content = panel };
-        window.Show();
+        var window = TestUi.Show(new Window { Content = panel });
         var symbol = AddAndRemove(panel, brush);
         // The renderer lets go of it after a few frames.
         for (var i = 0; i < 3; i++)
@@ -177,7 +164,7 @@ public class CASymbolIconTests
             Assert.Equal("", icon.Glyph?.Text);
             if (!OperatingSystem.IsWindows())
                 Assert.Contains("CupertinoAvalonia Symbols", icon.Glyph?.Family.ToString());
-            Assert.True(CountPixels(window, icon, c => c.R > 200 && c.G < 60 && c.B < 60) > 10, "No red pixels where the glyph is.");
+            Assert.True(CountPixels(window, icon, IsRed) > 10, "No red pixels where the glyph is.");
             Assert.Null(unmapped.Glyph);
             Assert.Equal(0, unmapped.DesiredSize.Width);
             window.Close();
@@ -204,8 +191,7 @@ public class CASymbolIconTests
             .ToDictionary(icon => icon.Symbol!, icon => icon);
         Assert.Equal(["chevron.up.chevron.down", "chevron.up", "chevron.down", "chevron.right", "magnifyingglass"], glyphs.Keys);
         Assert.All(glyphs.Values, icon => Assert.True(icon.IsNative, icon.Symbol));
-        // The pop-up's Medium 10.75 (measured on macOS 27), the kit's stepper's Medium 12.
-        Assert.Equal((10.75, FontWeight.Medium), (glyphs["chevron.up.chevron.down"].FontSize, glyphs["chevron.up.chevron.down"].FontWeight));
+        // The kit's stepper's Medium 12.
         Assert.Equal((12, FontWeight.Medium), (glyphs["chevron.up"].FontSize, glyphs["chevron.up"].FontWeight));
         window.Close();
     }

@@ -4,7 +4,6 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
-using Avalonia.Threading;
 using Xunit;
 
 namespace CupertinoAvalonia.Tests;
@@ -28,16 +27,15 @@ public class TextBoxTests
         }
         var multiLine = new TextBox { AcceptsReturn = true, Width = 120 };
         row.Children.Add(multiLine);
-        var window = new Window { Width = 800, Height = 200, Content = new StackPanel { Children = { new Border { Height = 80, Child = row } } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new Window { Width = 800, Height = 200, Content = new StackPanel { Children = { new Border { Height = 80, Child = row } } } });
 
         Assert.Equal([16d, 20, 24, 28], row.Children.Take(4).Select(c => c.Bounds.Height));
         Assert.Equal(80, multiLine.Bounds.Height);
         window.Close();
     }
 
-    // NSSecureTextField on macOS 27, 13 pt: a dot every 8.08 pt, whatever the mask character.
+    // NSSecureTextField on macOS 27, 13 pt: a dot every 8.08 pt (8.05 from the theme's fit across sizes), whatever the
+    // mask character.
     [AvaloniaTheory]
     [InlineData('•')]
     [InlineData('*')]

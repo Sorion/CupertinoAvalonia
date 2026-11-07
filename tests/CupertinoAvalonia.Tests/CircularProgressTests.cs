@@ -60,7 +60,7 @@ public class CircularProgressTests
     [AvaloniaFact]
     public void The_ring_fills_clockwise_from_the_top()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var progress = new ProgressBar { Classes = { "circular" }, Value = 25 };
         var window = Show(progress);
 
@@ -77,7 +77,7 @@ public class CircularProgressTests
     [AvaloniaFact]
     public void An_indeterminate_one_is_the_spinner()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var progress = new ProgressBar { Classes = { "circular" }, IsIndeterminate = true };
         var window = Show(progress);
 
@@ -110,7 +110,7 @@ public class CircularProgressTests
     [AvaloniaFact]
     public void In_an_inactive_window_the_ring_turns_gray_and_the_spinner_fades()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var ring = new ProgressBar { Classes = { "circular" }, Value = 30 };
         var spinner = new ProgressBar { Classes = { "circular" }, IsIndeterminate = true };
         var window = Show(ring);
@@ -133,9 +133,7 @@ public class CircularProgressTests
             Content = new StackPanel { Margin = new Thickness(20), Children = { progress } },
         };
         progress.HorizontalAlignment = HorizontalAlignment.Left;
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        TestUi.Show(window);
         return window;
     }
 

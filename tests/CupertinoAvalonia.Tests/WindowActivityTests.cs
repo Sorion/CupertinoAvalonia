@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
-using Avalonia.Styling;
 using Avalonia.Threading;
 using CupertinoAvalonia.Controls;
 using CupertinoAvalonia.Styling;
@@ -34,9 +33,7 @@ public class WindowActivityTests
                 Children = { plain, accent, tinted, toggleButton, checkBox, radioButton, toggleSwitch, slider, progressBar },
             },
         };
-        window.Show();
-        // Let the window activate, as it does once shown.
-        Dispatcher.UIThread.RunJobs();
+        Show(window);
         Assert.False(WindowActivity.GetIsInactive(window));
         var activeAccent = Describe(accent.Background);
 
@@ -68,16 +65,14 @@ public class WindowActivityTests
     public void Inactive_window_grays_sidebar_symbols_and_labels(string theme)
     {
         var variant = UseTheme(theme);
-        var icon = new CupertinoAvalonia.Controls.CASymbolIcon { Symbol = "folder" };
+        var icon = new CASymbolIcon { Symbol = "folder" };
         var label = new TextBlock { Text = "Notes" };
         var item = new ListBoxItem { Content = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Children = { icon, label } } };
         var list = new ListBox { Classes = { "sidebar" }, Items = { item }, SelectedIndex = 0 };
-        var treeIcon = new CupertinoAvalonia.Controls.CASymbolIcon { Symbol = "folder" };
+        var treeIcon = new CASymbolIcon { Symbol = "folder" };
         var treeItem = new TreeViewItem { Header = treeIcon };
         var tree = new TreeView { Classes = { "sidebar" }, Items = { treeItem } };
-        var window = new Window { Content = new StackPanel { Children = { list, tree } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new Window { Content = new StackPanel { Children = { list, tree } } });
 
         // _Leading: the accent's vibrant color, the label in the primary color.
         Assert.Equal(Describe(Resource("AccentVibrantBrush", variant)), Describe(icon.Foreground));
@@ -97,8 +92,7 @@ public class WindowActivityTests
     public void Inactive_window_hides_the_focus_ring()
     {
         var button = new Button { Content = "OK" };
-        var window = new Window { Content = new StackPanel { Children = { button } } };
-        window.Show();
+        var window = Show(new Window { Content = new StackPanel { Children = { button } } });
         button.Focus(NavigationMethod.Tab);
         Dispatcher.UIThread.RunJobs();
         var ring = Assert.IsType<Panel>(AdornerLayer.GetAdorner(Part<Border>(button, "PART_Background")))
@@ -114,9 +108,7 @@ public class WindowActivityTests
     public void Window_that_always_looks_active_keeps_the_accent()
     {
         var accent = new Button { Content = "OK", Classes = { "accent" } };
-        var window = new CAWindow { AlwaysLooksActive = true, Content = accent };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new CAWindow { AlwaysLooksActive = true, Content = accent });
         var active = Describe(accent.Background);
 
         // As WindowActivity does once another window is active.

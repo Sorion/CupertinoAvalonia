@@ -28,7 +28,7 @@ public class ListBoxTests
     [InlineData("sidebar")]
     public void A_disabled_list_keeps_its_rows_color(string classes)
     {
-        Avalonia.Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var row = new ListBoxItem { Content = new CASymbolIcon { Symbol = "gearshape" } };
         var disabledRow = new ListBoxItem { Content = "A disabled row", IsEnabled = false };
         var list = new ListBox { Items = { row, disabledRow } };

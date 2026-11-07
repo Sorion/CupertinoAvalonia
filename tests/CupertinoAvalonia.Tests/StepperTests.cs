@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
-using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -73,14 +72,13 @@ public class StepperTests
     [AvaloniaFact]
     public void Stepper_steps_the_value_and_dims_at_its_limits()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var numberBox = new NumericUpDown { Value = 99, Minimum = 0, Maximum = 100, Width = 120 };
         var window = Show(numberBox);
         var up = Part<RepeatButton>(numberBox, "PART_IncreaseButton");
         var down = Part<RepeatButton>(numberBox, "PART_DecreaseButton");
 
-        window.MouseDown(Center(up), MouseButton.Left);
-        window.MouseUp(Center(up), MouseButton.Left);
+        Click(window, up);
         Assert.Equal(100, numberBox.Value);
         Assert.False(up.IsEnabled);
         Assert.Equal(Describe(Resource("LabelTertiaryBrush", ThemeVariant.Light)), Describe(Part<CASymbolIcon>(up, "Chevron").Foreground));
@@ -91,7 +89,7 @@ public class StepperTests
     [AvaloniaFact]
     public void Only_the_pressed_half_darkens()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var numberBox = new NumericUpDown { Value = 1, Width = 120 };
         var window = Show(numberBox);
         var up = Part<RepeatButton>(numberBox, "PART_IncreaseButton");
@@ -113,9 +111,7 @@ public class StepperTests
         Dispatcher.UIThread.RunJobs();
 
         var up = Part<RepeatButton>(numberBox, "PART_IncreaseButton");
-        window.MouseDown(Center(up), MouseButton.Left);
-        window.MouseUp(Center(up), MouseButton.Left);
-        Dispatcher.UIThread.RunJobs();
+        Click(window, up);
         Assert.Equal(2, numberBox.Value);
         Assert.True(textBox.IsFocused);
         var ring = Assert.IsType<Panel>(AdornerLayer.GetAdorner(Part<ButtonSpinner>(numberBox, "PART_Spinner")))

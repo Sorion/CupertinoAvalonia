@@ -4,7 +4,6 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Xunit;
@@ -18,10 +17,10 @@ public class AutoCompleteBoxTests
     [AvaloniaFact]
     public void The_field_is_a_text_field()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var (window, box) = Show(new AutoCompleteBox { PlaceholderText = "Channel" });
 
-        var field = TextBox(box);
+        var field = Part<TextBox>(box, "PART_TextBox");
         Assert.Equal(24, field.Bounds.Height);
         Assert.Equal(ColorOf(Resource<IBrush>("TextFieldBackgroundBrush")), ColorOf(field.Background));
         Assert.Equal(Resource<CornerRadius>("ControlRadius"), field.CornerRadius);
@@ -32,10 +31,10 @@ public class AutoCompleteBoxTests
     [AvaloniaFact]
     public void Typing_opens_the_suggestions_in_a_menu()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var (window, box) = Show(new AutoCompleteBox { ItemsSource = Channels });
 
-        TextBox(box).Focus();
+        Part<TextBox>(box, "PART_TextBox").Focus();
         window.KeyTextInput("Ga");
         Dispatcher.UIThread.RunJobs();
 
@@ -62,7 +61,7 @@ public class AutoCompleteBoxTests
     {
         var (window, box) = Show(new AutoCompleteBox { Classes = { "small" } });
 
-        var field = TextBox(box);
+        var field = Part<TextBox>(box, "PART_TextBox");
         Assert.Equal(20, field.Bounds.Height);
         Assert.Equal(11, field.FontSize);
         Assert.Equal(Resource<CornerRadius>("ControlRadiusSmall"), field.CornerRadius);
@@ -72,15 +71,9 @@ public class AutoCompleteBoxTests
     private static (Window, AutoCompleteBox) Show(AutoCompleteBox box)
     {
         box.Width = 200;
-        var window = new Window { Width = 400, Height = 300, Content = new StackPanel { Margin = new Thickness(10), Children = { box } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        var window = TestUi.Show(new Window { Width = 400, Height = 300, Content = new StackPanel { Margin = new Thickness(10), Children = { box } } });
         return (window, box);
     }
-
-    private static TextBox TextBox(AutoCompleteBox box) =>
-        box.GetVisualDescendants().OfType<TextBox>().First(t => t.Name == "PART_TextBox");
 
     private static Avalonia.Controls.Primitives.Popup Popup(AutoCompleteBox box) =>
         box.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.Popup>().Single();

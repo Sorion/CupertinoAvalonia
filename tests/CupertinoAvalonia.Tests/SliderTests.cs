@@ -6,7 +6,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Xunit;
@@ -42,13 +41,12 @@ public class SliderTests
                 Child = new Border { Padding = new Thickness(12), Child = slider },
             },
         };
-        window.Show();
-        window.UpdateLayout();
+        Show(window);
 
         var thumb = Part<Thumb>(slider, "thumb");
         Assert.Null(AdornerLayer.GetAdorner(thumb));
 
-        var thumbCenter = thumb.TranslatePoint(new Point(thumb.Bounds.Width / 2, thumb.Bounds.Height / 2), window)!.Value;
+        var thumbCenter = Center(thumb);
         window.MouseDown(thumbCenter, MouseButton.Left);
         Assert.Contains(":pressed", slider.Classes);
         // The lens is an adorner of the knob, outside the slider's tree.
@@ -102,7 +100,7 @@ public class SliderTests
 
         // Pressed, the track keeps its shade: only the knob becomes the lens.
         var thumb = Part<Thumb>(slider, "thumb");
-        var center = thumb.TranslatePoint(new Point(thumb.Bounds.Width / 2, thumb.Bounds.Height / 2), window)!.Value;
+        var center = Center(thumb);
         window.MouseDown(center, MouseButton.Left);
         Assert.Contains(":pressed", slider.Classes);
         Assert.Equal(Describe(Resource("SliderTrackBrush", variant)), Describe(slider.Background));
@@ -125,17 +123,14 @@ public class SliderTests
         Assert.Equal(2, dots.Bounds.Height);
         Assert.Equal(trackBottom + 3, dots.TranslatePoint(default, slider)!.Value.Y);
         Assert.Equal(Describe(Resource("LabelTertiaryBrush")), Describe(dots.Fill));
-        Assert.Equal(Part<Thumb>(slider, "thumb").Bounds.Width, dots.ReservedSpace.Width);
+        var thumb = Part<Thumb>(slider, "thumb");
+        Assert.Equal(thumb.Bounds.Width, dots.ReservedSpace.Width);
 
         // The knob hides the tick under it: at 60, the one at its center.
-        var thumb = Part<Thumb>(slider, "thumb");
-        var under = thumb.TranslatePoint(new Point(thumb.Bounds.Width / 2, 0), window)!.Value.X;
+        var under = Center(thumb).X;
         var dotRow = dots.TranslatePoint(new Point(0, 1), window)!.Value.Y;
         using var frame = window.CaptureRenderedFrame()!;
         Assert.Equal(Colors.White, Pixel(frame, (int)under, (int)dotRow));
         window.Close();
     }
-
-    private static Rect ScreenRect(Visual visual, Visual root) =>
-        new Rect(visual.Bounds.Size).TransformToAABB(visual.TransformToVisual(root)!.Value);
 }

@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Xunit;
 
@@ -25,9 +24,7 @@ public class TypographyTests
         Assert.SkipUnless(OperatingSystem.IsMacOS(), "The system font is macOS's.");
         var text = new TextBlock { Text = Pangram };
         text.Classes.AddRange(classes.Split(' '));
-        var window = new Window { Content = text };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new Window { Content = text });
 
         Assert.Equal(width, text.TextLayout.Width, tolerance: 0.5);
         window.Close();
@@ -43,9 +40,7 @@ public class TypographyTests
         var button = new Button { Content = Pangram };
         if (size.Length > 0)
             button.Classes.Add(size);
-        var window = new Window { Content = button };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new Window { Content = button });
 
         var text = button.GetVisualDescendants().OfType<TextBlock>().Single();
         Assert.Equal(width, text.TextLayout.Width, tolerance: 0.5);

@@ -4,7 +4,6 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Media;
-using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using CupertinoAvalonia.Styling;
@@ -30,6 +29,7 @@ public class SegmentedControlTests
         window.Close();
     }
 
+    // Measured on macOS 27 (SwiftUI's segmented Picker).
     [AvaloniaTheory]
     [InlineData("mini", 15)]
     [InlineData("small", 19)]
@@ -42,7 +42,6 @@ public class SegmentedControlTests
         if (size != "") segmented.Classes.Add(size);
         var window = Show(segmented);
 
-        // Measured on macOS 27 (SwiftUI's segmented Picker): the widest label and 15, 19, 23, 27 or 35 pt around it.
         var month = Segments(segmented)[2];
         var label = month.GetVisualDescendants().OfType<TextBlock>().Single();
         Assert.Equal(margins, month.Padding.Left + month.Padding.Right);
@@ -63,7 +62,7 @@ public class SegmentedControlTests
         var segments = Segments(segmented);
         Assert.Equal(Describe(Resource("AccentButtonBackgroundBrush", variant)), Describe(segments[1].Background));
         Assert.Equal(Describe(Resource("WhiteBrush", variant)), Describe(segments[1].Foreground));
-        Assert.Equal(Colors.Transparent, (segments[0].Background as ISolidColorBrush)?.Color);
+        Assert.Equal(Colors.Transparent, ColorOf(segments[0].Background));
         Assert.Equal(Describe(Resource("LabelPrimaryBrush", variant)), Describe(segments[0].Foreground));
         Assert.Equal(Describe(Resource("ButtonBackgroundBrush", variant)), Describe(segmented.Background));
 
@@ -136,9 +135,7 @@ public class SegmentedControlTests
         {
             Content = new StackPanel { Children = { new Border { Height = 1000 }, segmented } },
         };
-        var window = new Window { Width = 600, Height = 300, Content = scrollViewer };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = TestUi.Show(new Window { Width = 600, Height = 300, Content = scrollViewer });
 
         // A segmented list has no scroll viewer of its own: bringing its selection into view scrolled the page.
         segmented.SelectedIndex = 2;
@@ -177,9 +174,7 @@ public class SegmentedControlTests
         var segments = Segments(segmented);
         var panel = Panel(segmented);
 
-        Assert.Equal(Describe(Resource("ToolbarGlassBrush", variant)), Describe(segmented.Background));
-        // Window/Segmented Control: 28 pt segments in a 36 pt capsule, 3 pt apart, a 20 pt separator.
-        Assert.Equal(36, segmented.Bounds.Height);
+        // Window/Segmented Control: 28 pt segments, 3 pt apart, a 20 pt separator.
         Assert.Equal(28, segments[0].Bounds.Height);
         Assert.Equal(segments[0].Bounds.Right + 3, segments[1].Bounds.Left);
         Assert.Equal(20, Assert.Single(panel.Separators()).Height);

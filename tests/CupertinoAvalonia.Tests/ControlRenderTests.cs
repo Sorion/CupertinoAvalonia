@@ -8,7 +8,6 @@ using Avalonia.Layout;
 using Avalonia.VisualTree;
 using Avalonia.Logging;
 using Avalonia.Markup.Xaml;
-using Avalonia.Styling;
 using Xunit;
 
 namespace CupertinoAvalonia.Tests;
@@ -64,10 +63,8 @@ public class ControlRenderTests
         Logger.Sink = sink;
         try
         {
-            Application.Current!.RequestedThemeVariant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
-            var window = new Window { Width = 600, Height = 1400, Content = AvaloniaRuntimeXamlLoader.Parse<Control>(Controls) };
-            window.Show();
-            window.UpdateLayout();
+            UseTheme(variantName);
+            var window = Show(new Window { Width = 600, Height = 1400, Content = AvaloniaRuntimeXamlLoader.Parse<Control>(Controls) });
             Assert.NotNull(window.CaptureRenderedFrame());
             window.Close();
         }
@@ -95,9 +92,7 @@ public class ControlRenderTests
     {
         var control = (Control)Activator.CreateInstance(controlType)!;
         var container = new UserControl { Content = control, HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top };
-        var window = new Window { Width = 300, Height = 200, Content = container };
-        window.Show();
-        window.UpdateLayout();
+        var window = Show(new Window { Width = 300, Height = 200, Content = container });
 
         // An Expander's focusable part is its header.
         var focusTarget = control is Expander

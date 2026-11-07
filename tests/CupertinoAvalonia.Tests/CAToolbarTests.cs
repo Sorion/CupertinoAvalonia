@@ -134,7 +134,7 @@ public class CAToolbarTests
     [AvaloniaFact]
     public void Inactive_window_shows_the_band_in_its_own_color()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Dark;
+        UseTheme("Dark");
         var (window, toolbar, _) = Show();
         var background = Background(toolbar);
         Assert.Equal(0, background.Opacity);

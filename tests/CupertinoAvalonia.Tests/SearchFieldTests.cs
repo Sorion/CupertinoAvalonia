@@ -3,7 +3,6 @@ using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
-using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -29,31 +28,28 @@ public class SearchFieldTests
         Assert.Equal(new CornerRadius(12), field.CornerRadius);
         var secondary = ColorOf(Resource<IBrush>("LabelSecondaryBrush", variant));
         Assert.Equal(secondary, ColorOf(field.PlaceholderForeground));
-        var glyph = Find<CASymbolIcon>(field, "SearchGlyph");
+        var glyph = Part<CASymbolIcon>(field, "SearchGlyph");
         Assert.Equal(("magnifyingglass", 13, FontWeight.Normal), (glyph.Symbol, glyph.FontSize, glyph.FontWeight));
         Assert.Equal(secondary, ColorOf(glyph.Foreground));
-        Assert.False(Find<Button>(field, "SearchClearButton").IsVisible);
+        Assert.False(Part<Button>(field, "SearchClearButton").IsVisible);
         window.Close();
     }
 
     [AvaloniaFact]
     public void The_clear_button_shows_with_text_and_clears_it()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var (window, field) = Show(new TextBox { Classes = { "search" } });
-        var clear = Find<Button>(field, "SearchClearButton");
+        var clear = Part<Button>(field, "SearchClearButton");
 
         field.Text = "Value";
         Dispatcher.UIThread.RunJobs();
         Assert.True(clear.IsVisible);
-        var glyph = Find<CASymbolIcon>(field, "SearchClearGlyph");
+        var glyph = Part<CASymbolIcon>(field, "SearchClearGlyph");
         Assert.Equal(("xmark.circle.fill", 13), (glyph.Symbol, glyph.FontSize));
         Assert.Equal(ColorOf(Resource<IBrush>("LabelSecondaryBrush", ThemeVariant.Light)), ColorOf(glyph.Foreground));
 
-        var center = clear.TranslatePoint(new Point(clear.Bounds.Width / 2, clear.Bounds.Height / 2), window)!.Value;
-        window.MouseDown(center, MouseButton.Left);
-        window.MouseUp(center, MouseButton.Left);
-        Dispatcher.UIThread.RunJobs();
+        Click(window, clear);
         Assert.True(string.IsNullOrEmpty(field.Text));
         Assert.False(clear.IsVisible);
         window.Close();
@@ -64,7 +60,7 @@ public class SearchFieldTests
     public void The_clear_button_is_named_in_the_app_s_language()
     {
         var (window, field) = Show(new TextBox { Classes = { "search" }, Text = "Value" });
-        var clear = Find<Button>(field, "SearchClearButton");
+        var clear = Part<Button>(field, "SearchClearButton");
 
         Assert.Equal("Close", AutomationProperties.GetName(clear));
         window.Resources["SearchFieldClearButtonText"] = "Effacer";
@@ -77,7 +73,7 @@ public class SearchFieldTests
     {
         var (window, field) = Show(new TextBox { Classes = { "toolbar" }, Text = "Value" });
 
-        Assert.True(Find<Button>(field, "SearchClearButton").IsVisible);
+        Assert.True(Part<Button>(field, "SearchClearButton").IsVisible);
         window.Close();
     }
 
@@ -91,7 +87,7 @@ public class SearchFieldTests
     public void Glyphs_and_text_sit_as_on_macOS(string? size, double height, double magnifier, double text, double clear, double glyph)
     {
         Assert.SkipUnless(OperatingSystem.IsMacOS(), "The glyphs are SF Symbols and the text the system font.");
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var field = new TextBox { Classes = { "search" }, Text = "Value" };
         if (size is not null)
             field.Classes.Add(size);
@@ -134,12 +130,7 @@ public class SearchFieldTests
         };
         // Half points stay exact, as on a Retina screen, instead of rounding to the 1x pixel grid.
         window.Styles.Add(new Style(x => x.Is<Layoutable>()) { Setters = { new Setter(Layoutable.UseLayoutRoundingProperty, false) } });
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        TestUi.Show(window);
         return (window, field);
     }
-
-    private static T Find<T>(Control control, string name) where T : Control =>
-        control.GetVisualDescendants().OfType<T>().First(c => c.Name == name);
 }

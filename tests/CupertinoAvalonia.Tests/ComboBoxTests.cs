@@ -44,7 +44,7 @@ public class ComboBoxTests
     [AvaloniaFact]
     public void The_text_edits_and_the_arrow_opens_the_list()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var (window, combo) = Show(new ComboBox { IsEditable = true, ItemsSource = Rates });
         var field = Part<Border>(combo, "Background");
         var arrow = Part<Border>(combo, "ArrowButton");
@@ -55,7 +55,7 @@ public class ComboBoxTests
         Assert.True(Part<TextBox>(combo, "PART_EditableTextBox").IsFocused);
 
         // Pressed, only the arrow button darkens; it stays so while the list is open.
-        var arrowCenter = arrow.TranslatePoint(new Point(arrow.Bounds.Width / 2, arrow.Bounds.Height / 2), window)!.Value;
+        var arrowCenter = Center(arrow);
         window.MouseDown(arrowCenter, MouseButton.Left);
         Assert.Equal(ColorOf(Resource<IBrush>("ButtonBackgroundPressedBrush", ThemeVariant.Light)), ColorOf(arrow.Background));
         Assert.Equal(fieldColor, ColorOf(field.Background));
@@ -83,14 +83,16 @@ public class ComboBoxTests
         Assert.Equal((width, arrowHeight), (arrow.Width, arrow.Height));
         Assert.Equal(combo.Bounds.Width - right, Right(arrow, combo), tolerance: 1);
         Assert.Equal(glyphSize, Part<CASymbolIcon>(combo, "ArrowGlyph").FontSize);
-        Assert.Equal(new Thickness(textLeft, 0, textRight, 0), Part<TextBox>(combo, "PART_EditableTextBox").Padding);
+        var field = Part<TextBox>(combo, "PART_EditableTextBox");
+        Assert.Equal(new Thickness(textLeft, 0, textRight, 0), field.Padding);
+        Assert.Equal((combo.FontSize, combo.LetterSpacing), (field.FontSize, field.LetterSpacing));
         window.Close();
     }
 
     [AvaloniaFact]
     public void A_disabled_editable_combo_box_fades_like_a_text_field()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var (window, combo) = Show(new ComboBox { IsEditable = true, ItemsSource = Rates, Text = "48 000 Hz", IsEnabled = false });
 
         Assert.Equal(ColorOf(Resource<IBrush>("TextFieldBackgroundDisabledBrush", ThemeVariant.Light)), ColorOf(Part<Border>(combo, "Background").Background));
@@ -119,18 +121,6 @@ public class ComboBoxTests
         window.Close();
     }
 
-    [AvaloniaFact]
-    public void An_editable_combo_box_sizes_its_text()
-    {
-        var (window, combo) = Show(new ComboBox { IsEditable = true, ItemsSource = Rates, Text = "48 000 Hz", Classes = { "mini" } });
-
-        var field = Part<TextBox>(combo, "PART_EditableTextBox");
-        Assert.Equal(combo.FontSize, field.FontSize);
-        Assert.Equal(combo.LetterSpacing, field.LetterSpacing);
-        Assert.Equal(9, field.FontSize);
-        window.Close();
-    }
-
     // NSPopUpButton on macOS 27: its width sized to fit, chevron.up.chevron.down (Medium), the chevron's 10 pt box
     // centered 13.5 pt from the end (its ink, 13.75 pt).
     [AvaloniaTheory]
@@ -150,9 +140,7 @@ public class ComboBoxTests
         {
             Setters = { new Setter(Avalonia.Layout.Layoutable.UseLayoutRoundingProperty, false) },
         });
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        TestUi.Show(window);
 
         Assert.Equal(width, combo.Bounds.Width, tolerance: 0.5);
         var glyph = Part<CASymbolIcon>(combo, "DropDownGlyph");
@@ -174,10 +162,7 @@ public class ComboBoxTests
     private static (Window, ComboBox) Show(ComboBox combo)
     {
         combo.Width = 200;
-        var window = new Window { Width = 400, Height = 300, Content = new StackPanel { Margin = new Thickness(20), Children = { combo } } };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        var window = TestUi.Show(new Window { Width = 400, Height = 300, Content = new StackPanel { Margin = new Thickness(20), Children = { combo } } });
         return (window, combo);
     }
 

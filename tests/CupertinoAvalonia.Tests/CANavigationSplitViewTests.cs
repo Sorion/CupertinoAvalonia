@@ -76,9 +76,7 @@ public class CANavigationSplitViewTests
         var (window, split) = Show(isSidebarOpen: true);
         var toggle = Part<Button>(split, "PART_SidebarToggle");
 
-        var center = toggle.TranslatePoint(new Point(18, 18), window)!.Value;
-        window.MouseDown(center, MouseButton.Left);
-        window.MouseUp(center, MouseButton.Left);
+        Click(window, toggle);
         Assert.False(split.IsSidebarOpen);
 
         // SplitView's 0.25 s transition; the headless clock runs slower than the wall clock.
@@ -130,7 +128,6 @@ public class CANavigationSplitViewTests
         first.Offset = new Vector(0, 40);
         Assert.Contains(":scrolled", toolbar.Classes);
 
-        // The next page takes its place.
         var next = Page();
         host.Content = next;
         Dispatcher.UIThread.RunJobs();
@@ -286,18 +283,14 @@ public class CANavigationSplitViewTests
     }
 
     [AvaloniaFact]
-    public void Outside_a_CupertinoWindow_the_button_stops_near_the_edge()
+    public void Outside_a_CAWindow_the_button_stops_near_the_edge()
     {
         var split = new CANavigationSplitView { IsSidebarOpen = false, ContentToolbar = new TextBlock { Text = "Title" } };
-        var window = new Window { Width = 900, Height = 600, Content = split };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        var window = TestUi.Show(new Window { Width = 900, Height = 600, Content = split });
 
         Assert.Equal(8, Origin(Part<Button>(split, "PART_SidebarToggle"), window).X);
         window.Close();
     }
-
 
     // SwiftUI's inspector, measured on macOS 27: 270 pt by default, the window's full height, the toolbar's trailing items
     // over it, 8 pt from the window's edge; the toolbar's band shows over the content only.
@@ -316,7 +309,8 @@ public class CANavigationSplitViewTests
         Assert.Equal(410, Part<Control>(toolbar, "PART_Background").Bounds.Width);
         Assert.Equal(CAToolbarBackgroundVisibility.Visible, toolbar.BackgroundVisibility);
         Assert.Equal(892, Origin(share, window).X + share.Bounds.Width);
-        // Its content starts below the toolbar, and is a logical child.
+        // Without limits, its width is fixed.
+        Assert.False(Part<Control>(split, "PART_InspectorGrip").IsHitTestVisible);
         var inspectorContent = (Control)split.Inspector!;
         Assert.Equal(52, Origin(inspectorContent, window).Y);
         Assert.Same(split, inspectorContent.GetLogicalParent());
@@ -324,10 +318,8 @@ public class CANavigationSplitViewTests
         // A trailing item over the inspector takes clicks.
         var clicked = false;
         share.Click += (_, _) => clicked = true;
-        var center = share.TranslatePoint(new Point(share.Bounds.Width / 2, share.Bounds.Height / 2), window)!.Value;
-        Assert.True(center.X > 630);
-        window.MouseDown(center, MouseButton.Left);
-        window.MouseUp(center, MouseButton.Left);
+        Assert.True(Center(share).X > 630);
+        Click(window, share);
         Assert.True(clicked);
         window.Close();
     }
@@ -437,14 +429,6 @@ public class CANavigationSplitViewTests
         window.Close();
     }
 
-    [AvaloniaFact]
-    public void The_inspector_keeps_its_width_unless_given_limits()
-    {
-        var (window, split) = Show(isSidebarOpen: true, configure: s => s.IsInspectorOpen = true);
-        Assert.False(Part<Control>(split, "PART_InspectorGrip").IsHitTestVisible);
-        window.Close();
-    }
-
     // SwiftGallery's inspector: 220 to 400 pt, 280 at first. Its edge is the sidebar's, mirrored.
     [AvaloniaFact]
     public void Dragging_the_inspector_edge_resizes_it_folds_it_and_brings_it_back()
@@ -525,9 +509,6 @@ public class CANavigationSplitViewTests
             Width = 900, Height = 600, ExtendsContentIntoTitleBar = true, ToolbarStyle = CAToolbarStyle.Unified,
             Content = split,
         };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
-        return (window, split);
+        return (TestUi.Show(window), split);
     }
 }

@@ -11,14 +11,13 @@ namespace CupertinoAvalonia.Tests;
 /// </summary>
 public partial class ResourceKeyTests
 {
-    // Includes the keys the theme's code sets at runtime.
+    // Keys the theme's code sets at runtime must resolve too.
     [GeneratedRegex(@"\{(?:DynamicResource|StaticResource)\s+(?:ResourceKey=)?([A-Za-z0-9_]+)\s*\}")]
     private static partial Regex ResourceReference();
 
-    public static TheoryData<string> Variants => ["Light", "Dark"];
-
     [AvaloniaTheory]
-    [MemberData(nameof(Variants))]
+    [InlineData("Light")]
+    [InlineData("Dark")]
     public void All_referenced_resources_resolve(string variantName)
     {
         var variant = UseTheme(variantName);

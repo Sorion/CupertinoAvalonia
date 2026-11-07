@@ -21,7 +21,7 @@ public class HiddenProgressTests
         var bar = new ProgressBar { IsIndeterminate = true, Width = 100 };
         var panel = new Panel { Children = { bar } };
         var window = Show(panel);
-        var segment = bar.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "IndeterminateSegment");
+        var segment = Part<Border>(bar, "IndeterminateSegment");
 
         Pump(window, 100);
         var x = IndeterminateSlide.GetX(segment);

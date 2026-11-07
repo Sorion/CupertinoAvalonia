@@ -4,8 +4,6 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
-using Avalonia.Styling;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Xunit;
 
@@ -45,7 +43,7 @@ public class GroupBoxTests
     [AvaloniaFact]
     public void The_title_sits_above_the_box_as_on_macOS()
     {
-        Application.Current!.RequestedThemeVariant = ThemeVariant.Light;
+        UseTheme("Light");
         var (window, box) = Show(new GroupBox { Header = "Title", Content = new Border { Height = 60 } });
 
         using var frame = window.CaptureRenderedFrame()!;
@@ -73,9 +71,7 @@ public class GroupBoxTests
             Width = 400, Height = 300, Background = Brushes.White,
             Content = new StackPanel { Margin = new Thickness(20), Children = { box } },
         };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
-        window.UpdateLayout();
+        TestUi.Show(window);
         return (window, box);
     }
 }

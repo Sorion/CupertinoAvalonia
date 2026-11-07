@@ -17,12 +17,12 @@ public class CAWindowTests
         var variant = UseTheme(theme);
         // Apps derive their main window from it, as the gallery does.
         var window = new DerivedWindow();
-        window.Show();
-        Assert.Equal(ColorOf(Resource("WindowBackgroundBrush", variant)), Assert.IsAssignableFrom<ISolidColorBrush>(window.Background).Color);
-        Assert.Equal(ColorOf(Resource("LabelPrimaryBrush", variant)), Assert.IsAssignableFrom<ISolidColorBrush>(window.Foreground).Color);
+        Show(window);
+        Assert.Equal(ColorOf(Resource("WindowBackgroundBrush", variant)), ColorOf(window.Background));
+        Assert.Equal(ColorOf(Resource("LabelPrimaryBrush", variant)), ColorOf(window.Foreground));
         // Only its theme clears the background for the material (Window's theme has the same colors).
         ((IPseudoClasses)window.Classes).Set(":material", true);
-        Assert.Equal(Colors.Transparent, Assert.IsAssignableFrom<ISolidColorBrush>(window.Background).Color);
+        Assert.Equal(Colors.Transparent, ColorOf(window.Background));
         window.Close();
     }
 
@@ -37,7 +37,7 @@ public class CAWindowTests
             ToolbarStyle = CAToolbarStyle.Unified,
             Material = CAWindowMaterial.Sidebar,
         };
-        window.Show();
+        Show(window);
 
         if (OperatingSystem.IsMacOS())
         {
@@ -60,7 +60,6 @@ public class CAWindowTests
         }
         else
         {
-            // Elsewhere, a plain window.
             Assert.False(window.ExtendClientAreaToDecorationsHint);
             Assert.DoesNotContain(":macos", window.Classes);
         }
@@ -71,8 +70,7 @@ public class CAWindowTests
     [AvaloniaFact]
     public void Window_controls_inset_follows_the_title_bar()
     {
-        var window = new CAWindow { ExtendsContentIntoTitleBar = true, ToolbarStyle = CAToolbarStyle.Unified };
-        window.Show();
+        var window = Show(new CAWindow { ExtendsContentIntoTitleBar = true, ToolbarStyle = CAToolbarStyle.Unified });
 
         if (OperatingSystem.IsMacOS())
         {

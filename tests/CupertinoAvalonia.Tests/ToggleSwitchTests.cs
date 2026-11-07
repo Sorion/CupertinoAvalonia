@@ -6,8 +6,6 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Styling;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Xunit;
 
@@ -22,9 +20,7 @@ public class ToggleSwitchTests
     {
         // Measured on macOS 27 (SwiftUI): 13 pt at every control size.
         var toggle = new ToggleSwitch { Content = "Mute", Classes = { size } };
-        var window = new Window { Content = toggle };
-        window.Show();
-        Dispatcher.UIThread.RunJobs();
+        var window = Show(new Window { Content = toggle });
 
         Assert.Equal(13, toggle.FontSize);
         window.Close();
@@ -56,15 +52,14 @@ public class ToggleSwitchTests
                 Child = new Border { Padding = new Thickness(12), Child = toggle },
             },
         };
-        window.Show();
-        window.UpdateLayout();
+        Show(window);
 
         var track = Part<Panel>(toggle, "PART_Track");
         var knob = Part<Border>(toggle, "PART_Knob");
         var movingKnobs = Part<Panel>(toggle, "PART_MovingKnobs");
         Assert.Null(AdornerLayer.GetAdorner(movingKnobs));
 
-        var knobCenter = knob.TranslatePoint(new Point(knob.Bounds.Width / 2, knob.Bounds.Height / 2), window)!.Value;
+        var knobCenter = Center(knob);
         window.MouseDown(knobCenter, MouseButton.Left);
         Assert.True(toggle.IsPressed);
         // The lens is an adorner of the knob, outside the switch's tree.
@@ -79,10 +74,9 @@ public class ToggleSwitchTests
         Assert.True(lens.Opacity == 1, $"lens opacity {lens.Opacity}, knob opacity {knob.Opacity}");
         Assert.Equal(0, knob.Opacity);
         // On screen, the lens is larger than the track and goes past its top and bottom edges.
-        var lensRect = new Rect(lens.Bounds.Size).TransformToAABB(lens.TransformToVisual(window)!.Value);
-        var trackRect = new Rect(track.Bounds.Size).TransformToAABB(track.TransformToVisual(window)!.Value);
+        var lensRect = ScreenRect(lens, window);
+        var trackRect = ScreenRect(track, window);
         Assert.True(lensRect.Top < trackRect.Top && lensRect.Bottom > trackRect.Bottom, $"lens {lensRect} vs track {trackRect}");
-
 
         window.MouseUp(knobCenter, MouseButton.Left);
         window.Close();
