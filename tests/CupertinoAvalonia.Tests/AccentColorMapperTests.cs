@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -69,6 +70,43 @@ public class AccentColorMapperTests
         Assert.Equal(expected.TextSelection, Resource<Color>("TextSelectionColor", variant));
         Assert.Equal(expected.TextSelection, Resource<ISolidColorBrush>("TextSelectionBrush", variant).Color);
     }
+
+    // System Settings can change the highlight color alone, which Avalonia doesn't report: AppKit announces it to the
+    // app with NSSystemColorsDidChangeNotification, once it has the new color.
+    [AvaloniaFact]
+    public void The_theme_reads_AppKit_colors_again_when_they_change()
+    {
+        Assert.SkipUnless(OperatingSystem.IsMacOS(), "AppKit's colors exist only on macOS.");
+        var expected = Assert.NotNull(MacOSAccentColors.Read()).Light.TextSelection;
+        var brush = (SolidColorBrush)Resource<ISolidColorBrush>("TextSelectionBrush", ThemeVariant.Light);
+        brush.Color = Colors.Red;
+
+        PostAppNotification("NSSystemColorsDidChangeNotification");
+        Dispatcher.UIThread.RunJobs();
+
+        Assert.Equal(expected, brush.Color);
+    }
+
+    private static void PostAppNotification(string notification)
+    {
+        var name = CFStringCreateWithCString(IntPtr.Zero, notification, 0x08000100);
+        CFNotificationCenterPostNotification(CFNotificationCenterGetLocalCenter(), name, IntPtr.Zero, IntPtr.Zero, true);
+        CFRelease(name);
+    }
+
+    private const string CoreFoundation = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
+
+    [DllImport(CoreFoundation)]
+    private static extern IntPtr CFStringCreateWithCString(IntPtr allocator, [MarshalAs(UnmanagedType.LPUTF8Str)] string value, uint encoding);
+
+    [DllImport(CoreFoundation)]
+    private static extern void CFRelease(IntPtr value);
+
+    [DllImport(CoreFoundation)]
+    private static extern IntPtr CFNotificationCenterGetLocalCenter();
+
+    [DllImport(CoreFoundation)]
+    private static extern void CFNotificationCenterPostNotification(IntPtr center, IntPtr name, IntPtr obj, IntPtr userInfo, [MarshalAs(UnmanagedType.I1)] bool deliverImmediately);
 
     // AppKit's selectedTextBackgroundColor on macOS 27, the highlight color following the accent: opaque, the accent at
     // 30 % over white, over #5A5A5A in dark mode. The theme drew the accent at 30 % over the field, too dark in dark mode.

@@ -46,6 +46,11 @@ public class CupertinoAvaloniaTheme : Styles
         _platformSettings = Application.Current?.PlatformSettings;
         if (_platformSettings is not null)
             _platformSettings.ColorValuesChanged += OnPlatformColorValuesChanged;
+        // Avalonia reports the accent's changes, not the highlight color's (System Settings › Appearance), which sets
+        // the selected text apart from the accent. Observed on macOS 27: System Settings' distributed notification
+        // (AppleColorPreferencesChangedNotification) comes before AppKit has the new color, which it then announces
+        // to the app with this one.
+        MacOSNotifications.ObserveApp("NSSystemColorsDidChangeNotification", UpdateAccent);
 
         UpdateAccent();
     }

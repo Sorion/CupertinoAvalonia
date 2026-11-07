@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using Avalonia.Threading;
 
 namespace CupertinoAvalonia.Media;
 
@@ -23,10 +22,6 @@ internal static partial class MacOSSidebarSize
     private const string CoreFoundation = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
     private const string ChangedNotification = "AppleSideBarDefaultIconSizeChanged";
     private const uint Utf8 = 0x08000100;
-    private const nint DeliverImmediately = 4;
-
-    // Kept alive: CoreFoundation calls it back.
-    private static readonly NotificationCallback Callback = OnNotification;
 
     public static SidebarSize Read()
     {
@@ -55,45 +50,11 @@ internal static partial class MacOSSidebarSize
     }
 
     /// <summary>Calls <paramref name="onChanged"/> on the UI thread whenever the setting changes (macOS only).</summary>
-    public static void Observe(Action onChanged) => Observe(ChangedNotification, onChanged);
-
-    internal static void Observe(string notification, Action onChanged)
-    {
-        if (!OperatingSystem.IsMacOS())
-            return;
-
-        try
-        {
-            var name = CFStringCreateWithCString(IntPtr.Zero, notification, Utf8);
-            try
-            {
-                // The observer is the handler itself, for the app's lifetime.
-                var observer = GCHandle.ToIntPtr(GCHandle.Alloc(onChanged));
-                CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), observer,
-                    Marshal.GetFunctionPointerForDelegate(Callback), name, IntPtr.Zero, DeliverImmediately);
-            }
-            finally
-            {
-                CFRelease(name);
-            }
-        }
-        catch (Exception e) when (e is DllNotFoundException or EntryPointNotFoundException)
-        {
-        }
-    }
-
-    private static void OnNotification(IntPtr center, IntPtr observer, IntPtr name, IntPtr obj, IntPtr userInfo)
-    {
-        if (GCHandle.FromIntPtr(observer).Target is Action onChanged)
-            Dispatcher.UIThread.Post(onChanged);
-    }
+    public static void Observe(Action onChanged) => MacOSNotifications.Observe(ChangedNotification, onChanged);
 
     // CFStringRef constants are exported as variables.
     private static IntPtr Constant(string name) =>
         Marshal.ReadIntPtr(NativeLibrary.GetExport(NativeLibrary.Load(CoreFoundation), name));
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void NotificationCallback(IntPtr center, IntPtr observer, IntPtr name, IntPtr obj, IntPtr userInfo);
 
     [LibraryImport(CoreFoundation)]
     private static partial IntPtr CFStringCreateWithCString(IntPtr allocator, [MarshalAs(UnmanagedType.LPUTF8Str)] string value, uint encoding);
@@ -107,10 +68,4 @@ internal static partial class MacOSSidebarSize
 
     [LibraryImport(CoreFoundation)]
     private static partial nint CFPreferencesGetAppIntegerValue(IntPtr key, IntPtr applicationId, [MarshalAs(UnmanagedType.I1)] out bool valid);
-
-    [LibraryImport(CoreFoundation)]
-    private static partial IntPtr CFNotificationCenterGetDistributedCenter();
-
-    [LibraryImport(CoreFoundation)]
-    private static partial void CFNotificationCenterAddObserver(IntPtr center, IntPtr observer, IntPtr callback, IntPtr name, IntPtr obj, nint suspensionBehavior);
 }
