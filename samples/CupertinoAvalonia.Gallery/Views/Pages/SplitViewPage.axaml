@@ -1,36 +1,34 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              xmlns:views="using:CupertinoAvalonia.Gallery.Views"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.SplitViewPage">
-  <StackPanel Spacing="28">
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Inspector" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="PanePlacement=&quot;Right&quot; and DisplayMode=&quot;Inline&quot;: an inspector in the sidebar's color, which pushes the content aside. With the &quot;plain&quot; class, it takes the content's background and a divider, as in Shortcuts." />
-      <StackPanel Orientation="Horizontal" Spacing="8">
-        <ToggleButton Content="Inspector" IsChecked="{Binding #Inspector.IsPaneOpen, Mode=TwoWay}" />
-        <ToggleButton Name="Plain" Content="plain" />
-      </StackPanel>
-      <Border Height="360" CornerRadius="10" ClipToBounds="True"
-              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
-        <SplitView Name="Inspector" PanePlacement="Right" DisplayMode="Inline" IsPaneOpen="True"
+  <gc:SectionStack>
+
+    <gc:GallerySection Title="SplitView"
+                       Description="A pane beside the content: an inspector on the right, in the sidebar's color, or a sidebar over the content. The plain class gives the inspector the content's background and a divider, as in Shortcuts."
+                       StyleClasses="plain" Properties="PanePlacement DisplayMode IsPaneOpen OpenPaneLength">
+      <gc:GalleryBlock Title="Inspector" Padding="0" HintSymbol="cursorarrow"
+                       Hint="Click Inspector to open or close it, and plain to switch its look.">
+        <SplitView Name="Inspector" Height="360" PanePlacement="Right" DisplayMode="Inline" IsPaneOpen="True"
                    Classes.plain="{Binding #Plain.IsChecked}">
           <SplitView.Pane>
             <views:ChannelInspector />
           </SplitView.Pane>
-          <TextBlock Margin="20" Classes="secondary" Text="Content" />
+          <StackPanel Margin="20" Spacing="12">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <ToggleButton Content="Inspector" IsChecked="{Binding #Inspector.IsPaneOpen, Mode=TwoWay}" />
+              <ToggleButton Name="Plain" Content="plain" />
+            </StackPanel>
+            <TextBlock Classes="secondary" TextWrapping="Wrap"
+                       Text="PanePlacement=&quot;Right&quot; and DisplayMode=&quot;Inline&quot;: the inspector pushes the content aside." />
+          </StackPanel>
         </SplitView>
-      </Border>
-    </StackPanel>
+      </gc:GalleryBlock>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Sidebar over the content" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="DisplayMode=&quot;Overlay&quot;: the sidebar covers the content, opaque, without dimming it; a click outside closes it." />
-      <ToggleButton HorizontalAlignment="Left" Content="Sidebar" IsChecked="{Binding #Overlay.IsPaneOpen, Mode=TwoWay}" />
-      <Border Height="240" CornerRadius="10" ClipToBounds="True"
-              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
-        <SplitView Name="Overlay" DisplayMode="Overlay" OpenPaneLength="200">
+      <gc:GalleryBlock Title="Sidebar over the content" Padding="0" HintSymbol="cursorarrow"
+                       Hint="Click Sidebar to open it; a click outside closes it.">
+        <SplitView Name="Overlay" Height="240" DisplayMode="Overlay" OpenPaneLength="200">
           <SplitView.Pane>
             <ListBox Classes="sidebar" Margin="0,10" SelectedIndex="0" Background="Transparent">
               <ListBoxItem Content="Mixer" />
@@ -38,9 +36,14 @@
               <ListBoxItem Content="Settings" />
             </ListBox>
           </SplitView.Pane>
-          <TextBlock Margin="20" Classes="secondary" Text="Content" />
+          <StackPanel Margin="20" Spacing="12">
+            <ToggleButton HorizontalAlignment="Left" Content="Sidebar" IsChecked="{Binding #Overlay.IsPaneOpen, Mode=TwoWay}" />
+            <TextBlock Classes="secondary" TextWrapping="Wrap"
+                       Text="DisplayMode=&quot;Overlay&quot;: the sidebar covers the content, opaque, without dimming it." />
+          </StackPanel>
         </SplitView>
-      </Border>
-    </StackPanel>
-  </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+  </gc:SectionStack>
 </UserControl>

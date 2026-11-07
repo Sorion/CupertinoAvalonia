@@ -1,16 +1,16 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              xmlns:cac="using:CupertinoAvalonia.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.ToolbarPage">
-  <StackPanel Spacing="28">
+  <gc:SectionStack>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Toolbar" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="Liquid Glass items for a unified toolbar: add the toolbar class to Button, ToggleButton, DropDownButton, ComboBox, TextBox (a search field) and a segmented ListBox; Border.toolbar-group groups buttons in one capsule. Pressed, an item swells: briefly after a click, up to 3 seconds while held, and as long as its menu is open." />
-      <Border Height="52" Padding="12,0" CornerRadius="10"
-              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
-        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
+    <gc:GallerySection Title="Toolbar items"
+                       Description="Liquid Glass items for a unified toolbar: the toolbar class on Button, ToggleButton, DropDownButton, ComboBox, TextBox (a search field) and a segmented ListBox. Border.toolbar-group puts buttons in one capsule; with ToolbarStyle=&quot;UnifiedCompact&quot;, the compact class makes the items 24 pt tall."
+                       StyleClasses="toolbar toolbar-group compact">
+      <gc:GalleryBlock Title="Unified" Padding="12,0" HintSymbol="cursorarrow"
+                       Hint="Press an item: it swells, briefly after a click, up to 3 seconds while held, and as long as its menu is open.">
+        <Grid Height="52" ColumnDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="8">
           <Button Classes="toolbar" ToolTip.Tip="More">
             <cac:CASymbolIcon Symbol="ellipsis" />
             <Button.Flyout>
@@ -65,16 +65,10 @@
           </Button>
           <TextBox Grid.Column="8" Classes="toolbar" Width="160" PlaceholderText="Search" />
         </Grid>
-      </Border>
-    </StackPanel>
+      </gc:GalleryBlock>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Compact toolbar" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="With ToolbarStyle=&quot;UnifiedCompact&quot;, add the compact class: the items are 24 points tall." />
-      <Border Height="40" Padding="12,0" CornerRadius="10"
-              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
-        <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
+      <gc:GalleryBlock Title="Compact" Padding="12,0">
+        <Grid Height="40" ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto" ColumnSpacing="8">
           <Border Classes="toolbar-group compact">
             <StackPanel>
               <Button>
@@ -102,74 +96,101 @@
           </ComboBox>
           <TextBox Grid.Column="5" Classes="toolbar compact" Width="160" PlaceholderText="Search" />
         </Grid>
-      </Border>
-    </StackPanel>
+      </gc:GalleryBlock>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Disabled toolbar items" />
-      <StackPanel Orientation="Horizontal" Spacing="8">
-        <Button Classes="toolbar" IsEnabled="False">
-          <cac:CASymbolIcon Symbol="square.and.arrow.up" />
-        </Button>
-        <Button Classes="toolbar accent" Content="Add Channel" IsEnabled="False" />
-        <ComboBox Classes="toolbar" SelectedIndex="0" IsEnabled="False">
-          <ComboBoxItem Content="Default" />
-        </ComboBox>
-        <TextBox Classes="toolbar" Width="160" PlaceholderText="Search" IsEnabled="False" />
-      </StackPanel>
-    </StackPanel>
+      <gc:GalleryBlock Title="Disabled" Padding="12,0">
+        <StackPanel Height="52" Orientation="Horizontal" Spacing="8">
+          <Button Classes="toolbar" IsEnabled="False">
+            <cac:CASymbolIcon Symbol="square.and.arrow.up" />
+          </Button>
+          <Button Classes="toolbar accent" Content="Add Channel" IsEnabled="False" />
+          <ComboBox Classes="toolbar" SelectedIndex="0" IsEnabled="False">
+            <ComboBoxItem Content="Default" />
+          </ComboBox>
+          <TextBox Classes="toolbar" Width="160" PlaceholderText="Search" IsEnabled="False" />
+        </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Segmented control" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="A ListBox with the segmented class: segments as wide as the widest, the selected one in the accent color. Arrow keys move the selection." />
-      <ListBox Classes="segmented" SelectedIndex="1">
-        <ListBoxItem Content="Day" />
-        <ListBoxItem Content="Week" />
-        <ListBoxItem Content="Month" />
-        <ListBoxItem Content="Year" />
-      </ListBox>
-      <ListBox Classes="segmented" SelectionMode="Multiple">
-        <ListBoxItem Content="Bold" IsSelected="True" />
-        <ListBoxItem Content="Italic" IsSelected="True" />
-        <ListBoxItem Content="Underline" />
-        <ListBoxItem Content="Strikethrough" />
-      </ListBox>
-      <TextBlock Classes="caption1 secondary" Text="SelectionMode=&quot;Multiple&quot;: each segment turns on and off." />
-      <ListBox Classes="segmented" SelectedIndex="0" IsEnabled="False">
-        <ListBoxItem Content="Disabled" />
-        <ListBoxItem Content="Segmented" />
-        <ListBoxItem Content="Control" />
-      </ListBox>
-    </StackPanel>
+    <gc:GallerySection Title="Segmented control"
+                       Description="A ListBox with the segmented class: segments as wide as the widest, the selected one in the accent color. With SelectionMode=&quot;Multiple&quot;, each segment turns on and off."
+                       BasedOn="ListBox" StyleClasses="segmented" SizeClasses="mini small large xlarge"
+                       Properties="SelectionMode">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="134,264,264" RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Normal" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Disabled" />
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Control sizes" />
-      <ListBox Classes="segmented mini" SelectedIndex="0">
-        <ListBoxItem Content="Mini" />
-        <ListBoxItem Content="Two" />
-        <ListBoxItem Content="Three" />
-      </ListBox>
-      <ListBox Classes="segmented small" SelectedIndex="0">
-        <ListBoxItem Content="Small" />
-        <ListBoxItem Content="Two" />
-        <ListBoxItem Content="Three" />
-      </ListBox>
-      <ListBox Classes="segmented" SelectedIndex="0">
-        <ListBoxItem Content="Regular" />
-        <ListBoxItem Content="Two" />
-        <ListBoxItem Content="Three" />
-      </ListBox>
-      <ListBox Classes="segmented large" SelectedIndex="0">
-        <ListBoxItem Content="Large" />
-        <ListBoxItem Content="Two" />
-        <ListBoxItem Content="Three" />
-      </ListBox>
-      <ListBox Classes="segmented xlarge" SelectedIndex="0">
-        <ListBoxItem Content="Extra Large" />
-        <ListBoxItem Content="Two" />
-        <ListBoxItem Content="Three" />
-      </ListBox>
-    </StackPanel>
-  </StackPanel>
+          <gc:RowLabel Grid.Row="1" Text="Select one" Note="No property" />
+          <ListBox Grid.Row="1" Grid.Column="1" Classes="segmented" SelectedIndex="1">
+            <ListBoxItem Content="Day" />
+            <ListBoxItem Content="Week" />
+            <ListBoxItem Content="Month" />
+          </ListBox>
+          <ListBox Grid.Row="1" Grid.Column="2" Classes="segmented" SelectedIndex="1" IsEnabled="False">
+            <ListBoxItem Content="Day" />
+            <ListBoxItem Content="Week" />
+            <ListBoxItem Content="Month" />
+          </ListBox>
+
+          <gc:RowLabel Grid.Row="2" Text="Select any" Code="SelectionMode" />
+          <ListBox Grid.Row="2" Grid.Column="1" Classes="segmented" SelectionMode="Multiple">
+            <ListBoxItem Content="Bold" IsSelected="True" />
+            <ListBoxItem Content="Italic" IsSelected="True" />
+            <ListBoxItem Content="Underline" />
+          </ListBox>
+          <ListBox Grid.Row="2" Grid.Column="2" Classes="segmented" SelectionMode="Multiple" IsEnabled="False">
+            <ListBoxItem Content="Bold" IsSelected="True" />
+            <ListBoxItem Content="Italic" IsSelected="True" />
+            <ListBoxItem Content="Underline" />
+          </ListBox>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Sizes">
+        <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="24" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Mini" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Small" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Regular" />
+          <TextBlock Grid.Column="3" Classes="subheadline secondary" Text="Large" />
+          <TextBlock Grid.Column="4" Classes="subheadline secondary" Text="Extra Large" />
+
+          <ListBox Grid.Row="1" Classes="segmented mini" SelectedIndex="0" VerticalAlignment="Center">
+            <ListBoxItem Content="Day" />
+            <ListBoxItem Content="Week" />
+          </ListBox>
+          <ListBox Grid.Row="1" Grid.Column="1" Classes="segmented small" SelectedIndex="0" VerticalAlignment="Center">
+            <ListBoxItem Content="Day" />
+            <ListBoxItem Content="Week" />
+          </ListBox>
+          <ListBox Grid.Row="1" Grid.Column="2" Classes="segmented" SelectedIndex="0" VerticalAlignment="Center">
+            <ListBoxItem Content="Day" />
+            <ListBoxItem Content="Week" />
+          </ListBox>
+          <ListBox Grid.Row="1" Grid.Column="3" Classes="segmented large" SelectedIndex="0" VerticalAlignment="Center">
+            <ListBoxItem Content="Day" />
+            <ListBoxItem Content="Week" />
+          </ListBox>
+          <ListBox Grid.Row="1" Grid.Column="4" Classes="segmented xlarge" SelectedIndex="0" VerticalAlignment="Center">
+            <ListBoxItem Content="Day" />
+            <ListBoxItem Content="Week" />
+          </ListBox>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context"
+                       Hint="With Keyboard navigation on, Tab reaches the control and the arrow keys move between its segments.">
+        <DockPanel>
+          <ListBox DockPanel.Dock="Right" Classes="segmented" SelectedIndex="1" VerticalAlignment="Center">
+            <ListBoxItem Content="Day" />
+            <ListBoxItem Content="Week" />
+            <ListBoxItem Content="Month" />
+            <ListBoxItem Content="Year" />
+          </ListBox>
+          <TextBlock Classes="title3" VerticalAlignment="Center" Text="November 2026" />
+        </DockPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+  </gc:SectionStack>
 </UserControl>
