@@ -165,7 +165,7 @@
                   BorderThickness="1" BorderBrush="{DynamicResource TableColumnSeparatorBrush}">
             <ScrollViewer AllowAutoHide="False">
               <TextBlock Name="LongText" Margin="10" TextWrapping="Wrap"
-                         Text="MixerStudio gives every application its own channel, so you can set the volume of music, games and calls independently. Each channel can be routed to a different output device, muted, or soloed. Profiles save a set of channels and rules and switch automatically when an application starts." />
+                         Text="The mixer gives every application its own channel, so you can set the volume of music, games and calls independently. Each channel can be routed to a different output device, muted, or soloed. Profiles save a set of channels and rules and switch automatically when an application starts." />
             </ScrollViewer>
           </Border>
         </Grid>

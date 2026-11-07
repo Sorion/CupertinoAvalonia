@@ -137,7 +137,7 @@
       <gc:GalleryBlock Title="In context" Padding="0" Hint="Click the switch, or press Space when it has the focus.">
         <StackPanel>
           <Grid ColumnDefinitions="*,Auto" Margin="16,10">
-            <TextBlock VerticalAlignment="Center" Text="Launch MixerStudio at login" />
+            <TextBlock VerticalAlignment="Center" Text="Launch the mixer at login" />
             <ToggleSwitch Grid.Column="1" IsChecked="True" />
           </Grid>
           <Border Height="1" Background="{DynamicResource TableColumnSeparatorBrush}" />

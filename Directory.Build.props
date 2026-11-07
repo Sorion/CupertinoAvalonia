@@ -11,7 +11,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
-    <!-- Keep aligned with MixerStudio, the first consumer of the theme. -->
+    <!-- The version the theme is built and tested against. -->
     <AvaloniaVersion>12.0.5</AvaloniaVersion>
   </PropertyGroup>
 

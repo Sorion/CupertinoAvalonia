@@ -60,7 +60,7 @@
         <StackPanel Spacing="6">
           <TextBlock Classes="subheadline secondary" Text="Notes" />
           <TextBox Width="520" Height="76" HorizontalAlignment="Left" AcceptsReturn="True" TextWrapping="Wrap"
-                   Text="MixerStudio routes each application to its own channel. Type here to try the caret and the selection color." />
+                   Text="The mixer routes each application to its own channel. Type here to try the caret and the selection color." />
         </StackPanel>
       </gc:GalleryBlock>
     </gc:GallerySection>

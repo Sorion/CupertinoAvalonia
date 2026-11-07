@@ -366,7 +366,7 @@ public class CANavigationSplitViewTests
         window.Close();
     }
 
-    // MixerStudio's editing inspector, with Cancel and Save: a drag doesn't close it.
+    // An editing inspector, with Cancel and Save: a drag doesn't close it.
     [AvaloniaFact]
     public void An_inspector_that_can_t_collapse_stops_at_its_minimum()
     {
