@@ -166,7 +166,10 @@
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="Foreground" Value="{DynamicResource LabelPrimaryBrush}" />
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeight}" />
-    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPadding}" />
+    <!-- Measured on macOS 27 (SwiftUI's segmented Picker, NSTabViewController's tabs): each segment as wide as the
+         widest label and 23 pt; the kit's 10 pt a side is 3 short. 11 and 12 rather than 11.5, which layout rounding
+         makes 12 on a 1x screen. The other sizes likewise: 15, 19, 27 and 35 pt around the label. -->
+    <Setter Property="Padding" Value="11,0,12,0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadius}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSize}" />
     <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacing}" />
@@ -211,7 +214,7 @@
   </Style>
   <Style Selector="ListBox.segmented.mini ListBoxItem">
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeightMini}" />
-    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPaddingMini}" />
+    <Setter Property="Padding" Value="7,0,8,0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusMini}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeMini}" />
     <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingMini}" />
@@ -224,7 +227,7 @@
   </Style>
   <Style Selector="ListBox.segmented.small ListBoxItem">
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeightSmall}" />
-    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPaddingSmall}" />
+    <Setter Property="Padding" Value="9,0,10,0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusSmall}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeSmall}" />
     <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingSmall}" />
@@ -237,7 +240,7 @@
   </Style>
   <Style Selector="ListBox.segmented.large ListBoxItem">
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeightLarge}" />
-    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPaddingLarge}" />
+    <Setter Property="Padding" Value="13,0,14,0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusLarge}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeLarge}" />
     <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingLarge}" />
@@ -250,7 +253,7 @@
   </Style>
   <Style Selector="ListBox.segmented.xlarge ListBoxItem">
     <Setter Property="MinHeight" Value="{DynamicResource ControlHeightXLarge}" />
-    <Setter Property="Padding" Value="{DynamicResource SegmentedControlPaddingXLarge}" />
+    <Setter Property="Padding" Value="17,0,18,0" />
     <Setter Property="CornerRadius" Value="{DynamicResource ButtonRadiusXLarge}" />
     <Setter Property="FontSize" Value="{DynamicResource ControlFontSizeXLarge}" />
     <Setter Property="LetterSpacing" Value="{DynamicResource ControlLetterSpacingXLarge}" />

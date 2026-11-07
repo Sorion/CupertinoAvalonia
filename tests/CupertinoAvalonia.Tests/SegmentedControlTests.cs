@@ -31,6 +31,26 @@ public class SegmentedControlTests
     }
 
     [AvaloniaTheory]
+    [InlineData("mini", 15)]
+    [InlineData("small", 19)]
+    [InlineData("", 23)]
+    [InlineData("large", 27)]
+    [InlineData("xlarge", 35)]
+    public void Segments_are_the_widest_label_and_the_margins_of_macOS(string size, double margins)
+    {
+        var segmented = Segmented("Day", "Week", "Month");
+        if (size != "") segmented.Classes.Add(size);
+        var window = Show(segmented);
+
+        // Measured on macOS 27 (SwiftUI's segmented Picker): the widest label and 15, 19, 23, 27 or 35 pt around it.
+        var month = Segments(segmented)[2];
+        var label = month.GetVisualDescendants().OfType<TextBlock>().Single();
+        Assert.Equal(margins, month.Padding.Left + month.Padding.Right);
+        Assert.Equal(label.Bounds.Width + margins, month.Bounds.Width, tolerance: 1);
+        window.Close();
+    }
+
+    [AvaloniaTheory]
     [InlineData("Light")]
     [InlineData("Dark")]
     public void Selected_segment_takes_the_accent(string theme)
