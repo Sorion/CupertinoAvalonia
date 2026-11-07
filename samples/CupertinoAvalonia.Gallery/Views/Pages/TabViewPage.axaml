@@ -1,73 +1,159 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.TabViewPage">
-  <StackPanel Spacing="28">
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Settings tabs" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="TabControl with the &quot;toolbar&quot; class: a settings window's tabs, a symbol (Icon=&quot;gearshape&quot;) over each label. The selected tab is on glass, in the accent." />
-      <Border Height="260" CornerRadius="10" ClipToBounds="True"
-              BorderBrush="{DynamicResource SplitViewDividerBrush}" BorderThickness="1">
-        <TabControl Classes="toolbar">
-          <TabItem Header="General" Icon="gearshape">
-            <StackPanel Spacing="10">
-              <CheckBox Content="Open at login" IsChecked="True" />
-              <CheckBox Content="Show in the menu bar" />
-              <ToggleSwitch Content="Automatic updates" IsChecked="True" />
-            </StackPanel>
-          </TabItem>
-          <TabItem Header="Appearance" Icon="paintpalette">
-            <StackPanel Spacing="10">
-              <TextBlock Classes="subheadline secondary" Text="Text size" />
-              <Slider Value="40" Width="240" HorizontalAlignment="Left" />
-            </StackPanel>
-          </TabItem>
-          <TabItem Header="Notifications" Icon="bell">
-            <TextBlock Classes="secondary" Text="Notification settings" />
-          </TabItem>
-          <TabItem Header="Advanced" Icon="gearshape.2">
-            <TextBlock Classes="secondary" Text="Advanced settings" />
-          </TabItem>
-        </TabControl>
-      </Border>
-    </StackPanel>
+  <UserControl.Styles>
+    <!-- A window around the settings tabs, whose band spans its top; its edge over the band, which would cover the
+         corners. -->
+    <Style Selector="Border.window">
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="ClipToBounds" Value="True" />
+      <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+    <Style Selector="Border.edge">
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="BorderBrush" Value="{DynamicResource SplitViewDividerBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+    <Style Selector="TextBlock.view">
+      <Setter Property="Foreground" Value="{DynamicResource LabelSecondaryBrush}" />
+    </Style>
+  </UserControl.Styles>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Segmented tabs" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="TabControl: a segmented control on top of the content, as in Audio MIDI Setup. TabStripPlacement=&quot;Bottom&quot; puts it below." />
-      <TabControl Height="140">
-        <TabItem Header="Input">
-          <TextBlock Classes="secondary" Text="Input: 48 000 Hz, 2 channels" />
-        </TabItem>
-        <TabItem Header="Output">
-          <TextBlock Classes="secondary" Text="Output: 48 000 Hz, 2 channels" />
-        </TabItem>
-        <TabItem Header="Disabled" IsEnabled="False" />
-      </TabControl>
-      <TabControl Height="140">
-        <TabItem Header="Microphone" Icon="mic">
-          <TextBlock Classes="secondary" Text="A segment can show a symbol before its label." />
-        </TabItem>
-        <TabItem Header="Speakers" Icon="speaker.wave.2" />
-      </TabControl>
-    </StackPanel>
+  <gc:SectionStack>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Tabs on the left" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="TabStripPlacement=&quot;Left&quot; or &quot;Right&quot;: a column of tabs beside the content." />
-      <TabControl Height="140" TabStripPlacement="Left">
-        <TabItem Header="Mixer">
-          <TextBlock Classes="secondary" Text="Mixer" />
-        </TabItem>
-        <TabItem Header="Profiles">
-          <TextBlock Classes="secondary" Text="Profiles" />
-        </TabItem>
-        <TabItem Header="Devices">
-          <TextBlock Classes="secondary" Text="Devices" />
-        </TabItem>
-      </TabControl>
-    </StackPanel>
-  </StackPanel>
+    <gc:GallerySection Title="TabControl"
+                       Description="Tabs that switch the view under them: a segmented control on top of it, as in Audio MIDI Setup. The toolbar class makes a settings window's tabs, a symbol over each label."
+                       StyleClasses="toolbar" Properties="SelectedIndex TabStripPlacement Icon">
+      <gc:GalleryBlock Title="States" HintSymbol="cursorarrow" Hint="Click a tab to show its view.">
+        <Grid ColumnDefinitions="134,264,264" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="16">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Normal" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Disabled" />
+
+          <gc:RowLabel Grid.Row="1" Text="Segmented" Note="No class" />
+          <TabControl Grid.Row="1" Grid.Column="1" Width="240" Height="80" HorizontalAlignment="Left">
+            <TabItem Header="Input">
+              <TextBlock Classes="view" Text="Input: 2 channels" />
+            </TabItem>
+            <TabItem Header="Output">
+              <TextBlock Classes="view" Text="Output: 2 channels" />
+            </TabItem>
+            <TabItem Header="Disabled" IsEnabled="False" />
+          </TabControl>
+          <TabControl Grid.Row="1" Grid.Column="2" Width="240" Height="80" HorizontalAlignment="Left" IsEnabled="False">
+            <TabItem Header="Input">
+              <TextBlock Classes="view" Text="Input: 2 channels" />
+            </TabItem>
+            <TabItem Header="Output" />
+          </TabControl>
+
+          <gc:RowLabel Grid.Row="2" Text="With symbols" Code="Icon" />
+          <TabControl Grid.Row="2" Grid.Column="1" Width="240" Height="80" HorizontalAlignment="Left">
+            <TabItem Header="Microphone" Icon="mic">
+              <TextBlock Classes="view" Text="Built-in microphone" />
+            </TabItem>
+            <TabItem Header="Speakers" Icon="speaker.wave.2">
+              <TextBlock Classes="view" Text="MacBook Pro Speakers" />
+            </TabItem>
+          </TabControl>
+          <TabControl Grid.Row="2" Grid.Column="2" Width="240" Height="80" HorizontalAlignment="Left" IsEnabled="False">
+            <TabItem Header="Microphone" Icon="mic">
+              <TextBlock Classes="view" Text="Built-in microphone" />
+            </TabItem>
+            <TabItem Header="Speakers" Icon="speaker.wave.2" />
+          </TabControl>
+
+          <gc:RowLabel Grid.Row="3" Text="Settings tabs" Code="toolbar" />
+          <Border Grid.Row="3" Grid.Column="1" Classes="window" Width="240" Height="120">
+            <Panel>
+              <TabControl Classes="toolbar">
+                <TabItem Header="General" Icon="gearshape">
+                  <TextBlock Classes="view" Text="General settings" />
+                </TabItem>
+                <TabItem Header="Sound" Icon="speaker.wave.2">
+                  <TextBlock Classes="view" Text="Sound settings" />
+                </TabItem>
+                <TabItem Header="Advanced" Icon="gearshape.2">
+                  <TextBlock Classes="view" Text="Advanced settings" />
+                </TabItem>
+              </TabControl>
+              <Border Classes="edge" />
+            </Panel>
+          </Border>
+          <Border Grid.Row="3" Grid.Column="2" Classes="window" Width="240" Height="120">
+            <Panel>
+              <TabControl Classes="toolbar" IsEnabled="False">
+                <TabItem Header="General" Icon="gearshape">
+                  <TextBlock Classes="view" Text="General settings" />
+                </TabItem>
+                <TabItem Header="Sound" Icon="speaker.wave.2" />
+                <TabItem Header="Advanced" Icon="gearshape.2" />
+              </TabControl>
+              <Border Classes="edge" />
+            </Panel>
+          </Border>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="Placement">
+        <Grid ColumnDefinitions="264,264,264" RowDefinitions="Auto,Auto" RowSpacing="12">
+          <TextBlock Classes="subheadline secondary" Text="Bottom" />
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="Left" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Right" />
+
+          <TabControl Grid.Row="1" Width="240" Height="100" HorizontalAlignment="Left" TabStripPlacement="Bottom">
+            <TabItem Header="Input">
+              <TextBlock Classes="view" Text="Input: 2 channels" />
+            </TabItem>
+            <TabItem Header="Output" />
+          </TabControl>
+          <TabControl Grid.Row="1" Grid.Column="1" Width="240" Height="100" HorizontalAlignment="Left" TabStripPlacement="Left">
+            <TabItem Header="Mixer">
+              <TextBlock Classes="view" Text="Mixer" />
+            </TabItem>
+            <TabItem Header="Profiles" />
+            <TabItem Header="Devices" />
+          </TabControl>
+          <TabControl Grid.Row="1" Grid.Column="2" Width="240" Height="100" HorizontalAlignment="Left" TabStripPlacement="Right">
+            <TabItem Header="Mixer">
+              <TextBlock Classes="view" Text="Mixer" />
+            </TabItem>
+            <TabItem Header="Profiles" />
+            <TabItem Header="Devices" />
+          </TabControl>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context" HintSymbol="cursorarrow" Hint="Click a tab: the settings window shows its pane.">
+        <Border Classes="window" Width="420" Height="240">
+          <Panel>
+            <TabControl Classes="toolbar">
+              <TabItem Header="General" Icon="gearshape">
+                <StackPanel Spacing="10">
+                  <CheckBox Content="Open at login" IsChecked="True" />
+                  <CheckBox Content="Show in the menu bar" />
+                  <ToggleSwitch Content="Automatic updates" IsChecked="True" />
+                </StackPanel>
+              </TabItem>
+              <TabItem Header="Appearance" Icon="paintpalette">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock VerticalAlignment="Center" Text="Text size" />
+                  <Slider Value="40" Width="240" />
+                </StackPanel>
+              </TabItem>
+              <TabItem Header="Notifications" Icon="bell">
+                <TextBlock Classes="view" Text="Notification settings" />
+              </TabItem>
+              <TabItem Header="Advanced" Icon="gearshape.2">
+                <TextBlock Classes="view" Text="Advanced settings" />
+              </TabItem>
+            </TabControl>
+            <Border Classes="edge" />
+          </Panel>
+        </Border>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+  </gc:SectionStack>
 </UserControl>

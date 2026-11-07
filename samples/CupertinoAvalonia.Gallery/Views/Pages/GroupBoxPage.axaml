@@ -1,29 +1,74 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.GroupBoxPage">
-  <StackPanel Spacing="28">
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Group box" />
-      <TextBlock Classes="secondary" TextWrapping="Wrap"
-                 Text="GroupBox: a rounded box with its title above it, as in a settings window. Padding sets the space around its content." />
-      <GroupBox Header="Output" Width="360" HorizontalAlignment="Left">
-        <StackPanel Spacing="10">
-          <ComboBox SelectedIndex="0">
-            <ComboBoxItem Content="48 000 Hz" />
-            <ComboBoxItem Content="44 100 Hz" />
-          </ComboBox>
-          <CheckBox Content="Mute when headphones are unplugged" IsChecked="True" />
-          <CheckBox Content="Show volume in the menu bar" />
-        </StackPanel>
-      </GroupBox>
-    </StackPanel>
+  <gc:SectionStack>
 
-    <StackPanel Spacing="10">
-      <TextBlock Classes="headline" Text="Without a title" />
-      <GroupBox Width="360" HorizontalAlignment="Left">
-        <TextBlock Classes="secondary" TextWrapping="Wrap"
-                   Text="Without a Header, the box starts at the top." />
-      </GroupBox>
-    </StackPanel>
-  </StackPanel>
+    <gc:GallerySection Title="GroupBox"
+                       Description="A rounded box around settings that go together, its title above it, as in a settings window. Padding sets the space around its content."
+                       Properties="Header Padding">
+      <gc:GalleryBlock Title="States">
+        <Grid ColumnDefinitions="134,264,264" RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
+          <TextBlock Grid.Column="1" Classes="subheadline secondary" Text="With a title" />
+          <TextBlock Grid.Column="2" Classes="subheadline secondary" Text="Without a title" />
+
+          <gc:RowLabel Grid.Row="1" Text="Enabled" />
+          <GroupBox Grid.Row="1" Grid.Column="1" Header="Startup" Width="240" HorizontalAlignment="Left">
+            <StackPanel Spacing="8">
+              <CheckBox Content="Open at login" IsChecked="True" />
+              <CheckBox Content="Show in the menu bar" />
+            </StackPanel>
+          </GroupBox>
+          <GroupBox Grid.Row="1" Grid.Column="2" Width="240" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <StackPanel Spacing="8">
+              <CheckBox Content="Open at login" IsChecked="True" />
+              <CheckBox Content="Show in the menu bar" />
+            </StackPanel>
+          </GroupBox>
+
+          <gc:RowLabel Grid.Row="2" Text="Disabled" />
+          <GroupBox Grid.Row="2" Grid.Column="1" Header="Startup" Width="240" HorizontalAlignment="Left" IsEnabled="False">
+            <StackPanel Spacing="8">
+              <CheckBox Content="Open at login" IsChecked="True" />
+              <CheckBox Content="Show in the menu bar" />
+            </StackPanel>
+          </GroupBox>
+          <GroupBox Grid.Row="2" Grid.Column="2" Width="240" HorizontalAlignment="Left" VerticalAlignment="Bottom" IsEnabled="False">
+            <StackPanel Spacing="8">
+              <CheckBox Content="Open at login" IsChecked="True" />
+              <CheckBox Content="Show in the menu bar" />
+            </StackPanel>
+          </GroupBox>
+        </Grid>
+      </gc:GalleryBlock>
+
+      <gc:GalleryBlock Title="In context">
+        <StackPanel Width="360" HorizontalAlignment="Left" Spacing="16">
+          <GroupBox Header="Output">
+            <StackPanel Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock VerticalAlignment="Center" Text="Sample rate:" />
+                <ComboBox SelectedIndex="0">
+                  <ComboBoxItem Content="48 000 Hz" />
+                  <ComboBoxItem Content="44 100 Hz" />
+                </ComboBox>
+              </StackPanel>
+              <CheckBox Content="Mute when headphones are unplugged" IsChecked="True" />
+              <CheckBox Content="Show volume in the menu bar" />
+            </StackPanel>
+          </GroupBox>
+          <GroupBox Header="Input">
+            <StackPanel Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock VerticalAlignment="Center" Text="Input level:" />
+                <Slider Width="180" Value="60" />
+              </StackPanel>
+              <CheckBox Content="Reduce background noise" IsChecked="True" />
+            </StackPanel>
+          </GroupBox>
+        </StackPanel>
+      </gc:GalleryBlock>
+    </gc:GallerySection>
+
+  </gc:SectionStack>
 </UserControl>
