@@ -23,9 +23,10 @@ internal static partial class MacOSSymbols
 
     public static bool IsSupported { get; } = OperatingSystem.IsMacOSVersionAtLeast(11) && LoadAppKit("NSImage");
 
-    // An opacity mask at the screen's scale, null for an unknown name. Turned clockwise by the angle, in degrees: drawn
-    // from the vector, so it stays sharp where a turned bitmap would be resampled. Only quarter turns are cached, the
-    // angles in between pass during an animation.
+    // An opacity mask at the screen's scale, null for an unknown name. Turned clockwise by the angle, in degrees, so it
+    // stays sharp where the compositor would resample a turned bitmap: a quarter turn moves the upright mask's pixels,
+    // which AppKit fits to the pixel grid (on macOS 27.2, the vector drawn turned lands half a pixel off, blurred); the
+    // angles in between, which pass during an animation, are drawn from the vector. Only quarter turns are cached.
     public static Symbol? Get(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale,
         double angle = 0)
     {
@@ -34,8 +35,48 @@ internal static partial class MacOSSymbols
             return Draw(name, pointSize, weight, symbolScale, scale, angle);
         var key = new Key(name, pointSize, weight, symbolScale, scale, angle);
         if (!Cache.TryGetValue(key, out var symbol))
-            Cache[key] = symbol = Draw(name, pointSize, weight, symbolScale, scale, angle);
+            Cache[key] = symbol = angle == 0
+                ? Draw(name, pointSize, weight, symbolScale, scale, 0)
+                : Turn(Get(name, pointSize, weight, symbolScale, scale), (int)(angle / 90), scale);
         return symbol;
+    }
+
+    // The upright mask turned clockwise by quarter turns, pixel for pixel.
+    private static Symbol? Turn(Symbol? upright, int quarterTurns, double scale)
+    {
+        if (upright is null)
+            return null;
+        using var source = upright.Mask.Lock();
+        var (w, h) = (source.Size.Width, source.Size.Height);
+        var (width, height) = quarterTurns == 2 ? (w, h) : (h, w);
+        var stride = width * 4;
+        var from = new int[source.RowBytes / 4 * h];
+        Marshal.Copy(source.Address, from, 0, from.Length);
+        var to = new int[width * height];
+        for (var y = 0; y < h; y++)
+            for (var x = 0; x < w; x++)
+            {
+                var (tx, ty) = quarterTurns switch
+                {
+                    1 => (h - 1 - y, x),
+                    2 => (w - 1 - x, h - 1 - y),
+                    _ => (y, w - 1 - x),
+                };
+                to[ty * width + tx] = from[y * (source.RowBytes / 4) + x];
+            }
+
+        var pixels = Marshal.AllocHGlobal(stride * height);
+        try
+        {
+            Marshal.Copy(to, 0, pixels, to.Length);
+            var mask = new WriteableBitmap(PixelFormats.Rgba8888, AlphaFormat.Premul, pixels,
+                new PixelSize(width, height), new Vector(96 * scale, 96 * scale), stride);
+            return new Symbol(mask, new Size(width / scale, height / scale));
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(pixels);
+        }
     }
 
     private static Symbol? Draw(string name, double pointSize, FontWeight weight, CASymbolScale symbolScale, double scale,

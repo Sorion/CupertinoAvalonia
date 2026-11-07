@@ -214,20 +214,29 @@ public class CASymbolIconTests
     public void A_turned_symbol_is_drawn_turned()
     {
         Assert.SkipUnless(OperatingSystem.IsMacOSVersionAtLeast(11), "SF Symbols are drawn by AppKit, on macOS 11 and later.");
-        // The compositor would turn the bitmap and resample it, jagged at 1x: AppKit draws the vector turned instead.
+        // The compositor would turn the bitmap and resample it, jagged at 1x; AppKit's vector drawn turned lands half a
+        // pixel off on macOS 27.2. A quarter turn moves the upright mask's pixels instead.
         var upright = MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1)!;
-        var turned = MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1, -90)!;
-        Assert.Equal(new Size(upright.Size.Height, upright.Size.Width), turned.Size);
-        Assert.Same(turned, MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1, 270));
+        Assert.Same(MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1, -90),
+            MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1, 270));
 
-        // Its ink is the upright one's, a quarter turn counterclockwise.
         using var a = upright.Mask.Lock();
-        using var b = turned.Mask.Lock();
         int Alpha(ILockedFramebuffer buffer, int x, int y) => Marshal.ReadByte(buffer.Address, y * buffer.RowBytes + x * 4 + 3);
         var (w, h) = (a.Size.Width, a.Size.Height);
-        for (var y = 0; y < h; y++)
-            for (var x = 0; x < w; x++)
-                Assert.InRange(Alpha(b, y, w - 1 - x) - Alpha(a, x, y), -8, 8);
+        foreach (var angle in new[] { 90, 180, 270 })
+        {
+            var turned = MacOSSymbols.Get("chevron.right", 13, FontWeight.Bold, CASymbolScale.Medium, 1, angle)!;
+            Assert.Equal(angle == 180 ? upright.Size : new Size(upright.Size.Height, upright.Size.Width), turned.Size);
+
+            // Its ink is the upright one's, turned clockwise.
+            using var b = turned.Mask.Lock();
+            for (var y = 0; y < h; y++)
+                for (var x = 0; x < w; x++)
+                {
+                    var (tx, ty) = angle switch { 90 => (h - 1 - y, x), 180 => (w - 1 - x, h - 1 - y), _ => (y, w - 1 - x) };
+                    Assert.Equal(Alpha(a, x, y), Alpha(b, tx, ty));
+                }
+        }
     }
 
     [AvaloniaFact]
