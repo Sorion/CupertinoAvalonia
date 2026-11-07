@@ -48,80 +48,68 @@ own colors in both modes; elsewhere, and for a custom accent, their shades are d
 
 ## Controls
 
+Avalonia's built-in controls take the macOS look as they are. Classes give the variants macOS has:
+
 | Control | Classes |
 |---|---|
-| `Button`, `RepeatButton`, `ToggleButton` | `accent` (or `IsDefault`), `tinted`, `destructive` (an alert's destructive button: macOS draws one in a window as any other), `borderless` |
-| `DropDownButton`, `SplitButton`, `ToggleSplitButton` | A pull-down button, with a button's classes (`toolbar` included); an action and, apart, its menu, as AppKit's split combo button |
-| `CheckBox`, `RadioButton`, `ToggleSwitch` | |
-| `TextBox`, `ComboBox`, `AutoCompleteBox` | `search`: a search field, a capsule with a magnifying glass and a button that clears it (the toolbar's search field has the button too). A `ComboBox` is a pop-up button; `IsEditable="True"` makes it a combo box, a text field with an arrow button. The autocomplete box's suggestions open in a menu |
-| `NumericUpDown`, `ButtonSpinner` | A field with the stepper inside; `outside`: the stepper after the field, as SwiftUI and AppKit place it. A `ButtonSpinner` is the stepper alone |
-| `ListBox` | `sidebar` (at System Settings' sidebar icon size on macOS, medium elsewhere; a gray selection, or with `accent` the accent while the list has the focus, as in SwiftUI), `alternating`, `segmented` (a segmented control; `SelectionMode="Multiple"` for several) |
-| `TreeView` | An outline view; `sidebar` for nested sidebar items, sized as the sidebar list, `accent` as the list's |
-| `MenuFlyout`, `ContextMenu`, `Flyout`, `ToolTip` | |
-| `Slider`, `ProgressBar`, `Expander`, `ScrollBar` | `small` (progress bar), `circular` (progress: a ring, or the spinner when indeterminate; `mini`, `small`), `button` (expander) |
-| `SplitView` | Pane on the left: a sidebar (on the window's material in a `CAWindow`). On the right: an inspector, in the sidebar's color. `plain`: the pane takes the content's background and a divider, as in Shortcuts. `PaneBackground` and the resources `SplitView…BackgroundBrush`, `SplitViewInspectorLength`, `SplitViewDividerThickness` change the rest |
-| `TabControl` | A segmented control on top of the content (`TabStripPlacement`: `Bottom` below it, `Left` and `Right` beside it). `toolbar`: a settings window's tabs, on glass. `Icon="gearshape"` gives a tab an SF Symbol |
-| `GroupBox` | A rounded box with its title above it, as macOS's group box. `Padding` sets the space around its content |
+| `Button`, `RepeatButton`, `ToggleButton` | `accent` (or `IsDefault`), `tinted`, `destructive`, `borderless` |
+| `DropDownButton`, `SplitButton`, `ToggleSplitButton` | A button's classes |
+| `TextBox` | `search` |
+| `ComboBox` | `IsEditable="True"` for a combo box |
+| `NumericUpDown` | `outside`: the stepper after the field |
+| `ListBox` | `sidebar`, `accent`, `alternating`, `segmented` |
+| `TreeView` | `sidebar`, `accent` |
+| `ProgressBar` | `small`, `circular` |
+| `Expander` | `button` |
+| `SplitView` | `plain` |
+| `TabControl` | `toolbar` |
 
-- **Sizes:** `mini`, `small`, `large` (and `xlarge` on buttons, segmented controls and steppers).
-- **Toolbar items:** add `toolbar` to a `Button`, `ToggleButton`, `DropDownButton`, `ComboBox`, `TextBox` (a search field) or
-  segmented `ListBox` for a Liquid Glass capsule; `accent` marks the primary item. A `Border` with
-  `toolbar-group` puts several buttons (in a `StackPanel`, without the class) in one capsule. Items are 36 pt
-  tall for a `Unified` toolbar; add `compact` for an `UnifiedCompact` one. Pressed, they swell as in macOS 27:
-  briefly after a click, up to 3 s while held, and as long as their flyout or drop-down is open (a group or
-  segmented control as a whole; the search field doesn't).
+`CheckBox`, `RadioButton`, `ToggleSwitch`, `Slider`, `GroupBox`, `AutoCompleteBox`, `ButtonSpinner`, menus, flyouts,
+tooltips and scroll bars need no class. Other controls (date and time pickers, `Calendar`…) keep Fluent's templates in
+Apple's colors.
+
+- **Sizes:** `mini`, `small`, `large`, and `xlarge` on buttons, segmented controls and steppers.
+- **Toolbar items:** `toolbar` on a button, a pop-up, a search field or a segmented control makes a Liquid Glass
+  capsule; `compact` for a compact toolbar. A `Border` with `toolbar-group` puts several buttons in one capsule.
 - **Text styles:** `TextBlock` classes `largeTitle`, `title1`…`title3`, `headline`, `body`, `callout`,
   `subheadline`, `footnote`, `caption1`, `caption2`, plus `emphasized`, `secondary`, `tertiary`.
-- **Resources** are named after the kit: `AccentBrush`, `LabelSecondaryBrush`, `WindowBackgroundBrush`,
-  `ControlHeight`… `AccentMulticolorBrush` is System Settings' multicolor swatch, for an accent picker.
-- **Inactive windows** gray out their controls, as on macOS. Your styles can do the same with
-  `[(cas|WindowActivity.IsInactive)=True]` (`xmlns:cas="using:CupertinoAvalonia.Styling"`).
+- **Resources** are named after Apple's: `AccentBrush`, `LabelSecondaryBrush`, `WindowBackgroundBrush`…
 - **Texts** are AppKit's English labels, as resources to redefine in your app's language:
-  `CANavigationSplitViewHideSidebarText` and `CANavigationSplitViewShowSidebarText` (the sidebar button's tooltip and
-  accessibility name), `SearchFieldClearButtonText` (the search field's clear button).
+  `CANavigationSplitViewHideSidebarText`, `CANavigationSplitViewShowSidebarText`, `SearchFieldClearButtonText`.
 
-  ```xml
-  <Application.Resources>
-    <x:String x:Key="CANavigationSplitViewHideSidebarText">Masquer la barre latérale</x:String>
-    <x:String x:Key="CANavigationSplitViewShowSidebarText">Afficher la barre latérale</x:String>
-  </Application.Resources>
-  ```
-- **Other controls** (date and time pickers, `Calendar`…) keep Fluent's templates,
-  recolored with Apple's palette.
+## Gallery
+
+The Gallery shows every control in the theme, page by page, with the classes above:
+
+```sh
+dotnet run --project samples/CupertinoAvalonia.Gallery
+```
 
 ## CAWindow
 
 ```xml
 <cac:CAWindow xmlns="https://github.com/avaloniaui"
-                     xmlns:cac="using:CupertinoAvalonia.Controls"
-                     ExtendsContentIntoTitleBar="True"
-                     ToolbarStyle="Unified"
-                     Material="Sidebar">
+              xmlns:cac="using:CupertinoAvalonia.Controls"
+              ExtendsContentIntoTitleBar="True"
+              ToolbarStyle="Unified"
+              Material="Sidebar">
 ```
 
-On macOS (elsewhere it's a plain `Window`):
+A window with macOS's title bar (elsewhere, a plain `Window`):
 
-- `ExtendsContentIntoTitleBar`: the content runs under the title bar. Keep it out of the window controls' way
-  with `WindowControlsInset` (as padding on a toolbar when no sidebar is shown, for one), and mark the areas that
-  move the window with `WindowDecorationProperties.ElementRole="TitleBar"`.
-- `ToolbarStyle`: `Unified` (52 pt) or `UnifiedCompact` (40 pt) title bar, the window controls centered in it.
-- `Material`: a system material behind the window (`Sidebar`, `WindowBackground`, `UnderWindowBackground`,
-  `HudWindow`), shown wherever the content is transparent.
-- `AlwaysLooksActive`: keeps the active look, the controls' and the material's, while another window is active:
-  for a palette, or to compare with a native app side by side (the Gallery's View menu).
+- `ExtendsContentIntoTitleBar`: the content runs under the title bar. `WindowControlsInset` keeps it clear of the
+  window controls.
+- `ToolbarStyle`: `Unified` (52 pt) or `UnifiedCompact` (40 pt).
+- `Material`: the material behind the window (`Sidebar`, `WindowBackground`, `UnderWindowBackground`, `HudWindow`).
+- `AlwaysLooksActive`: keeps the active look while another window is active.
 
-The Gallery's window ([MainWindow.axaml](https://github.com/Sorion/CupertinoAvalonia/blob/main/samples/CupertinoAvalonia.Gallery/Views/MainWindow.axaml)) is a
-complete example: a `CANavigationSplitView` with a sidebar on the sidebar material and a toolbar over the content.
-
-**Liquid Glass chrome:** macOS draws it only for apps whose executable declares a recent SDK (26 or later), which
-.NET's app host doesn't. The package's `buildTransitive/CupertinoAvalonia.targets` declares macOS 27's SDK after each build on
-macOS; with a project reference, import that file in your app (as the Gallery does). `CupertinoDeclareMacOSSdk=false`
-turns it off, `CupertinoMacOSSdkVersion` declares another SDK.
+**Liquid Glass chrome:** macOS draws it only for apps built with a recent SDK, which .NET's app host doesn't declare.
+The package declares macOS 27's SDK after each build on macOS (`CupertinoDeclareMacOSSdk=false` turns it off). With a
+project reference, import `buildTransitive/CupertinoAvalonia.targets` in your app, as the Gallery does.
 
 ## CANavigationSplitView
 
-A window's sidebar and content, as SwiftUI's `NavigationSplitView`: the sidebar runs the window's full height with its
-button over it, and the content has its own toolbar. An inspector can show on the right, as SwiftUI's `inspector`.
+A sidebar, a content with its own toolbar, and an optional inspector, as SwiftUI's `NavigationSplitView`:
 
 ```xml
 <cac:CAWindow ExtendsContentIntoTitleBar="True" ToolbarStyle="Unified" Material="Sidebar" …>
@@ -139,37 +127,20 @@ button over it, and the content has its own toolbar. An inspector can show on th
 </cac:CAWindow>
 ```
 
-- Closing, the sidebar slides out and the content follows its edge, which pushes the button until the window controls
-  stop it; opening, the edge picks the button up on its way (measured on macOS 27).
-- `ContentToolbar` is the content's toolbar after the button: a title, items, trailing items, as you lay them out. Its
-  buttons, pop-ups and segmented controls are toolbar items.
-- `CAToolbar.ScrollsUnder` on the content's scroll viewer: its content starts below the toolbar and scrolls
-  under it, which then shows its background (see CAToolbar). A style can set it, for pages a view locator shows:
-  `<Style Selector="cac|CANavigationSplitView ScrollViewer.page">`.
-- `SidebarWidth` (220), `SidebarBackground` where the window shows no material. In a `CAWindow` that extends
-  its content, the sidebar shows the window's material; elsewhere the columns start under the title bar.
-- Dragging the sidebar's edge resizes it between `MinSidebarWidth` (140, SwiftUI's) and `MaxSidebarWidth` (none), never
-  narrowing the content below its `MinWidth`. Past half the minimum the sidebar folds away; it comes back in the same
-  drag, as on macOS 27. `SidebarWidth` is two-way: bind it to keep the width.
-- No shortcut by default, as in SwiftUI, where an app adds `SidebarCommands` and `InspectorCommands`. For native apps'
-  View › Show Sidebar (⌃⌘S) and Show Inspector (⌃⌘I), add `NativeMenuItem`s with these gestures that toggle
-  `IsSidebarOpen` and `IsInspectorOpen`, as the Gallery does. Without a menu, `ToggleSidebarGesture` and
-  `ToggleInspectorGesture` take a shortcut wherever the focus is in the window.
-- `Inspector` is a column on the right, the window's full height, on the sidebar's material, without a divider.
-  `IsInspectorOpen` (closed by default, two-way) slides it in and pushes the content; the content's toolbar keeps its
-  trailing items at the window's edge, over the inspector, unless the inspector has its own section, and shows its band
-  over the content. There is no built-in button:
-  put one in `ContentToolbar`, with the `sidebar.right` symbol.
-- `InspectorToolbar` is the inspector's section of the toolbar, as the toolbar items SwiftUI's inspector declares: a
-  title and subtitle, items, which start at the inspector's edge. The content's toolbar then ends before them. They
-  never run past the window's edge, so once the inspector is closed they stay at the window's trailing edge, as in
-  SwiftUI; bind their `IsVisible` to `IsInspectorOpen` to hide them instead.
-- `InspectorWidth` is 270, fixed, as SwiftUI's. Give `MinInspectorWidth` and `MaxInspectorWidth` different values (the
-  Gallery: 220 to 400, at 280) and a drag on its edge resizes it, folds it away and brings it back, as the sidebar's.
-  `CanCollapseInspector="False"` keeps it open at its minimum, for an inspector that edits and closes through its own
-  buttons. `InspectorBackground` applies where the window shows no material.
+- `IsSidebarOpen`, `SidebarWidth` (220), `MinSidebarWidth`, `MaxSidebarWidth`: the sidebar opens, closes and resizes
+  as on macOS 27, and folds away when dragged narrow.
+- `Inspector`, `InspectorToolbar`, `IsInspectorOpen`, `InspectorWidth` (270): a column on the right, with its own part
+  of the toolbar. Give `MinInspectorWidth` and `MaxInspectorWidth` to make it resizable.
+- `ToggleSidebarGesture`, `ToggleInspectorGesture`: no shortcut by default, as in SwiftUI. The Gallery adds ⌃⌘S and
+  ⌃⌘I in its View menu.
+
+The Gallery's [MainWindow.axaml](https://github.com/Sorion/CupertinoAvalonia/blob/main/samples/CupertinoAvalonia.Gallery/Views/MainWindow.axaml)
+is a complete example.
 
 ## CAToolbar
+
+A toolbar laid over the content, as in macOS 27: transparent at rest, its background shows when the content scrolls
+under it. `CANavigationSplitView` has one already.
 
 ```xml
 <Panel>
@@ -182,21 +153,10 @@ button over it, and the content has its own toolbar. An inspector can show on th
 </Panel>
 ```
 
-The window's toolbar band, laid over the top of the content as in macOS 27: transparent at rest, its background
-(and its 1 pt edge line) fades in when the content scrolls under it or the pointer is over it. In dark mode it is a
-third color, lighter than the content; in an inactive window it shows, at rest too. `BackgroundVisibility`:
-`Automatic` (default), `Visible` (always), `Hidden` (never). Dragging the band moves the window. The content passing
-under it isn't blurred yet: the background is nearly opaque.
-
-- `CAToolbar.ScrollsUnder="True"` on a scroll viewer ties it to the toolbar laid over it (the first beside one of
-  its ancestors, as in a `Panel`): its content and its scroll bar start below the toolbar, as AppKit's content insets,
-  and the content scrolls under it.
-- `CAToolbar.ContentInset`, inherited by the content beside the toolbar, is the room it takes:
-  `(0, 52, 0, 0)`, or 40 in a compact toolbar. A padding for content that doesn't scroll:
-  `Padding="{Binding $self.(cac:CAToolbar.ContentInset)}"`.
-
-Its buttons, pop-ups and segmented controls are toolbar items without the `toolbar` class (and `compact` ones in a
-`compact` toolbar), except in a `toolbar-group`. Controls in a flyout or in another control's template stay as they are.
+- `CAToolbar.ScrollsUnder="True"` on a scroll viewer starts its content below the toolbar and lets it scroll under.
+- `CAToolbar.ContentInset` is the room the toolbar takes, for content that doesn't scroll.
+- `BackgroundVisibility`: `Automatic` (default), `Visible` or `Hidden`.
+- Buttons, pop-ups and segmented controls in it are toolbar items, without the `toolbar` class.
 
 ## CASymbolIcon
 
@@ -229,17 +189,6 @@ An SF Symbol by its name in Apple's catalog, at the size, weight and color of th
   (every recent Mac) colors looked more saturated than in native apps. Your own colors and images are affected too.
   Avalonia's [#21847](https://github.com/AvaloniaUI/Avalonia/pull/21847) proposes an option for it, which the theme
   will use once released.
-
-## Design tokens
-
-The theme's colors, metrics and text styles (`Styling/Tokens/*.g.axaml`) are generated from Apple's macOS 27 UI
-kit for Figma, and included in the library. Apple's kit itself isn't in the
-repository. To regenerate the tokens when Apple updates it:
-
-1. Duplicate Apple's [macOS 27 kit](https://developer.apple.com/design/resources/) from the Figma Community, then
-   in the Figma desktop app, **File → Save local copy…** to `design/source/macOS-27.fig` (ignored by git).
-2. In `tools/figma` (Node.js): `npm install`, then `npm run generate`. It works offline, without a Figma account.
-
 
 ## License
 
