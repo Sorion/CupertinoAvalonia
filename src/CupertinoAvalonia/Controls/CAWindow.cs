@@ -125,7 +125,7 @@ public class CAWindow : Window
         }
         else if (change.Property == WindowStateProperty)
         {
-            UpdateWindowControlsInset();
+            ApplyChrome();
         }
     }
 
@@ -171,8 +171,10 @@ public class CAWindow : Window
         {
             try
             {
-                // Avalonia removes any toolbar when it extends the content: set it after.
-                MacOSWindowChrome.SetToolbar(nsWindow, extended ? ToolbarStyle : CAToolbarStyle.None, extended);
+                // Avalonia removes any toolbar when it extends the content: set it after. None in full screen, where macOS
+                // draws it opaque over the content's own toolbar.
+                var fullScreen = WindowState == WindowState.FullScreen;
+                MacOSWindowChrome.SetToolbar(nsWindow, extended && !fullScreen ? ToolbarStyle : CAToolbarStyle.None, extended);
                 _materialApplied = Material != CAWindowMaterial.None
                     && MacOSWindowChrome.SetBehindWindowMaterial(nsWindow, Material, AlwaysLooksActive);
             }

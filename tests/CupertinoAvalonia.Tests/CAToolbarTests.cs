@@ -92,6 +92,22 @@ public class CAToolbarTests
         window.Close();
     }
 
+    // SwiftGallery in full screen on macOS 27: the band shows at rest, over content that hasn't scrolled.
+    [AvaloniaFact]
+    public void Background_shows_in_full_screen()
+    {
+        var (window, toolbar, _) = Show();
+
+        window.WindowState = WindowState.FullScreen;
+        WaitUntil(window, () => Background(toolbar).Opacity == 1);
+        Assert.Equal(1, Background(toolbar).Opacity);
+
+        window.WindowState = WindowState.Normal;
+        WaitUntil(window, () => Background(toolbar).Opacity == 0);
+        Assert.Equal(0, Background(toolbar).Opacity);
+        window.Close();
+    }
+
     [AvaloniaFact]
     public void Background_can_always_or_never_show()
     {

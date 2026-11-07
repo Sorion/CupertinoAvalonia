@@ -12,7 +12,9 @@ namespace CupertinoAvalonia.Controls;
 /// <summary>When a <see cref="CAToolbar"/> shows its background.</summary>
 public enum CAToolbarBackgroundVisibility
 {
-    /// <summary>When content scrolls under the toolbar, while the pointer is over it, or in an inactive window.</summary>
+    /// <summary>
+    /// When content scrolls under the toolbar, while the pointer is over it, in an inactive window or in full screen.
+    /// </summary>
     Automatic,
 
     Visible,
@@ -29,11 +31,12 @@ public enum CAToolbarBackgroundVisibility
 /// buttons, pop-ups and segmented controls are toolbar items without the <c>toolbar</c> class, except in a button group.
 /// </remarks>
 [TemplatePart(PartBackground, typeof(Control))]
-[PseudoClasses(PcScrolled)]
+[PseudoClasses(PcScrolled, PcFullScreen)]
 public class CAToolbar : ContentControl
 {
     private const string PartBackground = "PART_Background";
     private const string PcScrolled = ":scrolled";
+    private const string PcFullScreen = ":fullscreen";
     private const string ItemClass = "toolbar";
     private const string CompactClass = "compact";
 
@@ -68,6 +71,7 @@ public class CAToolbar : ContentControl
     private Thickness _backgroundMargin;
     private ScrollViewer? _scrollViewer;
     private Control? _contentInsetHost;
+    private Window? _window;
 
     static CAToolbar()
     {
@@ -124,6 +128,10 @@ public class CAToolbar : ContentControl
         // A CANavigationSplitView's toolbar tells its content; elsewhere, the toolbar tells the panel it's laid out in.
         _contentInsetHost = TemplatedParent as Control ?? this.GetVisualParent() as Control;
         UpdateContentInset();
+        _window = TopLevel.GetTopLevel(this) as Window;
+        if (_window is not null)
+            _window.PropertyChanged += OnWindowPropertyChanged;
+        UpdateFullScreen();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -131,7 +139,20 @@ public class CAToolbar : ContentControl
         base.OnDetachedFromVisualTree(e);
         _contentInsetHost?.ClearValue(ContentInsetProperty);
         _contentInsetHost = null;
+        if (_window is not null)
+            _window.PropertyChanged -= OnWindowPropertyChanged;
+        _window = null;
+        UpdateFullScreen();
     }
+
+    private void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property == Window.WindowStateProperty)
+            UpdateFullScreen();
+    }
+
+    // Full screen, macOS 27 shows the toolbar's background at rest too.
+    private void UpdateFullScreen() => PseudoClasses.Set(PcFullScreen, _window?.WindowState == WindowState.FullScreen);
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {

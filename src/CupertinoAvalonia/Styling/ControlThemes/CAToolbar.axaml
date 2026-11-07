@@ -52,7 +52,7 @@
     <Style Selector="^ /template/ Border#PART_Background">
       <Setter Property="Opacity" Value="0" />
     </Style>
-    <Style Selector="^[BackgroundVisibility=Visible] /template/ Border#PART_Background, ^[BackgroundVisibility=Automatic]:scrolled /template/ Border#PART_Background, ^[BackgroundVisibility=Automatic]:pointerover /template/ Border#PART_Background">
+    <Style Selector="^[BackgroundVisibility=Visible] /template/ Border#PART_Background, ^[BackgroundVisibility=Automatic]:scrolled /template/ Border#PART_Background, ^[BackgroundVisibility=Automatic]:pointerover /template/ Border#PART_Background, ^[BackgroundVisibility=Automatic]:fullscreen /template/ Border#PART_Background">
       <Setter Property="Opacity" Value="1" />
     </Style>
     <!-- Active=False: shown at rest too. -->
