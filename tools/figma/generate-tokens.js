@@ -77,14 +77,27 @@ const materials = {
   MaterialUnderWindowBackgroundColor: [fillStyle('Materials - Controls/Under Window Background'), fillStyle('Materials - Controls/Under Window Background - Dark')],
 };
 
+// Read from AppKit on macOS 27 (sRGB) where the kit differs by more than rounding: what AppKit draws wins. Marked in
+// the output.
+const measuredColors = {
+  LabelTertiaryColor: { Light: '#42000000' }, // tertiaryLabelColor, 26 %; the kit's 25 %
+  FillQuinaryColor: { Light: '#02000000', Dark: '#02FFFFFF' }, // quinarySystemFill, 0.8 %; the kit's 2 %
+  GrayColor: { Dark: '#98989D' }, // systemGray
+};
+const notes = {};
 {
   const rows = { Default: [], Dark: [] };
   for (const [name, row] of Object.entries(colorsVars)) {
     const key = colorKey(name);
     if (!key) continue;
-    rows.Default.push([key, valueOf(row.Light)]);
-    rows.Dark.push([key, valueOf(row.Dark)]);
+    for (const [variant, mode] of [['Default', 'Light'], ['Dark', 'Dark']]) {
+      const kit = valueOf(row[mode]);
+      const v = measuredColors[key]?.[mode] ?? kit;
+      if (v !== kit) notes[`${variant}/${key}`] = ` <!-- macOS 27; the kit's ${kit} -->`;
+      rows[variant].push([key, v]);
+    }
   }
+  for (const key of Object.keys(measuredColors)) if (!rows.Default.some(([k]) => k === key)) throw new Error(`No kit color ${key}`);
   for (const [key, [light, dark]] of Object.entries(materials)) {
     rows.Default.push([key, light]);
     rows.Dark.push([key, dark]);
@@ -101,7 +114,7 @@ const materials = {
       rows[variant].push([key.replace(/Color$/, 'TranslucentColor'), variant === 'Dark' ? `#${h2(level)}FFFFFF` : `#${h2(255 - level)}000000`]);
     }
   }
-  const dict = (variant) => rows[variant].map(([k, v]) => `      <Color x:Key="${k}">${v}</Color>`).join('\n') + '\n\n' +
+  const dict = (variant) => rows[variant].map(([k, v]) => `      <Color x:Key="${k}">${v}</Color>${notes[`${variant}/${k}`] ?? ''}`).join('\n') + '\n\n' +
     rows[variant].map(([k]) => `      <SolidColorBrush x:Key="${k.replace(/Color$/, 'Brush')}" Color="{StaticResource ${k}}" />`).join('\n');
   write('Colors.g.axaml', header('Colors and Materials') + `  <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Default">
