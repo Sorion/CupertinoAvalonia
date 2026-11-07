@@ -32,9 +32,9 @@ public partial class MainWindowViewModel : ObservableObject
         new("Group Box", "square.on.square", "GroupBox.", () => new GroupBoxPage()),
         new("Toolbar and Segmented", "wrench.adjustable", "Toolbar items and the segmented control.", () => new ToolbarPage()),
         new("Menus and Pop-ups", "filemenu.and.pointer.arrow", "ComboBox, MenuFlyout, ContextMenu, Flyout and ToolTip.", () => new MenusPage()),
-        new("Typography", "textformat", "macOS text styles, as TextBlock classes.", () => new TypographyPage()),
-        new("Colors", "paintpalette", "Colors and materials generated from Apple's kit.", () => new ColorsPage()),
-        new("All Controls", "repeat", "Every built-in control, to spot those still on the Fluent fallback.", () => new AllControlsPage()),
+        new("Typography", "textformat", "Text styles.", () => new TypographyPage()),
+        new("Colors", "paintpalette", "System colors and materials.", () => new ColorsPage()),
+        new("All Controls", "repeat", "Every control at a glance.", () => new AllControlsPage()),
     ];
 
     public IReadOnlyList<string> Themes { get; } = ["System", "Light", "Dark"];

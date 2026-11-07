@@ -1,6 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gc="using:CupertinoAvalonia.Gallery.Controls"
              x:Class="CupertinoAvalonia.Gallery.Views.Pages.ColorsPage">
-  <!-- Swatches are built in code from the resource keys. -->
-  <StackPanel Name="Groups" Spacing="24" />
+  <gc:SectionStack>
+    <!-- One block per group, its swatches built in code from the resource keys. -->
+    <gc:GallerySection Name="Groups" Title="System colors"
+                       Description="The theme's brushes, each named after its color with Brush at the end: AccentBrush, LabelSecondaryBrush. They follow the light or dark appearance, and on macOS the accent color." />
+  </gc:SectionStack>
 </UserControl>
