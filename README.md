@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/Sorion/CupertinoAvalonia/blob/main/assets/icon.png" width="128" alt="CupertinoAvalonia logo">
+<img src="https://raw.githubusercontent.com/Sorion/CupertinoAvalonia/main/assets/icon.png" width="128" alt="CupertinoAvalonia logo">
 </p>
 
 
@@ -15,6 +15,10 @@ Give your [Avalonia](https://avaloniaui.net) application a native macOS look.
 Inspired by [FluentAvalonia](https://github.com/amwx/FluentAvalonia).
 
 _Note: The theme is still in an early stage_
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/Sorion/CupertinoAvalonia/main/assets/gallery.png" alt="The Gallery's Buttons page, in light and dark mode">
+</p>
 
 ## Introduction
 
